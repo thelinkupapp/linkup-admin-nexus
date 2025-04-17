@@ -470,10 +470,12 @@ export function LinkupTable() {
             {filteredLinkups.map((linkup) => (
               <TableRow key={linkup.id}>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="text-xl">{linkup.emoji}</div>
-                    <div className="font-medium">{linkup.title}</div>
-                  </div>
+                  <Link to={`/linkups/${linkup.id}`} className="hover:underline">
+                    <div className="flex items-center gap-2">
+                      <div className="text-xl">{linkup.emoji}</div>
+                      <div className="font-medium">{linkup.title}</div>
+                    </div>
+                  </Link>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -560,7 +562,9 @@ export function LinkupTable() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to={`/linkups/${linkup.id}`}>View Details</Link>
+                        </DropdownMenuItem>
                         <DropdownMenuItem>Edit Linkup</DropdownMenuItem>
                         <DropdownMenuItem className="text-destructive">Remove Linkup</DropdownMenuItem>
                       </DropdownMenuContent>
