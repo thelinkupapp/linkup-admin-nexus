@@ -13,16 +13,14 @@ import {
   ShieldCheck,
   MessageSquare,
   ChevronDown,
-  Shield
+  Shield,
+  Megaphone
 } from "lucide-react";
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const navItems = [
   {
@@ -58,14 +56,21 @@ const navItems = [
     ]
   },
   {
-    title: "Email CRM",
-    href: "/crm/email",
-    icon: Mail
-  },
-  {
-    title: "Push Notifications",
-    href: "/crm/push",
-    icon: Bell
+    title: "Marketing",
+    type: "dropdown",
+    icon: Megaphone,
+    items: [
+      {
+        title: "Email CRM",
+        href: "/crm/email",
+        icon: Mail
+      },
+      {
+        title: "Push Notifications",
+        href: "/crm/push",
+        icon: Bell
+      }
+    ]
   },
   {
     title: "Linkup Plus",
@@ -108,39 +113,34 @@ export function Sidebar() {
         <nav className="space-y-1">
           {navItems.map((item) => {
             if (item.type === "dropdown") {
+              const isActive = item.items?.some(subItem => location.pathname === subItem.href);
+              
               return (
-                <div key={item.title} className="relative">
-                  <NavigationMenu orientation="vertical">
-                    <NavigationMenuList>
-                      <NavigationMenuItem>
-                        <NavigationMenuTrigger className={cn(
-                          "nav-link w-full justify-start gap-2 px-2 py-2",
-                          item.items?.some(subItem => location.pathname === subItem.href) && "active"
-                        )}>
-                          <item.icon className="h-5 w-5" />
-                          <span>{item.title}</span>
-                        </NavigationMenuTrigger>
-                        <NavigationMenuContent>
-                          <div className="w-48 bg-popover p-1">
-                            {item.items?.map((subItem) => (
-                              <Link
-                                key={subItem.href}
-                                to={subItem.href}
-                                className={cn(
-                                  "nav-link flex items-center gap-2 px-2 py-2",
-                                  location.pathname === subItem.href && "active"
-                                )}
-                              >
-                                <subItem.icon className="h-5 w-5" />
-                                <span>{subItem.title}</span>
-                              </Link>
-                            ))}
-                          </div>
-                        </NavigationMenuContent>
-                      </NavigationMenuItem>
-                    </NavigationMenuList>
-                  </NavigationMenu>
-                </div>
+                <Collapsible key={item.title}>
+                  <CollapsibleTrigger className={cn(
+                    "nav-link w-full justify-start gap-2 px-2 py-2 flex items-center text-sm",
+                    isActive && "active"
+                  )}>
+                    <item.icon className="h-5 w-5" />
+                    <span className="flex-1">{item.title}</span>
+                    <ChevronDown className="h-4 w-4 transition-transform duration-200 collapsible-chevron" />
+                  </CollapsibleTrigger>
+                  <CollapsibleContent className="pl-9 space-y-1">
+                    {item.items?.map((subItem) => (
+                      <Link
+                        key={subItem.href}
+                        to={subItem.href}
+                        className={cn(
+                          "nav-link flex items-center gap-2 px-2 py-2",
+                          location.pathname === subItem.href && "active"
+                        )}
+                      >
+                        <subItem.icon className="h-5 w-5" />
+                        <span>{subItem.title}</span>
+                      </Link>
+                    ))}
+                  </CollapsibleContent>
+                </Collapsible>
               );
             }
 
