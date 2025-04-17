@@ -26,6 +26,18 @@ export const languages = [
 export const genderOptions = [
   { id: "male", label: "Male", icon: "user" },
   { id: "female", label: "Female", icon: "user" },
-  { id: "non-binary", label: "Non-binary", icon: "user" },
-  { id: "other", label: "Other", icon: "user" }
+  { id: "non-binary", label: "Non-binary", icon: "user" }
+];
+
+export const countries = [
+  { id: "gb", label: "United Kingdom", value: "London, UK" },
+  { id: "us", label: "United States", value: "New York, USA" },
+  { id: "ca", label: "Canada", value: "Toronto, Canada" },
+  { id: "au", label: "Australia", value: "Sydney, Australia" },
+  { id: "fr", label: "France", value: "Paris, France" },
+  { id: "de", label: "Germany", value: "Berlin, Germany" },
+  { id: "it", label: "Italy", value: "Rome, Italy" },
+  { id: "es", label: "Spain", value: "Madrid, Spain" },
+  { id: "jp", label: "Japan", value: "Tokyo, Japan" },
+  { id: "sg", label: "Singapore", value: "Singapore" }
 ];

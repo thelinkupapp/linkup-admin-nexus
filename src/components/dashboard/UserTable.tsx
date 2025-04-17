@@ -27,11 +27,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataSort } from "./DataSort";
 import { cn } from "@/lib/utils";
-import { interests, languages, genderOptions } from "@/constants/filterOptions";
+import { interests, languages, genderOptions, countries } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 import { Switch } from "@/components/ui/switch";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 const users: User[] = [
   {
@@ -58,12 +69,11 @@ const users: User[] = [
 const UserTable = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [sortField, setSortField] = useState<"earnings" | "hosted" | "attended">("earnings");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedLocation, setSelectedLocation] = useState("");
+  const [locationOpen, setLocationOpen] = useState(false);
   const [ageRange, setAgeRange] = useState([18, 80]);
   const [minEarnings, setMinEarnings] = useState(0);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
@@ -91,8 +101,6 @@ const UserTable = () => {
     }
   };
 
-  const locations = Array.from(new Set(users.map(user => user.location))).sort();
-  
   const filteredUsers = users
     .filter(user => {
       const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
@@ -180,21 +188,42 @@ const UserTable = () => {
             </SelectContent>
           </Select>
 
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Location" />
-            </SelectTrigger>
-            <SelectContent>
-              {locations.map((location) => (
-                <SelectItem key={location} value={location}>
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>{location}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Popover open={locationOpen} onOpenChange={setLocationOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={locationOpen}
+                className="w-[200px] justify-between"
+              >
+                {selectedLocation
+                  ? countries.find((country) => country.value === selectedLocation)?.label
+                  : "Select location..."}
+                <MapPin className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-[200px] p-0">
+              <Command>
+                <CommandInput placeholder="Search location..." />
+                <CommandEmpty>No location found.</CommandEmpty>
+                <CommandGroup>
+                  {countries.map((country) => (
+                    <CommandItem
+                      key={country.id}
+                      value={country.label}
+                      onSelect={() => {
+                        setSelectedLocation(country.value);
+                        setLocationOpen(false);
+                      }}
+                    >
+                      <MapPin className="mr-2 h-4 w-4" />
+                      {country.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
 
           <Select
             value={selectedLanguages[0]}
@@ -243,58 +272,6 @@ const UserTable = () => {
             <div className="text-sm text-muted-foreground mt-1">
               Age: {ageRange[0]} - {ageRange[1]}
             </div>
-          </div>
-
-          <Select 
-            value={sortField} 
-            onValueChange={(value: "earnings" | "hosted" | "attended") => setSortField(value)}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by Activity" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="earnings">
-                <div className="flex items-center gap-2">
-                  <Coins className="h-4 w-4" />
-                  <span>Total Earnings</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="hosted">
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4" />
-                  <span>Hosted Linkups</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="attended">
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span>Attended Linkups</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <DataSort
-            sortDirection={sortDirection}
-            onSortChange={setSortDirection}
-          />
-
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border">
-            <ShieldCheck className="h-4 w-4" />
-            <span className="text-sm">Verified Only</span>
-            <Switch
-              checked={showVerifiedOnly}
-              onCheckedChange={setShowVerifiedOnly}
-            />
-          </div>
-
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border">
-            <Shield className="h-4 w-4" />
-            <span className="text-sm">Linkup Plus Only</span>
-            <Switch
-              checked={showLinkupPlusOnly}
-              onCheckedChange={setShowLinkupPlusOnly}
-            />
           </div>
         </div>
       </div>
