@@ -16,6 +16,7 @@ import PushNotificationCRM from "./pages/crm/PushNotificationCRM";
 import LinkupPlus from "./pages/LinkupPlus";
 import UserVerifications from "./pages/UserVerifications";
 import UserFeedback from "./pages/feedback/UserFeedback";
+import AdminManagement from "./pages/settings/AdminManagement";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/linkup-plus" element={<LinkupPlus />} />
           <Route path="/verifications" element={<UserVerifications />} />
           <Route path="/feedback" element={<UserFeedback />} />
+          <Route path="/settings/admin" element={<AdminManagement />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
