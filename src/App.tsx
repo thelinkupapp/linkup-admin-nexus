@@ -10,6 +10,12 @@ import UserProfile from "./pages/UserProfile";
 import Linkups from "./pages/Linkups";
 import LinkupDetails from "./pages/LinkupDetails";
 import NotFound from "./pages/NotFound";
+import UserReports from "./pages/reports/UserReports";
+import LinkupReports from "./pages/reports/LinkupReports";
+import EmailCRM from "./pages/crm/EmailCRM";
+import PushNotificationCRM from "./pages/crm/PushNotificationCRM";
+import LinkupPlus from "./pages/LinkupPlus";
+import UserVerifications from "./pages/UserVerifications";
 
 const queryClient = new QueryClient();
 
