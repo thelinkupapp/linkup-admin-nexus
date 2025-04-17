@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -59,6 +58,7 @@ export function UserTable() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [sortField, setSortField] = useState<"earnings" | "hosted" | "attended">("earnings");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedGender, setSelectedGender] = useState("");
@@ -89,8 +89,7 @@ export function UserTable() {
   
   const filteredUsers = users
     .filter(user => {
-      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
-                          user.email.toLowerCase().includes(searchValue.toLowerCase());
+      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
       const matchesInterests = selectedInterests.length === 0 || 
                               selectedInterests.some(interest => user.interests.includes(interest));
       const matchesLanguages = selectedLanguages.length === 0 || 
@@ -105,9 +104,17 @@ export function UserTable() {
     })
     .sort((a, b) => {
       if (sortDirection === "asc") {
-        return a.totalEarnings - b.totalEarnings;
+        return sortField === "earnings" 
+          ? a.totalEarnings - b.totalEarnings
+          : sortField === "hosted"
+          ? a.hostedLinkups - b.hostedLinkups
+          : a.attendedLinkups - b.attendedLinkups;
       }
-      return b.totalEarnings - a.totalEarnings;
+      return sortField === "earnings"
+        ? b.totalEarnings - a.totalEarnings
+        : sortField === "hosted"
+        ? b.hostedLinkups - a.hostedLinkups
+        : b.attendedLinkups - a.attendedLinkups;
     });
 
   return (
@@ -123,7 +130,6 @@ export function UserTable() {
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {/* Interests Filter */}
           <Select
             value={selectedInterests[0]}
             onValueChange={(value) => setSelectedInterests([value])}
@@ -143,7 +149,6 @@ export function UserTable() {
             </SelectContent>
           </Select>
 
-          {/* Location Filter */}
           <Select value={selectedLocation} onValueChange={setSelectedLocation}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select Location" />
@@ -160,7 +165,6 @@ export function UserTable() {
             </SelectContent>
           </Select>
 
-          {/* Languages Filter */}
           <Select
             value={selectedLanguages[0]}
             onValueChange={(value) => setSelectedLanguages([value])}
@@ -180,7 +184,6 @@ export function UserTable() {
             </SelectContent>
           </Select>
 
-          {/* Gender Filter */}
           <Select value={selectedGender} onValueChange={setSelectedGender}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Select Gender" />
@@ -197,7 +200,6 @@ export function UserTable() {
             </SelectContent>
           </Select>
 
-          {/* Age Range Slider */}
           <div className="min-w-[200px]">
             <Slider
               min={18}
@@ -212,7 +214,35 @@ export function UserTable() {
             </div>
           </div>
 
-          {/* Earnings Sort */}
+          <Select 
+            value={sortField} 
+            onValueChange={(value: "earnings" | "hosted" | "attended") => setSortField(value)}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Sort by Activity" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="earnings">
+                <div className="flex items-center gap-2">
+                  <Coins className="h-4 w-4" />
+                  <span>Total Earnings</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="hosted">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4" />
+                  <span>Hosted Linkups</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="attended">
+                <div className="flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  <span>Attended Linkups</span>
+                </div>
+              </SelectItem>
+            </SelectContent>
+          </Select>
+
           <DataSort
             sortDirection={sortDirection}
             onSortChange={setSortDirection}
@@ -225,7 +255,6 @@ export function UserTable() {
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>
-              <TableHead>Email</TableHead>
               <TableHead>Age</TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Hosted</TableHead>
@@ -253,7 +282,6 @@ export function UserTable() {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{user.email}</TableCell>
                 <TableCell>{user.age}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
