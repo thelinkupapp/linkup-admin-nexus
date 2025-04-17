@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -10,7 +9,8 @@ import {
   Settings,
   BarChart3,
   Bell,
-  ShieldCheck
+  ShieldCheck,
+  MessageSquare
 } from "lucide-react";
 
 const navItems = [
@@ -58,6 +58,11 @@ const navItems = [
     title: "Verifications",
     href: "/verifications",
     icon: ShieldCheck
+  },
+  {
+    title: "User Feedback",
+    href: "/feedback",
+    icon: MessageSquare
   },
   {
     title: "Settings",
