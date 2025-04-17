@@ -25,6 +25,12 @@ const App = () => (
           <Route path="/users/:userId" element={<UserProfile />} />
           <Route path="/linkups" element={<Linkups />} />
           <Route path="/linkups/:linkupId" element={<LinkupDetails />} />
+          <Route path="/reports/users" element={<UserReports />} />
+          <Route path="/reports/linkups" element={<LinkupReports />} />
+          <Route path="/crm/email" element={<EmailCRM />} />
+          <Route path="/crm/push" element={<PushNotificationCRM />} />
+          <Route path="/linkup-plus" element={<LinkupPlus />} />
+          <Route path="/verifications" element={<UserVerifications />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

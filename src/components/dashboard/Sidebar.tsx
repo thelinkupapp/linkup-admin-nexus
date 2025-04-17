@@ -3,12 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   Users, 
-  Map, 
-  AlertTriangle, 
-  Mail, 
-  Crown, 
+  Map,
+  AlertTriangle,
+  Mail,
+  Crown,
   Settings,
-  BarChart3
+  BarChart3,
+  Bell,
+  ShieldCheck
 } from "lucide-react";
 
 const navItems = [
@@ -28,19 +30,34 @@ const navItems = [
     icon: Map
   },
   {
-    title: "Reports",
-    href: "/reports",
+    title: "User Reports",
+    href: "/reports/users",
     icon: AlertTriangle
   },
   {
-    title: "CRM",
-    href: "/crm",
+    title: "Linkup Reports",
+    href: "/reports/linkups",
+    icon: AlertTriangle
+  },
+  {
+    title: "Email CRM",
+    href: "/crm/email",
     icon: Mail
+  },
+  {
+    title: "Push Notifications",
+    href: "/crm/push",
+    icon: Bell
   },
   {
     title: "Linkup Plus",
     href: "/linkup-plus",
     icon: Crown
+  },
+  {
+    title: "Verifications",
+    href: "/verifications",
+    icon: ShieldCheck
   },
   {
     title: "Settings",
