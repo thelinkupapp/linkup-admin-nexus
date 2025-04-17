@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban } from "lucide-react";
+import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -31,6 +31,7 @@ import { DataSort } from "./DataSort";
 import { cn } from "@/lib/utils";
 import { interests, languages, genderOptions } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
+import { Switch } from "@/components/ui/switch";
 
 const users: User[] = [
   {
@@ -65,7 +66,9 @@ export function UserTable() {
   const [selectedLocation, setSelectedLocation] = useState("");
   const [ageRange, setAgeRange] = useState([18, 80]);
   const [minEarnings, setMinEarnings] = useState(0);
-  
+  const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
+  const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
+
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
   };
@@ -98,9 +101,12 @@ export function UserTable() {
       const matchesLocation = !selectedLocation || user.location === selectedLocation;
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
       const matchesEarnings = user.totalEarnings >= minEarnings;
+      const matchesVerified = !showVerifiedOnly || user.isVerified;
+      const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
       return matchesSearch && matchesInterests && matchesLanguages && 
-             matchesGender && matchesAge && matchesEarnings && matchesLocation;
+             matchesGender && matchesAge && matchesEarnings && matchesLocation &&
+             matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
       if (sortDirection === "asc") {
@@ -247,6 +253,25 @@ export function UserTable() {
             sortDirection={sortDirection}
             onSortChange={setSortDirection}
           />
+
+          {/* Add new filter buttons with switches */}
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border">
+            <ShieldCheck className="h-4 w-4" />
+            <span className="text-sm">Verified Only</span>
+            <Switch
+              checked={showVerifiedOnly}
+              onCheckedChange={setShowVerifiedOnly}
+            />
+          </div>
+
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg border">
+            <Shield className="h-4 w-4" />
+            <span className="text-sm">Linkup Plus Only</span>
+            <Switch
+              checked={showLinkupPlusOnly}
+              onCheckedChange={setShowLinkupPlusOnly}
+            />
+          </div>
         </div>
       </div>
 
