@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Search, User as UserIcon, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Filter, Flag } from "lucide-react";
+import { Search, User as UserIcon, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Filter, Flag, ArrowUpDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 

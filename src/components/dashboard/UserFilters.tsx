@@ -1,3 +1,4 @@
+
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -128,7 +129,7 @@ export function UserFilters({
                       checked={selectedNationalities.includes(country.value)}
                       className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
-                    {country.emoji} {country.label}
+                    {country.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
