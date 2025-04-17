@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addWeeks, addMonths } from "date-fns";
 import { 
   Search, 
-  Filter,
   MoreVertical, 
   ChevronRight,
   Calendar,
@@ -12,19 +11,34 @@ import {
   Globe,
   Lock,
   CircleDollarSign,
-  Clock
+  Clock,
+  Filter,
+  Tag
 } from "lucide-react";
+
 import { DataSort } from "./DataSort";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Toggle } from "@/components/ui/toggle";
-import { 
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { 
   Table, 
   TableBody, 
@@ -33,12 +47,6 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -156,54 +164,79 @@ const linkups = [
   }
 ];
 
+// Add countries array
+const countries = [
+  "United States",
+  "Canada",
+  "United Kingdom",
+  "Australia",
+  "Germany",
+  "France",
+  "Japan",
+  "All Locations"
+];
+
 export function LinkupTable() {
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedCategory, setSelectedCategory] = useState("");
-  
-  // Status filters
-  const [upcomingFilter, setUpcomingFilter] = useState(false);
-  const [happenedFilter, setHappenedFilter] = useState(false);
-  const [cancelledFilter, setCancelledFilter] = useState(false);
-  const [deletedFilter, setDeletedFilter] = useState(false);
-  const [removedFilter, setRemovedFilter] = useState(false);
-  
-  // Access filters
-  const [publicFilter, setPublicFilter] = useState(false);
-  const [privateFilter, setPrivateFilter] = useState(false);
-  
-  // Availability filters
-  const [openFilter, setOpenFilter] = useState(false);
-  const [closedFilter, setClosedFilter] = useState(false);
-  
-  // Price filters
-  const [freeFilter, setFreeFilter] = useState(false);
-  const [paidFilter, setPaidFilter] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedVisibility, setSelectedVisibility] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState("");
+  const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({
+    from: undefined,
+    to: undefined,
+  });
+
+  const getDateRangeForPeriod = (period: string) => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    switch (period) {
+      case "today":
+        return { from: today, to: today };
+      case "tomorrow":
+        return { from: tomorrow, to: tomorrow };
+      case "thisWeek":
+        return { from: startOfWeek(today), to: endOfWeek(today) };
+      case "nextWeek":
+        return { from: startOfWeek(addWeeks(today, 1)), to: endOfWeek(addWeeks(today, 1)) };
+      case "nextMonth":
+        return { from: startOfMonth(addMonths(today, 1)), to: endOfMonth(addMonths(today, 1)) };
+      default:
+        return { from: undefined, to: undefined };
+    }
+  };
 
   // Filter linkups based on selected filters
   const filteredLinkups = [...linkups]
     .filter(linkup => {
+      if (searchValue && !linkup.title.toLowerCase().includes(searchValue.toLowerCase())) return false;
       if (selectedCategory && linkup.category !== selectedCategory) return false;
-      
-      // Status filters
-      if (upcomingFilter && linkup.status !== "upcoming") return false;
-      if (happenedFilter && linkup.status !== "happened") return false;
-      if (cancelledFilter && linkup.status !== "cancelled") return false;
-      if (deletedFilter && linkup.status !== "deleted") return false;
-      if (removedFilter && linkup.status !== "removed") return false;
-      
-      // Access filters
-      if (publicFilter && !linkup.isPublic) return false;
-      if (privateFilter && linkup.isPublic) return false;
-      
-      // Availability filters
-      if (openFilter && !linkup.isOpen) return false;
-      if (closedFilter && linkup.isOpen) return false;
-      
-      // Price filters
-      if (freeFilter && !linkup.isFree) return false;
-      if (paidFilter && linkup.isFree) return false;
-      
+      if (selectedLocation !== "All Locations" && linkup.location !== selectedLocation) return false;
+      if (selectedStatus && linkup.status !== selectedStatus.toLowerCase()) return false;
+      if (selectedVisibility) {
+        if (selectedVisibility === "Public" && !linkup.isPublic) return false;
+        if (selectedVisibility === "Private" && linkup.isPublic) return false;
+      }
+      if (selectedPrice) {
+        if (selectedPrice === "Free" && !linkup.isFree) return false;
+        if (selectedPrice === "Paid" && linkup.isFree) return false;
+      }
+      if (selectedJoinMethod) {
+        if (selectedJoinMethod === "Open" && !linkup.isOpen) return false;
+        if (selectedJoinMethod === "Closed" && linkup.isOpen) return false;
+      }
+      if (dateRange.from && dateRange.to) {
+        const linkupDate = new Date(linkup.date);
+        if (linkupDate < dateRange.from || linkupDate > dateRange.to) return false;
+      }
       return true;
     })
     .sort((a, b) => {
@@ -227,7 +260,7 @@ export function LinkupTable() {
         <div className="flex flex-wrap items-center gap-2">
           {/* Category Dropdown */}
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px] h-9">
+            <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
@@ -242,74 +275,114 @@ export function LinkupTable() {
             </SelectContent>
           </Select>
 
-          {/* Status Filters */}
-          <Toggle 
-            pressed={upcomingFilter}
-            onPressedChange={setUpcomingFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <Clock className="h-4 w-4" />
-            Upcoming
-          </Toggle>
-          
-          <Toggle 
-            pressed={happenedFilter}
-            onPressedChange={setHappenedFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <Calendar className="h-4 w-4" />
-            Happened
-          </Toggle>
+          {/* Location Dropdown */}
+          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Locations" />
+            </SelectTrigger>
+            <SelectContent>
+              {countries.map((country) => (
+                <SelectItem key={country} value={country}>{country}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          {/* Access Filters */}
-          <Toggle 
-            pressed={publicFilter}
-            onPressedChange={setPublicFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <Globe className="h-4 w-4" />
-            Public
-          </Toggle>
+          {/* Status Dropdown */}
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Upcoming">Upcoming</SelectItem>
+              <SelectItem value="Happened">Happened</SelectItem>
+              <SelectItem value="Cancelled">Cancelled</SelectItem>
+              <SelectItem value="Removed">Removed</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <Toggle 
-            pressed={privateFilter}
-            onPressedChange={setPrivateFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <Lock className="h-4 w-4" />
-            Private
-          </Toggle>
+          {/* Date Range Dropdown */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="w-[180px]">
+                <Calendar className="mr-2 h-4 w-4" />
+                {dateRange.from ? (
+                  dateRange.to ? (
+                    <>
+                      {format(dateRange.from, "LLL dd, y")} -{" "}
+                      {format(dateRange.to, "LLL dd, y")}
+                    </>
+                  ) : (
+                    format(dateRange.from, "LLL dd, y")
+                  )
+                ) : (
+                  "Select Date Range"
+                )}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-[320px] p-0" align="start">
+              <div className="p-2 space-y-2">
+                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("today"))}>
+                  Today
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("tomorrow"))}>
+                  Tomorrow
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("thisWeek"))}>
+                  This Week
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextWeek"))}>
+                  Next Week
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextMonth"))}>
+                  Next Month
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <div className="p-2">
+                  <CalendarComponent
+                    initialFocus
+                    mode="range"
+                    defaultMonth={dateRange.from}
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={2}
+                  />
+                </div>
+              </div>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          {/* Price Filters */}
-          <Toggle 
-            pressed={freeFilter}
-            onPressedChange={setFreeFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <CircleDollarSign className="h-4 w-4" />
-            Free
-          </Toggle>
+          {/* Visibility Dropdown */}
+          <Select value={selectedVisibility} onValueChange={setSelectedVisibility}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Visibility" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Public">Public</SelectItem>
+              <SelectItem value="Private">Private</SelectItem>
+            </SelectContent>
+          </Select>
 
-          <Toggle 
-            pressed={paidFilter}
-            onPressedChange={setPaidFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <CircleDollarSign className="h-4 w-4" />
-            Paid
-          </Toggle>
+          {/* Price Dropdown */}
+          <Select value={selectedPrice} onValueChange={setSelectedPrice}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Prices" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Free">Free</SelectItem>
+              <SelectItem value="Paid">Paid</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Join Method Dropdown */}
+          <Select value={selectedJoinMethod} onValueChange={setSelectedJoinMethod}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Join Methods" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Open">Open</SelectItem>
+              <SelectItem value="Closed">Closed</SelectItem>
+            </SelectContent>
+          </Select>
 
           <DataSort
             sortDirection={sortDirection}
@@ -323,10 +396,13 @@ export function LinkupTable() {
           <TableHeader>
             <TableRow>
               <TableHead>Linkup</TableHead>
+              <TableHead>Category</TableHead>
               <TableHead>Host</TableHead>
               <TableHead>Date & Time</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Attendees</TableHead>
+              <TableHead>Visibility</TableHead>
+              <TableHead>Join Method</TableHead>
+              <TableHead>Price</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -338,6 +414,14 @@ export function LinkupTable() {
                   <div className="flex items-center gap-2">
                     <div className="text-xl">{linkup.emoji}</div>
                     <div className="font-medium">{linkup.title}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Tag className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-sm">
+                      {categories.find(cat => cat.id === linkup.category)?.name || linkup.category}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -365,8 +449,23 @@ export function LinkupTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <UsersIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-sm">{linkup.attendeeCount}</span>
+                    {linkup.isPublic ? (
+                      <Globe className="h-3.5 w-3.5 text-muted-foreground" />
+                    ) : (
+                      <Lock className="h-3.5 w-3.5 text-muted-foreground" />
+                    )}
+                    <span className="text-sm">{linkup.isPublic ? "Public" : "Private"}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge variant="outline">
+                    {linkup.isOpen ? "Open" : "Closed"}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <CircleDollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-sm">{linkup.isFree ? "Free" : "Paid"}</span>
                   </div>
                 </TableCell>
                 <TableCell>
