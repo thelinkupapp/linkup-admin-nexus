@@ -1,26 +1,6 @@
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  ChevronDown,
-  ChevronRight,
-  CheckCircle,
-  Crown,
-  Flag
-} from "lucide-react";
-import { DataSort } from "./DataSort";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Toggle } from "@/components/ui/toggle";
+import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users } from "lucide-react";
 import { 
   Table, 
   TableBody, 
@@ -29,17 +9,25 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Slider } from "@/components/ui/slider";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { DataSort } from "./DataSort";
 import { cn } from "@/lib/utils";
+import { interests, languages, genderOptions } from "@/constants/filterOptions";
+import type { User } from "@/types/user";
 
-const users = [
+// Mock data - replace with actual data
+const users: User[] = [
   {
     id: "1",
     avatar: "https://i.pravatar.cc/150?img=1",
@@ -48,79 +36,48 @@ const users = [
     email: "emma@example.com",
     age: 28,
     joinDate: "2023-03-15",
-    location: "Los Angeles, CA",
+    location: "London, UK",
     isLinkupPlus: true,
-    isVerified: true
+    isVerified: true,
+    interests: ["photography", "travel"],
+    languages: ["en", "es"],
+    gender: "Female",
+    hostedLinkups: 15,
+    attendedLinkups: 23,
+    totalEarnings: 1250.50
   },
-  {
-    id: "2",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    name: "Michael Chen",
-    username: "mike_chen",
-    email: "michael@example.com",
-    age: 32,
-    joinDate: "2023-01-22",
-    location: "New York, NY",
-    isLinkupPlus: false,
-    isVerified: true
-  },
-  {
-    id: "3",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    name: "Sophia Rodriguez",
-    username: "sophia_r",
-    email: "sophia@example.com",
-    age: 25,
-    joinDate: "2023-05-07",
-    location: "Miami, FL",
-    isLinkupPlus: true,
-    isVerified: false
-  },
-  {
-    id: "4",
-    avatar: "https://i.pravatar.cc/150?img=4",
-    name: "James Wilson",
-    username: "james_w",
-    email: "james@example.com",
-    age: 30,
-    joinDate: "2023-02-18",
-    location: "Chicago, IL",
-    isLinkupPlus: false,
-    isVerified: false
-  },
-  {
-    id: "5",
-    avatar: "https://i.pravatar.cc/150?img=5",
-    name: "Olivia Johnson",
-    username: "olivia_j",
-    email: "olivia@example.com",
-    age: 27,
-    joinDate: "2023-04-30",
-    location: "Austin, TX",
-    isLinkupPlus: true,
-    isVerified: true
-  },
+  // ... Add more mock users with similar structure
 ];
 
 export function UserTable() {
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [verifiedFilter, setVerifiedFilter] = useState(false);
-  const [linkupPlusFilter, setLinkupPlusFilter] = useState(false);
-  const [selectedLocation, setSelectedLocation] = useState("");
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedGender, setSelectedGender] = useState("");
+  const [ageRange, setAgeRange] = useState([18, 80]);
+  const [minEarnings, setMinEarnings] = useState(0);
   
-  const filteredUsers = [...users]
+  const filteredUsers = users
     .filter(user => {
-      const matchesVerified = verifiedFilter ? user.isVerified : true;
-      const matchesLinkupPlus = linkupPlusFilter ? user.isLinkupPlus : true;
-      const matchesLocation = selectedLocation ? user.location.includes(selectedLocation) : true;
+      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
+                          user.email.toLowerCase().includes(searchValue.toLowerCase());
+      const matchesInterests = selectedInterests.length === 0 || 
+                              selectedInterests.some(interest => user.interests.includes(interest));
+      const matchesLanguages = selectedLanguages.length === 0 || 
+                              selectedLanguages.some(lang => user.languages.includes(lang));
+      const matchesGender = !selectedGender || user.gender === selectedGender;
+      const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
+      const matchesEarnings = user.totalEarnings >= minEarnings;
       
-      return matchesVerified && matchesLinkupPlus && matchesLocation;
+      return matchesSearch && matchesInterests && matchesLanguages && 
+             matchesGender && matchesAge && matchesEarnings;
     })
     .sort((a, b) => {
-      const dateA = new Date(a.joinDate).getTime();
-      const dateB = new Date(b.joinDate).getTime();
-      return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+      if (sortDirection === "asc") {
+        return a.totalEarnings - b.totalEarnings;
+      }
+      return b.totalEarnings - a.totalEarnings;
     });
 
   return (
@@ -136,46 +93,79 @@ export function UserTable() {
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <Toggle 
-            pressed={verifiedFilter}
-            onPressedChange={setVerifiedFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
+          {/* Interests Filter */}
+          <Select
+            value={selectedInterests[0]}
+            onValueChange={(value) => setSelectedInterests([value])}
           >
-            <CheckCircle className="h-4 w-4 text-status-verified" />
-            Verified
-          </Toggle>
-          
-          <Toggle
-            pressed={linkupPlusFilter}
-            onPressedChange={setLinkupPlusFilter}
-            variant="outline"
-            size="sm"
-            className="flex items-center gap-1.5"
-          >
-            <Crown className="h-4 w-4 text-linkup-purple" />
-            Plus
-          </Toggle>
-
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="w-[180px] h-9">
-              <SelectValue placeholder={
-                <div className="flex items-center gap-2">
-                  <Flag className="h-4 w-4" />
-                  <span>🇮🇩 Indonesia</span>
-                </div>
-              } />
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Interests" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Los Angeles, CA">🇺🇸 Los Angeles, CA</SelectItem>
-              <SelectItem value="New York, NY">🇺🇸 New York, NY</SelectItem>
-              <SelectItem value="Miami, FL">🇺🇸 Miami, FL</SelectItem>
-              <SelectItem value="Chicago, IL">🇺🇸 Chicago, IL</SelectItem>
-              <SelectItem value="Austin, TX">🇺🇸 Austin, TX</SelectItem>
+              {interests.map((interest) => (
+                <SelectItem key={interest.id} value={interest.id}>
+                  <div className="flex items-center gap-2">
+                    <span>{interest.emoji}</span>
+                    <span>{interest.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
+          {/* Languages Filter */}
+          <Select
+            value={selectedLanguages[0]}
+            onValueChange={(value) => setSelectedLanguages([value])}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Languages" />
+            </SelectTrigger>
+            <SelectContent>
+              {languages.map((language) => (
+                <SelectItem key={language.id} value={language.id}>
+                  <div className="flex items-center gap-2">
+                    <span>{language.emoji}</span>
+                    <span>{language.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Gender Filter */}
+          <Select value={selectedGender} onValueChange={setSelectedGender}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Gender" />
+            </SelectTrigger>
+            <SelectContent>
+              {genderOptions.map((option) => (
+                <SelectItem key={option.id} value={option.label}>
+                  <div className="flex items-center gap-2">
+                    <UserIcon className="h-4 w-4" />
+                    <span>{option.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Age Range Slider */}
+          <div className="min-w-[200px]">
+            <Slider
+              min={18}
+              max={80}
+              step={1}
+              value={ageRange}
+              onValueChange={setAgeRange}
+              className="w-full"
+            />
+            <div className="text-sm text-muted-foreground mt-1">
+              Age: {ageRange[0]} - {ageRange[1]}
+            </div>
+          </div>
+
+          {/* Earnings Sort */}
           <DataSort
             sortDirection={sortDirection}
             onSortChange={setSortDirection}
@@ -191,9 +181,10 @@ export function UserTable() {
               <TableHead>Email</TableHead>
               <TableHead>Age</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Join Date</TableHead>
+              <TableHead>Hosted</TableHead>
+              <TableHead>Attended</TableHead>
+              <TableHead>Total Earnings</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -214,40 +205,36 @@ export function UserTable() {
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.age}</TableCell>
                 <TableCell>{user.location}</TableCell>
-                <TableCell>{new Date(user.joinDate).toLocaleDateString()}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                    <span>{user.hostedLinkups}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <span>{user.attendedLinkups}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Coins className="h-4 w-4 text-muted-foreground" />
+                    <span>£{user.totalEarnings.toFixed(2)}</span>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {user.isVerified && (
                       <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20">
-                        <CheckCircle className="h-3 w-3 mr-1" /> Verified
+                        Verified
                       </Badge>
                     )}
                     {user.isLinkupPlus && (
                       <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
-                        <Crown className="h-3 w-3 mr-1" /> Plus
+                        Plus
                       </Badge>
                     )}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
-                    <Link to={`/users/${user.id}`}>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    </Link>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View Profile</DropdownMenuItem>
-                        <DropdownMenuItem>Edit User</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Suspend User</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                 </TableCell>
               </TableRow>
