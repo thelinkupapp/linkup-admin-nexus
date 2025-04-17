@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Search, 
@@ -13,7 +12,7 @@ import {
   Flag, 
   ArrowUpDown,
   CalendarDays,
-  UserRound  // Add UserRound for user column
+  UserRound 
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -240,6 +239,7 @@ const UserTable = () => {
   const [ageRange, setAgeRange] = useState([18, 100]);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
+  const [showAgeFilter, setShowAgeFilter] = useState(true);
 
   const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
   const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
@@ -293,7 +293,8 @@ const UserTable = () => {
                            selectedGenders.includes(user.gender.toLowerCase());
       const matchesLocation = selectedLocations.length === 0 || 
                              selectedLocations.includes(user.location);
-      const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
+      const matchesAge = !showAgeFilter || 
+                         (user.age >= ageRange[0] && user.age <= ageRange[1]);
       const matchesVerified = !showVerifiedOnly || user.isVerified;
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
@@ -336,6 +337,8 @@ const UserTable = () => {
         setShowLinkupPlusOnly={setShowLinkupPlusOnly}
         ageRange={ageRange}
         setAgeRange={setAgeRange}
+        showAgeFilter={showAgeFilter}
+        setShowAgeFilter={setShowAgeFilter}
       />
 
       <div className="border rounded-lg">
