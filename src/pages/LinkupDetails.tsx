@@ -230,11 +230,14 @@ const LinkupDetails = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <Card>
-                <CardContent className="p-0">
+                <CardHeader>
+                  <CardTitle>Linkup Image</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <LinkupImage 
                     url={linkup.officialImage.url} 
                     source={linkup.officialImage.source}
-                    size="small"
+                    size="large"
                     className="rounded-none"
                   />
                 </CardContent>
