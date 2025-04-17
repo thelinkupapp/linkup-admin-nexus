@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -35,23 +34,18 @@ const navItems = [
   },
   {
     title: "Linkups",
-    href: "/linkups",
-    icon: Map
-  },
-  {
-    title: "Reports",
     type: "dropdown",
-    icon: AlertTriangle,
+    icon: Map,
     items: [
       {
-        title: "User Reports",
-        href: "/reports/users",
-        icon: AlertTriangle
+        title: "Management",
+        href: "/linkups/management",
+        icon: Map
       },
       {
-        title: "Linkup Reports",
-        href: "/reports/linkups",
-        icon: AlertTriangle
+        title: "Stats",
+        href: "/linkups/stats",
+        icon: BarChart3
       }
     ]
   },

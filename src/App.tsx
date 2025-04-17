@@ -19,6 +19,8 @@ import UserFeedback from "./pages/feedback/UserFeedback";
 import AdminManagement from "./pages/settings/AdminManagement";
 import Settings from "./pages/Settings";
 import LinkupStaff from "./pages/LinkupStaff";
+import LinkupManagement from "./pages/linkups/Management";
+import LinkupStats from "./pages/linkups/Stats";
 
 const queryClient = new QueryClient();
 
@@ -36,7 +38,8 @@ const App = () => {
             <Route path="/users" element={<Users />} />
             <Route path="/users/:userId" element={<UserProfile />} />
             <Route path="/linkups" element={<Linkups />} />
-            <Route path="/linkups/:linkupId" element={<LinkupDetails />} />
+            <Route path="/linkups/management" element={<LinkupManagement />} />
+            <Route path="/linkups/stats" element={<LinkupStats />} />
             <Route path="/reports/users" element={<UserReports />} />
             <Route path="/reports/linkups" element={<LinkupReports />} />
             <Route path="/crm/email" element={<EmailCRM />} />
