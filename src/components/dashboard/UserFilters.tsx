@@ -1,3 +1,4 @@
+import React from "react";
 import { Search, Crown, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -162,6 +163,7 @@ export function UserFilters({
                       checked={selectedGenders.includes(gender.id)}
                       className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
+                    <span className="mr-2">{gender.emoji}</span>
                     {gender.label}
                   </CommandItem>
                 ))}

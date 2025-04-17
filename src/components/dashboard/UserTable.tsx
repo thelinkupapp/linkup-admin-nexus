@@ -12,7 +12,8 @@ import {
   Filter, 
   Flag, 
   ArrowUpDown,
-  CalendarDays 
+  CalendarDays,
+  UserRound  // Add UserRound for user column
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -341,8 +342,18 @@ const UserTable = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>User</TableHead>
-              <TableHead>Age</TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2">
+                  <UserRound className="h-4 w-4 text-muted-foreground" />
+                  <span>User</span>
+                </div>
+              </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                  <span>Age</span>
+                </div>
+              </TableHead>
               <TableHead>
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />

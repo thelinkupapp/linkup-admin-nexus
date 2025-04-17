@@ -23,9 +23,9 @@ export const languages = [
 ];
 
 export const genderOptions = [
-  { id: "male", label: "Male", icon: "user" },
-  { id: "female", label: "Female", icon: "user" },
-  { id: "non-binary", label: "Non-binary", icon: "user" }
+  { id: "male", label: "Male", icon: "user", emoji: "💁‍♂️" },
+  { id: "female", label: "Female", icon: "user", emoji: "💁‍♀️" },
+  { id: "non-binary", label: "Non-binary", icon: "user", emoji: "💖" }
 ];
 
 export const nationalities = [
