@@ -1,10 +1,14 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import UserTable from "@/components/dashboard/UserTable";
 
 const Users = () => {
+  useEffect(() => {
+    console.log("Users component mounted");
+  }, []);
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />

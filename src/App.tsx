@@ -22,32 +22,36 @@ import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/:userId" element={<UserProfile />} />
-          <Route path="/linkups" element={<Linkups />} />
-          <Route path="/linkups/:linkupId" element={<LinkupDetails />} />
-          <Route path="/reports/users" element={<UserReports />} />
-          <Route path="/reports/linkups" element={<LinkupReports />} />
-          <Route path="/crm/email" element={<EmailCRM />} />
-          <Route path="/crm/push" element={<PushNotificationCRM />} />
-          <Route path="/linkup-plus" element={<LinkupPlus />} />
-          <Route path="/verifications" element={<UserVerifications />} />
-          <Route path="/feedback" element={<UserFeedback />} />
-          <Route path="/settings/admin" element={<AdminManagement />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log("App rendering");
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/users/:userId" element={<UserProfile />} />
+            <Route path="/linkups" element={<Linkups />} />
+            <Route path="/linkups/:linkupId" element={<LinkupDetails />} />
+            <Route path="/reports/users" element={<UserReports />} />
+            <Route path="/reports/linkups" element={<LinkupReports />} />
+            <Route path="/crm/email" element={<EmailCRM />} />
+            <Route path="/crm/push" element={<PushNotificationCRM />} />
+            <Route path="/linkup-plus" element={<LinkupPlus />} />
+            <Route path="/verifications" element={<UserVerifications />} />
+            <Route path="/feedback" element={<UserFeedback />} />
+            <Route path="/settings/admin" element={<AdminManagement />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
