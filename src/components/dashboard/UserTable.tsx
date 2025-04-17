@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Search, User as UserIcon, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Filter, Flag, ArrowUpDown } from "lucide-react";
+import { Search, User as UserIcon, Coins, Crown, Users, MapPin, MoreHorizontal, Ban, Filter, Flag, ArrowUpDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -41,8 +40,180 @@ const users: User[] = [
     attendedLinkups: 23,
     totalEarnings: 1250.50
   },
-  // ... Add more mock users with similar structure
+  {
+    id: "2",
+    avatar: "https://i.pravatar.cc/150?img=2",
+    name: "Liam Chen",
+    username: "liam_c",
+    email: "liam@example.com",
+    age: 32,
+    joinDate: "2023-04-20",
+    location: "Toronto, Canada",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Canada",
+    gender: "Male",
+    hostedLinkups: 25,
+    attendedLinkups: 18,
+    totalEarnings: 2350.75
+  },
+  {
+    id: "3",
+    avatar: "https://i.pravatar.cc/150?img=3",
+    name: "Sophie Martin",
+    username: "sophie_m",
+    email: "sophie@example.com",
+    age: 26,
+    joinDate: "2023-05-10",
+    location: "Paris, France",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "France",
+    gender: "Female",
+    hostedLinkups: 12,
+    attendedLinkups: 30,
+    totalEarnings: 950.25
+  },
+  {
+    id: "4",
+    avatar: "https://i.pravatar.cc/150?img=4",
+    name: "Marco Rossi",
+    username: "marco_r",
+    email: "marco@example.com",
+    age: 35,
+    joinDate: "2023-06-01",
+    location: "Rome, Italy",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Italy",
+    gender: "Male",
+    hostedLinkups: 40,
+    attendedLinkups: 15,
+    totalEarnings: 4500.00
+  },
+  {
+    id: "5",
+    avatar: "https://i.pravatar.cc/150?img=5",
+    name: "Yuki Tanaka",
+    username: "yuki_t",
+    email: "yuki@example.com",
+    age: 29,
+    joinDate: "2023-07-15",
+    location: "Tokyo, Japan",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "Japan",
+    gender: "Female",
+    hostedLinkups: 8,
+    attendedLinkups: 20,
+    totalEarnings: 750.50
+  },
+  {
+    id: "6",
+    avatar: "https://i.pravatar.cc/150?img=6",
+    name: "Luis García",
+    username: "luis_g",
+    email: "luis@example.com",
+    age: 31,
+    joinDate: "2023-08-01",
+    location: "Madrid, Spain",
+    isLinkupPlus: true,
+    isVerified: false,
+    nationality: "Spain",
+    gender: "Male",
+    hostedLinkups: 22,
+    attendedLinkups: 28,
+    totalEarnings: 1850.25
+  },
+  {
+    id: "7",
+    avatar: "https://i.pravatar.cc/150?img=7",
+    name: "Anna Schmidt",
+    username: "anna_s",
+    email: "anna@example.com",
+    age: 27,
+    joinDate: "2023-09-10",
+    location: "Berlin, Germany",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Germany",
+    gender: "Female",
+    hostedLinkups: 35,
+    attendedLinkups: 42,
+    totalEarnings: 3750.00
+  },
+  {
+    id: "8",
+    avatar: "https://i.pravatar.cc/150?img=8",
+    name: "Oliver Wilson",
+    username: "oliver_w",
+    email: "oliver@example.com",
+    age: 33,
+    joinDate: "2023-10-20",
+    location: "Sydney, Australia",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "Australia",
+    gender: "Male",
+    hostedLinkups: 18,
+    attendedLinkups: 25,
+    totalEarnings: 1650.75
+  },
+  {
+    id: "9",
+    avatar: "https://i.pravatar.cc/150?img=9",
+    name: "Maria Silva",
+    username: "maria_s",
+    email: "maria@example.com",
+    age: 30,
+    joinDate: "2023-11-05",
+    location: "Singapore",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Singapore",
+    gender: "Female",
+    hostedLinkups: 28,
+    attendedLinkups: 33,
+    totalEarnings: 2850.50
+  },
+  {
+    id: "10",
+    avatar: "https://i.pravatar.cc/150?img=10",
+    name: "James Brown",
+    username: "james_b",
+    email: "james@example.com",
+    age: 34,
+    joinDate: "2023-12-15",
+    location: "New York, USA",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "USA",
+    gender: "Male",
+    hostedLinkups: 45,
+    attendedLinkups: 38,
+    totalEarnings: 5250.25
+  }
 ];
+
+const getCountryEmoji = (country: string) => {
+  const emojiMap: { [key: string]: string } = {
+    'UK': '🇬🇧',
+    'USA': '🇺🇸',
+    'Canada': '🇨🇦',
+    'Australia': '🇦🇺',
+    'France': '🇫🇷',
+    'Germany': '🇩🇪',
+    'Italy': '🇮🇹',
+    'Spain': '🇪🇸',
+    'Japan': '🇯🇵',
+    'Singapore': '🇸🇬'
+  };
+  return emojiMap[country] || '';
+};
+
+const formatCurrency = (amount: number) => {
+  return `£${amount.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+};
 
 const UserTable = () => {
   const navigate = useNavigate();
@@ -224,18 +395,18 @@ const UserTable = () => {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{user.location}</span>
+                    <span>{getCountryEmoji(user.nationality)} {user.location}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Flag className="h-4 w-4 text-muted-foreground" />
-                    <span>{user.nationality}</span>
+                    <span>{getCountryEmoji(user.nationality)} {user.nationality}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                    <Crown className="h-4 w-4 text-yellow-500" />
                     <span>{user.hostedLinkups}</span>
                   </div>
                 </TableCell>
@@ -248,7 +419,7 @@ const UserTable = () => {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Coins className="h-4 w-4 text-muted-foreground" />
-                    <span>£{user.totalEarnings.toFixed(2)}</span>
+                    <span>{formatCurrency(user.totalEarnings)}</span>
                   </div>
                 </TableCell>
                 <TableCell>
