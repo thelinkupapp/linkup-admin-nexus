@@ -7,6 +7,7 @@ interface LinkupImageProps {
   url: string;
   source: "uploaded" | "ai-generated" | "stock";
   className?: string;
+  size?: "small" | "medium" | "large";
 }
 
 const sourceConfig = {
@@ -15,12 +16,33 @@ const sourceConfig = {
   stock: { icon: Box, label: "Stock" },
 };
 
-export function LinkupImage({ url, source, className }: LinkupImageProps) {
+const sizeConfig = {
+  small: { 
+    aspectRatio: 1/1, 
+    containerClass: "h-32 w-32" 
+  },
+  medium: { 
+    aspectRatio: 3/4, 
+    containerClass: "h-48 w-36" 
+  },
+  large: { 
+    aspectRatio: 9/16, 
+    containerClass: "h-72 w-40" 
+  }
+};
+
+export function LinkupImage({ 
+  url, 
+  source, 
+  className = '', 
+  size = 'medium' 
+}: LinkupImageProps) {
   const { icon: Icon, label } = sourceConfig[source];
+  const { aspectRatio, containerClass } = sizeConfig[size];
   
   return (
-    <div className={`relative rounded-lg overflow-hidden ${className}`}>
-      <AspectRatio ratio={9/16}>
+    <div className={`relative rounded-lg overflow-hidden ${containerClass} ${className}`}>
+      <AspectRatio ratio={aspectRatio}>
         <img 
           src={url} 
           alt="Linkup cover" 

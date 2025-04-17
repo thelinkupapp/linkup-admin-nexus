@@ -234,6 +234,7 @@ const LinkupDetails = () => {
                   <LinkupImage 
                     url={linkup.officialImage.url} 
                     source={linkup.officialImage.source}
+                    size="small"
                     className="rounded-none"
                   />
                 </CardContent>
