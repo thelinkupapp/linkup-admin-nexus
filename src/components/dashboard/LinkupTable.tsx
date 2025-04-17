@@ -5,12 +5,13 @@ import {
   Search, 
   Filter, 
   MoreVertical, 
-  ChevronDown, 
+  ChevronDown,
   ChevronRight,
   Calendar,
   MapPin,
   Users as UsersIcon
 } from "lucide-react";
+import { DataSort } from "./DataSort";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -112,7 +113,15 @@ const linkups = [
 
 export function LinkupTable() {
   const [searchValue, setSearchValue] = useState("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
+  // Sort linkups based on date
+  const sortedLinkups = [...linkups].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -126,6 +135,10 @@ export function LinkupTable() {
           />
         </div>
         <div className="flex gap-2">
+          <DataSort
+            sortDirection={sortDirection}
+            onSortChange={setSortDirection}
+          />
           <Button variant="outline" size="sm" className="flex items-center gap-1">
             <Filter className="h-4 w-4" />
             Filters

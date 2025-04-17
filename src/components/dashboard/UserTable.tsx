@@ -1,15 +1,15 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
-  CheckCircle, 
-  Crown, 
-  MoreVertical, 
   Search, 
-  Filter,
+  Filter, 
+  MoreVertical, 
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  CheckCircle,
+  Crown
 } from "lucide-react";
+import { DataSort } from "./DataSort";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -30,7 +30,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-// Mock data for users
 const users = [
   {
     id: "1",
@@ -96,7 +95,14 @@ const users = [
 
 export function UserTable() {
   const [searchValue, setSearchValue] = useState("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   
+  const sortedUsers = [...users].sort((a, b) => {
+    const dateA = new Date(a.joinDate).getTime();
+    const dateB = new Date(b.joinDate).getTime();
+    return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+  });
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -110,6 +116,10 @@ export function UserTable() {
           />
         </div>
         <div className="flex gap-2">
+          <DataSort
+            sortDirection={sortDirection}
+            onSortChange={setSortDirection}
+          />
           <Button variant="outline" size="sm" className="flex items-center gap-1">
             <Filter className="h-4 w-4" />
             Filters
@@ -133,7 +143,7 @@ export function UserTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users.map((user) => (
+            {sortedUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>
                   <div className="flex items-center gap-3">

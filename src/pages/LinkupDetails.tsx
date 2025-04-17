@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -25,11 +24,11 @@ import {
   Image,
   Trash2,
   ExternalLink,
-  Tag
+  Tag,
+  Pin
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Mock data for a linkup
 const linkup = {
   id: "1",
   title: "Sunset Beach Volleyball",
@@ -148,13 +147,23 @@ const linkup = {
       type: "image",
       url: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"
     }
-  ]
+  ],
+  pinnedMessage: {
+    id: "pin1",
+    user: {
+      id: "h1",
+      name: "Emma Thompson",
+      username: "emma_t",
+      avatar: "https://i.pravatar.cc/150?img=1"
+    },
+    message: "Important: Please bring your own water bottles! We're trying to reduce plastic waste.",
+    timestamp: "2024-05-10T15:00:00Z"
+  }
 };
 
 const LinkupDetails = () => {
   const { linkupId } = useParams();
-  // In a real app, we'd fetch the linkup data based on linkupId
-  
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -215,6 +224,33 @@ const LinkupDetails = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
+              {linkup.pinnedMessage && (
+                <Card>
+                  <CardHeader className="flex flex-row items-center space-x-4 space-y-0">
+                    <div className="bg-amber-100 p-2 rounded-lg">
+                      <Pin className="h-4 w-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <CardTitle>Pinned Message</CardTitle>
+                      <CardDescription>
+                        Pinned by {linkup.pinnedMessage.user.name} on {new Date(linkup.pinnedMessage.timestamp).toLocaleDateString()}
+                      </CardDescription>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-start gap-3">
+                      <Avatar>
+                        <AvatarImage src={linkup.pinnedMessage.user.avatar} alt={linkup.pinnedMessage.user.name} />
+                        <AvatarFallback>{linkup.pinnedMessage.user.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1">
+                        <p className="font-medium">{linkup.pinnedMessage.message}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              
               <Card>
                 <CardHeader>
                   <CardTitle>Linkup Details</CardTitle>
