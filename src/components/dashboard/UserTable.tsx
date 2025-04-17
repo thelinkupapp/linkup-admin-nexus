@@ -69,11 +69,10 @@ const UserTable = () => {
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
 
-  // Replace single sort state with individual sort states
   const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
   const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
   const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
-  
+
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
   };
@@ -87,7 +86,6 @@ const UserTable = () => {
         navigate(`/users/${userId}/edit`);
         break;
       case 'suspend':
-        // Implement suspension logic
         console.log('Suspending user:', userId);
         break;
     }
@@ -133,12 +131,10 @@ const UserTable = () => {
     });
 
   const handleSort = (type: "earnings" | "hosted" | "attended") => {
-    // Reset other sorts when one is selected
     if (type !== "earnings") setEarningsSortDirection(null);
     if (type !== "hosted") setHostedSortDirection(null);
     if (type !== "attended") setAttendedSortDirection(null);
 
-    // Toggle sort direction for selected type
     switch (type) {
       case "earnings":
         setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
@@ -283,7 +279,6 @@ const UserTable = () => {
             onSortChange={setSortDirection}
           />
 
-          {/* Add new filter buttons with switches */}
           <div className="flex items-center gap-2 px-3 py-2 rounded-lg border">
             <ShieldCheck className="h-4 w-4" />
             <span className="text-sm">Verified Only</span>
