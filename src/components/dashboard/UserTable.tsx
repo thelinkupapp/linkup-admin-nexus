@@ -1,6 +1,6 @@
-
 import { useState } from "react";
-import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users } from "lucide-react";
+import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { 
   Table, 
   TableBody, 
@@ -21,12 +21,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { DataSort } from "./DataSort";
 import { cn } from "@/lib/utils";
 import { interests, languages, genderOptions } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 
-// Mock data - replace with actual data
 const users: User[] = [
   {
     id: "1",
@@ -50,13 +55,36 @@ const users: User[] = [
 ];
 
 export function UserTable() {
+  const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
   const [selectedGender, setSelectedGender] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [ageRange, setAgeRange] = useState([18, 80]);
   const [minEarnings, setMinEarnings] = useState(0);
+  
+  const handleUserClick = (userId: string) => {
+    navigate(`/users/${userId}`);
+  };
+
+  const handleUserAction = (action: string, userId: string) => {
+    switch (action) {
+      case 'view':
+        navigate(`/users/${userId}`);
+        break;
+      case 'edit':
+        navigate(`/users/${userId}/edit`);
+        break;
+      case 'suspend':
+        // Implement suspension logic
+        console.log('Suspending user:', userId);
+        break;
+    }
+  };
+
+  const locations = Array.from(new Set(users.map(user => user.location))).sort();
   
   const filteredUsers = users
     .filter(user => {
@@ -67,11 +95,12 @@ export function UserTable() {
       const matchesLanguages = selectedLanguages.length === 0 || 
                               selectedLanguages.some(lang => user.languages.includes(lang));
       const matchesGender = !selectedGender || user.gender === selectedGender;
+      const matchesLocation = !selectedLocation || user.location === selectedLocation;
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
       const matchesEarnings = user.totalEarnings >= minEarnings;
       
       return matchesSearch && matchesInterests && matchesLanguages && 
-             matchesGender && matchesAge && matchesEarnings;
+             matchesGender && matchesAge && matchesEarnings && matchesLocation;
     })
     .sort((a, b) => {
       if (sortDirection === "asc") {
@@ -107,6 +136,23 @@ export function UserTable() {
                   <div className="flex items-center gap-2">
                     <span>{interest.emoji}</span>
                     <span>{interest.label}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Location Filter */}
+          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select Location" />
+            </SelectTrigger>
+            <SelectContent>
+              {locations.map((location) => (
+                <SelectItem key={location} value={location}>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4" />
+                    <span>{location}</span>
                   </div>
                 </SelectItem>
               ))}
@@ -185,13 +231,17 @@ export function UserTable() {
               <TableHead>Attended</TableHead>
               <TableHead>Total Earnings</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead className="w-[50px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell>
-                  <div className="flex items-center gap-3">
+                  <div 
+                    className="flex items-center gap-3 cursor-pointer hover:opacity-80"
+                    onClick={() => handleUserClick(user.id)}
+                  >
                     <Avatar>
                       <AvatarImage src={user.avatar} alt={user.name} />
                       <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
@@ -204,7 +254,12 @@ export function UserTable() {
                 </TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.age}</TableCell>
-                <TableCell>{user.location}</TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    <span>{user.location}</span>
+                  </div>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <CalendarDays className="h-4 w-4 text-muted-foreground" />
@@ -236,6 +291,32 @@ export function UserTable() {
                       </Badge>
                     )}
                   </div>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        View Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
+                        <Filter className="mr-2 h-4 w-4" />
+                        Edit Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('suspend', user.id)}
+                        className="text-destructive"
+                      >
+                        <Ban className="mr-2 h-4 w-4" />
+                        Suspend User
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
