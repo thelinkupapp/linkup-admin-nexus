@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -13,7 +14,8 @@ import {
   MessageSquare,
   ChevronDown,
   Shield,
-  Megaphone
+  Megaphone,
+  FileText
 } from "lucide-react";
 import {
   Collapsible,
@@ -46,6 +48,23 @@ const navItems = [
         title: "Stats",
         href: "/linkups/stats",
         icon: BarChart3
+      }
+    ]
+  },
+  {
+    title: "Reports",
+    type: "dropdown",
+    icon: FileText,
+    items: [
+      {
+        title: "User Reports",
+        href: "/reports/users",
+        icon: Users
+      },
+      {
+        title: "Linkup Reports",
+        href: "/reports/linkups",
+        icon: Map
       }
     ]
   },
