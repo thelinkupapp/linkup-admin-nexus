@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -154,6 +155,14 @@ const ActivityGraph = ({ timeframe, setTimeframe }) => {
 
 // Component for super creators
 const SuperCreators = () => {
+  const superCreators = [
+    { name: "Emma Rodriguez", username: "emma_creates", linkups: 28 },
+    { name: "Alex Chen", username: "alex_innovates", linkups: 26 },
+    { name: "Sophie Nakamura", username: "sophie_connects", linkups: 24 },
+    { name: "Marcus Thompson", username: "marcus_explores", linkups: 22 },
+    { name: "Lila Patel", username: "lila_discovers", linkups: 20 }
+  ];
+
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0">
@@ -162,23 +171,23 @@ const SuperCreators = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {superCreators.map((creator, i) => (
             <div key={i} className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar>
-                  <AvatarImage src={`https://i.pravatar.cc/40?u=${i}`} />
-                  <AvatarFallback>SC</AvatarFallback>
+                  <AvatarImage src={`https://i.pravatar.cc/40?u=${i + 1}`} />
+                  <AvatarFallback>{creator.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <div>
                   <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">Super Creator {i}</p>
-                    <span className="text-xs text-muted-foreground">@supercreator{i}</span>
+                    <p className="text-sm font-medium">{creator.name}</p>
+                    <span className="text-xs text-muted-foreground">@{creator.username}</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">{30 - i * 2} linkups created</p>
+                  <p className="text-xs text-muted-foreground">{creator.linkups} linkups created</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <Link to={`/users/${i}`}>
+                <Link to={`/users/${i + 1}`}>
                   <Button variant="ghost" size="sm">
                     View Profile
                   </Button>
