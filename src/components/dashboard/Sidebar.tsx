@@ -103,14 +103,16 @@ export function Sidebar() {
   const location = useLocation();
 
   return (
-    <div className="h-screen w-64 fixed left-0 top-0 bg-sidebar border-r">
+    <div className="h-screen w-64 fixed left-0 top-0 bg-background border-r">
       <div className="p-4">
-        <div className="flex items-center gap-2 mb-8">
-          <div className="h-8 w-8 rounded-md bg-linkup-purple flex items-center justify-center text-white font-bold">L</div>
-          <span className="text-lg font-semibold">Linkup Admin</span>
+        <div className="flex items-center gap-3 mb-8">
+          <div className="h-12 w-12 rounded-xl bg-purple-500 flex items-center justify-center text-white text-2xl font-bold">
+            L
+          </div>
+          <span className="text-xl font-semibold">Linkup Admin</span>
         </div>
 
-        <nav className="space-y-1">
+        <nav className="space-y-2">
           {navItems.map((item) => {
             if (item.type === "dropdown") {
               const isActive = item.items?.some(subItem => location.pathname === subItem.href);
@@ -118,21 +120,21 @@ export function Sidebar() {
               return (
                 <Collapsible key={item.title}>
                   <CollapsibleTrigger className={cn(
-                    "nav-link w-full justify-start gap-2 px-2 py-2 flex items-center text-sm",
-                    isActive && "active"
+                    "w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition-colors hover:bg-secondary",
+                    isActive && "bg-secondary"
                   )}>
                     <item.icon className="h-5 w-5" />
                     <span className="flex-1">{item.title}</span>
                     <ChevronDown className="h-4 w-4 transition-transform duration-200 collapsible-chevron" />
                   </CollapsibleTrigger>
-                  <CollapsibleContent className="pl-9 space-y-1">
+                  <CollapsibleContent className="pl-3 mt-1 space-y-1">
                     {item.items?.map((subItem) => (
                       <Link
                         key={subItem.href}
                         to={subItem.href}
                         className={cn(
-                          "nav-link flex items-center gap-2 px-2 py-2",
-                          location.pathname === subItem.href && "active"
+                          "flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition-colors hover:bg-secondary",
+                          location.pathname === subItem.href && "bg-secondary"
                         )}
                       >
                         <subItem.icon className="h-5 w-5" />
@@ -152,8 +154,9 @@ export function Sidebar() {
                 key={item.href}
                 to={item.href}
                 className={cn(
-                  "nav-link",
-                  isActive && "active"
+                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition-colors hover:bg-secondary",
+                  isActive && "bg-secondary font-medium",
+                  location.pathname === "/linkup-plus" && item.href === "/linkup-plus" && "bg-purple-100"
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -165,10 +168,10 @@ export function Sidebar() {
       </div>
 
       <div className="absolute bottom-4 left-4 right-4">
-        <div className="p-3 rounded-lg bg-linkup-light-purple">
-          <p className="text-xs text-linkup-dark-purple mb-2">Logged in as</p>
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-linkup-purple text-white flex items-center justify-center">
+        <div className="p-3 rounded-lg bg-secondary">
+          <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-medium">
               A
             </div>
             <div>
