@@ -1,4 +1,3 @@
-
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,8 +7,9 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { ArrowUpCircle, ArrowDownCircle, TrendingUp, DollarSign, Users, Trophy, Coins } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
-// Mock data with more detailed information
 const mockChartData = {
   today: Array.from({ length: 24 }, (_, i) => ({
     time: `${String(i).padStart(2, '0')}:00`,
@@ -115,60 +115,50 @@ const LinkupStats = () => {
           <Card>
             <CardHeader>
               <CardTitle>Linkup Activity</CardTitle>
-              <Tabs value={timeframe} onValueChange={(value: any) => setTimeframe(value)} className="w-full">
-                <TabsList>
-                  <TabsTrigger value="today">Today</TabsTrigger>
-                  <TabsTrigger value="daily">Daily</TabsTrigger>
-                  <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                  <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                  <TabsTrigger value="yearly">Yearly</TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <TabsList className="w-full sm:w-auto">
+                <TabsTrigger value="today">Today</TabsTrigger>
+                <TabsTrigger value="daily">Daily</TabsTrigger>
+                <TabsTrigger value="weekly">Weekly</TabsTrigger>
+                <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                <TabsTrigger value="yearly">Yearly</TabsTrigger>
+              </TabsList>
             </CardHeader>
             <CardContent>
-              <div className="h-[400px]">
-                <ChartContainer
-                  config={{
-                    activity: {
-                      color: "#8B5CF6",
-                    },
-                  }}
-                >
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={mockChartData[timeframe]} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="activity" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <XAxis dataKey="time" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                      <ChartTooltip
-                        content={({ active, payload }) => {
-                          if (!active || !payload) return null;
-                          return (
-                            <ChartTooltipContent
-                              payload={payload}
-                              nameKey="name"
-                              labelKey="time"
-                              label={payload[0]?.payload?.time}
-                            />
-                          );
-                        }}
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="value"
-                        name="Activity"
-                        stroke="#8B5CF6"
-                        fill="url(#activity)"
-                        strokeWidth={2}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                </ChartContainer>
+              <div className="h-[400px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={mockChartData[timeframe]} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                    <defs>
+                      <linearGradient id="activity" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <XAxis dataKey="time" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+                    <ChartTooltip
+                      content={({ active, payload }) => {
+                        if (!active || !payload) return null;
+                        return (
+                          <ChartTooltipContent
+                            payload={payload}
+                            nameKey="name"
+                            labelKey="time"
+                            label={payload[0]?.payload?.time}
+                          />
+                        );
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      name="Activity"
+                      stroke="#8B5CF6"
+                      fill="url(#activity)"
+                      strokeWidth={2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </CardContent>
           </Card>
@@ -189,11 +179,21 @@ const LinkupStats = () => {
                         <AvatarFallback>SC</AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium">Super Creator {i}</p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium">Super Creator {i}</p>
+                          <span className="text-xs text-muted-foreground">@supercreator{i}</span>
+                        </div>
                         <p className="text-xs text-muted-foreground">{30 - i * 2} linkups created</p>
                       </div>
                     </div>
-                    <TrendingUp className="h-4 w-4 text-green-500" />
+                    <div className="flex items-center gap-2">
+                      <Link to={`/users/${i}`}>
+                        <Button variant="ghost" size="sm">
+                          View Profile
+                        </Button>
+                      </Link>
+                      <TrendingUp className="h-4 w-4 text-green-500" />
+                    </div>
                   </div>
                 ))}
               </div>
