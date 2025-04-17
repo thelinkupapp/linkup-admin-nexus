@@ -1,4 +1,5 @@
 
+import React from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { UserReportsTable } from "@/components/reports/UserReportsTable";
