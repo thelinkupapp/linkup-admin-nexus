@@ -1,8 +1,8 @@
-
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import {
   Popover,
   PopoverContent,
@@ -16,8 +16,6 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import {
-  interests,
-  languages,
   genderOptions,
   countries,
 } from "@/constants/filterOptions";
@@ -25,10 +23,8 @@ import {
 interface UserFiltersProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
-  selectedInterests: string[];
-  setSelectedInterests: (value: string[]) => void;
-  selectedLanguages: string[];
-  setSelectedLanguages: (value: string[]) => void;
+  selectedNationalities: string[];
+  setSelectedNationalities: (value: string[]) => void;
   selectedGenders: string[];
   setSelectedGenders: (value: string[]) => void;
   selectedLocations: string[];
@@ -37,15 +33,15 @@ interface UserFiltersProps {
   setShowVerifiedOnly: (value: boolean) => void;
   showLinkupPlusOnly: boolean;
   setShowLinkupPlusOnly: (value: boolean) => void;
+  ageRange: number[];
+  setAgeRange: (value: number[]) => void;
 }
 
 export function UserFilters({
   searchValue,
   setSearchValue,
-  selectedInterests,
-  setSelectedInterests,
-  selectedLanguages,
-  setSelectedLanguages,
+  selectedNationalities,
+  setSelectedNationalities,
   selectedGenders,
   setSelectedGenders,
   selectedLocations,
@@ -54,6 +50,8 @@ export function UserFilters({
   setShowVerifiedOnly,
   showLinkupPlusOnly,
   setShowLinkupPlusOnly,
+  ageRange,
+  setAgeRange,
 }: UserFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -109,60 +107,28 @@ export function UserFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
-              Interests ({selectedInterests.length})
+              Nationality ({selectedNationalities.length})
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[200px] p-0">
             <Command>
-              <CommandInput placeholder="Search interests..." />
-              <CommandEmpty>No interest found.</CommandEmpty>
+              <CommandInput placeholder="Search nationality..." />
+              <CommandEmpty>No nationality found.</CommandEmpty>
               <CommandGroup>
-                {interests.map((interest) => (
+                {countries.map((country) => (
                   <CommandItem
-                    key={interest.id}
+                    key={country.id}
                     onSelect={() => {
-                      setSelectedInterests(
-                        toggleArrayValue(selectedInterests, interest.id)
+                      setSelectedNationalities(
+                        toggleArrayValue(selectedNationalities, country.value)
                       );
                     }}
                   >
                     <Checkbox
-                      checked={selectedInterests.includes(interest.id)}
+                      checked={selectedNationalities.includes(country.value)}
                       className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
-                    {interest.emoji} {interest.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">
-              Languages ({selectedLanguages.length})
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Search languages..." />
-              <CommandEmpty>No language found.</CommandEmpty>
-              <CommandGroup>
-                {languages.map((language) => (
-                  <CommandItem
-                    key={language.id}
-                    onSelect={() => {
-                      setSelectedLanguages(
-                        toggleArrayValue(selectedLanguages, language.id)
-                      );
-                    }}
-                  >
-                    <Checkbox
-                      checked={selectedLanguages.includes(language.id)}
-                      className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                    />
-                    {language.emoji} {language.label}
+                    {country.emoji} {country.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -231,6 +197,29 @@ export function UserFilters({
                 ))}
               </CommandGroup>
             </Command>
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">
+              Age ({ageRange[0]} - {ageRange[1]})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-4">
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm">
+                <span>{ageRange[0]}</span>
+                <span>{ageRange[1]}</span>
+              </div>
+              <Slider
+                min={18}
+                max={100}
+                step={1}
+                value={ageRange}
+                onValueChange={setAgeRange}
+              />
+            </div>
           </PopoverContent>
         </Popover>
       </div>

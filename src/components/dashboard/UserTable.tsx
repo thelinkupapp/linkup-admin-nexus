@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Search, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown, Filter } from "lucide-react";
+import { Search, User as UserIcon, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Filter, Flag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -35,8 +34,7 @@ const users: User[] = [
     location: "London, UK",
     isLinkupPlus: true,
     isVerified: true,
-    interests: ["photography", "travel"],
-    languages: ["en", "es"],
+    nationality: "UK",
     gender: "Female",
     hostedLinkups: 15,
     attendedLinkups: 23,
@@ -48,11 +46,10 @@ const users: User[] = [
 const UserTable = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
-  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [selectedNationalities, setSelectedNationalities] = useState<string[]>([]);
   const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [ageRange, setAgeRange] = useState([18, 80]);
+  const [ageRange, setAgeRange] = useState([18, 100]);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
 
@@ -102,10 +99,8 @@ const UserTable = () => {
   const filteredUsers = users
     .filter(user => {
       const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
-      const matchesInterests = selectedInterests.length === 0 || 
-                              selectedInterests.some(interest => user.interests.includes(interest));
-      const matchesLanguages = selectedLanguages.length === 0 || 
-                              selectedLanguages.some(lang => user.languages.includes(lang));
+      const matchesNationality = selectedNationalities.length === 0 || 
+                                selectedNationalities.includes(user.nationality);
       const matchesGender = selectedGenders.length === 0 || 
                            selectedGenders.includes(user.gender.toLowerCase());
       const matchesLocation = selectedLocations.length === 0 || 
@@ -114,9 +109,8 @@ const UserTable = () => {
       const matchesVerified = !showVerifiedOnly || user.isVerified;
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
-      return matchesSearch && matchesInterests && matchesLanguages && 
-             matchesGender && matchesLocation && matchesAge &&
-             matchesVerified && matchesLinkupPlus;
+      return matchesSearch && matchesNationality && matchesGender && 
+             matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
       if (earningsSortDirection) {
@@ -142,10 +136,8 @@ const UserTable = () => {
       <UserFilters
         searchValue={searchValue}
         setSearchValue={setSearchValue}
-        selectedInterests={selectedInterests}
-        setSelectedInterests={setSelectedInterests}
-        selectedLanguages={selectedLanguages}
-        setSelectedLanguages={setSelectedLanguages}
+        selectedNationalities={selectedNationalities}
+        setSelectedNationalities={setSelectedNationalities}
         selectedGenders={selectedGenders}
         setSelectedGenders={setSelectedGenders}
         selectedLocations={selectedLocations}
@@ -154,6 +146,8 @@ const UserTable = () => {
         setShowVerifiedOnly={setShowVerifiedOnly}
         showLinkupPlusOnly={showLinkupPlusOnly}
         setShowLinkupPlusOnly={setShowLinkupPlusOnly}
+        ageRange={ageRange}
+        setAgeRange={setAgeRange}
       />
 
       <div className="border rounded-lg">
@@ -163,6 +157,7 @@ const UserTable = () => {
               <TableHead>User</TableHead>
               <TableHead>Age</TableHead>
               <TableHead>Location</TableHead>
+              <TableHead>Nationality</TableHead>
               <TableHead>
                 <div 
                   className="flex items-center gap-2 cursor-pointer"
@@ -229,6 +224,12 @@ const UserTable = () => {
                   <div className="flex items-center gap-1">
                     <MapPin className="h-4 w-4 text-muted-foreground" />
                     <span>{user.location}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Flag className="h-4 w-4 text-muted-foreground" />
+                    <span>{user.nationality}</span>
                   </div>
                 </TableCell>
                 <TableCell>

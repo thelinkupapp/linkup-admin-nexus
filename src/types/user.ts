@@ -10,9 +10,8 @@ export interface User {
   location: string;
   isLinkupPlus: boolean;
   isVerified: boolean;
-  interests: string[];
-  languages: string[];
-  gender: 'Male' | 'Female' | 'Non-binary' | 'Other';
+  nationality: string;
+  gender: 'Male' | 'Female' | 'Non-binary';
   hostedLinkups: number;
   attendedLinkups: number;
   totalEarnings: number;
