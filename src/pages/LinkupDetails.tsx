@@ -28,7 +28,6 @@ import {
   Pin
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { LinkupMedia } from "@/components/linkups/LinkupMedia";
 
 const linkup = {
   id: "1",
@@ -494,31 +493,25 @@ const LinkupDetails = () => {
                       <CardDescription>Images and videos shared for this linkup</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <LinkupMedia media={linkup.media} className="w-full" />
-                        <div className="space-y-4">
-                          <h3 className="text-sm font-medium text-muted-foreground">Additional Media</h3>
-                          <div className="grid grid-cols-2 gap-4">
-                            {linkup.media.slice(1).map((item) => (
-                              <div key={item.id} className="relative aspect-square rounded-md overflow-hidden border">
-                                {item.type === "image" && (
-                                  <img 
-                                    src={item.url} 
-                                    alt="Linkup media" 
-                                    className="w-full h-full object-cover"
-                                  />
-                                )}
-                                {item.type === "video" && (
-                                  <video 
-                                    src={item.url}
-                                    controls
-                                    className="w-full h-full object-cover"
-                                  />
-                                )}
-                              </div>
-                            ))}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {linkup.media.map((item) => (
+                          <div key={item.id} className="relative aspect-square rounded-md overflow-hidden border">
+                            {item.type === "image" && (
+                              <img 
+                                src={item.url} 
+                                alt="Linkup media" 
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+                            {item.type === "video" && (
+                              <video 
+                                src={item.url}
+                                controls
+                                className="w-full h-full object-cover"
+                              />
+                            )}
                           </div>
-                        </div>
+                        ))}
                       </div>
                     </CardContent>
                   </Card>
