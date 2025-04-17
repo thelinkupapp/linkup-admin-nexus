@@ -180,14 +180,6 @@ export function UserTable() {
             sortDirection={sortDirection}
             onSortChange={setSortDirection}
           />
-          
-          <Button variant="outline" size="sm" className="flex items-center gap-1">
-            <Filter className="h-4 w-4" />
-            More Filters
-            <ChevronDown className="h-4 w-4 ml-1" />
-          </Button>
-          
-          <Button size="sm">Add User</Button>
         </div>
       </div>
 
