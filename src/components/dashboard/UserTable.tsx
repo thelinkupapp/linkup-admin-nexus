@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Search, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown } from "lucide-react";
+import { Search, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -58,6 +59,27 @@ const UserTable = () => {
   const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
   const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
   const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
+
+  const handleUserClick = (userId: string) => {
+    navigate(`/users/${userId}`);
+  };
+
+  const handleUserAction = (action: string, userId: string) => {
+    switch (action) {
+      case 'view':
+        navigate(`/users/${userId}`);
+        break;
+      case 'edit':
+        navigate(`/users/${userId}/edit`);
+        break;
+      case 'suspend':
+        console.log(`Suspend user ${userId}`);
+        // Implement suspension logic
+        break;
+      default:
+        break;
+    }
+  };
 
   const handleSort = (type: "earnings" | "hosted" | "attended") => {
     if (type !== "earnings") setEarningsSortDirection(null);
