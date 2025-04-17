@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -7,11 +8,20 @@ import {
   ChevronDown,
   ChevronRight,
   CheckCircle,
-  Crown
+  Crown,
+  Flag
 } from "lucide-react";
 import { DataSort } from "./DataSort";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Toggle } from "@/components/ui/toggle";
 import { 
   Table, 
   TableBody, 
@@ -96,12 +106,23 @@ const users = [
 export function UserTable() {
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [verifiedFilter, setVerifiedFilter] = useState(false);
+  const [linkupPlusFilter, setLinkupPlusFilter] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState("");
   
-  const sortedUsers = [...users].sort((a, b) => {
-    const dateA = new Date(a.joinDate).getTime();
-    const dateB = new Date(b.joinDate).getTime();
-    return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
-  });
+  const filteredUsers = [...users]
+    .filter(user => {
+      const matchesVerified = verifiedFilter ? user.isVerified : true;
+      const matchesLinkupPlus = linkupPlusFilter ? user.isLinkupPlus : true;
+      const matchesLocation = selectedLocation ? user.location.includes(selectedLocation) : true;
+      
+      return matchesVerified && matchesLinkupPlus && matchesLocation;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.joinDate).getTime();
+      const dateB = new Date(b.joinDate).getTime();
+      return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+    });
 
   return (
     <div className="space-y-4">
@@ -115,16 +136,58 @@ export function UserTable() {
             className="pl-9 w-full sm:w-80"
           />
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <Toggle 
+            pressed={verifiedFilter}
+            onPressedChange={setVerifiedFilter}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1.5"
+          >
+            <CheckCircle className="h-4 w-4 text-status-verified" />
+            Verified
+          </Toggle>
+          
+          <Toggle
+            pressed={linkupPlusFilter}
+            onPressedChange={setLinkupPlusFilter}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-1.5"
+          >
+            <Crown className="h-4 w-4 text-linkup-purple" />
+            Plus
+          </Toggle>
+
+          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
+            <SelectTrigger className="w-[180px] h-9">
+              <SelectValue placeholder={
+                <div className="flex items-center gap-2">
+                  <Flag className="h-4 w-4" />
+                  <span>🇮🇩 Indonesia</span>
+                </div>
+              } />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Los Angeles, CA">🇺🇸 Los Angeles, CA</SelectItem>
+              <SelectItem value="New York, NY">🇺🇸 New York, NY</SelectItem>
+              <SelectItem value="Miami, FL">🇺🇸 Miami, FL</SelectItem>
+              <SelectItem value="Chicago, IL">🇺🇸 Chicago, IL</SelectItem>
+              <SelectItem value="Austin, TX">🇺🇸 Austin, TX</SelectItem>
+            </SelectContent>
+          </Select>
+
           <DataSort
             sortDirection={sortDirection}
             onSortChange={setSortDirection}
           />
+          
           <Button variant="outline" size="sm" className="flex items-center gap-1">
             <Filter className="h-4 w-4" />
-            Filters
+            More Filters
             <ChevronDown className="h-4 w-4 ml-1" />
           </Button>
+          
           <Button size="sm">Add User</Button>
         </div>
       </div>
