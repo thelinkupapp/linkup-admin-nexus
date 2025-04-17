@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addWeeks, addMonths } from "date-fns";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addWeeks, addMonths, differenceInHours, differenceInMinutes } from "date-fns";
 import { 
   Search, 
   MoreVertical, 
@@ -13,7 +13,15 @@ import {
   CircleDollarSign,
   Clock,
   Filter,
-  Tag
+  Tag,
+  CheckCircle2,
+  XCircle,
+  ArrowUpCircle,
+  DoorOpen,
+  DoorClosed,
+  Eye,
+  EyeOff,
+  Timer
 } from "lucide-react";
 
 import { DataSort } from "./DataSort";
@@ -51,7 +59,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
-// Categories with their emojis
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
   { id: "food", name: "Food", emoji: "🍔" },
@@ -75,7 +82,6 @@ const categories = [
   { id: "other", name: "Other", emoji: "🎯" }
 ];
 
-// Sample linkups data
 const linkups = [
   {
     id: "1",
@@ -87,12 +93,14 @@ const linkups = [
       avatar: "https://i.pravatar.cc/150?u=sarah"
     },
     date: "2025-04-25T14:30:00Z",
+    endTime: "2025-04-25T16:30:00Z",
     location: "Brew Café",
     attendeeCount: 4,
     status: "upcoming",
     isPublic: true,
     isOpen: true,
-    isFree: true
+    isFree: true,
+    price: 0
   },
   {
     id: "2",
@@ -104,12 +112,14 @@ const linkups = [
       avatar: "https://i.pravatar.cc/150?u=mike"
     },
     date: "2025-04-20T09:00:00Z",
+    endTime: "2025-04-20T14:00:00Z",
     location: "Forest Trail Park",
     attendeeCount: 8,
     status: "upcoming",
     isPublic: true,
     isOpen: false,
-    isFree: true
+    isFree: false,
+    price: 25
   },
   {
     id: "3",
@@ -164,7 +174,6 @@ const linkups = [
   }
 ];
 
-// Add countries array
 const countries = [
   "United States",
   "Canada",
@@ -214,7 +223,18 @@ export function LinkupTable() {
     }
   };
 
-  // Filter linkups based on selected filters
+  const formatDuration = (startDate: string, endDate: string) => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const hours = differenceInHours(end, start);
+    const minutes = differenceInMinutes(end, start) % 60;
+    
+    if (hours === 0) {
+      return `${minutes}min`;
+    }
+    return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}min`;
+  };
+
   const filteredLinkups = [...linkups]
     .filter(linkup => {
       if (searchValue && !linkup.title.toLowerCase().includes(searchValue.toLowerCase())) return false;
@@ -258,7 +278,6 @@ export function LinkupTable() {
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {/* Category Dropdown */}
           <Select value={selectedCategory} onValueChange={setSelectedCategory}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Categories" />
@@ -275,32 +294,38 @@ export function LinkupTable() {
             </SelectContent>
           </Select>
 
-          {/* Location Dropdown */}
-          <Select value={selectedLocation} onValueChange={setSelectedLocation}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Locations" />
-            </SelectTrigger>
-            <SelectContent>
-              {countries.map((country) => (
-                <SelectItem key={country} value={country}>{country}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          {/* Status Dropdown */}
           <Select value={selectedStatus} onValueChange={setSelectedStatus}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Upcoming">Upcoming</SelectItem>
-              <SelectItem value="Happened">Happened</SelectItem>
-              <SelectItem value="Cancelled">Cancelled</SelectItem>
-              <SelectItem value="Removed">Removed</SelectItem>
+              <SelectItem value="Upcoming">
+                <div className="flex items-center gap-2">
+                  <ArrowUpCircle className="h-4 w-4" />
+                  <span>Upcoming</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Happened">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4" />
+                  <span>Happened</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Cancelled">
+                <div className="flex items-center gap-2">
+                  <XCircle className="h-4 w-4" />
+                  <span>Cancelled</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Removed">
+                <div className="flex items-center gap-2">
+                  <XCircle className="h-4 w-4" />
+                  <span>Removed</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
 
-          {/* Date Range Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="w-[180px]">
@@ -322,18 +347,23 @@ export function LinkupTable() {
             <DropdownMenuContent className="w-[320px] p-0" align="start">
               <div className="p-2 space-y-2">
                 <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("today"))}>
+                  <Calendar className="mr-2 h-4 w-4" />
                   Today
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("tomorrow"))}>
+                  <Calendar className="mr-2 h-4 w-4" />
                   Tomorrow
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("thisWeek"))}>
+                  <Calendar className="mr-2 h-4 w-4" />
                   This Week
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextWeek"))}>
+                  <Calendar className="mr-2 h-4 w-4" />
                   Next Week
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextMonth"))}>
+                  <Calendar className="mr-2 h-4 w-4" />
                   Next Month
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -343,7 +373,9 @@ export function LinkupTable() {
                     mode="range"
                     defaultMonth={dateRange.from}
                     selected={dateRange}
-                    onSelect={setDateRange}
+                    onSelect={(range: { from: Date; to: Date | undefined }) => {
+                      setDateRange({ from: range.from, to: range.to || range.from });
+                    }}
                     numberOfMonths={2}
                   />
                 </div>
@@ -351,36 +383,63 @@ export function LinkupTable() {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Visibility Dropdown */}
           <Select value={selectedVisibility} onValueChange={setSelectedVisibility}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Visibility" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Public">Public</SelectItem>
-              <SelectItem value="Private">Private</SelectItem>
+              <SelectItem value="Public">
+                <div className="flex items-center gap-2">
+                  <Eye className="h-4 w-4" />
+                  <span>Public</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Private">
+                <div className="flex items-center gap-2">
+                  <EyeOff className="h-4 w-4" />
+                  <span>Private</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
 
-          {/* Price Dropdown */}
           <Select value={selectedPrice} onValueChange={setSelectedPrice}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Prices" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Free">Free</SelectItem>
-              <SelectItem value="Paid">Paid</SelectItem>
+              <SelectItem value="Free">
+                <div className="flex items-center gap-2">
+                  <CircleDollarSign className="h-4 w-4" />
+                  <span>Free</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Paid">
+                <div className="flex items-center gap-2">
+                  <CircleDollarSign className="h-4 w-4" />
+                  <span>Paid</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
 
-          {/* Join Method Dropdown */}
           <Select value={selectedJoinMethod} onValueChange={setSelectedJoinMethod}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="All Join Methods" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Open">Open</SelectItem>
-              <SelectItem value="Closed">Closed</SelectItem>
+              <SelectItem value="Open">
+                <div className="flex items-center gap-2">
+                  <DoorOpen className="h-4 w-4" />
+                  <span>Open</span>
+                </div>
+              </SelectItem>
+              <SelectItem value="Closed">
+                <div className="flex items-center gap-2">
+                  <DoorClosed className="h-4 w-4" />
+                  <span>Closed</span>
+                </div>
+              </SelectItem>
             </SelectContent>
           </Select>
 
@@ -425,20 +484,25 @@ export function LinkupTable() {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-7 w-7">
-                      <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
-                      <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="text-sm">{linkup.host.name}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-sm">
-                      {new Date(linkup.date).toLocaleDateString()} at {new Date(linkup.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-sm">
+                        {new Date(linkup.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-sm">
+                        {new Date(linkup.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(linkup.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Timer className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-sm">
+                        Duration: {formatDuration(linkup.date, linkup.endTime)}
+                      </span>
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -465,7 +529,9 @@ export function LinkupTable() {
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <CircleDollarSign className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-sm">{linkup.isFree ? "Free" : "Paid"}</span>
+                    <span className="text-sm">
+                      {linkup.isFree ? "Free" : `$${linkup.price}`}
+                    </span>
                   </div>
                 </TableCell>
                 <TableCell>
