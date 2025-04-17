@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown } from "lucide-react";
+import { Search, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -9,40 +9,18 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Slider } from "@/components/ui/slider";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
+import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { UserFilters } from "./UserFilters";
 import { cn } from "@/lib/utils";
-import { interests, languages, genderOptions, countries } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
-import { Switch } from "@/components/ui/switch";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 const users: User[] = [
   {
@@ -71,11 +49,9 @@ const UserTable = () => {
   const [searchValue, setSearchValue] = useState("");
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
-  const [selectedGender, setSelectedGender] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("");
-  const [locationOpen, setLocationOpen] = useState(false);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [ageRange, setAgeRange] = useState([18, 80]);
-  const [minEarnings, setMinEarnings] = useState(0);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
 
@@ -83,20 +59,20 @@ const UserTable = () => {
   const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
   const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
 
-  const handleUserClick = (userId: string) => {
-    navigate(`/users/${userId}`);
-  };
+  const handleSort = (type: "earnings" | "hosted" | "attended") => {
+    if (type !== "earnings") setEarningsSortDirection(null);
+    if (type !== "hosted") setHostedSortDirection(null);
+    if (type !== "attended") setAttendedSortDirection(null);
 
-  const handleUserAction = (action: string, userId: string) => {
-    switch (action) {
-      case 'view':
-        navigate(`/users/${userId}`);
+    switch (type) {
+      case "earnings":
+        setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
         break;
-      case 'edit':
-        navigate(`/users/${userId}/edit`);
+      case "hosted":
+        setHostedSortDirection(prev => prev === "asc" ? "desc" : "asc");
         break;
-      case 'suspend':
-        console.log('Suspending user:', userId);
+      case "attended":
+        setAttendedSortDirection(prev => prev === "asc" ? "desc" : "asc");
         break;
     }
   };
@@ -108,15 +84,16 @@ const UserTable = () => {
                               selectedInterests.some(interest => user.interests.includes(interest));
       const matchesLanguages = selectedLanguages.length === 0 || 
                               selectedLanguages.some(lang => user.languages.includes(lang));
-      const matchesGender = !selectedGender || user.gender === selectedGender;
-      const matchesLocation = !selectedLocation || user.location === selectedLocation;
+      const matchesGender = selectedGenders.length === 0 || 
+                           selectedGenders.includes(user.gender.toLowerCase());
+      const matchesLocation = selectedLocations.length === 0 || 
+                             selectedLocations.includes(user.location);
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
-      const matchesEarnings = user.totalEarnings >= minEarnings;
       const matchesVerified = !showVerifiedOnly || user.isVerified;
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
       return matchesSearch && matchesInterests && matchesLanguages && 
-             matchesGender && matchesAge && matchesEarnings && matchesLocation &&
+             matchesGender && matchesLocation && matchesAge &&
              matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
@@ -138,143 +115,24 @@ const UserTable = () => {
       return 0;
     });
 
-  const handleSort = (type: "earnings" | "hosted" | "attended") => {
-    if (type !== "earnings") setEarningsSortDirection(null);
-    if (type !== "hosted") setHostedSortDirection(null);
-    if (type !== "attended") setAttendedSortDirection(null);
-
-    switch (type) {
-      case "earnings":
-        setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-      case "hosted":
-        setHostedSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-      case "attended":
-        setAttendedSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-    }
-  };
-
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search users..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 w-full sm:w-80"
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Select
-            value={selectedInterests[0]}
-            onValueChange={(value) => setSelectedInterests([value])}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Interests" />
-            </SelectTrigger>
-            <SelectContent>
-              {interests.map((interest) => (
-                <SelectItem key={interest.id} value={interest.id}>
-                  <div className="flex items-center gap-2">
-                    <span>{interest.emoji}</span>
-                    <span>{interest.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={locationOpen}
-                className="w-[200px] justify-between"
-              >
-                {selectedLocation
-                  ? countries.find((country) => country.value === selectedLocation)?.label
-                  : "Select location..."}
-                <MapPin className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-[200px] p-0">
-              <Command>
-                <CommandInput placeholder="Search location..." />
-                <CommandEmpty>No location found.</CommandEmpty>
-                <CommandGroup>
-                  {countries.map((country) => (
-                    <CommandItem
-                      key={country.id}
-                      value={country.label}
-                      onSelect={() => {
-                        setSelectedLocation(country.value);
-                        setLocationOpen(false);
-                      }}
-                    >
-                      <MapPin className="mr-2 h-4 w-4" />
-                      {country.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-
-          <Select
-            value={selectedLanguages[0]}
-            onValueChange={(value) => setSelectedLanguages([value])}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Languages" />
-            </SelectTrigger>
-            <SelectContent>
-              {languages.map((language) => (
-                <SelectItem key={language.id} value={language.id}>
-                  <div className="flex items-center gap-2">
-                    <span>{language.emoji}</span>
-                    <span>{language.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedGender} onValueChange={setSelectedGender}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select Gender" />
-            </SelectTrigger>
-            <SelectContent>
-              {genderOptions.map((option) => (
-                <SelectItem key={option.id} value={option.label}>
-                  <div className="flex items-center gap-2">
-                    <UserIcon className="h-4 w-4" />
-                    <span>{option.label}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <div className="min-w-[200px]">
-            <Slider
-              min={18}
-              max={80}
-              step={1}
-              value={ageRange}
-              onValueChange={setAgeRange}
-              className="w-full"
-            />
-            <div className="text-sm text-muted-foreground mt-1">
-              Age: {ageRange[0]} - {ageRange[1]}
-            </div>
-          </div>
-        </div>
-      </div>
+      <UserFilters
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        selectedInterests={selectedInterests}
+        setSelectedInterests={setSelectedInterests}
+        selectedLanguages={selectedLanguages}
+        setSelectedLanguages={setSelectedLanguages}
+        selectedGenders={selectedGenders}
+        setSelectedGenders={setSelectedGenders}
+        selectedLocations={selectedLocations}
+        setSelectedLocations={setSelectedLocations}
+        showVerifiedOnly={showVerifiedOnly}
+        setShowVerifiedOnly={setShowVerifiedOnly}
+        showLinkupPlusOnly={showLinkupPlusOnly}
+        setShowLinkupPlusOnly={setShowLinkupPlusOnly}
+      />
 
       <div className="border rounded-lg">
         <Table>
