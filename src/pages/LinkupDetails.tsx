@@ -28,6 +28,7 @@ import {
   Pin
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LinkupImage } from "@/components/linkups/LinkupImage";
 
 const linkup = {
   id: "1",
@@ -158,6 +159,10 @@ const linkup = {
     },
     message: "Important: Please bring your own water bottles! We're trying to reduce plastic waste.",
     timestamp: "2024-05-10T15:00:00Z"
+  },
+  officialImage: {
+    url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
+    source: "uploaded" as const
   }
 };
 
@@ -224,33 +229,16 @@ const LinkupDetails = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
-              {linkup.pinnedMessage && (
-                <Card>
-                  <CardHeader className="flex flex-row items-center space-x-4 space-y-0">
-                    <div className="bg-amber-100 p-2 rounded-lg">
-                      <Pin className="h-4 w-4 text-amber-600" />
-                    </div>
-                    <div>
-                      <CardTitle>Pinned Message</CardTitle>
-                      <CardDescription>
-                        Pinned by {linkup.pinnedMessage.user.name} on {new Date(linkup.pinnedMessage.timestamp).toLocaleDateString()}
-                      </CardDescription>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-start gap-3">
-                      <Avatar>
-                        <AvatarImage src={linkup.pinnedMessage.user.avatar} alt={linkup.pinnedMessage.user.name} />
-                        <AvatarFallback>{linkup.pinnedMessage.user.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <p className="font-medium">{linkup.pinnedMessage.message}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-              
+              <Card>
+                <CardContent className="p-0">
+                  <LinkupImage 
+                    url={linkup.officialImage.url} 
+                    source={linkup.officialImage.source}
+                    className="rounded-none"
+                  />
+                </CardContent>
+              </Card>
+
               <Card>
                 <CardHeader>
                   <CardTitle>Linkup Details</CardTitle>
