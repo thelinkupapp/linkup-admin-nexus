@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Search, 
@@ -33,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { UserFilters } from "./UserFilters";
 import { cn } from "@/lib/utils";
+import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 
 const users: User[] = [
