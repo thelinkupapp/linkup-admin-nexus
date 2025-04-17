@@ -4,25 +4,50 @@ import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { ArrowUpCircle, ArrowDownCircle, TrendingUp, DollarSign, Users, Trophy } from "lucide-react";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { ArrowUpCircle, ArrowDownCircle, TrendingUp, DollarSign, Users, Trophy, Coins } from "lucide-react";
+import { useState } from "react";
 
-const mockChartData = [
-  { date: '2024-01', value: 150 },
-  { date: '2024-02', value: 220 },
-  { date: '2024-03', value: 280 },
-  { date: '2024-04', value: 350 },
-];
+// Mock data with more detailed information
+const mockChartData = {
+  today: Array.from({ length: 24 }, (_, i) => ({
+    time: `${String(i).padStart(2, '0')}:00`,
+    value: Math.floor(Math.random() * 50) + 20
+  })),
+  daily: Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    return {
+      time: date.toLocaleDateString('en-US', { weekday: 'short' }),
+      value: Math.floor(Math.random() * 100) + 50
+    };
+  }).reverse(),
+  weekly: Array.from({ length: 4 }, (_, i) => ({
+    time: `Week ${i + 1}`,
+    value: Math.floor(Math.random() * 200) + 100
+  })),
+  monthly: Array.from({ length: 12 }, (_, i) => ({
+    time: new Date(0, i).toLocaleString('default', { month: 'short' }),
+    value: Math.floor(Math.random() * 400) + 200
+  })),
+  yearly: Array.from({ length: 5 }, (_, i) => ({
+    time: `${2024 - i}`,
+    value: Math.floor(Math.random() * 1000) + 500
+  })).reverse()
+};
 
 const LinkupStats = () => {
+  const [timeframe, setTimeframe] = useState<'today' | 'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 pl-64">
         <Header title="Linkup Stats" />
         <main className="p-6 space-y-6">
-          {/* Active Linkups Card */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {/* Top Stats Cards */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Active Linkups</CardTitle>
@@ -49,7 +74,25 @@ const LinkupStats = () => {
               </CardContent>
             </Card>
 
-            <Card className="md:col-span-2 lg:col-span-1">
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <CardTitle className="text-sm font-medium">Most Profitable</CardTitle>
+                <Coins className="h-4 w-4 text-yellow-500" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center space-x-4">
+                  <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center">
+                    💰
+                  </div>
+                  <div className="space-y-1">
+                    <h4 className="text-sm font-semibold">Music Festival</h4>
+                    <p className="text-xs text-muted-foreground">$2,450 earned</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Most Attended</CardTitle>
                 <Trophy className="h-4 w-4 text-yellow-500" />
@@ -69,10 +112,10 @@ const LinkupStats = () => {
           </div>
 
           {/* Activity Graph */}
-          <Card className="col-span-3">
+          <Card>
             <CardHeader>
               <CardTitle>Linkup Activity</CardTitle>
-              <Tabs defaultValue="weekly" className="w-full">
+              <Tabs value={timeframe} onValueChange={(value: any) => setTimeframe(value)} className="w-full">
                 <TabsList>
                   <TabsTrigger value="today">Today</TabsTrigger>
                   <TabsTrigger value="daily">Daily</TabsTrigger>
@@ -83,21 +126,49 @@ const LinkupStats = () => {
               </Tabs>
             </CardHeader>
             <CardContent>
-              <div className="h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={mockChartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis />
-                    <Tooltip />
-                    <Line 
-                      type="monotone" 
-                      dataKey="value" 
-                      stroke="#8884d8" 
-                      strokeWidth={2}
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+              <div className="h-[400px]">
+                <ChartContainer
+                  config={{
+                    activity: {
+                      color: "#8B5CF6",
+                    },
+                  }}
+                >
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={mockChartData[timeframe]} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="activity" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="time" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+                      <ChartTooltip
+                        content={({ active, payload }) => {
+                          if (!active || !payload) return null;
+                          return (
+                            <ChartTooltipContent
+                              payload={payload}
+                              nameKey="name"
+                              labelKey="time"
+                              label={payload[0]?.payload?.time}
+                            />
+                          );
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        name="Activity"
+                        stroke="#8B5CF6"
+                        fill="url(#activity)"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </ChartContainer>
               </div>
             </CardContent>
           </Card>
