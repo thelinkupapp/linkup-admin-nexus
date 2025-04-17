@@ -1,7 +1,7 @@
 
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
-import { UserTable } from "@/components/dashboard/UserTable";
+import UserTable from "@/components/dashboard/UserTable";
 
 const Users = () => {
   return (
