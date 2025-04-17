@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck } from "lucide-react";
+import { Search, Filter, User as UserIcon, Languages, Tag, Coins, CalendarDays, Users, MapPin, MoreHorizontal, Ban, Shield, ShieldCheck, ArrowUpDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
   Table, 
@@ -55,7 +55,7 @@ const users: User[] = [
   // ... Add more mock users with similar structure
 ];
 
-export function UserTable() {
+const UserTable = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -69,6 +69,11 @@ export function UserTable() {
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
 
+  // Replace single sort state with individual sort states
+  const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
+  const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
+  const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
+  
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
   };
@@ -109,19 +114,43 @@ export function UserTable() {
              matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
-      if (sortDirection === "asc") {
-        return sortField === "earnings" 
+      if (earningsSortDirection) {
+        return earningsSortDirection === "asc" 
           ? a.totalEarnings - b.totalEarnings
-          : sortField === "hosted"
-          ? a.hostedLinkups - b.hostedLinkups
-          : a.attendedLinkups - b.attendedLinkups;
+          : b.totalEarnings - a.totalEarnings;
       }
-      return sortField === "earnings"
-        ? b.totalEarnings - a.totalEarnings
-        : sortField === "hosted"
-        ? b.hostedLinkups - a.hostedLinkups
-        : b.attendedLinkups - a.attendedLinkups;
+      if (hostedSortDirection) {
+        return hostedSortDirection === "asc"
+          ? a.hostedLinkups - b.hostedLinkups
+          : b.hostedLinkups - a.hostedLinkups;
+      }
+      if (attendedSortDirection) {
+        return attendedSortDirection === "asc"
+          ? a.attendedLinkups - b.attendedLinkups
+          : b.attendedLinkups - a.attendedLinkups;
+      }
+      return 0;
     });
+
+  const handleSort = (type: "earnings" | "hosted" | "attended") => {
+    // Reset other sorts when one is selected
+    if (type !== "earnings") setEarningsSortDirection(null);
+    if (type !== "hosted") setHostedSortDirection(null);
+    if (type !== "attended") setAttendedSortDirection(null);
+
+    // Toggle sort direction for selected type
+    switch (type) {
+      case "earnings":
+        setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
+        break;
+      case "hosted":
+        setHostedSortDirection(prev => prev === "asc" ? "desc" : "asc");
+        break;
+      case "attended":
+        setAttendedSortDirection(prev => prev === "asc" ? "desc" : "asc");
+        break;
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -282,9 +311,45 @@ export function UserTable() {
               <TableHead>User</TableHead>
               <TableHead>Age</TableHead>
               <TableHead>Location</TableHead>
-              <TableHead>Hosted</TableHead>
-              <TableHead>Attended</TableHead>
-              <TableHead>Total Earnings</TableHead>
+              <TableHead>
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort("hosted")}
+                >
+                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                  <span>Hosted</span>
+                  <ArrowUpDown className={cn(
+                    "h-4 w-4",
+                    hostedSortDirection && "text-primary"
+                  )} />
+                </div>
+              </TableHead>
+              <TableHead>
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort("attended")}
+                >
+                  <Users className="h-4 w-4 text-muted-foreground" />
+                  <span>Attended</span>
+                  <ArrowUpDown className={cn(
+                    "h-4 w-4",
+                    attendedSortDirection && "text-primary"
+                  )} />
+                </div>
+              </TableHead>
+              <TableHead>
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort("earnings")}
+                >
+                  <Coins className="h-4 w-4 text-muted-foreground" />
+                  <span>Total Earnings</span>
+                  <ArrowUpDown className={cn(
+                    "h-4 w-4",
+                    earningsSortDirection && "text-primary"
+                  )} />
+                </div>
+              </TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -379,4 +444,6 @@ export function UserTable() {
       </div>
     </div>
   );
-}
+};
+
+export default UserTable;
