@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -10,8 +11,18 @@ import {
   BarChart3,
   Bell,
   ShieldCheck,
-  MessageSquare
+  MessageSquare,
+  ChevronDown,
+  Shield
 } from "lucide-react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+} from "@/components/ui/navigation-menu";
 
 const navItems = [
   {
@@ -30,14 +41,21 @@ const navItems = [
     icon: Map
   },
   {
-    title: "User Reports",
-    href: "/reports/users",
-    icon: AlertTriangle
-  },
-  {
-    title: "Linkup Reports",
-    href: "/reports/linkups",
-    icon: AlertTriangle
+    title: "Reports",
+    type: "dropdown",
+    icon: AlertTriangle,
+    items: [
+      {
+        title: "User Reports",
+        href: "/reports/users",
+        icon: AlertTriangle
+      },
+      {
+        title: "Linkup Reports",
+        href: "/reports/linkups",
+        icon: AlertTriangle
+      }
+    ]
   },
   {
     title: "Email CRM",
@@ -53,6 +71,11 @@ const navItems = [
     title: "Linkup Plus",
     href: "/linkup-plus",
     icon: Crown
+  },
+  {
+    title: "Linkup Staff",
+    href: "/staff",
+    icon: Shield
   },
   {
     title: "Verifications",
@@ -84,6 +107,43 @@ export function Sidebar() {
 
         <nav className="space-y-1">
           {navItems.map((item) => {
+            if (item.type === "dropdown") {
+              return (
+                <div key={item.title} className="relative">
+                  <NavigationMenu orientation="vertical">
+                    <NavigationMenuList>
+                      <NavigationMenuItem>
+                        <NavigationMenuTrigger className={cn(
+                          "nav-link w-full justify-start gap-2 px-2 py-2",
+                          item.items?.some(subItem => location.pathname === subItem.href) && "active"
+                        )}>
+                          <item.icon className="h-5 w-5" />
+                          <span>{item.title}</span>
+                        </NavigationMenuTrigger>
+                        <NavigationMenuContent>
+                          <div className="w-48 bg-popover p-1">
+                            {item.items?.map((subItem) => (
+                              <Link
+                                key={subItem.href}
+                                to={subItem.href}
+                                className={cn(
+                                  "nav-link flex items-center gap-2 px-2 py-2",
+                                  location.pathname === subItem.href && "active"
+                                )}
+                              >
+                                <subItem.icon className="h-5 w-5" />
+                                <span>{subItem.title}</span>
+                              </Link>
+                            ))}
+                          </div>
+                        </NavigationMenuContent>
+                      </NavigationMenuItem>
+                    </NavigationMenuList>
+                  </NavigationMenu>
+                </div>
+              );
+            }
+
             const isActive = location.pathname === item.href || 
               (item.href !== "/" && location.pathname.startsWith(item.href));
 

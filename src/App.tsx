@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,6 +18,7 @@ import UserVerifications from "./pages/UserVerifications";
 import UserFeedback from "./pages/feedback/UserFeedback";
 import AdminManagement from "./pages/settings/AdminManagement";
 import Settings from "./pages/Settings";
+import LinkupStaff from "./pages/LinkupStaff";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +46,7 @@ const App = () => {
             <Route path="/feedback" element={<UserFeedback />} />
             <Route path="/settings/admin" element={<AdminManagement />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/staff" element={<LinkupStaff />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
