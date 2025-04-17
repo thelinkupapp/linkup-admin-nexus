@@ -67,6 +67,95 @@ const categories = [
   { id: "other", name: "Other", emoji: "🎯" }
 ];
 
+// Sample linkups data
+const linkups = [
+  {
+    id: "1",
+    title: "Coffee Meetup",
+    emoji: "☕",
+    category: "coffee-chats",
+    host: {
+      name: "Sarah Johnson",
+      avatar: "https://i.pravatar.cc/150?u=sarah"
+    },
+    date: "2025-04-25T14:30:00Z",
+    location: "Brew Café",
+    attendeeCount: 4,
+    status: "upcoming",
+    isPublic: true,
+    isOpen: true,
+    isFree: true
+  },
+  {
+    id: "2",
+    title: "Hiking Adventure",
+    emoji: "🏞️",
+    category: "outdoors",
+    host: {
+      name: "Mike Richards",
+      avatar: "https://i.pravatar.cc/150?u=mike"
+    },
+    date: "2025-04-20T09:00:00Z",
+    location: "Forest Trail Park",
+    attendeeCount: 8,
+    status: "upcoming",
+    isPublic: true,
+    isOpen: false,
+    isFree: true
+  },
+  {
+    id: "3",
+    title: "Wine Tasting",
+    emoji: "🍷",
+    category: "drinks",
+    host: {
+      name: "Emma Wilson",
+      avatar: "https://i.pravatar.cc/150?u=emma"
+    },
+    date: "2025-03-15T18:00:00Z",
+    location: "Vintage Winery",
+    attendeeCount: 12,
+    status: "happened",
+    isPublic: false,
+    isOpen: false,
+    isFree: false
+  },
+  {
+    id: "4",
+    title: "Tech Networking",
+    emoji: "💻",
+    category: "tech",
+    host: {
+      name: "David Chen",
+      avatar: "https://i.pravatar.cc/150?u=david"
+    },
+    date: "2025-04-30T17:30:00Z",
+    location: "Innovation Hub",
+    attendeeCount: 20,
+    status: "upcoming",
+    isPublic: true,
+    isOpen: true,
+    isFree: false
+  },
+  {
+    id: "5",
+    title: "Book Club",
+    emoji: "📚",
+    category: "learning",
+    host: {
+      name: "Lisa Patel",
+      avatar: "https://i.pravatar.cc/150?u=lisa"
+    },
+    date: "2025-03-22T19:00:00Z",
+    location: "Central Library",
+    attendeeCount: 6,
+    status: "cancelled",
+    isPublic: true,
+    isOpen: false,
+    isFree: true
+  }
+];
+
 export function LinkupTable() {
   const [searchValue, setSearchValue] = useState("");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
@@ -243,7 +332,7 @@ export function LinkupTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {linkups.map((linkup) => (
+            {filteredLinkups.map((linkup) => (
               <TableRow key={linkup.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
