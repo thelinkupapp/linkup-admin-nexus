@@ -17,6 +17,7 @@ import LinkupPlus from "./pages/LinkupPlus";
 import UserVerifications from "./pages/UserVerifications";
 import UserFeedback from "./pages/feedback/UserFeedback";
 import AdminManagement from "./pages/settings/AdminManagement";
+import Settings from "./pages/Settings";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
           <Route path="/verifications" element={<UserVerifications />} />
           <Route path="/feedback" element={<UserFeedback />} />
           <Route path="/settings/admin" element={<AdminManagement />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
