@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Search, 
@@ -342,45 +341,37 @@ const UserTable = () => {
             <TableRow>
               <TableHead>User</TableHead>
               <TableHead>Age</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Nationality</TableHead>
               <TableHead>
-                <div 
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleSort("hosted")}
-                >
-                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
-                  <span>Hosted</span>
-                  <ArrowUpDown className={cn(
-                    "h-4 w-4",
-                    hostedSortDirection && "text-primary"
-                  )} />
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span>Location</span>
                 </div>
               </TableHead>
               <TableHead>
-                <div 
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleSort("attended")}
-                >
+                <div className="flex items-center gap-2">
+                  <Flag className="h-4 w-4 text-muted-foreground" />
+                  <span>Nationality</span>
+                </div>
+              </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("hosted")}>
+                  <Crown className="h-4 w-4 text-muted-foreground" />
+                  <span>Hosted</span>
+                  <ArrowUpDown className={cn("h-4 w-4", hostedSortDirection && "text-primary")} />
+                </div>
+              </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("attended")}>
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
-                  <ArrowUpDown className={cn(
-                    "h-4 w-4",
-                    attendedSortDirection && "text-primary"
-                  )} />
+                  <ArrowUpDown className={cn("h-4 w-4", attendedSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead>
-                <div 
-                  className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => handleSort("earnings")}
-                >
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("earnings")}>
                   <Coins className="h-4 w-4 text-muted-foreground" />
                   <span>Total Earnings</span>
-                  <ArrowUpDown className={cn(
-                    "h-4 w-4",
-                    earningsSortDirection && "text-primary"
-                  )} />
+                  <ArrowUpDown className={cn("h-4 w-4", earningsSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead>Status</TableHead>
@@ -407,35 +398,14 @@ const UserTable = () => {
                 </TableCell>
                 <TableCell>{user.age}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    <span>{getCountryEmoji(user.nationality)} {user.location}</span>
-                  </div>
+                  {getCountryEmoji(user.nationality)} {user.location}
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Flag className="h-4 w-4 text-muted-foreground" />
-                    <span>{getCountryEmoji(user.nationality)} {user.nationality}</span>
-                  </div>
+                  {getCountryEmoji(user.nationality)} {nationalities.find(n => n.id === user.nationality.toLowerCase())?.label || user.nationality}
                 </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Crown className="h-4 w-4 text-yellow-500" />
-                    <span>{user.hostedLinkups}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4 text-muted-foreground" />
-                    <span>{user.attendedLinkups}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Coins className="h-4 w-4 text-muted-foreground" />
-                    <span>{formatCurrency(user.totalEarnings)}</span>
-                  </div>
-                </TableCell>
+                <TableCell>{user.hostedLinkups}</TableCell>
+                <TableCell>{user.attendedLinkups}</TableCell>
+                <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {user.isVerified && (

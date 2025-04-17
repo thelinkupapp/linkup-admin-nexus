@@ -1,4 +1,3 @@
-
 export const interests = [
   { id: "photography", label: "Photography", emoji: "📸" },
   { id: "travel", label: "Travel", emoji: "✈️" },
@@ -29,15 +28,28 @@ export const genderOptions = [
   { id: "non-binary", label: "Non-binary", icon: "user" }
 ];
 
+export const nationalities = [
+  { id: "gb", label: "British", emoji: "🇬🇧" },
+  { id: "us", label: "American", emoji: "🇺🇸" },
+  { id: "ca", label: "Canadian", emoji: "🇨🇦" },
+  { id: "au", label: "Australian", emoji: "🇦🇺" },
+  { id: "fr", label: "French", emoji: "🇫🇷" },
+  { id: "de", label: "German", emoji: "🇩🇪" },
+  { id: "it", label: "Italian", emoji: "🇮🇹" },
+  { id: "es", label: "Spanish", emoji: "🇪🇸" },
+  { id: "jp", label: "Japanese", emoji: "🇯🇵" },
+  { id: "sg", label: "Singaporean", emoji: "🇸🇬" }
+];
+
 export const countries = [
-  { id: "gb", label: "United Kingdom", value: "London, UK" },
-  { id: "us", label: "United States", value: "New York, USA" },
-  { id: "ca", label: "Canada", value: "Toronto, Canada" },
-  { id: "au", label: "Australia", value: "Sydney, Australia" },
-  { id: "fr", label: "France", value: "Paris, France" },
-  { id: "de", label: "Germany", value: "Berlin, Germany" },
-  { id: "it", label: "Italy", value: "Rome, Italy" },
-  { id: "es", label: "Spain", value: "Madrid, Spain" },
-  { id: "jp", label: "Japan", value: "Tokyo, Japan" },
-  { id: "sg", label: "Singapore", value: "Singapore" }
+  { id: "gb", label: "United Kingdom", value: "London, UK", emoji: "🇬🇧" },
+  { id: "us", label: "United States", value: "New York, USA", emoji: "🇺🇸" },
+  { id: "ca", label: "Canada", value: "Toronto, Canada", emoji: "🇨🇦" },
+  { id: "au", label: "Australia", value: "Sydney, Australia", emoji: "🇦🇺" },
+  { id: "fr", label: "France", value: "Paris, France", emoji: "🇫🇷" },
+  { id: "de", label: "Germany", value: "Berlin, Germany", emoji: "🇩🇪" },
+  { id: "it", label: "Italy", value: "Rome, Italy", emoji: "🇮🇹" },
+  { id: "es", label: "Spain", value: "Madrid, Spain", emoji: "🇪🇸" },
+  { id: "jp", label: "Japan", value: "Tokyo, Japan", emoji: "🇯🇵" },
+  { id: "sg", label: "Singapore", value: "Singapore", emoji: "🇸🇬" }
 ];

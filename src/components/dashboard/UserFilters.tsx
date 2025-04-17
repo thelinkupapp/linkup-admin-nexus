@@ -18,6 +18,7 @@ import {
 import {
   genderOptions,
   countries,
+  nationalities,
 } from "@/constants/filterOptions";
 
 interface UserFiltersProps {
@@ -115,20 +116,21 @@ export function UserFilters({
               <CommandInput placeholder="Search nationality..." />
               <CommandEmpty>No nationality found.</CommandEmpty>
               <CommandGroup>
-                {countries.map((country) => (
+                {nationalities.map((nationality) => (
                   <CommandItem
-                    key={country.id}
+                    key={nationality.id}
                     onSelect={() => {
                       setSelectedNationalities(
-                        toggleArrayValue(selectedNationalities, country.value)
+                        toggleArrayValue(selectedNationalities, nationality.label)
                       );
                     }}
                   >
                     <Checkbox
-                      checked={selectedNationalities.includes(country.value)}
+                      checked={selectedNationalities.includes(nationality.label)}
                       className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
-                    {country.label}
+                    <span className="mr-2">{nationality.emoji}</span>
+                    {nationality.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -192,6 +194,7 @@ export function UserFilters({
                       checked={selectedLocations.includes(country.value)}
                       className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                     />
+                    <span className="mr-2">{country.emoji}</span>
                     {country.label}
                   </CommandItem>
                 ))}
