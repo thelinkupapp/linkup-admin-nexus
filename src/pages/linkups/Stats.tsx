@@ -1,3 +1,4 @@
+
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -115,13 +116,15 @@ const LinkupStats = () => {
           <Card>
             <CardHeader>
               <CardTitle>Linkup Activity</CardTitle>
-              <TabsList className="w-full sm:w-auto">
-                <TabsTrigger value="today">Today</TabsTrigger>
-                <TabsTrigger value="daily">Daily</TabsTrigger>
-                <TabsTrigger value="weekly">Weekly</TabsTrigger>
-                <TabsTrigger value="monthly">Monthly</TabsTrigger>
-                <TabsTrigger value="yearly">Yearly</TabsTrigger>
-              </TabsList>
+              <Tabs value={timeframe} onValueChange={(value) => setTimeframe(value as any)}>
+                <TabsList className="w-full sm:w-auto">
+                  <TabsTrigger value="today" onClick={() => setTimeframe('today')}>Today</TabsTrigger>
+                  <TabsTrigger value="daily" onClick={() => setTimeframe('daily')}>Daily</TabsTrigger>
+                  <TabsTrigger value="weekly" onClick={() => setTimeframe('weekly')}>Weekly</TabsTrigger>
+                  <TabsTrigger value="monthly" onClick={() => setTimeframe('monthly')}>Monthly</TabsTrigger>
+                  <TabsTrigger value="yearly" onClick={() => setTimeframe('yearly')}>Yearly</TabsTrigger>
+                </TabsList>
+              </Tabs>
             </CardHeader>
             <CardContent>
               <div className="h-[400px] w-full">
