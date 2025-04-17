@@ -1,10 +1,9 @@
 import React from "react";
-import { Search, Crown, CheckCircle, ToggleLeft, ToggleRight } from "lucide-react";
+import { Search, Crown, CheckCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Switch } from "@/components/ui/switch";
 import {
   Popover,
   PopoverContent,
@@ -38,8 +37,6 @@ interface UserFiltersProps {
   setShowLinkupPlusOnly: (value: boolean) => void;
   ageRange: number[];
   setAgeRange: (value: number[]) => void;
-  showAgeFilter: boolean;
-  setShowAgeFilter: (value: boolean) => void;
 }
 
 export function UserFilters({
@@ -57,8 +54,6 @@ export function UserFilters({
   setShowLinkupPlusOnly,
   ageRange,
   setAgeRange,
-  showAgeFilter,
-  setShowAgeFilter,
 }: UserFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -212,31 +207,25 @@ export function UserFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="flex items-center gap-2">
+            <Button variant="outline">
               Age ({ageRange[0]} - {ageRange[1]})
-              <Switch 
-                checked={showAgeFilter}
-                onCheckedChange={setShowAgeFilter}
-              />
             </Button>
           </PopoverTrigger>
-          {showAgeFilter && (
-            <PopoverContent className="w-[200px] p-4">
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span>{ageRange[0]}</span>
-                  <span>{ageRange[1]}</span>
-                </div>
-                <Slider
-                  min={18}
-                  max={100}
-                  step={1}
-                  value={ageRange}
-                  onValueChange={setAgeRange}
-                />
+          <PopoverContent className="w-[200px] p-4">
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm">
+                <span>{ageRange[0]}</span>
+                <span>{ageRange[1]}</span>
               </div>
-            </PopoverContent>
-          )}
+              <Slider
+                min={18}
+                max={100}
+                step={1}
+                value={ageRange}
+                onValueChange={setAgeRange}
+              />
+            </div>
+          </PopoverContent>
         </Popover>
       </div>
     </div>
