@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -10,6 +9,7 @@ import { ArrowUpCircle, DollarSign, Users, Trophy, Coins, TrendingUp } from "luc
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const mockChartData = {
   today: Array.from({ length: 24 }, (_, i) => ({
@@ -38,22 +38,23 @@ const mockChartData = {
   })).reverse()
 };
 
-// Component for top stat cards
 const TopStatsCards = () => {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Active Linkups</CardTitle>
-          <ArrowUpCircle className="h-4 w-4 text-green-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">245</div>
-          <p className="text-xs text-muted-foreground">
-            +12.5% from last month
-          </p>
-        </CardContent>
-      </Card>
+      <Link to="/linkups/management" className="block">
+        <Card className="transition-all hover:shadow-md cursor-pointer">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Active Linkups</CardTitle>
+            <ArrowUpCircle className="h-4 w-4 text-green-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">245</div>
+            <p className="text-xs text-muted-foreground">
+              +12.5% from last month
+            </p>
+          </CardContent>
+        </Card>
+      </Link>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -68,46 +69,49 @@ const TopStatsCards = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Most Profitable</CardTitle>
-          <Coins className="h-4 w-4 text-yellow-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center space-x-4">
-            <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center">
-              💰
+      <Link to="/linkups/music-festival" className="block">
+        <Card className="transition-all hover:shadow-md cursor-pointer">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Most Profitable</CardTitle>
+            <Coins className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center space-x-4">
+              <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center">
+                💰
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-semibold">Music Festival</h4>
+                <p className="text-xs text-muted-foreground">$2,450 earned</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h4 className="text-sm font-semibold">Music Festival</h4>
-              <p className="text-xs text-muted-foreground">$2,450 earned</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Link>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Most Attended</CardTitle>
-          <Trophy className="h-4 w-4 text-yellow-500" />
-        </CardHeader>
-        <CardContent>
-          <div className="flex items-center space-x-4">
-            <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center">
-              🎉
+      <Link to="/linkups/tech-meetup-2024" className="block">
+        <Card className="transition-all hover:shadow-md cursor-pointer">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Most Attended</CardTitle>
+            <Trophy className="h-4 w-4 text-yellow-500" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center space-x-4">
+              <div className="h-16 w-16 rounded-lg bg-secondary flex items-center justify-center">
+                🎉
+              </div>
+              <div className="space-y-1">
+                <h4 className="text-sm font-semibold">Tech Meetup 2024</h4>
+                <p className="text-xs text-muted-foreground">156 attendees</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h4 className="text-sm font-semibold">Tech Meetup 2024</h4>
-              <p className="text-xs text-muted-foreground">156 attendees</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Link>
     </div>
   );
 };
 
-// Component for activity graph
 const ActivityGraph = ({ timeframe, setTimeframe }) => {
   return (
     <Card>
@@ -153,7 +157,6 @@ const ActivityGraph = ({ timeframe, setTimeframe }) => {
   );
 };
 
-// Component for super creators
 const SuperCreators = () => {
   const superCreators = [
     { name: "Emma Rodriguez", username: "emma_creates", linkups: 28 },
