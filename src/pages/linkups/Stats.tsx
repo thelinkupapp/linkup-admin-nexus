@@ -113,58 +113,58 @@ const LinkupStats = () => {
           </div>
 
           {/* Activity Graph */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Linkup Activity</CardTitle>
-              <Tabs value={timeframe} onValueChange={(value) => setTimeframe(value as any)}>
+          <Tabs defaultValue={timeframe} value={timeframe} onValueChange={(value) => setTimeframe(value as any)}>
+            <Card>
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Linkup Activity</CardTitle>
                 <TabsList className="w-full sm:w-auto">
-                  <TabsTrigger value="today" onClick={() => setTimeframe('today')}>Today</TabsTrigger>
-                  <TabsTrigger value="daily" onClick={() => setTimeframe('daily')}>Daily</TabsTrigger>
-                  <TabsTrigger value="weekly" onClick={() => setTimeframe('weekly')}>Weekly</TabsTrigger>
-                  <TabsTrigger value="monthly" onClick={() => setTimeframe('monthly')}>Monthly</TabsTrigger>
-                  <TabsTrigger value="yearly" onClick={() => setTimeframe('yearly')}>Yearly</TabsTrigger>
+                  <TabsTrigger value="today">Today</TabsTrigger>
+                  <TabsTrigger value="daily">Daily</TabsTrigger>
+                  <TabsTrigger value="weekly">Weekly</TabsTrigger>
+                  <TabsTrigger value="monthly">Monthly</TabsTrigger>
+                  <TabsTrigger value="yearly">Yearly</TabsTrigger>
                 </TabsList>
-              </Tabs>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[400px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={mockChartData[timeframe]} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
-                    <defs>
-                      <linearGradient id="activity" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="time" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
-                    <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
-                    <ChartTooltip
-                      content={({ active, payload }) => {
-                        if (!active || !payload) return null;
-                        return (
-                          <ChartTooltipContent
-                            payload={payload}
-                            nameKey="name"
-                            labelKey="time"
-                            label={payload[0]?.payload?.time}
-                          />
-                        );
-                      }}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="value"
-                      name="Activity"
-                      stroke="#8B5CF6"
-                      fill="url(#activity)"
-                      strokeWidth={2}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent>
+                <div className="h-[400px] w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={mockChartData[timeframe]} margin={{ top: 20, right: 20, left: 20, bottom: 20 }}>
+                      <defs>
+                        <linearGradient id="activity" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#8B5CF6" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="time" stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#888888" fontSize={12} tickLine={false} axisLine={false} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" vertical={false} />
+                      <ChartTooltip
+                        content={({ active, payload }) => {
+                          if (!active || !payload) return null;
+                          return (
+                            <ChartTooltipContent
+                              payload={payload}
+                              nameKey="name"
+                              labelKey="time"
+                              label={payload[0]?.payload?.time}
+                            />
+                          );
+                        }}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        name="Activity"
+                        stroke="#8B5CF6"
+                        fill="url(#activity)"
+                        strokeWidth={2}
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </CardContent>
+            </Card>
+          </Tabs>
 
           {/* Super Creators */}
           <Card>
