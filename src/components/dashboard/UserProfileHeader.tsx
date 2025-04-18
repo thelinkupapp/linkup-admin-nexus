@@ -1,11 +1,13 @@
 
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Flag, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Flag, Trash2 } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Card } from "@/components/ui/card";
+import { useState } from "react";
+import { SuspendUserDialog } from "./SuspendUserDialog";
+import { DeleteUserDialog } from "./DeleteUserDialog";
 
 interface UserProfileHeaderProps {
   user: {
@@ -18,11 +20,13 @@ interface UserProfileHeaderProps {
     joinDate: string;
     isVerified: boolean;
     isLinkupPlus: boolean;
-    gender: string;
   };
 }
 
 export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
+  const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
   return (
     <>
       <div className="mb-6">
@@ -88,12 +92,14 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
               <Button 
                 variant="outline" 
                 className="text-destructive border-destructive/20 hover:bg-destructive/10"
+                onClick={() => setIsSuspendDialogOpen(true)}
               >
                 <Flag className="h-4 w-4 mr-2" />
                 Suspend User
               </Button>
               <Button 
                 variant="destructive"
+                onClick={() => setIsDeleteDialogOpen(true)}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete User
@@ -102,6 +108,25 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
           </div>
         </div>
       </Card>
+
+      <SuspendUserDialog 
+        isOpen={isSuspendDialogOpen}
+        onClose={() => setIsSuspendDialogOpen(false)}
+        userId={user.id}
+        username={user.username}
+        userAvatar={user.avatar}
+        userName={user.name}
+      />
+
+      <DeleteUserDialog 
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        userId={user.id}
+        username={user.username}
+        userAvatar={user.avatar}
+        userName={user.name}
+      />
     </>
   );
 };
+
