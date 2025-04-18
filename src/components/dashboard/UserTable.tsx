@@ -6,7 +6,7 @@ import {
   Crown, 
   Users, 
   MapPin, 
-  MoreHorizontal, 
+  MoreVertical, 
   Ban, 
   Filter, 
   Flag, 
@@ -108,6 +108,72 @@ const getCountryEmoji = (country: string) => {
     'Finland': '🇫🇮'
   };
   return emojiMap[country] || '🌍';
+};
+
+const generateAdditionalUsers = (): User[] => {
+  const additionalUsers: User[] = [];
+  const citiesByCountry: { [key: string]: string[] } = {
+    'France': ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice'],
+    'Italy': ['Rome', 'Milan', 'Florence', 'Venice', 'Naples'],
+    'Germany': ['Berlin', 'Munich', 'Hamburg', 'Frankfurt', 'Cologne'],
+    'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Bilbao'],
+    'Portugal': ['Lisbon', 'Porto', 'Faro', 'Braga', 'Coimbra'],
+    'Netherlands': ['Amsterdam', 'Rotterdam', 'The Hague', 'Utrecht', 'Eindhoven'],
+    'Belgium': ['Brussels', 'Antwerp', 'Ghent', 'Bruges', 'Liege'],
+    'Switzerland': ['Zurich', 'Geneva', 'Basel', 'Bern', 'Lausanne'],
+    'Austria': ['Vienna', 'Salzburg', 'Innsbruck', 'Graz', 'Linz'],
+    'Sweden': ['Stockholm', 'Gothenburg', 'Malmo', 'Uppsala', 'Vasteras'],
+    'Denmark': ['Copenhagen', 'Aarhus', 'Odense', 'Aalborg', 'Esbjerg'],
+    'Norway': ['Oslo', 'Bergen', 'Trondheim', 'Stavanger', 'Tromso'],
+    'Finland': ['Helsinki', 'Tampere', 'Turku', 'Oulu', 'Espoo']
+  };
+
+  const firstNames = [
+    'Emma', 'Liam', 'Sophia', 'Noah', 'Olivia', 'Lucas', 'Isabella', 'Mason',
+    'Ava', 'Ethan', 'Mia', 'Oliver', 'Charlotte', 'Elijah', 'Amelia', 'William',
+    'Harper', 'James', 'Evelyn', 'Alexander', 'Abigail', 'Benjamin', 'Emily',
+    'Sebastian', 'Elizabeth', 'Jack', 'Sofia', 'Daniel', 'Avery', 'Samuel'
+  ];
+
+  const lastNames = [
+    'Smith', 'Johnson', 'Brown', 'Taylor', 'Anderson', 'Wilson', 'Martinez',
+    'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Hernandez', 'Lopez', 'Gonzalez',
+    'Williams', 'Lee', 'Walker', 'Hall', 'Young', 'King', 'Wright', 'Scott',
+    'Green', 'Baker', 'Adams', 'Nelson', 'Carter', 'Mitchell', 'Parker', 'Collins'
+  ];
+
+  const genders: Array<'Male' | 'Female' | 'Non-binary'> = ['Male', 'Female', 'Non-binary'];
+  const nationalities = Object.keys(citiesByCountry);
+
+  for (let i = 16; i <= 110; i++) {
+    const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
+    const cities = citiesByCountry[nationality];
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}`;
+    const gender = genders[Math.floor(Math.random() * genders.length)];
+    
+    additionalUsers.push({
+      id: i.toString(),
+      avatar: `https://i.pravatar.cc/150?u=${username}`,
+      name: `${firstName} ${lastName}`,
+      username: username,
+      email: `${username}@example.com`,
+      age: Math.floor(Math.random() * (50 - 20 + 1)) + 20,
+      joinDate: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString(),
+      location: `${getCountryEmoji(nationality)} ${city}, ${nationality}`,
+      isLinkupPlus: Math.random() > 0.5,
+      isVerified: Math.random() > 0.3,
+      nationality: nationality,
+      gender: gender,
+      hostedLinkups: Math.floor(Math.random() * 30),
+      attendedLinkups: Math.floor(Math.random() * 40),
+      totalEarnings: Math.floor(Math.random() * 5000 * 100) / 100
+    });
+  }
+
+  return additionalUsers;
 };
 
 export const users: User[] = [
@@ -368,72 +434,6 @@ export const users: User[] = [
   }
 ];
 
-const generateAdditionalUsers = (): User[] => {
-  const additionalUsers: User[] = [];
-  const citiesByCountry: { [key: string]: string[] } = {
-    'France': ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice'],
-    'Italy': ['Rome', 'Milan', 'Florence', 'Venice', 'Naples'],
-    'Germany': ['Berlin', 'Munich', 'Hamburg', 'Frankfurt', 'Cologne'],
-    'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Bilbao'],
-    'Portugal': ['Lisbon', 'Porto', 'Faro', 'Braga', 'Coimbra'],
-    'Netherlands': ['Amsterdam', 'Rotterdam', 'The Hague', 'Utrecht', 'Eindhoven'],
-    'Belgium': ['Brussels', 'Antwerp', 'Ghent', 'Bruges', 'Liege'],
-    'Switzerland': ['Zurich', 'Geneva', 'Basel', 'Bern', 'Lausanne'],
-    'Austria': ['Vienna', 'Salzburg', 'Innsbruck', 'Graz', 'Linz'],
-    'Sweden': ['Stockholm', 'Gothenburg', 'Malmo', 'Uppsala', 'Vasteras'],
-    'Denmark': ['Copenhagen', 'Aarhus', 'Odense', 'Aalborg', 'Esbjerg'],
-    'Norway': ['Oslo', 'Bergen', 'Trondheim', 'Stavanger', 'Tromso'],
-    'Finland': ['Helsinki', 'Tampere', 'Turku', 'Oulu', 'Espoo']
-  };
-
-  const firstNames = [
-    'Emma', 'Liam', 'Sophia', 'Noah', 'Olivia', 'Lucas', 'Isabella', 'Mason',
-    'Ava', 'Ethan', 'Mia', 'Oliver', 'Charlotte', 'Elijah', 'Amelia', 'William',
-    'Harper', 'James', 'Evelyn', 'Alexander', 'Abigail', 'Benjamin', 'Emily',
-    'Sebastian', 'Elizabeth', 'Jack', 'Sofia', 'Daniel', 'Avery', 'Samuel'
-  ];
-
-  const lastNames = [
-    'Smith', 'Johnson', 'Brown', 'Taylor', 'Anderson', 'Wilson', 'Martinez',
-    'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Hernandez', 'Lopez', 'Gonzalez',
-    'Williams', 'Lee', 'Walker', 'Hall', 'Young', 'King', 'Wright', 'Scott',
-    'Green', 'Baker', 'Adams', 'Nelson', 'Carter', 'Mitchell', 'Parker', 'Collins'
-  ];
-
-  const genders: Array<'Male' | 'Female' | 'Non-binary'> = ['Male', 'Female', 'Non-binary'];
-  const nationalities = Object.keys(citiesByCountry);
-
-  for (let i = 16; i <= 110; i++) {
-    const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
-    const cities = citiesByCountry[nationality];
-    const city = cities[Math.floor(Math.random() * cities.length)];
-    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-    const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}`;
-    const gender = genders[Math.floor(Math.random() * genders.length)];
-    
-    additionalUsers.push({
-      id: i.toString(),
-      avatar: `https://i.pravatar.cc/150?u=${username}`,
-      name: `${firstName} ${lastName}`,
-      username: username,
-      email: `${username}@example.com`,
-      age: Math.floor(Math.random() * (50 - 20 + 1)) + 20,
-      joinDate: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString(),
-      location: `${getCountryEmoji(nationality)} ${city}, ${nationality}`,
-      isLinkupPlus: Math.random() > 0.5,
-      isVerified: Math.random() > 0.3,
-      nationality: nationality,
-      gender: gender,
-      hostedLinkups: Math.floor(Math.random() * 30),
-      attendedLinkups: Math.floor(Math.random() * 40),
-      totalEarnings: Math.floor(Math.random() * 5000 * 100) / 100
-    });
-  }
-
-  return additionalUsers;
-};
-
 users.push(...generateAdditionalUsers());
 
 const formatCurrency = (amount: number) => {
@@ -547,17 +547,17 @@ const UserTable = () => {
         setAgeRange={setAgeRange}
       />
 
-      <div className="relative border rounded-lg overflow-x-auto">
-        <Table>
+      <div className="border rounded-lg overflow-visible">
+        <Table className="w-full table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[250px] min-w-[200px]">User</TableHead>
-              <TableHead className="w-[80px]">Age</TableHead>
-              <TableHead className="w-[140px]">Location</TableHead>
-              <TableHead className="w-[120px]">Nationality</TableHead>
-              <TableHead className="w-[100px]">
+              <TableHead className="w-[22%]">User</TableHead>
+              <TableHead className="w-[6%]">Age</TableHead>
+              <TableHead className="w-[12%]">Location</TableHead>
+              <TableHead className="w-[12%]">Nationality</TableHead>
+              <TableHead className="w-[8%]">
                 <div 
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-1 cursor-pointer"
                   onClick={() => handleSort('hosted')}
                 >
                   <Crown className="h-4 w-4 text-muted-foreground" />
@@ -565,9 +565,9 @@ const UserTable = () => {
                   <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
-              <TableHead className="w-[100px]">
+              <TableHead className="w-[8%]">
                 <div 
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-1 cursor-pointer"
                   onClick={() => handleSort('attended')}
                 >
                   <Users className="h-4 w-4 text-muted-foreground" />
@@ -575,9 +575,9 @@ const UserTable = () => {
                   <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
-              <TableHead className="w-[120px]">
+              <TableHead className="w-[10%]">
                 <div 
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-1 cursor-pointer"
                   onClick={() => handleSort('earnings')}
                 >
                   <Coins className="h-4 w-4 text-muted-foreground" />
@@ -585,9 +585,9 @@ const UserTable = () => {
                   <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
-              <TableHead className="w-[140px]">
+              <TableHead className="w-[10%]">
                 <div 
-                  className="flex items-center gap-2 cursor-pointer"
+                  className="flex items-center gap-1 cursor-pointer"
                   onClick={() => handleSort('joined')}
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
@@ -595,13 +595,13 @@ const UserTable = () => {
                   <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
-              <TableHead className="w-[70px]"></TableHead>
+              <TableHead className="w-[12%] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
-                <TableCell>
+                <TableCell className="max-w-0">
                   <div 
                     className="flex items-center gap-3 cursor-pointer hover:opacity-80"
                     onClick={() => handleUserClick(user.id)}
@@ -647,41 +647,63 @@ const UserTable = () => {
                   </div>
                 </TableCell>
                 <TableCell>{user.age}</TableCell>
-                <TableCell className="truncate max-w-[140px]">
-                  <span className="truncate">{user.location}</span>
+                <TableCell className="truncate">
+                  <div className="truncate">{user.location}</div>
                 </TableCell>
                 <TableCell>
-                  {getCountryEmoji(user.nationality)} {getNationalityLabel(user.nationality)}
+                  <div className="truncate">
+                    {getCountryEmoji(user.nationality)} {getNationalityLabel(user.nationality)}
+                  </div>
                 </TableCell>
                 <TableCell>{user.hostedLinkups}</TableCell>
                 <TableCell>{user.attendedLinkups}</TableCell>
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
-                        <UserIcon className="mr-2 h-4 w-4" />
-                        View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
-                        <Filter className="mr-2 h-4 w-4" />
-                        Edit Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id)}
-                        className="text-destructive"
-                      >
-                        <Ban className="mr-2 h-4 w-4" />
-                        Suspend User
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                <TableCell className="text-right">
+                  <div className="flex justify-end space-x-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 w-8 p-0" 
+                      onClick={() => handleUserAction('view', user.id)}
+                      title="View Profile"
+                    >
+                      <UserIcon className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-8 w-8 p-0" 
+                      onClick={() => handleUserAction('edit', user.id)}
+                      title="Edit Profile"
+                    >
+                      <Filter className="h-4 w-4" />
+                    </Button>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                          <UserIcon className="mr-2 h-4 w-4" />
+                          View Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
+                          <Filter className="mr-2 h-4 w-4" />
+                          Edit Profile
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => handleUserAction('suspend', user.id)}
+                          className="text-destructive"
+                        >
+                          <Ban className="mr-2 h-4 w-4" />
+                          Suspend User
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
