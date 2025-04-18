@@ -125,9 +125,15 @@ const UserProfile = () => {
       isProfilePicture: true
     },
     {
-      id: "4",
-      url: "/lovable-uploads/13a7d777-aa40-4ae8-b11b-4fab740b73f1.png",
-      uploadDate: "2023-10-15T08:15:00Z",
+      id: "2",
+      url: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+      uploadDate: "2024-04-18T10:00:00Z",
+      isProfilePicture: false
+    },
+    {
+      id: "3",
+      url: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+      uploadDate: "2024-04-18T10:00:00Z",
       isProfilePicture: false
     }
   ];
