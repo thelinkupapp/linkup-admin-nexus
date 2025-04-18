@@ -22,10 +22,6 @@ import {
   nationalities,
 } from "@/constants/filterOptions";
 
-// Import the new icons
-import VerifiedIcon from "@/assets/icons/verified.png";
-import LinkupPlusIcon from "@/assets/icons/linkup-plus.png";
-
 interface UserFiltersProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
@@ -95,11 +91,7 @@ export function UserFilters({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
               Verified
-              <img 
-                src={VerifiedIcon} 
-                alt="Verified" 
-                className="h-4 w-4"
-              />
+              <CheckCircle2 className="h-4 w-4 text-blue-500" />
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -113,11 +105,7 @@ export function UserFilters({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
               Linkup Plus
-              <img 
-                src={LinkupPlusIcon} 
-                alt="Linkup Plus" 
-                className="h-4 w-4"
-              />
+              <span className="text-amber-500 text-sm">👑</span>
             </label>
           </div>
         </div>

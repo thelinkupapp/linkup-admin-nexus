@@ -621,11 +621,7 @@ const UserTable = () => {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  <img 
-                                    src={VerifiedIcon} 
-                                    alt="Verified" 
-                                    className="h-3.5 w-3.5" 
-                                  />
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -638,12 +634,8 @@ const UserTable = () => {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="inline-flex">
-                                  <img 
-                                    src={LinkupPlusIcon} 
-                                    alt="Linkup Plus" 
-                                    className="h-3.5 w-3.5" 
-                                  />
+                                <span className="inline-flex text-amber-500">
+                                  👑
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
