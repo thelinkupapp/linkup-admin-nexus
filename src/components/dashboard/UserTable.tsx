@@ -352,64 +352,44 @@ const UserTable = () => {
         setAgeRange={setAgeRange}
       />
 
-      <div className="border rounded-lg">
+      <div className="relative border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>
-                <div className="flex items-center gap-2">
-                  <UserRound className="h-4 w-4 text-muted-foreground" />
-                  <span>User</span>
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 text-muted-foreground" />
-                  <span>Age</span>
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span>Location</span>
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex items-center gap-2">
-                  <Flag className="h-4 w-4 text-muted-foreground" />
-                  <span>Nationality</span>
-                </div>
-              </TableHead>
-              <TableHead>
+              <TableHead className="w-[250px] min-w-[200px]">User</TableHead>
+              <TableHead className="w-[80px]">Age</TableHead>
+              <TableHead className="w-[140px]">Location</TableHead>
+              <TableHead className="w-[120px]">Nationality</TableHead>
+              <TableHead className="w-[100px]">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("hosted")}>
                   <Crown className="h-4 w-4 text-muted-foreground" />
                   <span>Hosted</span>
                   <ArrowUpDown className={cn("h-4 w-4", hostedSortDirection && "text-primary")} />
                 </div>
               </TableHead>
-              <TableHead>
+              <TableHead className="w-[100px]">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("attended")}>
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
                   <ArrowUpDown className={cn("h-4 w-4", attendedSortDirection && "text-primary")} />
                 </div>
               </TableHead>
-              <TableHead>
+              <TableHead className="w-[120px]">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("earnings")}>
                   <Coins className="h-4 w-4 text-muted-foreground" />
-                  <span>Total Earnings</span>
+                  <span>Earnings</span>
                   <ArrowUpDown className={cn("h-4 w-4", earningsSortDirection && "text-primary")} />
                 </div>
               </TableHead>
-              <TableHead>
+              <TableHead className="w-[140px]">
                 <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("joined")}>
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
                   <ArrowUpDown className={cn("h-4 w-4", joinDateSortDirection && "text-primary")} />
                 </div>
               </TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[180px]">Status</TableHead>
+              <TableHead className="w-[70px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -424,15 +404,18 @@ const UserTable = () => {
                       <AvatarImage src={user.avatar} alt={user.name} />
                       <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <div>
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-sm text-muted-foreground">@{user.username}</div>
+                    <div className="min-w-0">
+                      <div className="font-medium truncate">{user.name}</div>
+                      <div className="text-sm text-muted-foreground truncate">@{user.username}</div>
                     </div>
                   </div>
                 </TableCell>
                 <TableCell>{user.age}</TableCell>
-                <TableCell>
-                  {getCountryEmoji(user.nationality)} {user.location}
+                <TableCell className="truncate max-w-[140px]">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+                    <span className="truncate">{user.location}</span>
+                  </div>
                 </TableCell>
                 <TableCell>
                   {getCountryEmoji(user.nationality)} {nationalities.find(n => n.id === user.nationality.toLowerCase())?.label || user.nationality}
@@ -442,7 +425,7 @@ const UserTable = () => {
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <Badge variant="outline" className={cn(
                       user.isVerified 
                         ? "bg-status-verified/10 text-status-verified border-status-verified/20"
