@@ -53,6 +53,15 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       return;
     }
 
+    if (user.isLinkupPlus) {
+      toast({
+        variant: "destructive",
+        title: "Unable to Delete User",
+        description: "This user has an active Linkup Plus subscription. Please cancel their subscription before proceeding with account deletion.",
+      });
+      return;
+    }
+
     setIsDeleteDialogOpen(true);
   };
 
