@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Popover,
   PopoverContent,
@@ -152,25 +153,27 @@ export function UserFilters({
             <Command>
               <CommandInput placeholder="Search nationality..." />
               <CommandEmpty>No nationality found.</CommandEmpty>
-              <CommandGroup>
-                {nationalities.map((nationality) => (
-                  <CommandItem
-                    key={nationality.id}
-                    onSelect={() => {
-                      setSelectedNationalities(
-                        toggleArrayValue(selectedNationalities, nationality.id)
-                      );
-                    }}
-                  >
-                    <Checkbox
-                      checked={selectedNationalities.includes(nationality.id)}
-                      className="mr-2 h-4 w-4"
-                    />
-                    <span className="mr-2">{nationality.emoji}</span>
-                    {nationality.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              <ScrollArea className="h-60">
+                <CommandGroup>
+                  {nationalities.map((nationality) => (
+                    <CommandItem
+                      key={nationality.id}
+                      onSelect={() => {
+                        setSelectedNationalities(
+                          toggleArrayValue(selectedNationalities, nationality.id)
+                        );
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedNationalities.includes(nationality.id)}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="mr-2">{nationality.emoji}</span>
+                      {nationality.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
             </Command>
           </PopoverContent>
         </Popover>
@@ -185,25 +188,27 @@ export function UserFilters({
             <Command>
               <CommandInput placeholder="Search location..." />
               <CommandEmpty>No location found.</CommandEmpty>
-              <CommandGroup>
-                {countries.map((country) => (
-                  <CommandItem
-                    key={country.id}
-                    onSelect={() => {
-                      setSelectedLocations(
-                        toggleArrayValue(selectedLocations, country.value)
-                      );
-                    }}
-                  >
-                    <Checkbox
-                      checked={selectedLocations.includes(country.value)}
-                      className="mr-2 h-4 w-4"
-                    />
-                    <span className="mr-2">{country.emoji}</span>
-                    {country.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
+              <ScrollArea className="h-60">
+                <CommandGroup>
+                  {countries.map((country) => (
+                    <CommandItem
+                      key={country.id}
+                      onSelect={() => {
+                        setSelectedLocations(
+                          toggleArrayValue(selectedLocations, country.value)
+                        );
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedLocations.includes(country.value)}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="mr-2">{country.emoji}</span>
+                      {country.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
             </Command>
           </PopoverContent>
         </Popover>
