@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -41,6 +40,7 @@ import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
+  PaginationItemsPerPage,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
@@ -56,7 +56,6 @@ import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
-import { Users } from "lucide-react";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -505,6 +504,7 @@ export default function UserTable() {
   const [deleteUserName, setDeleteUserName] = useState<string>("");
   const [verificationStatus, setVerificationStatus] = useState("");
   const [membershipStatus, setMembershipStatus] = useState("");
+  const [itemsPerPageOptions, setItemsPerPageOptions] = useState([25, 50, 100]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -823,61 +823,86 @@ export default function UserTable() {
       </div>
       
       {totalPages > 1 && (
-        <Pagination className="mt-4">
-          <PaginationContent>
-            {currentPage > 1 ? (
-              <PaginationPrevious 
-                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              />
-            ) : (
-              <PaginationItem>
-                <span className="flex h-10 items-center justify-center gap-1 pl-2.5 opacity-50">
-                  <span>Previous</span>
-                </span>
-              </PaginationItem>
-            )}
-            
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageNum = i + 1;
-              return (
-                <PaginationItem key={pageNum}>
-                  <PaginationLink 
-                    onClick={() => handlePageChange(pageNum)}
-                    isActive={currentPage === pageNum}
-                  >
-                    {pageNum}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            })}
-            
-            {totalPages > 5 && (
-              <>
-                <PaginationEllipsis />
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4">
+          <Pagination>
+            <PaginationContent>
+              {currentPage > 1 ? (
+                <PaginationPrevious 
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                />
+              ) : (
                 <PaginationItem>
-                  <PaginationLink 
-                    onClick={() => handlePageChange(totalPages)}
-                    isActive={currentPage === totalPages}
-                  >
-                    {totalPages}
-                  </PaginationLink>
+                  <span className="flex h-10 items-center justify-center gap-1 pl-2.5 opacity-50">
+                    <span>Previous</span>
+                  </span>
                 </PaginationItem>
-              </>
-            )}
-            
-            {currentPage < totalPages ? (
-              <PaginationNext 
-                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              />
-            ) : (
-              <PaginationItem>
-                <span className="flex h-10 items-center justify-center gap-1 pr-2.5 opacity-50">
-                  <span>Next</span>
-                </span>
-              </PaginationItem>
-            )}
-          </PaginationContent>
-        </Pagination>
+              )}
+              
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const pageNum = i + 1;
+                return (
+                  <PaginationItem key={pageNum}>
+                    <PaginationLink 
+                      onClick={() => handlePageChange(pageNum)}
+                      isActive={currentPage === pageNum}
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              
+              {totalPages > 5 && (
+                <>
+                  <PaginationEllipsis />
+                  <PaginationItem>
+                    <PaginationLink 
+                      onClick={() => handlePageChange(totalPages)}
+                      isActive={currentPage === totalPages}
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                </>
+              )}
+              
+              {currentPage < totalPages ? (
+                <PaginationNext 
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                />
+              ) : (
+                <PaginationItem>
+                  <span className="flex h-10 items-center justify-center gap-1 pr-2.5 opacity-50">
+                    <span>Next</span>
+                  </span>
+                </PaginationItem>
+              )}
+            </PaginationContent>
+          </Pagination>
+          
+          <PaginationItemsPerPage>
+            <span>Show</span>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => {
+                setItemsPerPage(Number(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-20">
+                <SelectValue placeholder="25" />
+              </SelectTrigger>
+              <SelectContent>
+                {itemsPerPageOptions.map((option) => (
+                  <SelectItem key={option} value={option.toString()}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span>per page</span>
+          </PaginationItemsPerPage>
+        </div>
       )}
       
       <SuspendUserDialog
