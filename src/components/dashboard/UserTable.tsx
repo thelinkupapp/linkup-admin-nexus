@@ -1,19 +1,7 @@
 import React, { useState } from "react";
 import { 
-  Search, 
-  User as UserIcon, 
-  Coins, 
-  Crown, 
-  Users, 
-  MapPin, 
   MoreVertical, 
   Ban, 
-  Filter, 
-  ArrowUpDown,
-  CalendarDays,
-  UserRound,
-  CheckCircle2,
-  Calendar
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -25,41 +13,14 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { 
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { UserFilters } from "./UserFilters";
 import { cn } from "@/lib/utils";
-import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
-import { formatJoinDate } from "@/utils/dateFormatting";
-import { 
-  Tooltip, 
-  TooltipContent, 
-  TooltipProvider, 
-  TooltipTrigger 
-} from "@/components/ui/tooltip";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -659,50 +620,28 @@ export default function UserTable() {
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
                 <TableCell className="text-right">
-                  <div className="flex justify-end space-x-1">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-8 w-8 p-0" 
-                      onClick={() => handleUserAction('view', user.id)}
-                      title="View Profile"
-                    >
-                      <UserIcon className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-8 w-8 p-0" 
-                      onClick={() => handleUserAction('edit', user.id)}
-                      title="Edit Profile"
-                    >
-                      <Filter className="h-4 w-4" />
-                    </Button>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
-                          <UserIcon className="mr-2 h-4 w-4" />
-                          View Profile
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
-                          <Filter className="mr-2 h-4 w-4" />
-                          Edit Profile
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleUserAction('suspend', user.id)}
-                          className="text-destructive"
-                        >
-                          <Ban className="mr-2 h-4 w-4" />
-                          Suspend User
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                        View Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
+                        Edit Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('suspend', user.id)}
+                        className="text-destructive"
+                      >
+                        <Ban className="mr-2 h-4 w-4" />
+                        Suspend User
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </TableCell>
               </TableRow>
             ))}
