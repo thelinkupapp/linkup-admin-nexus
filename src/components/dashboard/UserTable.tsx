@@ -691,15 +691,27 @@ export default function UserTable() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  <img 
-                                    src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                                    alt="Verified" 
-                                    className="h-4 w-4" 
-                                  />
+                                  {user.username === "jackpeagam" ? (
+                                    <img 
+                                      src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
+                                      alt="Staff Member" 
+                                      className="h-4 w-4" 
+                                    />
+                                  ) : (
+                                    <img 
+                                      src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                                      alt="Verified" 
+                                      className="h-4 w-4" 
+                                    />
+                                  )}
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Verified User</p>
+                                <p>
+                                  {user.username === "jackpeagam" 
+                                    ? "Staff Member" 
+                                    : "Verified User"}
+                                </p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
