@@ -118,6 +118,7 @@ export function UserFilters({
       </div>
 
       <div className="flex flex-wrap gap-2">
+        {/* Reordered filters: Gender, Age, Location, Nationality */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
@@ -146,35 +147,24 @@ export function UserFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
-              Nationality ({selectedNationalities.length})
+              Age ({ageRange[0]} - {ageRange[1]})
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Search nationality..." />
-              <CommandEmpty>No nationality found.</CommandEmpty>
-              <ScrollArea className="h-60">
-                <CommandGroup>
-                  {nationalities.map((nationality) => (
-                    <CommandItem
-                      key={nationality.id}
-                      onSelect={() => {
-                        setSelectedNationalities(
-                          toggleArrayValue(selectedNationalities, nationality.id)
-                        );
-                      }}
-                    >
-                      <Checkbox
-                        checked={selectedNationalities.includes(nationality.id)}
-                        className="mr-2 h-4 w-4"
-                      />
-                      <span className="mr-2">{nationality.emoji}</span>
-                      {nationality.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </ScrollArea>
-            </Command>
+          <PopoverContent className="w-[200px] p-4">
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm">
+                <span>{ageRange[0]}</span>
+                <span>{ageRange[1]}</span>
+              </div>
+              <Slider
+                min={18}
+                max={100}
+                step={1}
+                value={ageRange}
+                onValueChange={setAgeRange}
+                className="mb-6"
+              />
+            </div>
           </PopoverContent>
         </Popover>
 
@@ -216,24 +206,35 @@ export function UserFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
-              Age ({ageRange[0]} - {ageRange[1]})
+              Nationality ({selectedNationalities.length})
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-4">
-            <div className="space-y-4">
-              <div className="flex justify-between text-sm">
-                <span>{ageRange[0]}</span>
-                <span>{ageRange[1]}</span>
-              </div>
-              <Slider
-                min={18}
-                max={100}
-                step={1}
-                value={ageRange}
-                onValueChange={setAgeRange}
-                className="mb-6"
-              />
-            </div>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search nationality..." />
+              <CommandEmpty>No nationality found.</CommandEmpty>
+              <ScrollArea className="h-60">
+                <CommandGroup>
+                  {nationalities.map((nationality) => (
+                    <CommandItem
+                      key={nationality.id}
+                      onSelect={() => {
+                        setSelectedNationalities(
+                          toggleArrayValue(selectedNationalities, nationality.id)
+                        );
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedNationalities.includes(nationality.id)}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="mr-2">{nationality.emoji}</span>
+                      {nationality.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
+            </Command>
           </PopoverContent>
         </Popover>
       </div>
