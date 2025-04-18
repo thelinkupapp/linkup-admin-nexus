@@ -499,6 +499,8 @@ export default function UserTable() {
   const [deleteUsername, setDeleteUsername] = useState<string>("");
   const [deleteUserAvatar, setDeleteUserAvatar] = useState<string>("");
   const [deleteUserName, setDeleteUserName] = useState<string>("");
+  const [verificationStatus, setVerificationStatus] = useState("");
+  const [membershipStatus, setMembershipStatus] = useState("");
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -530,12 +532,16 @@ export default function UserTable() {
       
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
       
-      const matchesVerified = !showVerifiedOnly || user.isVerified;
-      
-      const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
+      const matchesVerification = verificationStatus === "" || 
+        (verificationStatus === "verified" && user.isVerified) ||
+        (verificationStatus === "unverified" && !user.isVerified);
+
+      const matchesMembership = membershipStatus === "" ||
+        (membershipStatus === "plus" && user.isLinkupPlus) ||
+        (membershipStatus === "free" && !user.isLinkupPlus);
       
       return matchesSearch && matchesNationality && matchesGender && 
-             matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
+             matchesLocation && matchesAge && matchesVerification && matchesMembership;
     })
     .sort((a, b) => {
       const multiplier = sortDirection === 'asc' ? 1 : -1;
@@ -624,6 +630,10 @@ export default function UserTable() {
         setShowVerifiedOnly={setShowVerifiedOnly}
         showLinkupPlusOnly={showLinkupPlusOnly}
         setShowLinkupPlusOnly={setShowLinkupPlusOnly}
+        verificationStatus={verificationStatus}
+        setVerificationStatus={setVerificationStatus}
+        membershipStatus={membershipStatus}
+        setMembershipStatus={setMembershipStatus}
         ageRange={ageRange}
         setAgeRange={setAgeRange}
         filteredCount={filteredUsersCount}

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -5,6 +6,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
@@ -36,6 +44,10 @@ interface UserFiltersProps {
   setShowVerifiedOnly: (value: boolean) => void;
   showLinkupPlusOnly: boolean;
   setShowLinkupPlusOnly: (value: boolean) => void;
+  verificationStatus: string;
+  setVerificationStatus: (value: string) => void;
+  membershipStatus: string;
+  setMembershipStatus: (value: string) => void;
   ageRange: number[];
   setAgeRange: (value: number[]) => void;
   filteredCount: number;
@@ -55,6 +67,10 @@ export function UserFilters({
   setShowVerifiedOnly,
   showLinkupPlusOnly,
   setShowLinkupPlusOnly,
+  verificationStatus,
+  setVerificationStatus,
+  membershipStatus,
+  setMembershipStatus,
   ageRange,
   setAgeRange,
   filteredCount,
@@ -75,8 +91,8 @@ export function UserFilters({
   const hasActiveFilters = selectedNationalities.length > 0 || 
     selectedLocations.length > 0 || 
     selectedGenders.length > 0 || 
-    showVerifiedOnly || 
-    showLinkupPlusOnly || 
+    verificationStatus !== "" || 
+    membershipStatus !== "" || 
     ageRange[0] !== 18 || 
     ageRange[1] !== 100 ||
     searchValue !== "";
@@ -105,40 +121,6 @@ export function UserFilters({
             onChange={(e) => setSearchValue(e.target.value)}
             className="pl-9 w-full"
           />
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="verified"
-              checked={showVerifiedOnly}
-              onCheckedChange={() => setShowVerifiedOnly(!showVerifiedOnly)}
-            />
-            <label
-              htmlFor="verified"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
-            >
-              Verified
-              <img 
-                src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                alt="Verified" 
-                className="h-4 w-4" 
-              />
-            </label>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="linkupPlus"
-              checked={showLinkupPlusOnly}
-              onCheckedChange={() => setShowLinkupPlusOnly(!showLinkupPlusOnly)}
-            />
-            <label
-              htmlFor="linkupPlus"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
-            >
-              Linkup Plus
-              <span className="text-amber-500 text-sm">👑</span>
-            </label>
-          </div>
         </div>
       </div>
 
@@ -261,6 +243,42 @@ export function UserFilters({
             </Command>
           </PopoverContent>
         </Popover>
+
+        <Select value={verificationStatus} onValueChange={setVerificationStatus}>
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Verification" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All Users</SelectItem>
+            <SelectItem value="verified">
+              <div className="flex items-center gap-2">
+                Verified
+                <img 
+                  src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                  alt="Verified" 
+                  className="h-4 w-4" 
+                />
+              </div>
+            </SelectItem>
+            <SelectItem value="unverified">Unverified</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select value={membershipStatus} onValueChange={setMembershipStatus}>
+          <SelectTrigger className="w-[140px]">
+            <SelectValue placeholder="Membership" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="">All Users</SelectItem>
+            <SelectItem value="free">Free User</SelectItem>
+            <SelectItem value="plus">
+              <div className="flex items-center gap-2">
+                Linkup Plus
+                <span className="text-amber-500">👑</span>
+              </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );
