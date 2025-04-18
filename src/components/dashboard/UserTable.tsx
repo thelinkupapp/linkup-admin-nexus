@@ -659,12 +659,15 @@ export default function UserTable() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('view', user.id)}
+                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors duration-200"
+                      >
                         View Profile
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id)}
-                        className="text-destructive"
+                        className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
                       >
                         <Ban className="mr-2 h-4 w-4" />
                         Suspend User
