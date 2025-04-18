@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Search, Crown, CheckCircle } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -16,8 +17,8 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+
 import {
-  genderOptions,
   countries,
   nationalities,
 } from "@/constants/filterOptions";
@@ -27,8 +28,6 @@ interface UserFiltersProps {
   setSearchValue: (value: string) => void;
   selectedNationalities: string[];
   setSelectedNationalities: (value: string[]) => void;
-  selectedGenders: string[];
-  setSelectedGenders: (value: string[]) => void;
   selectedLocations: string[];
   setSelectedLocations: (value: string[]) => void;
   showVerifiedOnly: boolean;
@@ -44,8 +43,6 @@ export function UserFilters({
   setSearchValue,
   selectedNationalities,
   setSelectedNationalities,
-  selectedGenders,
-  setSelectedGenders,
   selectedLocations,
   setSelectedLocations,
   showVerifiedOnly,
@@ -74,33 +71,31 @@ export function UserFilters({
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="verified"
-                checked={showVerifiedOnly}
-                onCheckedChange={() => setShowVerifiedOnly(!showVerifiedOnly)}
-              />
-              <label
-                htmlFor="verified"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-1"
-              >
-                Verified <CheckCircle className="h-4 w-4 text-blue-500" />
-              </label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="linkupPlus"
-                checked={showLinkupPlusOnly}
-                onCheckedChange={() => setShowLinkupPlusOnly(!showLinkupPlusOnly)}
-              />
-              <label
-                htmlFor="linkupPlus"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-1"
-              >
-                Linkup Plus <Crown className="h-4 w-4 text-yellow-500" />
-              </label>
-            </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="verified"
+              checked={showVerifiedOnly}
+              onCheckedChange={() => setShowVerifiedOnly(!showVerifiedOnly)}
+            />
+            <label
+              htmlFor="verified"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Verified Only
+            </label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="linkupPlus"
+              checked={showLinkupPlusOnly}
+              onCheckedChange={() => setShowLinkupPlusOnly(!showLinkupPlusOnly)}
+            />
+            <label
+              htmlFor="linkupPlus"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Linkup Plus Only
+            </label>
           </div>
         </div>
       </div>
@@ -128,43 +123,10 @@ export function UserFilters({
                   >
                     <Checkbox
                       checked={selectedNationalities.includes(nationality.label)}
-                      className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                      className="mr-2 h-4 w-4"
                     />
                     <span className="mr-2">{nationality.emoji}</span>
                     {nationality.label}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline">
-              Gender ({selectedGenders.length})
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[200px] p-0">
-            <Command>
-              <CommandInput placeholder="Search gender..." />
-              <CommandEmpty>No gender found.</CommandEmpty>
-              <CommandGroup>
-                {genderOptions.map((gender) => (
-                  <CommandItem
-                    key={gender.id}
-                    onSelect={() => {
-                      setSelectedGenders(
-                        toggleArrayValue(selectedGenders, gender.id)
-                      );
-                    }}
-                  >
-                    <Checkbox
-                      checked={selectedGenders.includes(gender.id)}
-                      className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
-                    />
-                    <span className="mr-2">{gender.emoji}</span>
-                    {gender.label}
                   </CommandItem>
                 ))}
               </CommandGroup>
@@ -194,7 +156,7 @@ export function UserFilters({
                   >
                     <Checkbox
                       checked={selectedLocations.includes(country.value)}
-                      className="mr-2 h-4 w-4 border-primary data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                      className="mr-2 h-4 w-4"
                     />
                     <span className="mr-2">{country.emoji}</span>
                     {country.label}
