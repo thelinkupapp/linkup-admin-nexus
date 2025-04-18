@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -268,13 +267,13 @@ export default function Login() {
             className="h-16 w-16 rounded-xl mx-auto mb-4"
           />
           <h1 className="text-2xl font-semibold mb-1">
-            {resetStep === "login" ? "Welcome back" : 
+            {resetStep === "login" ? "Do more, together" : 
              resetStep === "confirm-reset" ? "Reset Password" :
              resetStep === "enter-code" ? "Verify Code" :
              "Create New Password"}
           </h1>
           <p className="text-muted-foreground">
-            {resetStep === "login" ? "Sign in to access your admin dashboard" :
+            {resetStep === "login" ? "Collaborate and achieve more with Linkup" :
              resetStep === "confirm-reset" ? "We'll send you a code to reset your password" :
              resetStep === "enter-code" ? "Enter the verification code from your email" :
              "Choose a new password for your account"}
