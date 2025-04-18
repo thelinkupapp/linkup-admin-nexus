@@ -5,24 +5,30 @@ import UserProfile from './pages/UserProfile';
 import AdminProfile from "./pages/profile/AdminProfile";
 import LinkupStats from './pages/linkups/Stats';
 import Linkups from './pages/Linkups';
+import UserManagement from './pages/users/Management';
+import LinkupManagement from './pages/linkups/Management';
+import Users from './pages/Users';
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Dashboard routes */}
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/users/:userId" element={<UserProfile />} />
-        <Route path="/profile" element={<AdminProfile />} />
-        {/* Add dashboard as the main starting route */}
-        <Route path="/dashboard" element={<Navigate to="/profile" replace />} />
-        {/* Make sure nested routes point to their correct components */}
-        <Route path="/users/management" element={<Navigate to="/users" replace />} />
-        <Route path="/users" element={<Navigate to="/users/1" replace />} />
+        <Route path="/dashboard" element={<AdminProfile />} />
         
-        {/* Add Linkup routes */}
+        {/* User routes */}
+        <Route path="/users/:userId" element={<UserProfile />} />
+        <Route path="/users" element={<Users />} />
+        <Route path="/users/management" element={<UserManagement />} />
+        
+        {/* Profile routes */}
+        <Route path="/profile" element={<AdminProfile />} />
+        
+        {/* Linkup routes */}
         <Route path="/linkups" element={<Linkups />} />
         <Route path="/linkups/statistics" element={<LinkupStats />} />
-        <Route path="/linkups/management" element={<Navigate to="/linkups" replace />} />
+        <Route path="/linkups/management" element={<LinkupManagement />} />
       </Routes>
     </Router>
   );
