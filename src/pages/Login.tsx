@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -262,7 +263,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img 
-            src="/lovable-uploads/8be47164-879f-4e71-9457-a380cd0fbf40.png"
+            src="/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png"
             alt="Linkup Logo"
             className="h-16 w-16 rounded-xl mx-auto mb-4"
           />
@@ -273,7 +274,7 @@ export default function Login() {
              "Create New Password"}
           </h1>
           <p className="text-muted-foreground">
-            {resetStep === "login" ? "Collaborate and achieve more with Linkup" :
+            {resetStep === "login" ? "Sign in to access the admin dashboard" :
              resetStep === "confirm-reset" ? "We'll send you a code to reset your password" :
              resetStep === "enter-code" ? "Enter the verification code from your email" :
              "Choose a new password for your account"}
