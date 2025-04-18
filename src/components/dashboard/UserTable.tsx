@@ -660,10 +660,8 @@ export default function UserTable() {
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="max-w-0">
-                  <div 
-                    className="flex items-center gap-3 cursor-pointer hover:opacity-80"
-                    onClick={() => handleUserClick(user.id)}
-                  >
+                  <div className="flex items-center gap-3 cursor-pointer hover:opacity-80"
+                       onClick={() => handleUserClick(user.id)}>
                     <div className="relative">
                       <Avatar>
                         <AvatarImage src={user.avatar} alt={user.name} />
@@ -691,11 +689,11 @@ export default function UserTable() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  {user.username === "jackpeagam" ? (
+                                  {(user.username === "jackpeagam" || user.username === "benwhatson") ? (
                                     <img 
                                       src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
                                       alt="Staff Member" 
-                                      className="h-4 w-4" 
+                                      className="h-5 w-5" 
                                     />
                                   ) : (
                                     <img 
@@ -708,7 +706,7 @@ export default function UserTable() {
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>
-                                  {user.username === "jackpeagam" 
+                                  {(user.username === "jackpeagam" || user.username === "benwhatson") 
                                     ? "Staff Member" 
                                     : "Verified User"}
                                 </p>
