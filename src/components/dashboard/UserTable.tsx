@@ -307,7 +307,7 @@ export const users: User[] = [
 
 const getCountryEmoji = (country: string) => {
   const emojiMap: { [key: string]: string } = {
-    'UK': '🇬🇧',
+    'UK': '��🇧',
     'USA': '🇺🇸',
     'UAE': '🇦🇪',
     'Ireland': '🇮🇪',
@@ -329,6 +329,9 @@ const formatCurrency = (amount: number) => {
   return `£${amount.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 };
 
+type SortField = 'hosted' | 'attended' | 'earnings' | 'joined';
+type SortDirection = 'asc' | 'desc';
+
 const UserTable = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
@@ -340,6 +343,17 @@ const UserTable = () => {
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [sortField, setSortField] = useState<SortField>('joined');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
+    }
+  };
 
   const filteredUsers = users
     .filter(user => {
@@ -358,9 +372,20 @@ const UserTable = () => {
              matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
-      const dateA = new Date(a.joinDate).getTime();
-      const dateB = new Date(b.joinDate).getTime();
-      return dateB - dateA;
+      const multiplier = sortDirection === 'asc' ? 1 : -1;
+      
+      switch (sortField) {
+        case 'hosted':
+          return (a.hostedLinkups - b.hostedLinkups) * multiplier;
+        case 'attended':
+          return (a.attendedLinkups - b.attendedLinkups) * multiplier;
+        case 'earnings':
+          return (a.totalEarnings - b.totalEarnings) * multiplier;
+        case 'joined':
+          return (new Date(a.joinDate).getTime() - new Date(b.joinDate).getTime()) * multiplier;
+        default:
+          return 0;
+      }
     });
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -420,27 +445,43 @@ const UserTable = () => {
               <TableHead className="w-[140px]">Location</TableHead>
               <TableHead className="w-[120px]">Nationality</TableHead>
               <TableHead className="w-[100px]">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort('hosted')}
+                >
                   <Crown className="h-4 w-4 text-muted-foreground" />
                   <span>Hosted</span>
+                  <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
               <TableHead className="w-[100px]">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort('attended')}
+                >
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
+                  <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
               <TableHead className="w-[120px]">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort('earnings')}
+                >
                   <Coins className="h-4 w-4 text-muted-foreground" />
                   <span>Earnings</span>
+                  <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
               <TableHead className="w-[140px]">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div 
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => handleSort('joined')}
+                >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
+                  <ArrowUpDown className="h-3 w-3" />
                 </div>
               </TableHead>
               <TableHead className="w-[70px]"></TableHead>
