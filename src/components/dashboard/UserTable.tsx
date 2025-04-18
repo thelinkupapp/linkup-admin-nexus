@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { 
   MoreVertical, 
   Ban,
@@ -624,6 +624,14 @@ export default function UserTable() {
     setDeleteUserName("");
   };
 
+  const renderLinkupPlusIcon = () => (
+    <img 
+      src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png" 
+      alt="Linkup Plus" 
+      className="h-4 w-4 ml-0.5" 
+    />
+  );
+
   return (
     <div className="space-y-4">
       <UserFilters
@@ -803,7 +811,7 @@ export default function UserTable() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  <Crown className="h-4 w-4 text-linkup-purple" />
+                                  {renderLinkupPlusIcon()}
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>
