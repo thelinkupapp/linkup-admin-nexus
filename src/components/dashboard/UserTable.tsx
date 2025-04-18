@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   MoreVertical, 
@@ -802,14 +801,14 @@ const UserTable = () => {
                         View profile
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        className="text-red-500 hover:text-white hover:bg-red-500 cursor-pointer"
+                        className="text-destructive hover:bg-destructive hover:text-white cursor-pointer"
                         onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
                       >
                         <Ban className="mr-2 h-4 w-4" />
                         Suspend user
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        className="text-red-500 hover:text-white hover:bg-red-500 cursor-pointer"
+                        className="text-destructive hover:bg-destructive hover:text-white cursor-pointer"
                         onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
