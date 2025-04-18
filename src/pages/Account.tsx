@@ -1,4 +1,3 @@
-
 import { ArrowLeft, Lock, Mail, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -64,8 +63,8 @@ export default function Account() {
   };
 
   return (
-    <div className="container max-w-4xl py-6">
-      <div className="flex items-center gap-4 mb-8">
+    <div className="container max-w-6xl py-4">
+      <div className="flex items-center gap-4 mb-4">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/">
             <ArrowLeft className="h-4 w-4" />
@@ -79,23 +78,23 @@ export default function Account() {
         </div>
       </div>
 
-      <div className="grid gap-6">
-        <Card className="p-6">
-          <div className="flex items-center gap-4 mb-6">
+      <div className="grid md:grid-cols-2 gap-4">
+        <Card className="p-4">
+          <div className="flex items-center gap-3 mb-4">
             <User className="h-5 w-5 text-muted-foreground" />
             <h3 className="text-lg font-semibold">Profile Information</h3>
           </div>
-          <form onSubmit={handleProfileUpdate} className="space-y-6">
-            <div className="flex items-center gap-4 mb-6">
+          <form onSubmit={handleProfileUpdate} className="space-y-4">
+            <div className="flex items-center gap-3 mb-4">
               <img 
                 src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
                 alt="Profile" 
-                className="h-16 w-16 rounded-full object-cover border-2 border-primary/10"
+                className="h-14 w-14 rounded-full object-cover border-2 border-primary/10"
               />
               <Button size="sm">Change Avatar</Button>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2">
+            <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First name</Label>
                 <Input id="firstName" defaultValue="Jack" />
@@ -109,17 +108,17 @@ export default function Account() {
               <Label htmlFor="role">Role</Label>
               <Input id="role" value="Super Admin" disabled />
             </div>
-            <Button type="submit">Save Changes</Button>
+            <Button type="submit" size="sm" className="w-full">Save Changes</Button>
           </form>
         </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <Mail className="h-5 w-5 text-muted-foreground" />
-            <h3 className="text-lg font-semibold">Email Address</h3>
-          </div>
-          <form onSubmit={handleEmailUpdate}>
-            <div className="space-y-4">
+        <div className="space-y-4">
+          <Card className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <Mail className="h-5 w-5 text-muted-foreground" />
+              <h3 className="text-lg font-semibold">Email Address</h3>
+            </div>
+            <form onSubmit={handleEmailUpdate} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Current email</Label>
                 <Input 
@@ -139,18 +138,16 @@ export default function Account() {
                   placeholder="Enter new email address"
                 />
               </div>
-              <Button type="submit">Update Email</Button>
-            </div>
-          </form>
-        </Card>
+              <Button type="submit" size="sm" className="w-full">Update Email</Button>
+            </form>
+          </Card>
 
-        <Card className="p-6">
-          <div className="flex items-center gap-4 mb-6">
-            <Lock className="h-5 w-5 text-muted-foreground" />
-            <h3 className="text-lg font-semibold">Password</h3>
-          </div>
-          <form onSubmit={handlePasswordUpdate}>
-            <div className="space-y-4">
+          <Card className="p-4">
+            <div className="flex items-center gap-3 mb-4">
+              <Lock className="h-5 w-5 text-muted-foreground" />
+              <h3 className="text-lg font-semibold">Password</h3>
+            </div>
+            <form onSubmit={handlePasswordUpdate} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="currentPassword">Current password</Label>
                 <Input 
@@ -178,10 +175,10 @@ export default function Account() {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-              <Button type="submit">Change Password</Button>
-            </div>
-          </form>
-        </Card>
+              <Button type="submit" size="sm" className="w-full">Change Password</Button>
+            </form>
+          </Card>
+        </div>
       </div>
 
       <AlertDialog open={showEmailConfirm} onOpenChange={setShowEmailConfirm}>
