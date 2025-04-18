@@ -20,6 +20,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { UserRoundX } from "lucide-react";
 
 interface SuspendUserDialogProps {
   isOpen: boolean;
@@ -49,6 +50,7 @@ export function SuspendUserDialog({
 }: SuspendUserDialogProps) {
   const [reason, setReason] = useState<string>("");
   const [notes, setNotes] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const { toast } = useToast();
 
   const handleSuspend = () => {
@@ -67,77 +69,113 @@ export function SuspendUserDialog({
       notes: notes.trim(),
     });
     
-    toast({
-      title: "User Suspended",
-      description: `${username} has been suspended.`,
-    });
-    
+    setIsConfirmed(true);
+  };
+
+  const handleClose = () => {
+    setIsConfirmed(false);
+    setReason("");
+    setNotes("");
     onClose();
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Suspend User</AlertDialogTitle>
-          <div className="flex items-center space-x-4 p-4 bg-muted/20 rounded-lg mb-4">
-            <Avatar className="h-12 w-12">
-              <AvatarImage src={userAvatar} alt={userName} />
-              <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="font-medium">{userName}</h3>
-              <p className="text-sm text-muted-foreground">@{username}</p>
+    <AlertDialog open={isOpen} onOpenChange={handleClose}>
+      <AlertDialogContent className="sm:max-w-[425px]">
+        {!isConfirmed ? (
+          <>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Suspend User</AlertDialogTitle>
+              <div className="flex items-center space-x-4 p-4 bg-muted/20 rounded-lg mb-4">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src={userAvatar} alt={userName} />
+                  <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <h3 className="font-medium">{userName}</h3>
+                  <p className="text-sm text-muted-foreground">@{username}</p>
+                </div>
+              </div>
+              <AlertDialogDescription>
+                Are you sure you want to suspend this user? This action can be reversed later.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            <div className="grid gap-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Reason for Suspension
+                </label>
+                <Select onValueChange={setReason} value={reason}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select reason" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {suspensionReasons.map((reason) => (
+                      <SelectItem key={reason} value={reason}>
+                        {reason}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Additional Notes (Optional)
+                </label>
+                <Textarea
+                  placeholder="Add any additional context..."
+                  value={notes}
+                  onChange={(e) => setNotes(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
             </div>
-          </div>
-          <AlertDialogDescription>
-            Are you sure you want to suspend this user? This action can be reversed later.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        
-        <div className="grid gap-4 py-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Reason for Suspension
-            </label>
-            <Select onValueChange={setReason} value={reason}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select reason" />
-              </SelectTrigger>
-              <SelectContent>
-                {suspensionReasons.map((reason) => (
-                  <SelectItem key={reason} value={reason}>
-                    {reason}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="space-y-2">
-            <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-              Additional Notes (Optional)
-            </label>
-            <Textarea
-              placeholder="Add any additional context..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="min-h-[100px]"
-            />
-          </div>
-        </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <Button
+                variant="destructive"
+                onClick={handleSuspend}
+              >
+                Suspend User
+              </Button>
+            </AlertDialogFooter>
+          </>
+        ) : (
+          <div className="py-6 text-center space-y-4">
+            <div className="mx-auto w-fit p-3 rounded-full bg-red-100 text-red-600 mb-4">
+              <UserRoundX className="h-12 w-12" />
+            </div>
+            
+            <div className="flex justify-center mb-4">
+              <Avatar className="h-16 w-16">
+                <AvatarImage src={userAvatar} alt={userName} />
+                <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
+              </Avatar>
+            </div>
+            
+            <AlertDialogTitle className="text-2xl mb-2">
+              Bye bye, {userName}! 👋
+            </AlertDialogTitle>
+            
+            <AlertDialogDescription className="text-md mb-6">
+              This user has been suspended and moved to the Suspended Users section.
+              <br />
+              You can always revoke their suspension if needed.
+            </AlertDialogDescription>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button
-            variant="destructive"
-            onClick={handleSuspend}
-          >
-            Suspend User
-          </Button>
-        </AlertDialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={handleClose}
+              className="w-full"
+            >
+              Close
+            </Button>
+          </div>
+        )}
       </AlertDialogContent>
     </AlertDialog>
   );
 }
-
