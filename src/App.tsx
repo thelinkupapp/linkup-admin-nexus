@@ -31,6 +31,7 @@ import AdminManagement from "./pages/settings/AdminManagement";
 import Settings from "./pages/Settings";
 import EmailCRM from "./pages/crm/EmailCRM";
 import PushNotificationCRM from "./pages/crm/PushNotificationCRM";
+import Account from "./pages/Account";
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,7 @@ const App = () => {
             <Route path="/settings/admin" element={<AdminManagement />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/staff" element={<LinkupStaff />} />
+            <Route path="/account" element={<Account />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
