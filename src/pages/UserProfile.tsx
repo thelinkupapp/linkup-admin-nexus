@@ -4,6 +4,42 @@ import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { DeleteUserDialog } from "@/components/dashboard/DeleteUserDialog";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
+import { ProfilePhotos } from "@/components/dashboard/ProfilePhotos";
+import { UserActivity } from "@/components/dashboard/UserActivity";
+import { getCountryEmoji } from "@/utils/countryUtils";
+import { 
+  Tabs, 
+  TabsList, 
+  TabsTrigger, 
+  TabsContent 
+} from "@/components/ui/tabs";
+import { 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  CardDescription, 
+  CardContent 
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { 
+  Briefcase, 
+  Heart, 
+  Languages, 
+  Instagram, 
+  Twitter, 
+  Linkedin, 
+  CheckCircle, 
+  X, 
+  Check, 
+  Crown, 
+  Flag, 
+  AlertTriangle, 
+  User as UserIcon 
+} from "lucide-react";
 
 const user = {
   id: "2",
@@ -759,54 +795,4 @@ const UserProfile = () => {
                     <CardContent>
                       {user.pendingFriendRequests.sent.length === 0 ? (
                         <p className="text-muted-foreground text-center py-4">No sent friend requests</p>
-                      ) : (
-                        <div className="space-y-4">
-                          {user.pendingFriendRequests.sent.map((request) => (
-                            <div key={request.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar>
-                                  <AvatarImage src={request.avatar} alt={request.name} />
-                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium">{request.name}</p>
-                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
-                                </div>
-                              </div>
-                              <Button variant="outline" size="sm">Cancel</Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="photos" className="space-y-6">
-              <ProfilePhotos photos={userPhotos} />
-            </TabsContent>
-
-            <TabsContent value="activity" className="space-y-6">
-              <UserActivity chatActivity={userChatActivity} linkupActivity={userLinkupActivity} />
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-      
-      {isDeleteDialogOpen && (
-        <DeleteUserDialog
-          isOpen={isDeleteDialogOpen}
-          onClose={() => setIsDeleteDialogOpen(false)}
-          userId={user.id}
-          username={user.username}
-          userAvatar={user.avatar}
-          userName={user.name}
-        />
-      )}
-    </div>
-  );
-};
-
-export default UserProfile;
+                      ) :
