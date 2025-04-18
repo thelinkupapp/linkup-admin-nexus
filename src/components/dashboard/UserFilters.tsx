@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { nationalities } from "@/constants/filterOptions";
 import {
@@ -70,8 +71,8 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Nationality</label>
           <Select
-            multiple
-            onValueChange={(value) => setSelectedNationalities(value === "" ? [] : (Array.isArray(value) ? value : [value]))}
+            value={selectedNationalities.length > 0 ? selectedNationalities[0] : ""}
+            onValueChange={(value) => setSelectedNationalities(value === "" ? [] : [value])}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select nationalities" />
@@ -89,8 +90,8 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Gender</label>
           <Select
-            multiple
-            onValueChange={(value) => setSelectedGenders(value === "" ? [] : (Array.isArray(value) ? value : [value]))}
+            value={selectedGenders.length > 0 ? selectedGenders[0] : ""}
+            onValueChange={(value) => setSelectedGenders(value === "" ? [] : [value])}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select genders" />
