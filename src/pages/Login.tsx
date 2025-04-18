@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Mail, Lock, Loader2, ArrowRight, KeyRound, CheckCircle2 } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowRight, KeyRound, CheckCircle2, ShieldCheck } from "lucide-react";
 
 type ResetStep = "login" | "confirm-reset" | "enter-code" | "new-password";
 
@@ -249,7 +249,10 @@ export default function Login() {
                   Signing in...
                 </>
               ) : (
-                "Sign in"
+                <>
+                  <ShieldCheck className="mr-2 h-4 w-4" />
+                  Sign in securely
+                </>
               )}
             </Button>
           </form>
