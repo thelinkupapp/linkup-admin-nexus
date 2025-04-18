@@ -537,8 +537,8 @@ export default function UserTable() {
         <Table className="w-full table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[22%]">User</TableHead>
-              <TableHead className="w-[6%]">Age</TableHead>
+              <TableHead className="w-[25%]">User</TableHead>
+              <TableHead className="w-[5%]">Age</TableHead>
               <TableHead className="w-[12%]">Location</TableHead>
               <TableHead className="w-[12%]">Nationality</TableHead>
               <TableHead className="w-[8%]">
@@ -577,7 +577,7 @@ export default function UserTable() {
                   <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
-              <TableHead className="w-[12%] text-right">Actions</TableHead>
+              <TableHead className="w-[10%] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
