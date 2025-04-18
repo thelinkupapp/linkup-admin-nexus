@@ -1,47 +1,10 @@
-
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { 
-  ArrowLeft, 
-  CheckCircle, 
-  Crown, 
-  MapPin, 
-  Calendar, 
-  Mail,
-  Phone,
-  Globe,
-  Briefcase,
-  Flag,
-  Instagram,
-  Twitter,
-  Linkedin,
-  User,
-  Shield,
-  AlertTriangle,
-  Users as UsersIcon,
-  CreditCard,
-  Check,
-  X,
-  MessageSquare
-} from "lucide-react";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
+import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
 
-// Mock data for a user profile
 const user = {
   id: "1",
   avatar: "https://i.pravatar.cc/300?img=1",
@@ -166,9 +129,7 @@ const user = {
 
 const UserProfile = () => {
   const { userId } = useParams();
-  const [activeTab, setActiveTab] = useState("basic-info");
-  
-  // In a real app, we would fetch the user data based on userId
+  const [activeTab, setActiveTab] = useState("profile-details");
   
   return (
     <div className="flex min-h-screen bg-background">
@@ -176,64 +137,10 @@ const UserProfile = () => {
       <div className="flex-1 pl-64">
         <Header title="User Profile" />
         <main className="p-6">
-          <div className="mb-6">
-            <Button variant="ghost" className="gap-1 text-muted-foreground">
-              <ArrowLeft className="h-4 w-4" />
-              Back to Users
-            </Button>
-          </div>
-
-          <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              
-              <div className="flex-1">
-                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
-                  <div className="flex flex-wrap gap-2">
-                    {user.isVerified && (
-                      <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20">
-                        <CheckCircle className="h-3 w-3 mr-1" /> Verified
-                      </Badge>
-                    )}
-                    {user.isLinkupPlus && (
-                      <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
-                        <Crown className="h-3 w-3 mr-1" /> Linkup Plus
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <p className="text-muted-foreground">@{user.username}</p>
-                
-                <div className="flex flex-col sm:flex-row gap-3 mt-3">
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Mail className="h-4 w-4" />
-                    {user.email}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {user.location}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    Joined {new Date(user.joinDate).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex gap-2 self-start">
-                <Button variant="outline" className="text-destructive border-destructive/20">Suspend User</Button>
-                <Button>Edit Profile</Button>
-              </div>
-            </div>
-          </div>
+          <UserProfileHeader user={user} />
 
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="mb-6">
-              <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
               <TabsTrigger value="profile-details">Profile Details</TabsTrigger>
               <TabsTrigger value="verification">Verification</TabsTrigger>
               <TabsTrigger value="wallet">Wallet & Billing</TabsTrigger>
@@ -243,58 +150,6 @@ const UserProfile = () => {
               <TabsTrigger value="friends">Friends</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="basic-info" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Full Name</p>
-                      <p>{user.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Username</p>
-                      <p>@{user.username}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
-                      <p>{user.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
-                      <p>{user.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Date of Birth</p>
-                      <p>{new Date(user.dob).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Age</p>
-                      <p>{user.age} years old</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Gender</p>
-                      <p>{user.gender}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Nationality</p>
-                      <p>{user.nationality}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Join Date</p>
-                      <p>{new Date(user.joinDate).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Last Known Location</p>
-                      <p>{user.location}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
             <TabsContent value="profile-details" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
