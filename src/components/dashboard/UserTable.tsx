@@ -3,7 +3,8 @@ import {
   MoreVertical, 
   Ban,
   ArrowUpDown,
-  Eye
+  Eye,
+  Trash2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -523,6 +524,10 @@ export default function UserTable() {
         setSuspendUserAvatar(avatar || "");
         setSuspendUserName(name || "");
         break;
+      case 'delete':
+        // For now, just log the deletion - you might want to add a confirmation dialog later
+        console.log('Deleting user:', userId);
+        break;
       default:
         break;
     }
@@ -687,6 +692,13 @@ export default function UserTable() {
                       >
                         <Ban className="mr-2 h-4 w-4" />
                         Suspend User
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('delete', user.id)}
+                        className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete User
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
