@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -16,13 +15,23 @@ import {
   AlertTriangle,
   Trash2,
   Mail,
-  LayoutDashboard
+  LayoutDashboard,
+  LogOut,
+  User,
+  HelpCircle
 } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItems = [
   {
@@ -195,20 +204,44 @@ export function Sidebar() {
       </div>
 
       <div className="absolute bottom-4 left-4 right-4">
-        <div className="p-3 rounded-lg bg-secondary">
-          <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
-          <div className="flex items-center gap-3">
-            <img 
-              src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
-              alt="Jack Peagam" 
-              className="h-9 w-9 rounded-full object-cover"
-            />
-            <div>
-              <p className="text-sm font-medium">Jack Peagam</p>
-              <p className="text-xs text-muted-foreground">jack@linkupapp.io</p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <div className="p-3 rounded-lg bg-secondary cursor-pointer hover:bg-secondary/80 transition-colors">
+              <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
+              <div className="flex items-center gap-3">
+                <img 
+                  src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
+                  alt="Jack Peagam" 
+                  className="h-9 w-9 rounded-full object-cover"
+                />
+                <div>
+                  <p className="text-sm font-medium">Jack Peagam</p>
+                  <p className="text-xs text-muted-foreground">jack@linkupapp.io</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>My Profile</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Account Settings</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <HelpCircle className="mr-2 h-4 w-4" />
+              <span>Help & Support</span>
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem className="text-destructive focus:text-destructive">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log Out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
   );
