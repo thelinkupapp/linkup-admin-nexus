@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -804,3 +805,107 @@ const UserProfile = () => {
                               <p className="text-sm text-muted-foreground">@{friend.username}</p>
                             </div>
                           </div>
+                          <Button variant="outline" size="sm">View Profile</Button>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <div className="space-y-6">
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Received Friend Requests</CardTitle>
+                      <CardDescription>
+                        {user.pendingFriendRequests.received.length} pending requests
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {user.pendingFriendRequests.received.length === 0 ? (
+                        <p className="text-muted-foreground text-center py-4">No pending friend requests</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {user.pendingFriendRequests.received.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Avatar>
+                                  <AvatarImage src={request.avatar} alt={request.name} />
+                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium">{request.name}</p>
+                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button variant="outline" size="sm">Deny</Button>
+                                <Button size="sm">Accept</Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Sent Friend Requests</CardTitle>
+                      <CardDescription>
+                        {user.pendingFriendRequests.sent.length} outgoing requests
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      {user.pendingFriendRequests.sent.length === 0 ? (
+                        <p className="text-muted-foreground text-center py-4">No sent friend requests</p>
+                      ) : (
+                        <div className="space-y-4">
+                          {user.pendingFriendRequests.sent.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Avatar>
+                                  <AvatarImage src={request.avatar} alt={request.name} />
+                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium">{request.name}</p>
+                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm">Cancel</Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="photos" className="space-y-6">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+
+            <TabsContent value="activity" className="space-y-6">
+              <UserActivity chatActivity={userChatActivity} linkupActivity={userLinkupActivity} />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+      
+      {isDeleteDialogOpen && (
+        <DeleteUserDialog
+          isOpen={isDeleteDialogOpen}
+          onClose={() => setIsDeleteDialogOpen(false)}
+          userId={user.id}
+          username={user.username}
+          userAvatar={user.avatar}
+          userName={user.name}
+        />
+      )}
+    </div>
+  );
+};
+
+export default UserProfile;
