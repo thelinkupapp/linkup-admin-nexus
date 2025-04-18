@@ -13,7 +13,8 @@ import {
   ArrowUpDown,
   CalendarDays,
   UserRound,
-  CheckCircle2
+  CheckCircle2,
+  Calendar
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -37,6 +38,7 @@ import { UserFilters } from "./UserFilters";
 import { cn } from "@/lib/utils";
 import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 export const users: User[] = [
   {
@@ -244,6 +246,7 @@ const UserTable = () => {
   const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
   const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
   const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
+  const [joinDateSortDirection, setJoinDateSortDirection] = useState<"asc" | "desc" | null>(null);
 
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
@@ -266,12 +269,16 @@ const UserTable = () => {
     }
   };
 
-  const handleSort = (type: "earnings" | "hosted" | "attended") => {
+  const handleSort = (type: "earnings" | "hosted" | "attended" | "joined") => {
     if (type !== "earnings") setEarningsSortDirection(null);
     if (type !== "hosted") setHostedSortDirection(null);
     if (type !== "attended") setAttendedSortDirection(null);
+    if (type !== "joined") setJoinDateSortDirection(null);
 
     switch (type) {
+      case "joined":
+        setJoinDateSortDirection(prev => prev === "asc" ? "desc" : "asc");
+        break;
       case "earnings":
         setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
         break;
@@ -301,6 +308,13 @@ const UserTable = () => {
              matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
+      if (joinDateSortDirection) {
+        const dateA = new Date(a.joinDate).getTime();
+        const dateB = new Date(b.joinDate).getTime();
+        return joinDateSortDirection === "asc" 
+          ? dateA - dateB
+          : dateB - dateA;
+      }
       if (earningsSortDirection) {
         return earningsSortDirection === "asc" 
           ? a.totalEarnings - b.totalEarnings
@@ -387,6 +401,13 @@ const UserTable = () => {
                   <ArrowUpDown className={cn("h-4 w-4", earningsSortDirection && "text-primary")} />
                 </div>
               </TableHead>
+              <TableHead>
+                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("joined")}>
+                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <span>Joined</span>
+                  <ArrowUpDown className={cn("h-4 w-4", joinDateSortDirection && "text-primary")} />
+                </div>
+              </TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="w-[50px]"></TableHead>
             </TableRow>
@@ -419,6 +440,7 @@ const UserTable = () => {
                 <TableCell>{user.hostedLinkups}</TableCell>
                 <TableCell>{user.attendedLinkups}</TableCell>
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
+                <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className={cn(
