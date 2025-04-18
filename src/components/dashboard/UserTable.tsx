@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -807,10 +808,18 @@ export default function UserTable() {
       {totalPages > 1 && (
         <Pagination className="mt-4">
           <PaginationContent>
-            <PaginationPrevious 
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
-            />
+            {/* Fixed: removed disabled property and conditionally render the component */}
+            {currentPage > 1 ? (
+              <PaginationPrevious 
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              />
+            ) : (
+              <PaginationItem>
+                <span className="flex h-10 items-center justify-center gap-1 pl-2.5 opacity-50">
+                  <span>Previous</span>
+                </span>
+              </PaginationItem>
+            )}
             
             {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
               const pageNum = i + 1;
@@ -840,10 +849,18 @@ export default function UserTable() {
               </>
             )}
             
-            <PaginationNext 
-              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-              disabled={currentPage === totalPages}
-            />
+            {/* Fixed: removed disabled property and conditionally render the component */}
+            {currentPage < totalPages ? (
+              <PaginationNext 
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              />
+            ) : (
+              <PaginationItem>
+                <span className="flex h-10 items-center justify-center gap-1 pr-2.5 opacity-50">
+                  <span>Next</span>
+                </span>
+              </PaginationItem>
+            )}
           </PaginationContent>
         </Pagination>
       )}
