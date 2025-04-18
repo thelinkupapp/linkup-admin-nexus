@@ -646,9 +646,18 @@ export default function UserTable() {
                         <AvatarImage src={user.avatar} alt={user.name} />
                         <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                       </Avatar>
-                      <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs">
-                        {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
-                      </div>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs">
+                              {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{user.gender} User</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                     <div className="min-w-0">
                       <div className="font-medium truncate">{user.name}</div>
