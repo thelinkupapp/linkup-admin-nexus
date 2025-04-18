@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   AlertDialog,
@@ -171,7 +170,7 @@ export function DeleteUserDialog({
             <AlertDialogDescription className="text-md mb-6 px-4">
               This user has been permanently deleted from the app. 
               This action cannot be undone. 
-              They have been moved to the 'deleted users' section.
+              They have been moved to the 'Deleted Users' section.
             </AlertDialogDescription>
 
             <Button 
