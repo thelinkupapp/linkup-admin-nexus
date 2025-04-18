@@ -23,16 +23,17 @@ export function formatJoinDate(date: string | Date): string {
   }
 
   if (isThisWeek(joinDate)) {
-    return `${format(joinDate, 'EEEE')} at ${time}`;
+    return `${format(joinDate, 'EEEE')} at ${time}`; // Returns full day name like "Monday"
   }
 
   if (isLastWeek(joinDate)) {
-    return `${format(joinDate, 'EEE d')} at ${time}`;
+    return `${format(joinDate, 'EEE d')} at ${time}`; // Returns abbreviated day name + date like "Wed 15"
   }
 
   if (differenceInYears(now, joinDate) > 0) {
-    return `${format(joinDate, 'MMM d yyyy')} at ${time}`;
+    return `${format(joinDate, 'MMM d yyyy')} at ${time}`; // Returns full date with year like "Mar 21 2024"
   }
 
-  return `${format(joinDate, 'MMM d')} at ${time}`;
+  return `${format(joinDate, 'MMM d')} at ${time}`; // Returns month and day like "Mar 21"
 }
+
