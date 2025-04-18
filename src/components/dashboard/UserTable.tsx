@@ -509,7 +509,7 @@ export default function UserTable() {
   const [deleteUserName, setDeleteUserName] = useState<string>("");
   const [verificationStatus, setVerificationStatus] = useState("");
   const [membershipStatus, setMembershipStatus] = useState("");
-  const [itemsPerPageOptions, setItemsPerPageOptions] = useState([25, 50, 100]);
+  const [itemsPerPageOptions] = useState([25, 50, 100]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -785,4 +785,176 @@ export default function UserTable() {
                                   )}
                                 </span>
                               </TooltipTrigger>
-                              <TooltipContent
+                              <TooltipContent>
+                                <p>{(user.username === "jackpeagam" || 
+                                  user.username === "benwhatson" || 
+                                  user.username === "elieabousamra") ? "Staff Member" : "Verified User"}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                        {user.isLinkupPlus && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <img 
+                                  src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png" 
+                                  alt="Linkup Plus" 
+                                  className="h-4 w-4 ml-0.5" 
+                                />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Linkup Plus Member</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>{user.age}</TableCell>
+                <TableCell>{user.location}</TableCell>
+                <TableCell>
+                  {user.nationality === "🇱🇧" ? "Lebanese" : getNationalityLabel(user.nationality)}
+                </TableCell>
+                <TableCell>{user.hostedLinkups}</TableCell>
+                <TableCell>{user.attendedLinkups}</TableCell>
+                <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
+                <TableCell>
+                  {formatJoinDate(user.joinDate)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        <span>View Profile</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}>
+                        <Ban className="mr-2 h-4 w-4" />
+                        <span>Suspend User</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive" 
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete User</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {filteredUsers.length > 0 ? (
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex-1">
+            <PaginationItemsPerPage
+              defaultValue={String(itemsPerPage)}
+              onValueChange={(value) => setItemsPerPage(Number(value))}
+            >
+              <PaginationItem>
+                Show
+                <Select>
+                  <SelectTrigger className="w-[70px]">
+                    <SelectValue placeholder={itemsPerPage.toString()} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {itemsPerPageOptions.map(option => (
+                      <SelectItem key={option} value={option.toString()}>
+                        {option}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </PaginationItem>
+            </PaginationItemsPerPage>
+          </div>
+
+          <Pagination>
+            <PaginationContent>
+              <PaginationPrevious 
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              />
+              
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <PaginationLink
+                      key={page}
+                      isActive={page === currentPage}
+                      onClick={() => handlePageChange(page)}
+                    >
+                      {page}
+                    </PaginationLink>
+                  );
+                }
+                
+                if (
+                  (page === 2 && currentPage > 3) ||
+                  (page === totalPages - 1 && currentPage < totalPages - 2)
+                ) {
+                  return <PaginationEllipsis key={`ellipsis-${page}`} />;
+                }
+                
+                return null;
+              })}
+              
+              <PaginationNext
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              />
+            </PaginationContent>
+          </Pagination>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <Users className="h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium">No users found</h3>
+          <p className="text-muted-foreground mt-1">
+            Try adjusting your search or filter criteria
+          </p>
+        </div>
+      )}
+
+      {suspendUserId && (
+        <SuspendUserDialog
+          open={!!suspendUserId}
+          onClose={handleCloseSuspendDialog}
+          userId={suspendUserId}
+          username={suspendUsername}
+          userAvatar={suspendUserAvatar}
+          userName={suspendUserName}
+        />
+      )}
+
+      {deleteUserId && (
+        <DeleteUserDialog
+          open={!!deleteUserId}
+          onClose={handleCloseDeleteDialog}
+          userId={deleteUserId}
+          username={deleteUsername}
+          userAvatar={deleteUserAvatar}
+          userName={deleteUserName}
+        />
+      )}
+    </div>
+  );
+}
