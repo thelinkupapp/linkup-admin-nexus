@@ -734,7 +734,7 @@ export default function UserTable() {
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent 
-                          className="w-80 bg-white border border-gray-200 rounded-xl shadow-lg text-gray-900 p-4"
+                          className="w-80 bg-white border border-gray-200 rounded-xl shadow-xl text-gray-900 p-4"
                         >
                           <div className="flex justify-between space-x-4">
                             <Avatar className="h-16 w-16 border-2 border-linkup-purple">
