@@ -24,8 +24,8 @@ export default function Account() {
   };
 
   return (
-    <div className="container py-6 space-y-6">
-      <div className="flex items-center gap-4">
+    <div className="container max-w-4xl py-6">
+      <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" asChild>
           <Link to="/">
             <ArrowLeft className="h-4 w-4" />
@@ -39,74 +39,68 @@ export default function Account() {
         </div>
       </div>
 
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card className="p-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 mb-6">
+          <form onSubmit={handleProfileUpdate} className="space-y-4">
+            <div className="flex items-center gap-4 mb-4">
               <img 
                 src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
                 alt="Profile" 
-                className="h-20 w-20 rounded-full object-cover"
+                className="h-16 w-16 rounded-full object-cover"
               />
-              <Button>Change Avatar</Button>
+              <Button size="sm">Change Avatar</Button>
             </div>
 
-            <form onSubmit={handleProfileUpdate} className="space-y-4">
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First name</Label>
-                  <Input id="firstName" defaultValue="Jack" />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last name</Label>
-                  <Input id="lastName" defaultValue="Peagam" />
-                </div>
+            <div className="grid gap-4 grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="firstName">First name</Label>
+                <Input id="firstName" defaultValue="Jack" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Input id="role" value="Super Admin" disabled />
+                <Label htmlFor="lastName">Last name</Label>
+                <Input id="lastName" defaultValue="Peagam" />
               </div>
-              <Button type="submit">Update Profile</Button>
-            </form>
-          </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="role">Role</Label>
+              <Input id="role" value="Super Admin" disabled />
+            </div>
+            <Button type="submit" size="sm">Update Profile</Button>
+          </form>
         </Card>
 
-        <Card className="p-6">
-          <form onSubmit={handleEmailUpdate} className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Email Settings</h3>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email address</Label>
+        <div className="space-y-6">
+          <Card className="p-6">
+            <form onSubmit={handleEmailUpdate} className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <Label htmlFor="email">Email address</Label>
+                <Button type="submit" size="sm">Update Email</Button>
+              </div>
               <Input 
                 id="email" 
                 type="email" 
                 defaultValue="jack@linkupapp.io"
               />
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 You'll need to verify your new email address
               </p>
-            </div>
-            <Button type="submit">Update Email</Button>
-          </form>
-        </Card>
+            </form>
+          </Card>
 
-        <Card className="p-6">
-          <form onSubmit={handlePasswordUpdate} className="space-y-4">
-            <h3 className="text-lg font-semibold mb-4">Password Settings</h3>
-            <div className="space-y-2">
-              <Label htmlFor="current">Current password</Label>
-              <Input id="current" type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new">New password</Label>
-              <Input id="new" type="password" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirm">Confirm password</Label>
-              <Input id="confirm" type="password" />
-            </div>
-            <Button type="submit">Update Password</Button>
-          </form>
-        </Card>
+          <Card className="p-6">
+            <form onSubmit={handlePasswordUpdate} className="space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <Label>Password settings</Label>
+                <Button type="submit" size="sm">Update Password</Button>
+              </div>
+              <div className="space-y-4">
+                <Input type="password" placeholder="Current password" />
+                <Input type="password" placeholder="New password" />
+                <Input type="password" placeholder="Confirm password" />
+              </div>
+            </form>
+          </Card>
+        </div>
       </div>
     </div>
   );
