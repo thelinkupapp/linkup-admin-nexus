@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -490,8 +489,8 @@ export default function UserTable() {
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
-  const [sortField, setSortField] = useState<'hosted' | 'attended' | 'earnings' | 'joined'>('joined');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [sortField, setSortField] = useState<SortField>('joined');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [suspendUserId, setSuspendUserId] = useState<string | null>(null);
   const [suspendUsername, setSuspendUsername] = useState<string>("");
   const [suspendUserAvatar, setSuspendUserAvatar] = useState<string>("");
@@ -501,7 +500,7 @@ export default function UserTable() {
   const [deleteUserAvatar, setDeleteUserAvatar] = useState<string>("");
   const [deleteUserName, setDeleteUserName] = useState<string>("");
 
-  const handleSort = (field: 'hosted' | 'attended' | 'earnings' | 'joined') => {
+  const handleSort = (field: SortField) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -548,8 +547,12 @@ export default function UserTable() {
           return (a.attendedLinkups - b.attendedLinkups) * multiplier;
         case 'earnings':
           return (a.totalEarnings - b.totalEarnings) * multiplier;
-        case 'joined':
-          return (new Date(a.joinDate).getTime() - new Date(b.joinDate).getTime()) * multiplier;
+        case 'joined': {
+          const dateA = new Date(a.joinDate).getTime();
+          const dateB = new Date(b.joinDate).getTime();
+          
+          return (dateA - dateB) * multiplier;
+        }
         default:
           return 0;
       }

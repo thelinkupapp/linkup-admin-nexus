@@ -10,9 +10,10 @@ function isLastWeek(date: Date): boolean {
 }
 
 export function formatJoinDate(date: string | Date): string {
-  const joinDate = new Date(date);
+  // Ensure we're working with a valid date
+  const joinDate = date instanceof Date ? date : new Date(date);
   const now = new Date();
-  const time = format(joinDate, 'HH:mm'); // Changed to 24-hour clock format
+  const time = format(joinDate, 'HH:mm'); // 24-hour clock format
 
   if (isToday(joinDate)) {
     return `Today at ${time}`;
