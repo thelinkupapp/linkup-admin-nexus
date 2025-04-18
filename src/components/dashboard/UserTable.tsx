@@ -21,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { UserFilters } from "./UserFilters";
+import { UserFilters } from "@/components/dashboard/UserFilters";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { 
   Select,
@@ -546,7 +546,7 @@ export default function UserTable() {
                   className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('hosted')}
                 >
-                  <span className="truncate">Hosted</span>
+                  <span>Hosted</span>
                   <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
@@ -555,7 +555,7 @@ export default function UserTable() {
                   className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('attended')}
                 >
-                  <span className="truncate">Attended</span>
+                  <span>Attended</span>
                   <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
@@ -564,7 +564,7 @@ export default function UserTable() {
                   className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('earnings')}
                 >
-                  <span className="truncate">Earnings</span>
+                  <span>Earnings</span>
                   <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
@@ -573,7 +573,7 @@ export default function UserTable() {
                   className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('joined')}
                 >
-                  <span className="truncate">Joined</span>
+                  <span>Joined</span>
                   <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
