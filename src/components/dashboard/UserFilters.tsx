@@ -38,8 +38,8 @@ interface UserFiltersProps {
   setShowLinkupPlusOnly: (value: boolean) => void;
   ageRange: number[];
   setAgeRange: (value: number[]) => void;
-  filteredCount: number; // Add this new prop
-  totalCount: number; // Add this new prop
+  filteredCount: number;
+  totalCount: number;
 }
 
 export function UserFilters({
@@ -86,11 +86,11 @@ export function UserFilters({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-muted-foreground" />
-          <span className="text-sm text-muted-foreground">
+          <span className="text-lg font-semibold text-foreground">
             {hasActiveFilters ? (
-              <>Showing <span className="font-medium text-foreground">{filteredCount}</span> of <span className="font-medium text-foreground">{totalCount}</span> users</>
+              <>Showing <span className="font-bold text-primary">{filteredCount}</span> of <span className="font-bold text-primary">{totalCount}</span> users</>
             ) : (
-              <><span className="font-medium text-foreground">{totalCount}</span> total users</>
+              <><span className="font-bold text-primary">{totalCount}</span> total users</>
             )}
           </span>
         </div>
@@ -143,7 +143,6 @@ export function UserFilters({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {/* Reordered filters: Gender, Age, Location, Nationality */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
