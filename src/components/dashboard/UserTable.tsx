@@ -39,7 +39,12 @@ import { cn } from "@/lib/utils";
 import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 import { formatJoinDate } from "@/utils/dateFormatting";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "react-tooltip";
+import { 
+  Tooltip, 
+  TooltipContent, 
+  TooltipProvider, 
+  TooltipTrigger 
+} from "@/components/ui/tooltip";
 
 export const users: User[] = [
   {
@@ -411,8 +416,10 @@ const UserTable = () => {
                         {user.isVerified && (
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger>
-                                <CheckCircle2 className="h-3.5 w-3.5 text-status-verified" />
+                              <TooltipTrigger asChild>
+                                <span className="inline-flex">
+                                  <CheckCircle2 className="h-3.5 w-3.5 text-status-verified" />
+                                </span>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Verified User</p>
@@ -423,8 +430,10 @@ const UserTable = () => {
                         {user.isLinkupPlus && (
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger>
-                                <Crown className="h-3.5 w-3.5 text-linkup-purple" />
+                              <TooltipTrigger asChild>
+                                <span className="inline-flex">
+                                  <Crown className="h-3.5 w-3.5 text-linkup-purple" />
+                                </span>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Linkup Plus Member</p>
