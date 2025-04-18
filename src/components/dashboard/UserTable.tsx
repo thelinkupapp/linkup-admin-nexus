@@ -776,7 +776,9 @@ const UserTable = () => {
                 <TableCell>{user.age}</TableCell>
                 <TableCell>{user.location}</TableCell>
                 <TableCell>
-                  {user.nationality === "🇱🇧" ? "Lebanese" : getNationalityLabel(user.nationality)}
+                  {user.nationality === "🇱🇧" 
+                    ? "Lebanese" 
+                    : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
                 </TableCell>
                 <TableCell>{user.hostedLinkups}</TableCell>
                 <TableCell>{user.attendedLinkups}</TableCell>
