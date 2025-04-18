@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search } from "lucide-react";
+import { Search, Crown, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -89,9 +88,10 @@ export function UserFilters({
             />
             <label
               htmlFor="verified"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
-              Verified Only
+              Verified
+              <CheckCircle2 className="h-4 w-4 text-[#1EAEDB]" />
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -102,9 +102,10 @@ export function UserFilters({
             />
             <label
               htmlFor="linkupPlus"
-              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
-              Linkup Plus Only
+              Linkup Plus
+              <Crown className="h-4 w-4 text-[#9b87f5]" />
             </label>
           </div>
         </div>

@@ -12,7 +12,8 @@ import {
   Flag, 
   ArrowUpDown,
   CalendarDays,
-  UserRound
+  UserRound,
+  CheckCircle2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -420,16 +421,30 @@ const UserTable = () => {
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    {user.isVerified && (
-                      <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20">
-                        Verified
-                      </Badge>
-                    )}
-                    {user.isLinkupPlus && (
-                      <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
-                        Plus
-                      </Badge>
-                    )}
+                    <Badge variant="outline" className={cn(
+                      user.isVerified 
+                        ? "bg-status-verified/10 text-status-verified border-status-verified/20"
+                        : "bg-destructive/10 text-destructive border-destructive/20"
+                    )}>
+                      {user.isVerified ? (
+                        <div className="flex items-center gap-1">
+                          Verified
+                          <CheckCircle2 className="h-3 w-3 ml-1" />
+                        </div>
+                      ) : "Not Verified"}
+                    </Badge>
+                    <Badge variant="outline" className={cn(
+                      user.isLinkupPlus 
+                        ? "bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20"
+                        : "bg-muted/50 text-muted-foreground border-muted-foreground/20"
+                    )}>
+                      {user.isLinkupPlus ? (
+                        <div className="flex items-center gap-1">
+                          Plus
+                          <Crown className="h-3 w-3 ml-1" />
+                        </div>
+                      ) : "Free User"}
+                    </Badge>
                   </div>
                 </TableCell>
                 <TableCell>
