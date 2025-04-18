@@ -47,6 +47,7 @@ import {
 } from "@/components/ui/tooltip";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import type { User } from "@/types/user";
+import { SuspendUserDialog } from "./SuspendUserDialog";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -451,6 +452,8 @@ export default function UserTable() {
   const [itemsPerPage, setItemsPerPage] = useState(25);
   const [sortField, setSortField] = useState<SortField>('joined');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [suspendUserId, setSuspendUserId] = useState<string | null>(null);
+  const [suspendUsername, setSuspendUsername] = useState<string>("");
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -506,18 +509,23 @@ export default function UserTable() {
     navigate(`/users/${userId}`);
   };
 
-  const handleUserAction = (action: string, userId: string) => {
+  const handleUserAction = (action: string, userId: string, username?: string) => {
     switch (action) {
       case 'view':
         navigate(`/users/${userId}`);
         break;
       case 'suspend':
-        console.log(`Suspend user ${userId}`);
-        // Implement suspension logic
+        setSuspendUserId(userId);
+        setSuspendUsername(username || "");
         break;
       default:
         break;
     }
+  };
+
+  const handleCloseSuspendDialog = () => {
+    setSuspendUserId(null);
+    setSuspendUsername("");
   };
 
   return (
@@ -660,13 +668,7 @@ export default function UserTable() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem 
-                        onClick={() => handleUserAction('view', user.id)}
-                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors duration-200"
-                      >
-                        View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id)}
+                        onClick={() => handleUserAction('suspend', user.id, user.username)}
                         className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
                       >
                         <Ban className="mr-2 h-4 w-4" />
@@ -680,6 +682,13 @@ export default function UserTable() {
           </TableBody>
         </Table>
       </div>
+
+      <SuspendUserDialog
+        isOpen={!!suspendUserId}
+        onClose={handleCloseSuspendDialog}
+        userId={suspendUserId || ""}
+        username={suspendUsername}
+      />
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
