@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { 
   MoreVertical, 
   Ban,
-  ArrowUpDown 
+  ArrowUpDown,
+  Eye
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -667,6 +668,13 @@ export default function UserTable() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('view', user.id)}
+                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors duration-200"
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Profile
+                      </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id, user.username)}
                         className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
