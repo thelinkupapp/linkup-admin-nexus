@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 
 interface User {
   email: string;
@@ -15,12 +15,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Check if user data exists in localStorage on initial load
+    const savedUser = localStorage.getItem("auth_user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  // Update localStorage whenever user state changes
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("auth_user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("auth_user");
+    }
+  }, [user]);
 
   const login = async (email: string, password: string) => {
     // Mock login - in reality, this would call an API
     if (email === "jack@linkupapp.io" && password === "linkupapp") {
-      setUser({ email, name: "Jack Peagam" });
+      const userData = { email, name: "Jack Peagam" };
+      setUser(userData);
     } else {
       throw new Error("Invalid credentials");
     }

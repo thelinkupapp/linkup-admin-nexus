@@ -24,6 +24,10 @@ export default function Login() {
 
     try {
       await login(email, password);
+      toast({
+        title: "Success",
+        description: "Logged in successfully!",
+      });
       navigate("/");
     } catch (err) {
       setError("Invalid email or password");
