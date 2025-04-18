@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -19,7 +18,6 @@ import {
   LayoutDashboard,
   LogOut,
   User,
-  HelpCircle
 } from "lucide-react";
 import {
   Collapsible,
@@ -33,6 +31,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useState } from "react";
 
 const navItems = [
   {
@@ -140,6 +149,11 @@ const navItems = [
 
 export function Sidebar() {
   const location = useLocation();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+
+  const handleLogout = () => {
+    console.log("User logged out");
+  };
 
   return (
     <div className="h-screen w-64 fixed left-0 top-0 bg-background border-r">
@@ -234,6 +248,7 @@ export function Sidebar() {
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
+              onClick={() => setShowLogoutDialog(true)}
               className="text-destructive focus:text-destructive cursor-pointer hover:bg-destructive/10 transition-colors"
             >
               <LogOut className="mr-2 h-4 w-4" />
@@ -241,6 +256,26 @@ export function Sidebar() {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to log out?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will end your current session.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction 
+                onClick={handleLogout}
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              >
+                Log out
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
