@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -512,9 +511,6 @@ export default function UserTable() {
       case 'view':
         navigate(`/users/${userId}`);
         break;
-      case 'edit':
-        navigate(`/users/${userId}/edit`);
-        break;
       case 'suspend':
         console.log(`Suspend user ${userId}`);
         // Implement suspension logic
@@ -665,9 +661,6 @@ export default function UserTable() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
                         View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleUserAction('edit', user.id)}>
-                        Edit Profile
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id)}
