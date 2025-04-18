@@ -198,9 +198,11 @@ export function Sidebar() {
         <div className="p-3 rounded-lg bg-secondary">
           <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-medium">
-              JP
-            </div>
+            <img 
+              src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
+              alt="Jack Peagam" 
+              className="h-9 w-9 rounded-full object-cover"
+            />
             <div>
               <p className="text-sm font-medium">Jack Peagam</p>
               <p className="text-xs text-muted-foreground">jack@linkupapp.io</p>
