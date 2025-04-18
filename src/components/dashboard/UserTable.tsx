@@ -698,7 +698,6 @@ export default function UserTable() {
           <TableBody>
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
-                
                 <TableCell className="max-w-0">
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -777,7 +776,6 @@ export default function UserTable() {
                     </div>
                   </div>
                 </TableCell>
-                
                 <TableCell>{user.age}</TableCell>
                 <TableCell>{user.location}</TableCell>
                 <TableCell>
@@ -791,3 +789,111 @@ export default function UserTable() {
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Profile
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => 
+                        handleUserAction('suspend', user.id, user.username, user.avatar, user.name)
+                      }>
+                        <Ban className="mr-2 h-4 w-4" />
+                        Suspend User
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => 
+                        handleUserAction('delete', user.id, user.username, user.avatar, user.name)
+                      }>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete User
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      
+      {totalPages > 1 && (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                className={currentPage === 1 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              <PaginationItem key={page}>
+                <PaginationLink 
+                  isActive={currentPage === page}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                className={currentPage === totalPages ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
+      
+      <div className="flex justify-end items-center space-x-2 mt-4">
+        <span className="text-sm text-muted-foreground">Items per page:</span>
+        <Select
+          value={itemsPerPage.toString()}
+          onValueChange={(value) => {
+            setItemsPerPage(Number(value));
+            setCurrentPage(1);
+          }}
+        >
+          <SelectTrigger className="w-20">
+            <SelectValue placeholder={itemsPerPage.toString()} />
+          </SelectTrigger>
+          <SelectContent>
+            {itemsPerPageOptions.map((value) => (
+              <SelectItem key={value} value={value.toString()}>
+                {value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      
+      {suspendUserId && (
+        <SuspendUserDialog
+          open={!!suspendUserId}
+          onClose={handleCloseSuspendDialog}
+          userId={suspendUserId}
+          username={suspendUsername}
+          avatar={suspendUserAvatar}
+          name={suspendUserName}
+        />
+      )}
+      
+      {deleteUserId && (
+        <DeleteUserDialog
+          open={!!deleteUserId}
+          onClose={handleCloseDeleteDialog}
+          userId={deleteUserId}
+          username={deleteUsername}
+          avatar={deleteUserAvatar}
+          name={deleteUserName}
+        />
+      )}
+    </div>
+  );
+}
