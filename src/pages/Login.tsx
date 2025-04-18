@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -137,7 +136,7 @@ export default function Login() {
                 render={({ slots }) => (
                   <InputOTPGroup>
                     {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} {...slot} />
+                      <InputOTPSlot key={index} {...slot} index={index} />
                     ))}
                   </InputOTPGroup>
                 )}
@@ -287,4 +286,3 @@ export default function Login() {
     </div>
   );
 }
-
