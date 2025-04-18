@@ -47,6 +47,8 @@ import {
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
 import { getCountryEmoji, getGenderEmoji } from "@/utils/countryUtils";
+import { ProfilePhotos } from "@/components/dashboard/ProfilePhotos";
+import { UserActivity } from "@/components/dashboard/UserActivity";
 
 const user = {
   id: "1",
@@ -174,7 +176,66 @@ const UserProfile = () => {
   const { userId } = useParams();
   const [activeTab, setActiveTab] = useState("basic-info");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  
+
+  const userPhotos = [
+    {
+      id: "1",
+      url: user.avatar,
+      uploadDate: "2024-01-15T10:30:00Z",
+      isProfilePicture: true
+    },
+    {
+      id: "2",
+      url: "https://i.pravatar.cc/300?img=2",
+      uploadDate: "2023-12-20T15:45:00Z",
+      isProfilePicture: false
+    },
+    {
+      id: "3",
+      url: "https://i.pravatar.cc/300?img=3",
+      uploadDate: "2023-11-05T09:20:00Z",
+      isProfilePicture: false
+    }
+  ];
+
+  const userChatActivity = [
+    {
+      id: "1",
+      type: "linkup" as const,
+      with: "Beach Volleyball Group",
+      lastMessage: "See you all tomorrow at 3PM!",
+      timestamp: "2024-04-17T14:30:00Z"
+    },
+    {
+      id: "2",
+      type: "friend" as const,
+      with: "John Smith",
+      lastMessage: "Thanks for the invite!",
+      timestamp: "2024-04-17T10:15:00Z"
+    }
+  ];
+
+  const userLinkupActivity = [
+    {
+      id: "1",
+      type: "joined" as const,
+      linkupName: "Weekend Hiking Adventure",
+      timestamp: "2024-04-16T09:00:00Z"
+    },
+    {
+      id: "2",
+      type: "sent" as const,
+      linkupName: "Board Game Night",
+      timestamp: "2024-04-15T20:30:00Z"
+    },
+    {
+      id: "3",
+      type: "accepted" as const,
+      linkupName: "Yoga in the Park",
+      timestamp: "2024-04-14T11:45:00Z"
+    }
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -193,6 +254,8 @@ const UserProfile = () => {
               <TabsTrigger value="privacy">Privacy Settings</TabsTrigger>
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="friends">Friends</TabsTrigger>
+              <TabsTrigger value="photos">Photos</TabsTrigger>
+              <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             
             <TabsContent value="basic-info" className="space-y-6">
@@ -811,6 +874,17 @@ const UserProfile = () => {
                   </Card>
                 </div>
               </div>
+            </TabsContent>
+
+            <TabsContent value="photos">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+
+            <TabsContent value="activity">
+              <UserActivity 
+                chatActivity={userChatActivity}
+                linkupActivity={userLinkupActivity}
+              />
             </TabsContent>
           </Tabs>
 
