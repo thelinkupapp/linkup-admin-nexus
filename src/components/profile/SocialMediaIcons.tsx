@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { SocialMediaLinks } from '@/types/user';
-import Image from '@/components/ui/image';
 
 interface SocialMediaIconsProps {
   socials: SocialMediaLinks;

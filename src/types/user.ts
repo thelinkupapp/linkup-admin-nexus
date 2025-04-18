@@ -17,3 +17,10 @@ export interface User {
   attendedLinkups: number;
   totalEarnings: number;
 }
+
+export interface SocialMediaLinks {
+  instagram?: string;
+  twitter?: string;
+  linkedin?: string;
+  tiktok?: string;
+}
