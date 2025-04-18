@@ -23,6 +23,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Update localStorage whenever user state changes
   useEffect(() => {
+    console.log("AuthProvider: User state changed", user);
     if (user) {
       localStorage.setItem("auth_user", JSON.stringify(user));
     } else {
@@ -31,16 +32,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const login = async (email: string, password: string) => {
-    // Mock login - in reality, this would call an API
-    if (email === "jack@linkupapp.io" && password === "linkupapp") {
+    console.log("Login attempt for:", email);
+    // Mock login - in real application, this would call an API
+    if (email === "jack@linkupapp.io" && password === "linkup") {
       const userData = { email, name: "Jack Peagam" };
+      console.log("Login successful", userData);
       setUser(userData);
     } else {
+      console.error("Invalid login credentials");
       throw new Error("Invalid credentials");
     }
   };
 
   const logout = () => {
+    console.log("Logging out user");
     setUser(null);
   };
 

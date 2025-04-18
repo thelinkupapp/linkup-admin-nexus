@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -40,11 +41,15 @@ const queryClient = new QueryClient();
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const location = useLocation();
-
+  
+  console.log("ProtectedRoute check:", { user, path: location.pathname });
+  
   if (!user) {
+    console.log("No user found, redirecting to login");
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-
+  
+  console.log("User authenticated, rendering protected content");
   return children;
 }
 

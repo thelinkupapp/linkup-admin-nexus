@@ -2,13 +2,15 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import UserTable from "@/components/dashboard/UserTable";
 import { Toaster } from "@/components/ui/toaster";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const UserManagement = () => {
   console.log("Rendering User Management page");
+  const [isLoaded, setIsLoaded] = useState(false);
   
   useEffect(() => {
     console.log("UserManagement component mounted");
+    setIsLoaded(true);
   }, []);
   
   return (
@@ -23,7 +25,13 @@ const UserManagement = () => {
             </p>
           </div>
 
-          <UserTable />
+          {isLoaded ? (
+            <UserTable />
+          ) : (
+            <div className="flex justify-center items-center h-64">
+              <p>Loading user data...</p>
+            </div>
+          )}
         </div>
       </div>
       <Toaster />

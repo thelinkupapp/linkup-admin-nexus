@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,21 +12,34 @@ import { Mail, Lock, Loader2, ArrowRight, KeyRound, CheckCircle2, ShieldCheck } 
 type ResetStep = "login" | "confirm-reset" | "enter-code" | "new-password";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("jack@linkupapp.io"); // Pre-filled for demo
+  const [password, setPassword] = useState("linkup"); // Pre-filled for demo
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resetStep, setResetStep] = useState<ResetStep>("login");
   const [resetCode, setResetCode] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const { login } = useAuth();
+  const { login, user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  console.log("Login page rendered, user:", user);
+  
+  useEffect(() => {
+    // If user is already logged in, redirect to home or the page they were trying to access
+    if (user) {
+      const from = location.state?.from?.pathname || "/";
+      console.log("User already logged in, redirecting to:", from);
+      navigate(from, { replace: true });
+    }
+  }, [user, navigate, location]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
+    console.log("Login attempt with:", email, password);
 
     try {
       await login(email, password);
@@ -34,8 +47,10 @@ export default function Login() {
         title: "Success",
         description: "Logged in successfully!",
       });
-      navigate("/");
+      
+      // Navigation happens in useEffect above when user state changes
     } catch (err) {
+      console.error("Login failed:", err);
       setError("Invalid email or password");
       toast({
         variant: "destructive",
@@ -281,6 +296,11 @@ export default function Login() {
              resetStep === "enter-code" ? "Enter the verification code from your email" :
              "Choose a new password for your account"}
           </p>
+          <Alert variant="info" className="mt-2 bg-blue-50 border-blue-100">
+            <AlertDescription className="text-sm">
+              For demo: Use <strong>jack@linkupapp.io</strong> and password <strong>linkup</strong>
+            </AlertDescription>
+          </Alert>
         </div>
 
         <div className="bg-card border rounded-xl shadow-sm p-6">
