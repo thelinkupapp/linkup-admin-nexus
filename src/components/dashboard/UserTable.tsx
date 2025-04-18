@@ -307,7 +307,7 @@ export const users: User[] = [
 
 const getCountryEmoji = (country: string) => {
   const emojiMap: { [key: string]: string } = {
-    'UK': '��🇧',
+    'UK': '🇬🇧',
     'USA': '🇺🇸',
     'UAE': '🇦🇪',
     'Ireland': '🇮🇪',
