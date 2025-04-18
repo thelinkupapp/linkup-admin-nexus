@@ -56,6 +56,11 @@ import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -695,8 +700,7 @@ export default function UserTable() {
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="max-w-0">
-                  <div className="flex items-center gap-3 cursor-pointer hover:opacity-80"
-                       onClick={() => handleUserClick(user.id)}>
+                  <div className="flex items-center gap-3 cursor-pointer hover:opacity-80">
                     <div className="relative">
                       <Avatar>
                         <AvatarImage src={user.avatar} alt={user.name} />
@@ -716,7 +720,47 @@ export default function UserTable() {
                       </TooltipProvider>
                     </div>
                     <div className="min-w-0">
-                      <div className="font-medium">{user.name}</div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div 
+                            className="font-medium hover:underline cursor-pointer"
+                            onClick={() => handleUserClick(user.id)}
+                          >
+                            {user.name}
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-80">
+                          <div className="flex justify-between space-x-4">
+                            <Avatar className="h-16 w-16">
+                              <AvatarImage src={user.avatar} />
+                              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <div className="space-y-1 flex-1">
+                              <h4 className="text-sm font-semibold">{user.name}</h4>
+                              <p className="text-sm text-muted-foreground">@{user.username}</p>
+                              <p className="text-sm">
+                                {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
+                              </p>
+                              <div className="flex items-center gap-4">
+                                <div className="text-sm">
+                                  <span className="text-muted-foreground">Created:</span>{" "}
+                                  {user.hostedLinkups}
+                                </div>
+                                <div className="text-sm">
+                                  <span className="text-muted-foreground">Attended:</span>{" "}
+                                  {user.attendedLinkups}
+                                </div>
+                              </div>
+                              <Button 
+                                className="w-full mt-2" 
+                                onClick={() => handleUserClick(user.id)}
+                              >
+                                View Profile
+                              </Button>
+                            </div>
+                          </div>
+                        </HoverCardContent>
+                      </HoverCard>
                       <div className="text-sm text-muted-foreground">@{user.username}</div>
                       <div className="flex items-center gap-1 mt-0.5">
                         {user.isVerified && (
@@ -741,187 +785,4 @@ export default function UserTable() {
                                   )}
                                 </span>
                               </TooltipTrigger>
-                              <TooltipContent>
-                                <p>
-                                  {(user.username === "jackpeagam" || 
-                                    user.username === "benwhatson" || 
-                                    user.username === "elieabousamra") 
-                                    ? "Staff Member" 
-                                    : "Verified User"}
-                                </p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {user.isLinkupPlus && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="inline-flex text-amber-500">
-                                  👑
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Linkup Plus Member</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>{user.age}</TableCell>
-                <TableCell className="max-w-[150px]">
-                  <div className="truncate">{user.location}</div>
-                </TableCell>
-                <TableCell>
-                  <div className="truncate">
-                    {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
-                  </div>
-                </TableCell>
-                <TableCell>{user.hostedLinkups}</TableCell>
-                <TableCell>{user.attendedLinkups}</TableCell>
-                <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
-                <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('view', user.id)}
-                        className="cursor-pointer hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors duration-200"
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        View Profile
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/20 hover:text-destructive focus:bg-destructive/20 focus:text-destructive transition-colors duration-200"
-                      >
-                        <Ban className="mr-2 h-4 w-4" />
-                        Suspend User
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/20 hover:text-destructive focus:bg-destructive/20 focus:text-destructive transition-colors duration-200"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete User
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-      
-      {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4">
-          <PaginationItemsPerPage className="flex items-center gap-2">
-            <span>Show</span>
-            <Select
-              value={itemsPerPage.toString()}
-              onValueChange={(value) => {
-                setItemsPerPage(Number(value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-20">
-                <SelectValue placeholder="25" />
-              </SelectTrigger>
-              <SelectContent>
-                {[25, 50, 100].map((option) => (
-                  <SelectItem key={option} value={option.toString()}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span>per page</span>
-          </PaginationItemsPerPage>
-
-          <Pagination>
-            <PaginationContent>
-              {currentPage > 1 ? (
-                <PaginationPrevious 
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                />
-              ) : (
-                <PaginationItem>
-                  <span className="flex h-10 items-center justify-center gap-1 pl-2.5 opacity-50">
-                    <span>Previous</span>
-                  </span>
-                </PaginationItem>
-              )}
-              
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink 
-                      onClick={() => handlePageChange(pageNum)}
-                      isActive={currentPage === pageNum}
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
-              
-              {totalPages > 5 && (
-                <>
-                  <PaginationEllipsis />
-                  <PaginationItem>
-                    <PaginationLink 
-                      onClick={() => handlePageChange(totalPages)}
-                      isActive={currentPage === totalPages}
-                    >
-                      {totalPages}
-                    </PaginationLink>
-                  </PaginationItem>
-                </>
-              )}
-              
-              {currentPage < totalPages ? (
-                <PaginationNext 
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                />
-              ) : (
-                <PaginationItem>
-                  <span className="flex h-10 items-center justify-center gap-1 pr-2.5 opacity-50">
-                    <span>Next</span>
-                  </span>
-                </PaginationItem>
-              )}
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
-      
-      <SuspendUserDialog
-        isOpen={suspendUserId !== null}
-        onClose={handleCloseSuspendDialog}
-        userId={suspendUserId || ""}
-        username={suspendUsername}
-        userAvatar={suspendUserAvatar}
-        userName={suspendUserName}
-      />
-      
-      <DeleteUserDialog
-        isOpen={deleteUserId !== null}
-        onClose={handleCloseDeleteDialog}
-        userId={deleteUserId || ""}
-        username={deleteUsername}
-        userAvatar={deleteUserAvatar}
-        userName={deleteUserName}
-      />
-    </div>
-  );
-}
+                              <TooltipContent
