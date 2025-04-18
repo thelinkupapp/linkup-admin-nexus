@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -800,4 +801,31 @@ const UserProfile = () => {
                         <div className="space-y-4">
                           {user.pendingFriendRequests.sent.map((request) => (
                             <div key={request.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-
+                              <div className="flex items-center gap-3">
+                                <Avatar>
+                                  <AvatarImage src={request.avatar} alt={request.name} />
+                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium">{request.name}</p>
+                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm">Cancel Request</Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
