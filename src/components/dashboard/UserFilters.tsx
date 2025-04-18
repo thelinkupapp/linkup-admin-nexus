@@ -158,12 +158,12 @@ export function UserFilters({
                     key={nationality.id}
                     onSelect={() => {
                       setSelectedNationalities(
-                        toggleArrayValue(selectedNationalities, nationality.label)
+                        toggleArrayValue(selectedNationalities, nationality.value)
                       );
                     }}
                   >
                     <Checkbox
-                      checked={selectedNationalities.includes(nationality.label)}
+                      checked={selectedNationalities.includes(nationality.value)}
                       className="mr-2 h-4 w-4"
                     />
                     <span className="mr-2">{nationality.emoji}</span>
@@ -226,6 +226,7 @@ export function UserFilters({
                 step={1}
                 value={ageRange}
                 onValueChange={setAgeRange}
+                className="mb-6"
               />
             </div>
           </PopoverContent>

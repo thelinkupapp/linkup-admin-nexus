@@ -454,8 +454,8 @@ export default function UserTable() {
   const [showLinkupPlusOnly, setShowLinkupPlusOnly] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
-  const [sortField, setSortField] = useState<SortField>('joined');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [sortField, setSortField] = useState<'hosted' | 'attended' | 'earnings' | 'joined'>('joined');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   const [suspendUserId, setSuspendUserId] = useState<string | null>(null);
   const [suspendUsername, setSuspendUsername] = useState<string>("");
   const [suspendUserAvatar, setSuspendUserAvatar] = useState<string>("");
@@ -465,7 +465,7 @@ export default function UserTable() {
   const [deleteUserAvatar, setDeleteUserAvatar] = useState<string>("");
   const [deleteUserName, setDeleteUserName] = useState<string>("");
 
-  const handleSort = (field: SortField) => {
+  const handleSort = (field: 'hosted' | 'attended' | 'earnings' | 'joined') => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
     } else {
@@ -476,15 +476,31 @@ export default function UserTable() {
 
   const filteredUsers = users
     .filter(user => {
-      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
+      // Search filter
+      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
+                            user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+                            user.email.toLowerCase().includes(searchValue.toLowerCase());
+      
+      // Nationality filter - check against the user's nationality
       const matchesNationality = selectedNationalities.length === 0 || 
                                 selectedNationalities.includes(user.nationality);
+      
+      // Gender filter - check against the user's gender (case insensitive)
       const matchesGender = selectedGenders.length === 0 || 
                            selectedGenders.includes(user.gender.toLowerCase());
+      
+      // Location filter - check if country name appears in location string
       const matchesLocation = selectedLocations.length === 0 || 
-                             selectedLocations.includes(user.location);
+                             selectedLocations.some(location => 
+                               user.location.includes(location));
+      
+      // Age filter - check if user's age is within the specified range
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
+      
+      // Verified filter
       const matchesVerified = !showVerifiedOnly || user.isVerified;
+      
+      // Linkup Plus filter
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
       return matchesSearch && matchesNationality && matchesGender && 
