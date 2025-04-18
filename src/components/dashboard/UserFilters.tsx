@@ -158,12 +158,12 @@ export function UserFilters({
                     key={nationality.id}
                     onSelect={() => {
                       setSelectedNationalities(
-                        toggleArrayValue(selectedNationalities, nationality.value)
+                        toggleArrayValue(selectedNationalities, nationality.id)
                       );
                     }}
                   >
                     <Checkbox
-                      checked={selectedNationalities.includes(nationality.value)}
+                      checked={selectedNationalities.includes(nationality.id)}
                       className="mr-2 h-4 w-4"
                     />
                     <span className="mr-2">{nationality.emoji}</span>

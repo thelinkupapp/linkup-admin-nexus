@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -481,9 +480,12 @@ export default function UserTable() {
                             user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
                             user.email.toLowerCase().includes(searchValue.toLowerCase());
       
-      // Nationality filter - check against the user's nationality
+      // Nationality filter
       const matchesNationality = selectedNationalities.length === 0 || 
-                                selectedNationalities.includes(user.nationality);
+                              selectedNationalities.some(natId => {
+                                const nat = nationalities.find(n => n.id === natId);
+                                return nat && getNationalityLabel(user.nationality) === nat.label;
+                              });
       
       // Gender filter - check against the user's gender (case insensitive)
       const matchesGender = selectedGenders.length === 0 || 
