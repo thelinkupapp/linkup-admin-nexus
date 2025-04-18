@@ -6,10 +6,10 @@ const UserManagement = () => {
   return (
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
-      {/* Added overflow-x-hidden and max-w-full to prevent horizontal scroll */}
-      <div className="flex-1 ml-64 overflow-x-hidden max-w-full">
-        {/* Added px-8 instead of p-8 and adjusted width to prevent content from being too close to the edge */}
-        <div className="py-8 px-8 w-[calc(100vw-16rem)]">
+      {/* Adding width calc and overflow handling to prevent content from being cut off */}
+      <div className="flex-1 ml-64 overflow-x-auto">
+        {/* Changed to a fixed width that considers the sidebar width */}
+        <div className="py-8 px-8 w-full max-w-[calc(100vw-16rem-2rem)]">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">User Management</h1>
             <p className="text-muted-foreground">
