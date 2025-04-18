@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Search, 
@@ -592,7 +593,7 @@ export default function UserTable() {
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
-                  <ArrowUpDown className="h-5 w-5" />
+                  <ArrowUpDown className="h-4 w-4" />
                 </div>
               </TableHead>
               <TableHead className="w-[12%] text-right">Actions</TableHead>
