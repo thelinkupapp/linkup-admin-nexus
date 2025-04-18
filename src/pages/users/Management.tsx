@@ -2,9 +2,14 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import UserTable from "@/components/dashboard/UserTable";
 import { Toaster } from "@/components/ui/toaster";
+import { useEffect } from "react";
 
 const UserManagement = () => {
   console.log("Rendering User Management page");
+  
+  useEffect(() => {
+    console.log("UserManagement component mounted");
+  }, []);
   
   return (
     <div className="flex min-h-screen bg-muted/10">
