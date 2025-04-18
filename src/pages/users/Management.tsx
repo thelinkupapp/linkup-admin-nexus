@@ -4,6 +4,8 @@ import UserTable from "@/components/dashboard/UserTable";
 import { Toaster } from "@/components/ui/toaster";
 
 const UserManagement = () => {
+  console.log("Rendering User Management page");
+  
   return (
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
