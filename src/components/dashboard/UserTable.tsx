@@ -9,7 +9,6 @@ import {
   MoreVertical, 
   Ban, 
   Filter, 
-  Flag, 
   ArrowUpDown,
   CalendarDays,
   UserRound,
@@ -557,42 +556,38 @@ export default function UserTable() {
               <TableHead className="w-[12%]">Nationality</TableHead>
               <TableHead className="w-[8%]">
                 <button 
-                  className="flex items-center space-x-1.5 hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('hosted')}
                 >
-                  <Crown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="truncate">Hosted</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-auto" />
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
               <TableHead className="w-[8%]">
                 <button 
-                  className="flex items-center space-x-1.5 hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('attended')}
                 >
-                  <Users className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="truncate">Attended</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-auto" />
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
               <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center space-x-1.5 hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('earnings')}
                 >
-                  <Coins className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="truncate">Earnings</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-auto" />
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
               <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center space-x-1.5 hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('joined')}
                 >
-                  <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <span className="truncate">Joined</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-auto" />
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
                 </button>
               </TableHead>
               <TableHead className="w-[12%] text-right">Actions</TableHead>
