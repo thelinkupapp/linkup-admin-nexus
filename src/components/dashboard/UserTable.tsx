@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   MoreVertical, 
@@ -911,23 +910,23 @@ export default function UserTable() {
 
       {suspendUserId && (
         <SuspendUserDialog
-          open={!!suspendUserId}
+          isOpen={!!suspendUserId}
           onClose={handleCloseSuspendDialog}
           userId={suspendUserId}
           username={suspendUsername}
-          avatar={suspendUserAvatar}
-          name={suspendUserName}
+          userAvatar={suspendUserAvatar}
+          userName={suspendUserName}
         />
       )}
 
       {deleteUserId && (
         <DeleteUserDialog
-          open={!!deleteUserId}
+          isOpen={!!deleteUserId}
           onClose={handleCloseDeleteDialog}
           userId={deleteUserId}
           username={deleteUsername}
-          avatar={deleteUserAvatar}
-          name={deleteUserName}
+          userAvatar={deleteUserAvatar}
+          userName={deleteUserName}
         />
       )}
     </div>
