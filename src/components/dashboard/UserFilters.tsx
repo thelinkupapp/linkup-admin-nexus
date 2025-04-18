@@ -71,10 +71,8 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Nationality</label>
           <Select
-            onValueChange={(value) => {
-              // Handle single selection as we can't use multiple in this component
-              setSelectedNationalities(value === "" ? [] : [value]);
-            }}
+            multiple
+            onValueChange={(value) => setSelectedNationalities(value === "" ? [] : (Array.isArray(value) ? value : [value]))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select nationalities" />
@@ -92,10 +90,8 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Gender</label>
           <Select
-            onValueChange={(value) => {
-              // Handle single selection as we can't use multiple in this component
-              setSelectedGenders(value === "" ? [] : [value]);
-            }}
+            multiple
+            onValueChange={(value) => setSelectedGenders(value === "" ? [] : (Array.isArray(value) ? value : [value]))}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select genders" />
