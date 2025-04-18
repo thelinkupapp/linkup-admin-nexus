@@ -44,6 +44,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   };
 
   const handleDeleteClick = () => {
+    // Check for hosting linkups first
     if (user.hostingLinkups && user.hostingLinkups > 0) {
       toast({
         variant: "destructive",
@@ -52,7 +53,8 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       });
       return;
     }
-
+    
+    // Then check for Linkup Plus subscription if not hosting any linkups
     if (user.isLinkupPlus) {
       toast({
         variant: "destructive",
@@ -62,6 +64,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       return;
     }
 
+    // If all checks pass, open the delete dialog
     setIsDeleteDialogOpen(true);
   };
 
