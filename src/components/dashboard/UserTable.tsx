@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Search, 
@@ -263,7 +264,7 @@ export const users: User[] = [
     isLinkupPlus: Math.random() > 0.5,
     isVerified: Math.random() > 0.5,
     nationality: "UK",
-    gender: Math.random() > 0.5 ? "Male" : "Female",
+    gender: Math.random() > 0.66 ? "Male" : Math.random() > 0.5 ? "Female" : "Non-binary" as "Male" | "Female" | "Non-binary",
     hostedLinkups: Math.floor(Math.random() * 30),
     attendedLinkups: Math.floor(Math.random() * 40),
     totalEarnings: Math.floor(Math.random() * 5000)
