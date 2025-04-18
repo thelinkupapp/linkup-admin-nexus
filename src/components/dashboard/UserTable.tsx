@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   MoreVertical, 
@@ -162,7 +161,8 @@ const generateAdditionalUsers = (): User[] => {
     additionalUsers.push({
       id: i.toString(),
       avatar: `https://i.pravatar.cc/150?u=${username}`,
-      name: `${firstName} ${lastName}`,
+      firstName: firstName,
+      lastName: lastName,
       username: username,
       email: `${username}@example.com`,
       age: Math.floor(Math.random() * (50 - 20 + 1)) + 20,
@@ -185,7 +185,8 @@ export const users: User[] = [
   {
     id: "0",
     avatar: "/lovable-uploads/a165dd8e-2635-4f3a-a050-ce01c92a0a6f.png",
-    name: "Jack Peagam",
+    firstName: "Jack",
+    lastName: "Peagam",
     username: "jackpeagam",
     email: "jack@example.com",
     age: 30,
@@ -202,7 +203,8 @@ export const users: User[] = [
   {
     id: "1",
     avatar: "/lovable-uploads/1fa5e36a-9e47-4933-9b3c-d103bedaf3bf.png",
-    name: "Ben Whatson",
+    firstName: "Ben",
+    lastName: "Whatson",
     username: "benwhatson",
     email: "ben@example.com",
     age: 31,
@@ -219,7 +221,8 @@ export const users: User[] = [
   {
     id: "2",
     avatar: "/lovable-uploads/f1cb2afb-e7ab-44e6-95c2-037da6ccad60.png",
-    name: "Elie Abou Samra",
+    firstName: "Elie",
+    lastName: "Abou Samra",
     username: "elieabousamra",
     email: "elie@example.com",
     age: 39,
@@ -236,7 +239,8 @@ export const users: User[] = [
   {
     id: "3",
     avatar: "https://i.pravatar.cc/150?img=62",
-    name: "Marcus Chen",
+    firstName: "Marcus",
+    lastName: "Chen",
     username: "marcus_c",
     email: "marcus@example.com",
     age: 21,
@@ -253,7 +257,8 @@ export const users: User[] = [
   {
     id: "4",
     avatar: "https://i.pravatar.cc/150?img=45",
-    name: "Emma Williams",
+    firstName: "Emma",
+    lastName: "Williams",
     username: "emma_w",
     email: "emma@example.com",
     age: 22,
@@ -270,7 +275,8 @@ export const users: User[] = [
   {
     id: "5",
     avatar: "https://i.pravatar.cc/150?img=68",
-    name: "Raj Patel",
+    firstName: "Raj",
+    lastName: "Patel",
     username: "raj_p",
     email: "raj@example.com",
     age: 37,
@@ -287,7 +293,8 @@ export const users: User[] = [
   {
     id: "6",
     avatar: "https://i.pravatar.cc/150?img=33",
-    name: "Isabella Rodriguez",
+    firstName: "Isabella",
+    lastName: "Rodriguez",
     username: "bella_r",
     email: "isabella@example.com",
     age: 28,
@@ -304,7 +311,8 @@ export const users: User[] = [
   {
     id: "7",
     avatar: "https://i.pravatar.cc/150?img=73",
-    name: "Thomas Anderson",
+    firstName: "Thomas",
+    lastName: "Anderson",
     username: "thomas_a",
     email: "thomas@example.com",
     age: 39,
@@ -321,7 +329,8 @@ export const users: User[] = [
   {
     id: "8",
     avatar: "https://i.pravatar.cc/150?img=41",
-    name: "Maria Silva",
+    firstName: "Maria",
+    lastName: "Silva",
     username: "maria_s",
     email: "maria@example.com",
     age: 21,
@@ -338,7 +347,8 @@ export const users: User[] = [
   {
     id: "9",
     avatar: "https://i.pravatar.cc/150?img=60",
-    name: "James O'Connor",
+    firstName: "James",
+    lastName: "O'Connor",
     username: "james_o",
     email: "james@example.com",
     age: 25,
@@ -355,7 +365,8 @@ export const users: User[] = [
   {
     id: "10",
     avatar: "https://i.pravatar.cc/150?img=47",
-    name: "Lucy Chen",
+    firstName: "Lucy",
+    lastName: "Chen",
     username: "lucy_c",
     email: "lucy@example.com",
     age: 30,
@@ -372,7 +383,8 @@ export const users: User[] = [
   {
     id: "11",
     avatar: "https://i.pravatar.cc/150?img=63",
-    name: "Hans Schmidt",
+    firstName: "Hans",
+    lastName: "Schmidt",
     username: "hans_s",
     email: "hans@example.com",
     age: 34,
@@ -389,7 +401,8 @@ export const users: User[] = [
   {
     id: "12",
     avatar: "https://i.pravatar.cc/150?img=39",
-    name: "Alex Morgan",
+    firstName: "Alex",
+    lastName: "Morgan",
     username: "alex_m",
     email: "alex@example.com",
     age: 24,
@@ -406,7 +419,8 @@ export const users: User[] = [
   {
     id: "13",
     avatar: "https://i.pravatar.cc/150?img=70",
-    name: "William Wright",
+    firstName: "William",
+    lastName: "Wright",
     username: "will_w",
     email: "william@example.com",
     age: 29,
@@ -423,7 +437,8 @@ export const users: User[] = [
   {
     id: "14",
     avatar: "https://i.pravatar.cc/150?img=31",
-    name: "Sofia Martinez",
+    firstName: "Sofia",
+    lastName: "Martinez",
     username: "sofia_m",
     email: "sofia@example.com",
     age: 26,
@@ -440,7 +455,8 @@ export const users: User[] = [
   {
     id: "15",
     avatar: "https://i.pravatar.cc/150?img=43",
-    name: "Emily Thompson",
+    firstName: "Emily",
+    lastName: "Thompson",
     username: "emily_t",
     email: "emily@example.com",
     age: 29,
@@ -457,7 +473,8 @@ export const users: User[] = [
   {
     id: "16",
     avatar: "https://i.pravatar.cc/150?img=64",
-    name: "Luca Rossi",
+    firstName: "Luca",
+    lastName: "Rossi",
     username: "luca_r",
     email: "luca@example.com",
     age: 32,
@@ -533,9 +550,10 @@ const UserTable = () => {
 
   const filteredUsers = users
     .filter(user => {
-      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
-                            user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
-                            user.email.toLowerCase().includes(searchValue.toLowerCase());
+      const fullName = `${user.firstName} ${user.lastName}`;
+      const matchesSearch = fullName.toLowerCase().includes(searchValue.toLowerCase()) || 
+                          user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
+                          user.email.toLowerCase().includes(searchValue.toLowerCase());
       
       const matchesNationality = selectedNationalities.length === 0 || 
                               selectedNationalities.some(natId => {
@@ -708,118 +726,121 @@ const UserTable = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell className="max-w-0">
-                  <div className="flex items-center gap-3">
-                    <div className="relative">
-                      <Avatar>
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs transition-all duration-200 hover:scale-110 hover:bg-primary/10 cursor-help">
-                              {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>{user.gender} User</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                    <div className="min-w-0">
-                      <div 
-                        className="font-medium hover:underline cursor-pointer"
-                        onClick={() => handleUserClick(user.id)}
-                      >
-                        {user.name}
+            {paginatedUsers.map((user) => {
+              const fullName = `${user.firstName} ${user.lastName}`;
+              return (
+                <TableRow key={user.id}>
+                  <TableCell className="max-w-0">
+                    <div className="flex items-center gap-3">
+                      <div className="relative">
+                        <Avatar>
+                          <AvatarImage src={user.avatar} alt={fullName} />
+                          <AvatarFallback>{user.firstName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs transition-all duration-200 hover:scale-110 hover:bg-primary/10 cursor-help">
+                                {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{user.gender} User</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
-                      <div className="text-sm text-muted-foreground">@{user.username}</div>
-                      <div className="flex items-center gap-1 mt-0.5">
-                        {user.isVerified && (
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <span className="inline-flex transition-transform duration-200 hover:scale-110 hover:rotate-3 cursor-help">
-                                  {(user.username === "jackpeagam" || 
+                      <div className="min-w-0">
+                        <div 
+                          className="font-medium hover:underline cursor-pointer"
+                          onClick={() => handleUserClick(user.id)}
+                        >
+                          {fullName}
+                        </div>
+                        <div className="text-sm text-muted-foreground">@{user.username}</div>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          {user.isVerified && (
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <span className="inline-flex transition-transform duration-200 hover:scale-110 hover:rotate-3 cursor-help">
+                                    {(user.username === "jackpeagam" || 
+                                      user.username === "benwhatson" || 
+                                      user.username === "elieabousamra") ? (
+                                      <img 
+                                        src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
+                                        alt="Staff Member" 
+                                        className="h-5 w-5" 
+                                      />
+                                    ) : (
+                                      <img 
+                                        src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                                        alt="Verified" 
+                                        className="h-4 w-4" 
+                                      />
+                                    )}
+                                  </span>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>{(user.username === "jackpeagam" || 
                                     user.username === "benwhatson" || 
-                                    user.username === "elieabousamra") ? (
-                                    <img 
-                                      src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
-                                      alt="Staff Member" 
-                                      className="h-5 w-5" 
-                                    />
-                                  ) : (
-                                    <img 
-                                      src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                                      alt="Verified" 
-                                      className="h-4 w-4" 
-                                    />
-                                  )}
-                                </span>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{(user.username === "jackpeagam" || 
-                                  user.username === "benwhatson" || 
-                                  user.username === "elieabousamra") ? "Staff Member" : "Verified User"}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-                        {user.isLinkupPlus && renderLinkupPlusIcon()}
+                                    user.username === "elieabousamra") ? "Staff Member" : "Verified User"}</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          )}
+                          {user.isLinkupPlus && renderLinkupPlusIcon()}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>{user.age}</TableCell>
-                <TableCell>{user.location}</TableCell>
-                <TableCell>
-                  {user.nationality === "🇱🇧" 
-                    ? "Lebanese" 
-                    : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
-                </TableCell>
-                <TableCell>{user.hostedLinkups}</TableCell>
-                <TableCell>{user.attendedLinkups}</TableCell>
-                <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
-                <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
-                        <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-[160px]">
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('view', user.id)}
-                        className="cursor-pointer"
-                      >
-                        <Eye className="mr-2 h-4 w-4" />
-                        <span>View Profile</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-amber-600 focus:text-amber-600"
-                      >
-                        <Ban className="mr-2 h-4 w-4" />
-                        <span>Suspend User</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-red-600 focus:text-red-600"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        <span>Delete User</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+                  </TableCell>
+                  <TableCell>{user.age}</TableCell>
+                  <TableCell>{user.location}</TableCell>
+                  <TableCell>
+                    {user.nationality === "🇱🇧" 
+                      ? "Lebanese" 
+                      : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
+                  </TableCell>
+                  <TableCell>{user.hostedLinkups}</TableCell>
+                  <TableCell>{user.attendedLinkups}</TableCell>
+                  <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
+                  <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                          <MoreVertical className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem 
+                          onClick={() => handleUserAction('view', user.id)}
+                          className="cursor-pointer"
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          <span>View Profile</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, `${user.firstName} ${user.lastName}`)}
+                          className="cursor-pointer text-amber-600 focus:text-amber-600"
+                        >
+                          <Ban className="mr-2 h-4 w-4" />
+                          <span>Suspend User</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, `${user.firstName} ${user.lastName}`)}
+                          className="cursor-pointer text-red-600 focus:text-red-600"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          <span>Delete User</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>

@@ -51,7 +51,8 @@ const deletedUsers: (User & { deletedDate: string, reasonForDeletion: string })[
   {
     id: "101",
     avatar: "https://i.pravatar.cc/150?img=33",
-    name: "Sophie Wilson",
+    firstName: "Sophie",
+    lastName: "Wilson",
     username: "sophie_w",
     email: "sophie@example.com",
     age: 29,
@@ -70,7 +71,8 @@ const deletedUsers: (User & { deletedDate: string, reasonForDeletion: string })[
   {
     id: "102",
     avatar: "https://i.pravatar.cc/150?img=45",
-    name: "Miguel Rodriguez",
+    firstName: "Miguel",
+    lastName: "Rodriguez",
     username: "miguel_r",
     email: "miguel@example.com",
     age: 34,
@@ -89,7 +91,8 @@ const deletedUsers: (User & { deletedDate: string, reasonForDeletion: string })[
   {
     id: "103",
     avatar: "https://i.pravatar.cc/150?img=22",
-    name: "Jessica Park",
+    firstName: "Jessica",
+    lastName: "Park",
     username: "jessica_p",
     email: "jessica@example.com",
     age: 26,
@@ -108,7 +111,8 @@ const deletedUsers: (User & { deletedDate: string, reasonForDeletion: string })[
   {
     id: "104",
     avatar: "https://i.pravatar.cc/150?img=53",
-    name: "Thomas Müller",
+    firstName: "Thomas",
+    lastName: "Müller",
     username: "thomas_m",
     email: "thomas@example.com",
     age: 31,
@@ -127,7 +131,8 @@ const deletedUsers: (User & { deletedDate: string, reasonForDeletion: string })[
   {
     id: "105",
     avatar: "https://i.pravatar.cc/150?img=26",
-    name: "Olivia Johnson",
+    firstName: "Olivia",
+    lastName: "Johnson",
     username: "olivia_j",
     email: "olivia@example.com",
     age: 24,
@@ -153,7 +158,8 @@ const UserDeletedTable = () => {
 
   // Filter users based on search input and deletion reason
   const filteredUsers = deletedUsers.filter(user => {
-    const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
+    const fullName = `${user.firstName} ${user.lastName}`;
+    const matchesSearch = fullName.toLowerCase().includes(searchValue.toLowerCase()) || 
                          user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
                          user.email.toLowerCase().includes(searchValue.toLowerCase());
     
@@ -240,59 +246,62 @@ const UserDeletedTable = () => {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar>
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{user.name}</p>
-                        <div className="flex flex-col text-sm text-muted-foreground">
-                          <span>@{user.username}</span>
-                          <span>{user.email}</span>
+              paginatedUsers.map((user) => {
+                const fullName = `${user.firstName} ${user.lastName}`;
+                return (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar>
+                          <AvatarImage src={user.avatar} alt={fullName} />
+                          <AvatarFallback>{fullName.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium">{fullName}</p>
+                          <div className="flex flex-col text-sm text-muted-foreground">
+                            <span>@{user.username}</span>
+                            <span>{user.email}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      {formatJoinDate(user.deletedDate)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className="font-normal">
-                      {user.reasonForDeletion}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleRestoreUser(user.id)}>
-                          <RotateCcw className="mr-2 h-4 w-4" />
-                          Restore User
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handlePermanentDelete(user.id)}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Permanent Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4 text-muted-foreground" />
+                        {formatJoinDate(user.deletedDate)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline" className="font-normal">
+                        {user.reasonForDeletion}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleRestoreUser(user.id)}>
+                            <RotateCcw className="mr-2 h-4 w-4" />
+                            Restore User
+                          </DropdownMenuItem>
+                          <DropdownMenuItem 
+                            onClick={() => handlePermanentDelete(user.id)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" />
+                            Permanent Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </TableBody>
         </Table>
