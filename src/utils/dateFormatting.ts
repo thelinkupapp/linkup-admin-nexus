@@ -1,5 +1,13 @@
 
-import { format, isToday, isYesterday, isThisWeek, isLastWeek, differenceInYears } from "date-fns";
+import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek } from "date-fns";
+
+// Custom implementation since isLastWeek is not exported from date-fns
+function isLastWeek(date: Date): boolean {
+  const now = new Date();
+  const startOfCurrentWeek = startOfWeek(now);
+  const diff = differenceInDays(startOfCurrentWeek, date);
+  return diff > 0 && diff < 8; // If the date is 1-7 days before the start of current week
+}
 
 export function formatJoinDate(date: string | Date): string {
   const joinDate = new Date(date);
