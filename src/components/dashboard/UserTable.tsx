@@ -39,6 +39,7 @@ import { cn } from "@/lib/utils";
 import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "react-tooltip";
 
 export const users: User[] = [
   {
@@ -388,7 +389,6 @@ const UserTable = () => {
                   <ArrowUpDown className={cn("h-4 w-4", joinDateSortDirection && "text-primary")} />
                 </div>
               </TableHead>
-              <TableHead className="w-[180px]">Status</TableHead>
               <TableHead className="w-[70px]"></TableHead>
             </TableRow>
           </TableHeader>
@@ -407,6 +407,32 @@ const UserTable = () => {
                     <div className="min-w-0">
                       <div className="font-medium truncate">{user.name}</div>
                       <div className="text-sm text-muted-foreground truncate">@{user.username}</div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {user.isVerified && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <CheckCircle2 className="h-3.5 w-3.5 text-status-verified" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Verified User</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                        {user.isLinkupPlus && (
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <Crown className="h-3.5 w-3.5 text-linkup-purple" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Linkup Plus Member</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </TableCell>
@@ -424,34 +450,6 @@ const UserTable = () => {
                 <TableCell>{user.attendedLinkups}</TableCell>
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
                 <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline" className={cn(
-                      user.isVerified 
-                        ? "bg-status-verified/10 text-status-verified border-status-verified/20"
-                        : "bg-destructive/10 text-destructive border-destructive/20"
-                    )}>
-                      {user.isVerified ? (
-                        <div className="flex items-center gap-1">
-                          Verified
-                          <CheckCircle2 className="h-3 w-3 ml-1" />
-                        </div>
-                      ) : "Not Verified"}
-                    </Badge>
-                    <Badge variant="outline" className={cn(
-                      user.isLinkupPlus 
-                        ? "bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20"
-                        : "bg-muted/50 text-muted-foreground border-muted-foreground/20"
-                    )}>
-                      {user.isLinkupPlus ? (
-                        <div className="flex items-center gap-1">
-                          Plus
-                          <Crown className="h-3 w-3 ml-1" />
-                        </div>
-                      ) : "Free User"}
-                    </Badge>
-                  </div>
-                </TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
