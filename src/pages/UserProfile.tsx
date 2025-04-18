@@ -6,6 +6,7 @@ import { DeleteUserDialog } from "@/components/dashboard/DeleteUserDialog";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
 import { ProfilePhotos } from "@/components/dashboard/ProfilePhotos";
 import { UserActivity } from "@/components/dashboard/UserActivity";
+import { ProfileImageCarousel } from "@/components/profile/ProfileImageCarousel";
 import { getCountryEmoji } from "@/utils/countryUtils";
 import { 
   Tabs, 
