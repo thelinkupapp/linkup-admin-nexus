@@ -486,6 +486,10 @@ const formatCurrency = (amount: number) => {
 type SortField = 'hosted' | 'attended' | 'earnings' | 'joined';
 type SortDirection = 'asc' | 'desc';
 
+const renderLinkupPlusIcon = () => (
+  <span className="ml-0.5 text-lg">👑</span>
+);
+
 export default function UserTable() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
@@ -624,14 +628,6 @@ export default function UserTable() {
     setDeleteUserName("");
   };
 
-  const renderLinkupPlusIcon = () => (
-    <img 
-      src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png" 
-      alt="Linkup Plus" 
-      className="h-4 w-4 ml-0.5" 
-    />
-  );
-
   return (
     <div className="space-y-4">
       <UserFilters
@@ -747,7 +743,7 @@ export default function UserTable() {
                               <h4 className="text-sm font-semibold flex items-center gap-2">
                                 {user.name}
                                 {user.isLinkupPlus && (
-                                  <Crown className="h-4 w-4 text-linkup-purple" />
+                                  <span className="ml-0.5 text-lg">👑</span>
                                 )}
                               </h4>
                               <p className="text-sm text-muted-foreground">@{user.username}</p>
