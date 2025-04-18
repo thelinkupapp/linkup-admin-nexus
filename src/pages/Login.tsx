@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -52,6 +53,7 @@ export default function Login() {
 
   const handleConfirmReset = (e: React.FormEvent) => {
     e.preventDefault();
+    // Simulate sending a reset code
     setResetStep("enter-code");
     toast({
       title: "Code Sent",
