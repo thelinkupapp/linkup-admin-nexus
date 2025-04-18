@@ -50,6 +50,7 @@ import {
 import { formatJoinDate } from "@/utils/dateFormatting";
 import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
+import { DeleteUserDialog } from "./DeleteUserDialog";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -458,6 +459,10 @@ export default function UserTable() {
   const [suspendUsername, setSuspendUsername] = useState<string>("");
   const [suspendUserAvatar, setSuspendUserAvatar] = useState<string>("");
   const [suspendUserName, setSuspendUserName] = useState<string>("");
+  const [deleteUserId, setDeleteUserId] = useState<string | null>(null);
+  const [deleteUsername, setDeleteUsername] = useState<string>("");
+  const [deleteUserAvatar, setDeleteUserAvatar] = useState<string>("");
+  const [deleteUserName, setDeleteUserName] = useState<string>("");
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -525,8 +530,10 @@ export default function UserTable() {
         setSuspendUserName(name || "");
         break;
       case 'delete':
-        // For now, just log the deletion - you might want to add a confirmation dialog later
-        console.log('Deleting user:', userId);
+        setDeleteUserId(userId);
+        setDeleteUsername(username || "");
+        setDeleteUserAvatar(avatar || "");
+        setDeleteUserName(name || "");
         break;
       default:
         break;
@@ -538,6 +545,13 @@ export default function UserTable() {
     setSuspendUsername("");
     setSuspendUserAvatar("");
     setSuspendUserName("");
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setDeleteUserId(null);
+    setDeleteUsername("");
+    setDeleteUserAvatar("");
+    setDeleteUserName("");
   };
 
   return (
@@ -718,6 +732,15 @@ export default function UserTable() {
         userName={suspendUserName}
       />
 
+      <DeleteUserDialog
+        isOpen={!!deleteUserId}
+        onClose={handleCloseDeleteDialog}
+        userId={deleteUserId || ""}
+        username={deleteUsername}
+        userAvatar={deleteUserAvatar}
+        userName={deleteUserName}
+      />
+
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <p className="text-sm text-muted-foreground">Items per page</p>
@@ -805,16 +828,4 @@ export default function UserTable() {
 
             <PaginationItem>
               <PaginationNext
-                onClick={() => handlePageChange(currentPage + 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === totalPages && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </div>
-  );
-}
+                onClick={()
