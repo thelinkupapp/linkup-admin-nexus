@@ -62,6 +62,25 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
+const getNationalityLabel = (countryCode: string): string => {
+  const nationalityMap: { [key: string]: string } = {
+    'UK': 'British',
+    'USA': 'American',
+    'UAE': 'Emirati',
+    'Ireland': 'Irish',
+    'Singapore': 'Singaporean',
+    'Spain': 'Spanish',
+    'Japan': 'Japanese',
+    'Australia': 'Australian',
+    'Brazil': 'Brazilian',
+    'Germany': 'German',
+    'France': 'French',
+    'Canada': 'Canadian',
+    'Italy': 'Italian'
+  };
+  return nationalityMap[countryCode] || countryCode;
+};
+
 export const users: User[] = [
   {
     id: "1",
@@ -250,24 +269,40 @@ export const users: User[] = [
     attendedLinkups: 0,
     totalEarnings: 0
   },
-  // Adding more users to demonstrate pagination
-  ...Array.from({ length: 114 }, (_, index) => ({
-    id: `${index + 12}`,
-    avatar: `https://i.pravatar.cc/150?img=${index + 12}`,
-    name: `Test User ${index + 12}`,
-    username: `user_${index + 12}`,
-    email: `user${index + 12}@example.com`,
-    age: Math.floor(Math.random() * (50 - 18) + 18),
-    joinDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
-    location: "🇬🇧 London, UK",
-    isLinkupPlus: Math.random() > 0.5,
-    isVerified: Math.random() > 0.5,
-    nationality: "UK",
-    gender: Math.random() > 0.66 ? "Male" : Math.random() > 0.5 ? "Female" : "Non-binary" as "Male" | "Female" | "Non-binary",
-    hostedLinkups: Math.floor(Math.random() * 30),
-    attendedLinkups: Math.floor(Math.random() * 40),
-    totalEarnings: Math.floor(Math.random() * 5000)
-  }))
+  {
+    id: "12",
+    avatar: "https://i.pravatar.cc/150?u=alexander",
+    name: "Alexander Wright",
+    username: "alex_w",
+    email: "alexander@example.com",
+    age: 29,
+    joinDate: "2024-12-15T00:00:00Z",
+    location: "🇨🇦 Vancouver, Canada",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Canada",
+    gender: "Male",
+    hostedLinkups: 15,
+    attendedLinkups: 22,
+    totalEarnings: 1850.00
+  },
+  {
+    id: "13",
+    avatar: "https://i.pravatar.cc/150?u=isabella_m",
+    name: "Isabella Martinez",
+    username: "bella_m",
+    email: "isabella@example.com",
+    age: 26,
+    joinDate: "2024-12-10T00:00:00Z",
+    location: "🇪🇸 Madrid, Spain",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "Spain",
+    gender: "Female",
+    hostedLinkups: 8,
+    attendedLinkups: 16,
+    totalEarnings: 920.00
+  }
 ];
 
 const getCountryEmoji = (country: string) => {
@@ -319,7 +354,6 @@ const UserTable = () => {
              matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
-      // Default sort by join date in descending order
       const dateA = new Date(a.joinDate).getTime();
       const dateB = new Date(b.joinDate).getTime();
       return dateB - dateA;
@@ -461,7 +495,7 @@ const UserTable = () => {
                   <span className="truncate">{user.location}</span>
                 </TableCell>
                 <TableCell>
-                  {getCountryEmoji(user.nationality)} {nationalities.find(n => n.id === user.nationality.toLowerCase())?.label || user.nationality}
+                  {getCountryEmoji(user.nationality)} {getNationalityLabel(user.nationality)}
                 </TableCell>
                 <TableCell>{user.hostedLinkups}</TableCell>
                 <TableCell>{user.attendedLinkups}</TableCell>
