@@ -14,6 +14,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Trash2 } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DeleteUserDialogProps {
   isOpen: boolean;
@@ -24,6 +31,15 @@ interface DeleteUserDialogProps {
   userName?: string;
 }
 
+const deleteReasons = [
+  { value: "inappropriate", label: "Inappropriate Behavior" },
+  { value: "spam", label: "Spam/Scam Activities" },
+  { value: "fake", label: "Fake Account" },
+  { value: "inactive", label: "Long-term Inactivity" },
+  { value: "request", label: "User Request" },
+  { value: "other", label: "Other" }
+];
+
 export function DeleteUserDialog({ 
   isOpen, 
   onClose, 
@@ -33,12 +49,23 @@ export function DeleteUserDialog({
   userName 
 }: DeleteUserDialogProps) {
   const [notes, setNotes] = useState("");
+  const [reason, setReason] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const { toast } = useToast();
 
   const handleDelete = () => {
+    if (!reason) {
+      toast({
+        title: "Required Field",
+        description: "Please select a reason for deletion",
+        variant: "destructive",
+      });
+      return;
+    }
+
     console.log("Deleting user:", {
       userId,
+      reason,
       notes: notes.trim(),
     });
     
@@ -48,10 +75,10 @@ export function DeleteUserDialog({
   const handleClose = () => {
     setIsConfirmed(false);
     setNotes("");
+    setReason("");
     onClose();
   };
 
-  // Extract first name (first word of userName)
   const firstName = userName?.split(' ')[0] || username;
 
   return (
@@ -77,6 +104,27 @@ export function DeleteUserDialog({
             </AlertDialogHeader>
             
             <div className="grid gap-4 py-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Reason for Deletion *
+                </label>
+                <Select
+                  value={reason}
+                  onValueChange={setReason}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a reason" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {deleteReasons.map((reason) => (
+                      <SelectItem key={reason.value} value={reason.value}>
+                        {reason.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div className="space-y-2">
                 <label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                   Additional Notes (Optional)
