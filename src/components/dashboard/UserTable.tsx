@@ -51,6 +51,7 @@ import { formatJoinDate } from "@/utils/dateFormatting";
 import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
+import { nationalities } from "@/constants/filterOptions";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
