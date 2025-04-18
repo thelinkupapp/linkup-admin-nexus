@@ -38,7 +38,17 @@ export const nationalities = [
   { id: "it", label: "Italian", emoji: "🇮🇹" },
   { id: "es", label: "Spanish", emoji: "🇪🇸" },
   { id: "jp", label: "Japanese", emoji: "🇯🇵" },
-  { id: "sg", label: "Singaporean", emoji: "🇸🇬" }
+  { id: "sg", label: "Singaporean", emoji: "🇸🇬" },
+  { id: "kr", label: "Korean", emoji: "🇰🇷" },
+  { id: "cn", label: "Chinese", emoji: "🇨🇳" },
+  { id: "in", label: "Indian", emoji: "🇮🇳" },
+  { id: "br", label: "Brazilian", emoji: "🇧🇷" },
+  { id: "mx", label: "Mexican", emoji: "🇲🇽" },
+  { id: "za", label: "South African", emoji: "🇿🇦" },
+  { id: "ru", label: "Russian", emoji: "🇷🇺" },
+  { id: "se", label: "Swedish", emoji: "🇸🇪" },
+  { id: "nl", label: "Dutch", emoji: "🇳🇱" },
+  { id: "nz", label: "New Zealander", emoji: "🇳🇿" }
 ];
 
 export const countries = [
@@ -51,5 +61,15 @@ export const countries = [
   { id: "it", label: "Italy", value: "Rome, Italy", emoji: "🇮🇹" },
   { id: "es", label: "Spain", value: "Madrid, Spain", emoji: "🇪🇸" },
   { id: "jp", label: "Japan", value: "Tokyo, Japan", emoji: "🇯🇵" },
-  { id: "sg", label: "Singapore", value: "Singapore", emoji: "🇸🇬" }
+  { id: "sg", label: "Singapore", value: "Singapore", emoji: "🇸🇬" },
+  { id: "kr", label: "South Korea", value: "Seoul, South Korea", emoji: "🇰🇷" },
+  { id: "cn", label: "China", value: "Beijing, China", emoji: "🇨🇳" },
+  { id: "in", label: "India", value: "Mumbai, India", emoji: "🇮🇳" },
+  { id: "br", label: "Brazil", value: "São Paulo, Brazil", emoji: "🇧🇷" },
+  { id: "mx", label: "Mexico", value: "Mexico City, Mexico", emoji: "🇲🇽" },
+  { id: "za", label: "South Africa", value: "Cape Town, South Africa", emoji: "🇿🇦" },
+  { id: "ru", label: "Russia", value: "Moscow, Russia", emoji: "🇷🇺" },
+  { id: "se", label: "Sweden", value: "Stockholm, Sweden", emoji: "🇸🇪" },
+  { id: "nl", label: "Netherlands", value: "Amsterdam, Netherlands", emoji: "🇳🇱" },
+  { id: "nz", label: "New Zealand", value: "Auckland, New Zealand", emoji: "🇳🇿" }
 ];
