@@ -25,12 +25,12 @@ interface UserActivityProps {
 }
 
 export const UserActivity = ({ chatActivity, linkupActivity }: UserActivityProps) => {
-  const getBadgeVariant = (type: LinkupActivity['type']) => {
+  const getBadgeVariant = (type: LinkupActivity['type']): "default" | "secondary" | "outline" | "destructive" => {
     switch (type) {
       case 'sent':
         return 'default';
       case 'accepted':
-        return 'success';
+        return 'secondary';
       case 'requested':
         return 'secondary';
       case 'joined':
