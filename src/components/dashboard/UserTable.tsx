@@ -390,7 +390,7 @@ export const users: User[] = [
     email: "alex@example.com",
     age: 24,
     joinDate: "2025-04-18T10:30:00Z",
-    location: "🇯🇵 Tokyo, Japan",
+    location: "🇯���� Tokyo, Japan",
     isLinkupPlus: false,
     isVerified: false,
     nationality: "Japan",
@@ -759,7 +759,7 @@ export default function UserTable() {
                 </TableCell>
                 <TableCell>
                   <div className="truncate">
-                    {getCountryEmoji(user.nationality)} {getNationalityLabel(user.nationality)}
+                    {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
                   </div>
                 </TableCell>
                 <TableCell>{user.hostedLinkups}</TableCell>
@@ -783,4 +783,88 @@ export default function UserTable() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:
+                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 transition-colors duration-200"
+                      >
+                        <Ban className="mr-2 h-4 w-4" />
+                        Suspend User
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
+                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 transition-colors duration-200"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete User
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+      
+      {totalPages > 1 && (
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationPrevious 
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+            />
+            
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageNum = i + 1;
+              return (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink 
+                    onClick={() => handlePageChange(pageNum)}
+                    isActive={currentPage === pageNum}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+            
+            {totalPages > 5 && (
+              <>
+                <PaginationEllipsis />
+                <PaginationItem>
+                  <PaginationLink 
+                    onClick={() => handlePageChange(totalPages)}
+                    isActive={currentPage === totalPages}
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            
+            <PaginationNext 
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+            />
+          </PaginationContent>
+        </Pagination>
+      )}
+      
+      <SuspendUserDialog
+        isOpen={suspendUserId !== null}
+        onClose={handleCloseSuspendDialog}
+        userId={suspendUserId || ""}
+        username={suspendUsername}
+        userAvatar={suspendUserAvatar}
+        userName={suspendUserName}
+      />
+      
+      <DeleteUserDialog
+        isOpen={deleteUserId !== null}
+        onClose={handleCloseDeleteDialog}
+        userId={deleteUserId || ""}
+        username={deleteUsername}
+        userAvatar={deleteUserAvatar}
+        userName={deleteUserName}
+      />
+    </div>
+  );
+}
