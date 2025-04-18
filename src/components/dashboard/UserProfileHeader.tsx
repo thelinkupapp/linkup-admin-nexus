@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowLeft, Flag, Trash2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,7 +20,6 @@ interface UserProfileHeaderProps {
     joinDate: string;
     isVerified: boolean;
     isLinkupPlus: boolean;
-    // Add these new properties to the user interface
     hostingLinkups?: number;
   };
 }
@@ -41,28 +39,10 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       return;
     }
 
-    if (user.hostingLinkups && user.hostingLinkups > 0) {
-      toast({
-        variant: "destructive",
-        title: "Unable to Suspend User",
-        description: `This user is currently hosting ${user.hostingLinkups} linkup${user.hostingLinkups > 1 ? 's' : ''}. Please remove their hosted linkups before proceeding with suspension.`,
-      });
-      return;
-    }
-
     setIsSuspendDialogOpen(true);
   };
 
   const handleDeleteClick = () => {
-    if (user.isLinkupPlus) {
-      toast({
-        variant: "destructive",
-        title: "Unable to Delete User",
-        description: "This user has an active Linkup Plus subscription. Please cancel their subscription before proceeding with account deletion.",
-      });
-      return;
-    }
-
     if (user.hostingLinkups && user.hostingLinkups > 0) {
       toast({
         variant: "destructive",
