@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -82,7 +83,12 @@ export default {
           active: '#22c55e',
           cancelled: '#6b7280',
           upcoming: '#3b82f6'
-        }
+        },
+        // Adding explicit white for HoverCard
+        white: '#FFFFFF'
+      },
+      backgroundColor: {
+        'white': '#FFFFFF',
       },
       borderRadius: {
         lg: 'var(--radius)',
