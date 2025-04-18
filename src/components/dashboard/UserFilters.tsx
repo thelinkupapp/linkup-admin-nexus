@@ -96,6 +96,22 @@ export function UserFilters({
     ageRange[1] !== 100 ||
     searchValue !== "";
 
+  const handleVerificationChange = (value: string) => {
+    if (value === "all") {
+      setVerificationStatus("");
+    } else {
+      setVerificationStatus(value);
+    }
+  };
+
+  const handleMembershipChange = (value: string) => {
+    if (value === "all") {
+      setMembershipStatus("");
+    } else {
+      setMembershipStatus(value);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between mb-4">
@@ -243,7 +259,7 @@ export function UserFilters({
           </PopoverContent>
         </Popover>
 
-        <Select value={verificationStatus} onValueChange={setVerificationStatus}>
+        <Select value={verificationStatus} onValueChange={handleVerificationChange}>
           <SelectTrigger className="w-[140px] font-medium">
             <SelectValue placeholder="Verification" />
           </SelectTrigger>
@@ -263,7 +279,7 @@ export function UserFilters({
           </SelectContent>
         </Select>
 
-        <Select value={membershipStatus} onValueChange={setMembershipStatus}>
+        <Select value={membershipStatus} onValueChange={handleMembershipChange}>
           <SelectTrigger className="w-[140px] font-medium">
             <SelectValue placeholder="Membership" />
           </SelectTrigger>
