@@ -824,6 +824,29 @@ export default function UserTable() {
       
       {totalPages > 1 && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-4">
+          <PaginationItemsPerPage className="flex items-center gap-2">
+            <span>Show</span>
+            <Select
+              value={itemsPerPage.toString()}
+              onValueChange={(value) => {
+                setItemsPerPage(Number(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-20">
+                <SelectValue placeholder="25" />
+              </SelectTrigger>
+              <SelectContent>
+                {[25, 50, 100].map((option) => (
+                  <SelectItem key={option} value={option.toString()}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span>per page</span>
+          </PaginationItemsPerPage>
+
           <Pagination>
             <PaginationContent>
               {currentPage > 1 ? (
@@ -879,29 +902,6 @@ export default function UserTable() {
               )}
             </PaginationContent>
           </Pagination>
-          
-          <PaginationItemsPerPage>
-            <span>Show</span>
-            <Select
-              value={itemsPerPage.toString()}
-              onValueChange={(value) => {
-                setItemsPerPage(Number(value));
-                setCurrentPage(1);
-              }}
-            >
-              <SelectTrigger className="w-20">
-                <SelectValue placeholder="25" />
-              </SelectTrigger>
-              <SelectContent>
-                {itemsPerPageOptions.map((option) => (
-                  <SelectItem key={option} value={option.toString()}>
-                    {option}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <span>per page</span>
-          </PaginationItemsPerPage>
         </div>
       )}
       
