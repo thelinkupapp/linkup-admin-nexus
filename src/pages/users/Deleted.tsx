@@ -1,6 +1,6 @@
 
 import { Sidebar } from "@/components/dashboard/Sidebar";
-import { UserDeletedTable } from "@/components/dashboard/UserDeletedTable";
+import UserDeletedTable from "@/components/dashboard/UserDeletedTable";
 
 const UserDeleted = () => {
   return (
