@@ -24,7 +24,6 @@ import {
   Timer
 } from "lucide-react";
 
-import { DataSort } from "./DataSort";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -442,11 +441,6 @@ export function LinkupTable() {
               </SelectItem>
             </SelectContent>
           </Select>
-
-          <DataSort
-            sortDirection={sortDirection}
-            onSortChange={setSortDirection}
-          />
         </div>
       </div>
 
