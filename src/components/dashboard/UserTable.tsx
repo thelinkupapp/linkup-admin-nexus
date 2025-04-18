@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   MoreVertical, 
@@ -783,6 +784,159 @@ const UserTable = () => {
                 <TableCell>{user.hostedLinkups}</TableCell>
                 <TableCell>{user.attendedLinkups}</TableCell>
                 <TableCell>{formatCurrency(user.totalEarnings)}</TableCell>
-                <TableCell>
-                  {formatJoinDate(user.joinDate)}
-                </
+                <TableCell>{formatJoinDate(user.joinDate)}</TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 p-0">
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-[160px]">
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('view', user.id)}
+                        className="cursor-pointer"
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        <span>View Profile</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
+                        className="cursor-pointer text-amber-600 focus:text-amber-600"
+                      >
+                        <Ban className="mr-2 h-4 w-4" />
+                        <span>Suspend User</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
+                        className="cursor-pointer text-red-600 focus:text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete User</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {filteredUsers.length > 0 && (
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4">
+          <div className="flex items-center gap-2">
+            <p className="text-sm text-muted-foreground">
+              Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length} users
+            </p>
+            <div className="flex items-center ml-4">
+              <span className="text-sm text-muted-foreground mr-2">Users per page:</span>
+              <Select 
+                value={itemsPerPage.toString()} 
+                onValueChange={(value) => setItemsPerPage(Number(value))}
+              >
+                <SelectTrigger className="h-8 w-[70px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemsPerPageOptions.map(option => (
+                    <SelectItem key={option} value={option.toString()}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === 1 && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+              
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+
+                return (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      onClick={() => handlePageChange(pageNum)}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+              )}
+
+              {totalPages > 5 && (currentPage < totalPages - 2) && (
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => handlePageChange(totalPages)}
+                    className="cursor-pointer"
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              )}
+
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === totalPages && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+
+      <SuspendUserDialog
+        isOpen={suspendUserId !== null}
+        onClose={handleCloseSuspendDialog}
+        userId={suspendUserId || ""}
+        username={suspendUsername}
+        userAvatar={suspendUserAvatar}
+        userName={suspendUserName}
+      />
+
+      <DeleteUserDialog
+        isOpen={deleteUserId !== null}
+        onClose={handleCloseDeleteDialog}
+        userId={deleteUserId || ""}
+        username={deleteUsername}
+        userAvatar={deleteUserAvatar}
+        userName={deleteUserName}
+      />
+    </div>
+  );
+};
+
+export default UserTable;
