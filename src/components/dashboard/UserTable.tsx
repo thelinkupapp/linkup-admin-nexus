@@ -786,3 +786,140 @@ export default function UserTable() {
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                        <Eye className="mr-2 h-4 w-4" />
+                        <span>View</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}>
+                        <Ban className="mr-2 h-4 w-4" />
+                        <span>Suspend</span>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}>
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <div className="flex items-center justify-between">
+        <div className="flex-1 text-sm text-muted-foreground">
+          Showing <span className="font-medium">{startIndex + 1}</span> to{" "}
+          <span className="font-medium">
+            {Math.min(startIndex + itemsPerPage, filteredUsers.length)}
+          </span>{" "}
+          of <span className="font-medium">{filteredUsers.length}</span> users
+        </div>
+
+        <div className="flex items-center space-x-6">
+          <Select 
+            value={itemsPerPage.toString()} 
+            onValueChange={(value) => {
+              setItemsPerPage(Number(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={itemsPerPage.toString()} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {itemsPerPageOptions.map((option) => (
+                <SelectItem key={option} value={option.toString()}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
+                />
+              </PaginationItem>
+              
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNumber = i + 1;
+                
+                if (totalPages > 5) {
+                  if (currentPage <= 3) {
+                    pageNumber = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNumber = totalPages - 4 + i;
+                  } else {
+                    pageNumber = currentPage - 2 + i;
+                  }
+                }
+                
+                return (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      isActive={currentPage === pageNumber}
+                      onClick={() => handlePageChange(pageNumber)}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <>
+                  <PaginationItem>
+                    <PaginationEllipsis />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink onClick={() => handlePageChange(totalPages)}>
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                </>
+              )}
+              
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      </div>
+      
+      {suspendUserId && (
+        <SuspendUserDialog
+          userId={suspendUserId}
+          username={suspendUsername}
+          avatar={suspendUserAvatar}
+          name={suspendUserName}
+          onClose={handleCloseSuspendDialog}
+        />
+      )}
+      
+      {deleteUserId && (
+        <DeleteUserDialog
+          userId={deleteUserId}
+          username={deleteUsername}
+          avatar={deleteUserAvatar} 
+          name={deleteUserName}
+          onClose={handleCloseDeleteDialog}
+        />
+      )}
+    </div>
+  );
+}
