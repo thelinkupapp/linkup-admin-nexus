@@ -169,8 +169,9 @@ export function DeleteUserDialog({
             </AlertDialogTitle>
             
             <AlertDialogDescription className="text-md mb-6 px-4">
-              This user has been permanently deleted from the platform.
-              This action cannot be undone.
+              This user has been permanently deleted from the app. 
+              This action cannot be undone. 
+              They have been moved to the 'deleted users' section.
             </AlertDialogDescription>
 
             <Button 
