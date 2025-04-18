@@ -733,7 +733,9 @@ export default function UserTable() {
                             {user.name}
                           </div>
                         </HoverCardTrigger>
-                        <HoverCardContent className="w-80">
+                        <HoverCardContent 
+                          className="w-80 bg-dark-purple border border-white/10 rounded-lg shadow-2xl backdrop-blur-sm bg-opacity-90 text-white"
+                        >
                           <div className="flex justify-between space-x-4">
                             <Avatar className="h-16 w-16 border-2 border-linkup-purple">
                               <AvatarImage src={user.avatar} />
@@ -742,9 +744,7 @@ export default function UserTable() {
                             <div className="space-y-1.5 flex-1">
                               <h4 className="text-sm font-semibold flex items-center gap-2">
                                 {user.name}
-                                {user.isLinkupPlus && (
-                                  <span className="ml-0.5 text-lg">👑</span>
-                                )}
+                                {user.isLinkupPlus && renderLinkupPlusIcon()}
                               </h4>
                               <p className="text-sm text-muted-foreground">@{user.username}</p>
                               <p className="text-sm">
