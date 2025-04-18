@@ -302,12 +302,79 @@ export const users: User[] = [
     hostedLinkups: 8,
     attendedLinkups: 16,
     totalEarnings: 920.00
+  },
+  {
+    id: "14",
+    avatar: "https://i.pravatar.cc/150?u=emma",
+    name: "Emma Thompson",
+    username: "emma_t",
+    email: "emma@example.com",
+    age: 29,
+    joinDate: "2024-11-20T00:00:00Z",
+    location: "🇫🇷 Paris, France",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "France",
+    gender: "Female",
+    hostedLinkups: 18,
+    attendedLinkups: 25,
+    totalEarnings: 1750.00
+  },
+  {
+    id: "15",
+    avatar: "https://i.pravatar.cc/150?u=luca",
+    name: "Luca Rossi",
+    username: "luca_r",
+    email: "luca@example.com",
+    age: 32,
+    joinDate: "2024-10-15T00:00:00Z",
+    location: "🇮🇹 Milan, Italy",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "Italy",
+    gender: "Male",
+    hostedLinkups: 7,
+    attendedLinkups: 12,
+    totalEarnings: 450.50
   }
 ];
 
+const generateAdditionalUsers = (): User[] => {
+  const additionalUsers: User[] = [];
+  const nationalities = ['France', 'Italy', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Sweden', 'Denmark', 'Norway', 'Finland'];
+  const genders = ['Male', 'Female', 'Non-binary'];
+
+  for (let i = 16; i <= 110; i++) {
+    const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
+    const gender = genders[Math.floor(Math.random() * genders.length)];
+    
+    additionalUsers.push({
+      id: i.toString(),
+      avatar: `https://i.pravatar.cc/150?u=user${i}`,
+      name: `User ${i}`,
+      username: `user_${i}`,
+      email: `user${i}@example.com`,
+      age: Math.floor(Math.random() * (50 - 20 + 1)) + 20,
+      joinDate: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString(),
+      location: `🌍 City, ${nationality}`,
+      isLinkupPlus: Math.random() > 0.5,
+      isVerified: Math.random() > 0.3,
+      nationality: nationality,
+      gender: gender,
+      hostedLinkups: Math.floor(Math.random() * 30),
+      attendedLinkups: Math.floor(Math.random() * 40),
+      totalEarnings: Math.random() * 5000
+    });
+  }
+
+  return additionalUsers;
+};
+
+users.push(...generateAdditionalUsers());
+
 const getCountryEmoji = (country: string) => {
   const emojiMap: { [key: string]: string } = {
-    'UK': '🇬🇧',
+    'UK': '��🇧',
     'USA': '🇺🇸',
     'UAE': '🇦🇪',
     'Ireland': '🇮🇪',
