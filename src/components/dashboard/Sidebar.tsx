@@ -199,11 +199,11 @@ export function Sidebar() {
           <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
           <div className="flex items-center gap-3">
             <div className="h-9 w-9 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm font-medium">
-              A
+              JP
             </div>
             <div>
-              <p className="text-sm font-medium">Admin User</p>
-              <p className="text-xs text-muted-foreground">admin@linkup.com</p>
+              <p className="text-sm font-medium">Jack Peagam</p>
+              <p className="text-xs text-muted-foreground">jack@linkupapp.io</p>
             </div>
           </div>
         </div>
