@@ -249,7 +249,7 @@ export function UserFilters({
             <SelectValue placeholder="Verification" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Users</SelectItem>
+            <SelectItem value="all">All Users</SelectItem>
             <SelectItem value="verified">
               <div className="flex items-center gap-2">
                 Verified
@@ -269,7 +269,7 @@ export function UserFilters({
             <SelectValue placeholder="Membership" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">All Users</SelectItem>
+            <SelectItem value="all">All Users</SelectItem>
             <SelectItem value="free">Free User</SelectItem>
             <SelectItem value="plus">
               <div className="flex items-center gap-2">
