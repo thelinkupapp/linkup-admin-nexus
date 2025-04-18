@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Crown, CheckCircle2 } from "lucide-react";
+import { Search, Filter, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,10 @@ import {
   countries,
   nationalities,
 } from "@/constants/filterOptions";
+
+// Import the new icons
+import VerifiedIcon from "@/assets/icons/verified.png";
+import LinkupPlusIcon from "@/assets/icons/linkup-plus.png";
 
 interface UserFiltersProps {
   searchValue: string;
@@ -91,7 +95,11 @@ export function UserFilters({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
               Verified
-              <CheckCircle2 className="h-4 w-4 text-[#1EAEDB]" />
+              <img 
+                src={VerifiedIcon} 
+                alt="Verified" 
+                className="h-4 w-4"
+              />
             </label>
           </div>
           <div className="flex items-center space-x-2">
@@ -105,7 +113,11 @@ export function UserFilters({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
               Linkup Plus
-              <Crown className="h-4 w-4 text-[#9b87f5]" />
+              <img 
+                src={LinkupPlusIcon} 
+                alt="Linkup Plus" 
+                className="h-4 w-4"
+              />
             </label>
           </div>
         </div>
