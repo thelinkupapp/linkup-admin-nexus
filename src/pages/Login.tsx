@@ -263,9 +263,9 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img 
-            src="/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png"
+            src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png"
             alt="Linkup Logo"
-            className="h-16 w-16 rounded-xl mx-auto mb-4"
+            className="mx-auto mb-4 object-contain h-24 w-auto max-w-full"
           />
           <h1 className="text-2xl font-semibold mb-1">
             {resetStep === "login" ? "Do more, together" : 
@@ -288,3 +288,4 @@ export default function Login() {
     </div>
   );
 }
+
