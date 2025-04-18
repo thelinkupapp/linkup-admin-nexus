@@ -37,7 +37,7 @@ import { cn } from "@/lib/utils";
 import { nationalities } from "@/constants/filterOptions";
 import type { User } from "@/types/user";
 
-const users: User[] = [
+export const users: User[] = [
   {
     id: "1",
     avatar: "https://i.pravatar.cc/150?img=1",

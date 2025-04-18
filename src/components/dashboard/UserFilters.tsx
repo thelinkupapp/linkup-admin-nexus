@@ -9,13 +9,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
 
 import {
   countries,
@@ -62,9 +55,9 @@ export function UserFilters({
   };
 
   const genderOptions = [
-    { value: "male", label: "Male" },
-    { value: "female", label: "Female" },
-    { value: "other", label: "Other" },
+    { value: "male", label: "Male 💁‍♂️" },
+    { value: "female", label: "Female 💁‍♀️" },
+    { value: "non-binary", label: "Non-binary 💖" },
   ];
 
   return (
