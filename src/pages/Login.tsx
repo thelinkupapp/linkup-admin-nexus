@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/components/ui/use-toast";
-import { Mail, Lock, Loader2 } from "lucide-react";
+import { Mail, Lock, Loader2, CircleHelp, MessageCircleQuestion } from "lucide-react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
+  const [isForgotPasswordMode, setIsForgotPasswordMode] = useState(false);
   const { login } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -41,13 +43,25 @@ export default function Login() {
     }
   };
 
-  // Reset form state when component mounts
-  useState(() => {
-    setEmail("");
-    setPassword("");
-    setError("");
-    setIsLoading(false);
-  });
+  const handleForgotPassword = () => {
+    setIsForgotPasswordMode(true);
+  };
+
+  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+      title: "Password Reset",
+      description: `A password reset link has been sent to ${forgotPasswordEmail}. Please check your email.`,
+      variant: "default",
+    });
+    setIsForgotPasswordMode(false);
+    setForgotPasswordEmail("");
+  };
+
+  const handleCancelForgotPassword = () => {
+    setIsForgotPasswordMode(false);
+    setForgotPasswordEmail("");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-secondary/5 flex items-center justify-center p-4">
@@ -58,75 +72,123 @@ export default function Login() {
             alt="Linkup Logo"
             className="h-16 w-16 rounded-xl mx-auto mb-4"
           />
-          <h1 className="text-2xl font-semibold mb-1">Welcome back</h1>
-          <p className="text-muted-foreground">Sign in to access your admin dashboard</p>
+          <h1 className="text-2xl font-semibold mb-1">
+            {isForgotPasswordMode ? "Reset Password" : "Welcome back"}
+          </h1>
+          <p className="text-muted-foreground">
+            {isForgotPasswordMode 
+              ? "Enter your email to reset your password" 
+              : "Sign in to access your admin dashboard"}
+          </p>
         </div>
 
         <div className="bg-card border rounded-xl shadow-sm p-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form 
+            onSubmit={isForgotPasswordMode ? handleForgotPasswordSubmit : handleSubmit} 
+            className="space-y-4"
+          >
             {error && (
               <Alert variant="destructive">
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
             
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm font-medium">
-                Email address
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="pl-10"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+            {isForgotPasswordMode ? (
+              <div className="space-y-2">
+                <div className="relative">
+                  <MessageCircleQuestion className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    id="forgot-password-email"
+                    type="email"
+                    placeholder="Enter your email address"
+                    className="pl-10"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="flex justify-between space-x-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    className="w-full" 
+                    onClick={handleCancelForgotPassword}
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="w-full" 
+                    disabled={!forgotPasswordEmail}
+                  >
+                    Send Reset Link
+                  </Button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <>
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium">
+                    Email address
+                  </label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email"
+                      className="pl-10"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <label htmlFor="password" className="text-sm font-medium">
-                  Password
-                </label>
-                <Button variant="link" className="text-xs p-0 h-auto" onClick={() => toast({
-                  title: "Password Reset",
-                  description: "This is a mock implementation. In a real app, this would send a password reset email."
-                })}>
-                  Forgot password?
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label htmlFor="password" className="text-sm font-medium">
+                      Password
+                    </label>
+                    <Button 
+                      type="button"
+                      variant="link" 
+                      className="text-xs p-0 h-auto" 
+                      onClick={handleForgotPassword}
+                    >
+                      Forgot password?
+                    </Button>
+                  </div>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type="password"
+                      placeholder="Enter your password"
+                      className="pl-10"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    "Sign in"
+                  )}
                 </Button>
-              </div>
-              <div className="relative">
-                <Lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  className="pl-10"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Signing in...
-                </>
-              ) : (
-                "Sign in"
-              )}
-            </Button>
+              </>
+            )}
           </form>
         </div>
       </div>
     </div>
   );
 }
+
