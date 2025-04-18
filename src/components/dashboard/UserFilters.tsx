@@ -30,6 +30,8 @@ import {
   nationalities,
 } from "@/constants/filterOptions";
 
+import { Crown } from "lucide-react";
+
 interface UserFiltersProps {
   searchValue: string;
   setSearchValue: (value: string) => void;
@@ -314,7 +316,7 @@ export function UserFilters({
               className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
             >
               <span>Linkup Plus</span>
-              <span className="text-amber-500 ml-1">👑</span>
+              <Crown className="h-4 w-4 text-amber-500" />
             </SelectItem>
           </SelectContent>
         </Select>
