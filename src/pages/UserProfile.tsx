@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -119,12 +118,6 @@ const UserProfile = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const userPhotos = [
-    {
-      id: "1",
-      url: user.avatar,
-      uploadDate: "2024-01-15T10:30:00Z",
-      isProfilePicture: true
-    },
     {
       id: "2",
       url: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png",
@@ -792,4 +785,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
