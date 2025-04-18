@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -465,7 +466,7 @@ const UserProfile = () => {
                             <Crown className="h-3 w-3 mr-1" /> Active
                           </Badge>
                           <p className="text-sm text-muted-foreground">
-                            Since {new Date(user.wallet.linkupPlus.startDate).toLocaleDateString()}
+                            Since {new Date(user.wallet.linkupPlus.startDate || new Date()).toLocaleDateString()}
                           </p>
                         </div>
                         <p>User is currently subscribed to Linkup Plus and receives all premium features.</p>
@@ -730,21 +731,25 @@ const UserProfile = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {user.friends.map((friend) => (
-                        <div key={friend.id} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Avatar>
-                              <AvatarImage src={friend.avatar} alt={friend.name} />
-                              <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">{friend.name}</p>
-                              <p className="text-sm text-muted-foreground">@{friend.username}</p>
+                      {user.friends.length === 0 ? (
+                        <p className="text-muted-foreground text-center py-4">No friends yet</p>
+                      ) : (
+                        user.friends.map((friend) => (
+                          <div key={friend.id} className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <Avatar>
+                                <AvatarImage src={friend.avatar} alt={friend.name} />
+                                <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-medium">{friend.name}</p>
+                                <p className="text-sm text-muted-foreground">@{friend.username}</p>
+                              </div>
                             </div>
+                            <Button variant="outline" size="sm">View Profile</Button>
                           </div>
-                          <Button variant="outline" size="sm">View Profile</Button>
-                        </div>
-                      ))}
+                        ))
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -795,4 +800,52 @@ const UserProfile = () => {
                     <CardContent>
                       {user.pendingFriendRequests.sent.length === 0 ? (
                         <p className="text-muted-foreground text-center py-4">No sent friend requests</p>
-                      ) :
+                      ) : (
+                        <div className="space-y-4">
+                          {user.pendingFriendRequests.sent.map((request) => (
+                            <div key={request.id} className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                <Avatar>
+                                  <AvatarImage src={request.avatar} alt={request.name} />
+                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-medium">{request.name}</p>
+                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
+                                </div>
+                              </div>
+                              <Button variant="outline" size="sm">Cancel</Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="photos" className="space-y-6">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+
+            <TabsContent value="activity" className="space-y-6">
+              <UserActivity chatActivity={userChatActivity} linkupActivity={userLinkupActivity} />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+      
+      <DeleteUserDialog
+        isOpen={isDeleteDialogOpen}
+        onClose={() => setIsDeleteDialogOpen(false)}
+        userId={user.id}
+        username={user.username}
+        userAvatar={user.avatar}
+        userName={user.name}
+      />
+    </div>
+  );
+};
+
+export default UserProfile;
