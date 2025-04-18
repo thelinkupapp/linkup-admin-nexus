@@ -274,11 +274,11 @@ export function UserFilters({
               value="verified" 
               className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
             >
-              Verified
+              <span>Verified</span>
               <img 
                 src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
                 alt="Verified" 
-                className="h-4 w-4" 
+                className="h-4 w-4 ml-1" 
               />
             </SelectItem>
             <SelectItem 
@@ -311,8 +311,8 @@ export function UserFilters({
               value="plus" 
               className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
             >
-              Linkup Plus
-              <span className="text-amber-500">👑</span>
+              <span>Linkup Plus</span>
+              <span className="text-amber-500 ml-1">👑</span>
             </SelectItem>
           </SelectContent>
         </Select>
