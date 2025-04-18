@@ -52,6 +52,7 @@ const App = () => {
             <Route path="/users/statistics" element={<UserStatistics />} />
             <Route path="/users/reports" element={<UserReports />} />
             <Route path="/users/suspended" element={<UserSuspended />} />
+            <Route path="/verifications" element={<UserVerifications />} />
             
             {/* Linkup routes */}
             <Route path="/linkups" element={<Linkups />} />

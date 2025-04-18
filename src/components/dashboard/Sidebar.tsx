@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -15,7 +14,8 @@ import {
   FileText,
   AlertTriangle,
   Trash2,
-  Mail
+  Mail,
+  LayoutDashboard
 } from "lucide-react";
 import {
   Collapsible,
@@ -24,6 +24,11 @@ import {
 } from "@/components/ui/collapsible";
 
 const navItems = [
+  {
+    title: "Dashboard",
+    href: "/",
+    icon: LayoutDashboard
+  },
   {
     title: "Users",
     type: "dropdown",
@@ -48,6 +53,11 @@ const navItems = [
         title: "Suspended",
         href: "/users/suspended",
         icon: AlertTriangle
+      },
+      {
+        title: "Verifications",
+        href: "/verifications",
+        icon: ShieldCheck
       }
     ]
   },
@@ -99,11 +109,6 @@ const navItems = [
     title: "Linkup Staff",
     href: "/staff",
     icon: Shield
-  },
-  {
-    title: "Verifications",
-    href: "/verifications",
-    icon: ShieldCheck
   },
   {
     title: "User Feedback",
