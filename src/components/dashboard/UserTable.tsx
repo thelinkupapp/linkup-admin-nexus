@@ -52,6 +52,7 @@ import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
+import { Users } from "lucide-react";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -519,6 +520,9 @@ export default function UserTable() {
       }
     });
 
+  const totalUsers = users.length;
+  const filteredUsersCount = filteredUsers.length;
+
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
@@ -584,6 +588,8 @@ export default function UserTable() {
         setShowLinkupPlusOnly={setShowLinkupPlusOnly}
         ageRange={ageRange}
         setAgeRange={setAgeRange}
+        filteredCount={filteredUsersCount}
+        totalCount={totalUsers}
       />
 
       <div className="border rounded-lg">
@@ -798,73 +804,4 @@ export default function UserTable() {
               <PaginationPrevious 
                 onClick={() => handlePageChange(currentPage - 1)}
                 className={cn(
-                  "cursor-pointer",
-                  currentPage === 1 && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-            
-            <PaginationItem>
-              <PaginationLink
-                onClick={() => handlePageChange(1)}
-                isActive={currentPage === 1}
-              >
-                1
-              </PaginationLink>
-            </PaginationItem>
-
-            {currentPage > 3 && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-
-            {Array.from({ length: 3 }, (_, i) => {
-              const pageNum = currentPage - 1 + i;
-              if (pageNum > 1 && pageNum < totalPages) {
-                return (
-                  <PaginationItem key={pageNum}>
-                    <PaginationLink
-                      onClick={() => handlePageChange(pageNum)}
-                      isActive={currentPage === pageNum}
-                    >
-                      {pageNum}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              }
-              return null;
-            })}
-
-            {currentPage < totalPages - 2 && (
-              <PaginationItem>
-                <PaginationEllipsis />
-              </PaginationItem>
-            )}
-
-            {totalPages > 1 && (
-              <PaginationItem>
-                <PaginationLink
-                  onClick={() => handlePageChange(totalPages)}
-                  isActive={currentPage === totalPages}
-                >
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            )}
-
-            <PaginationItem>
-              <PaginationNext
-                onClick={() => handlePageChange(currentPage + 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === totalPages && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </div>
-  );
-}
+                  "cursor

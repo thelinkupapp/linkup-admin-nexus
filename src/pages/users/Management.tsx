@@ -2,14 +2,13 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import UserTable from "@/components/dashboard/UserTable";
 import { Toaster } from "@/components/ui/toaster";
+import { Users } from "lucide-react";
 
 const UserManagement = () => {
   return (
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
-      {/* Use flex-1 for proper scaling and remove fixed width constraint */}
       <div className="flex-1 ml-64">
-        {/* Remove max-width constraint and add proper padding */}
         <div className="p-6 w-full">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">User Management</h1>
@@ -24,7 +23,6 @@ const UserManagement = () => {
       <Toaster />
     </div>
   );
-};
+}
 
 export default UserManagement;
-

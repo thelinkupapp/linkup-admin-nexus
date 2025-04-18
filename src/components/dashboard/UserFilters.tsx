@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -39,6 +38,8 @@ interface UserFiltersProps {
   setShowLinkupPlusOnly: (value: boolean) => void;
   ageRange: number[];
   setAgeRange: (value: number[]) => void;
+  filteredCount: number; // Add this new prop
+  totalCount: number; // Add this new prop
 }
 
 export function UserFilters({
@@ -56,6 +57,8 @@ export function UserFilters({
   setShowLinkupPlusOnly,
   ageRange,
   setAgeRange,
+  filteredCount,
+  totalCount,
 }: UserFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -69,8 +72,30 @@ export function UserFilters({
     { value: "non-binary", label: "Non-binary 💖" },
   ];
 
+  const hasActiveFilters = selectedNationalities.length > 0 || 
+    selectedLocations.length > 0 || 
+    selectedGenders.length > 0 || 
+    showVerifiedOnly || 
+    showLinkupPlusOnly || 
+    ageRange[0] !== 18 || 
+    ageRange[1] !== 100 ||
+    searchValue !== "";
+
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-muted-foreground" />
+          <span className="text-sm text-muted-foreground">
+            {hasActiveFilters ? (
+              <>Showing <span className="font-medium text-foreground">{filteredCount}</span> of <span className="font-medium text-foreground">{totalCount}</span> users</>
+            ) : (
+              <><span className="font-medium text-foreground">{totalCount}</span> total users</>
+            )}
+          </span>
+        </div>
+      </div>
+
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="relative flex-grow max-w-[300px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
