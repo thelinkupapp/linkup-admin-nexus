@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { useState } from "react";
+import { ProfilePicture } from "@/components/profile/ProfilePicture";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -16,6 +17,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 export default function Account() {
+  const [profilePic, setProfilePic] = useState("/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png");
   const [newEmail, setNewEmail] = useState("");
   const [showEmailConfirm, setShowEmailConfirm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -85,15 +87,11 @@ export default function Account() {
             <h3 className="text-lg font-semibold">Profile Information</h3>
           </div>
           <form onSubmit={handleProfileUpdate} className="space-y-4">
-            <div className="flex items-center gap-3 mb-4">
-              <img 
-                src="/lovable-uploads/2025b415-79e2-4d69-8a16-54c1f4fffc9e.png" 
-                alt="Profile" 
-                className="h-14 w-14 rounded-full object-cover border-2 border-primary/10"
-              />
-              <Button size="sm">Change Avatar</Button>
-            </div>
-
+            <ProfilePicture 
+              currentImage={profilePic}
+              onImageChange={setProfilePic}
+            />
+            
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="firstName">First name</Label>
