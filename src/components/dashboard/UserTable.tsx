@@ -793,16 +793,34 @@ export default function UserTable() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                      <DropdownMenuItem 
+                        className={cn(
+                          "text-foreground hover:bg-red-50 focus:bg-red-100 group",
+                          "cursor-pointer"
+                        )}
+                        onClick={() => handleUserAction('view', user.id)}
+                      >
                         <Eye className="mr-2 h-4 w-4" />
                         <span>View</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}>
-                        <Ban className="mr-2 h-4 w-4" />
+                      <DropdownMenuItem 
+                        className={cn(
+                          "text-red-600 hover:text-red-800 hover:bg-red-100 focus:bg-red-200 group",
+                          "cursor-pointer transition-colors duration-200"
+                        )}
+                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
+                      >
+                        <Ban className="mr-2 h-4 w-4 text-red-600 group-hover:text-red-800" />
                         <span>Suspend</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}>
-                        <Trash2 className="mr-2 h-4 w-4" />
+                      <DropdownMenuItem 
+                        className={cn(
+                          "text-red-600 hover:text-red-800 hover:bg-red-100 focus:bg-red-200 group",
+                          "cursor-pointer transition-colors duration-200"
+                        )}
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4 text-red-600 group-hover:text-red-800" />
                         <span>Delete</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
