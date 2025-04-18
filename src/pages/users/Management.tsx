@@ -7,10 +7,10 @@ const UserManagement = () => {
   return (
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
-      {/* Prevent any horizontal scrolling with overflow-x-hidden */}
-      <div className="flex-1 ml-64 overflow-x-hidden">
-        {/* Set a width that respects the sidebar while allowing content to fit */}
-        <div className="py-8 px-6 w-full">
+      {/* Prevent any horizontal scrolling with overflow-hidden */}
+      <div className="flex-1 ml-64 overflow-hidden">
+        {/* Use consistent padding and provide enough space for the table */}
+        <div className="p-8 w-full max-w-[calc(100vw-16rem)]">
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">User Management</h1>
             <p className="text-muted-foreground">
