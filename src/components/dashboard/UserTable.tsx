@@ -234,6 +234,7 @@ const UserTable = () => {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [selectedNationalities, setSelectedNationalities] = useState<string[]>([]);
+  const [selectedGenders, setSelectedGenders] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [ageRange, setAgeRange] = useState([18, 100]);
   const [showVerifiedOnly, setShowVerifiedOnly] = useState(false);
@@ -287,13 +288,15 @@ const UserTable = () => {
       const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
       const matchesNationality = selectedNationalities.length === 0 || 
                                 selectedNationalities.includes(user.nationality);
+      const matchesGender = selectedGenders.length === 0 || 
+                           selectedGenders.includes(user.gender.toLowerCase());
       const matchesLocation = selectedLocations.length === 0 || 
                              selectedLocations.includes(user.location);
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
       const matchesVerified = !showVerifiedOnly || user.isVerified;
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
-      return matchesSearch && matchesNationality && 
+      return matchesSearch && matchesNationality && matchesGender && 
              matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
     })
     .sort((a, b) => {
@@ -322,6 +325,8 @@ const UserTable = () => {
         setSearchValue={setSearchValue}
         selectedNationalities={selectedNationalities}
         setSelectedNationalities={setSelectedNationalities}
+        selectedGenders={selectedGenders}
+        setSelectedGenders={setSelectedGenders}
         selectedLocations={selectedLocations}
         setSelectedLocations={setSelectedLocations}
         showVerifiedOnly={showVerifiedOnly}

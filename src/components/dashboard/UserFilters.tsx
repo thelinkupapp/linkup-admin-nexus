@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -30,6 +29,8 @@ interface UserFiltersProps {
   setSelectedNationalities: (value: string[]) => void;
   selectedLocations: string[];
   setSelectedLocations: (value: string[]) => void;
+  selectedGenders: string[];
+  setSelectedGenders: (value: string[]) => void;
   showVerifiedOnly: boolean;
   setShowVerifiedOnly: (value: boolean) => void;
   showLinkupPlusOnly: boolean;
@@ -45,6 +46,8 @@ export function UserFilters({
   setSelectedNationalities,
   selectedLocations,
   setSelectedLocations,
+  selectedGenders,
+  setSelectedGenders,
   showVerifiedOnly,
   setShowVerifiedOnly,
   showLinkupPlusOnly,
@@ -57,6 +60,12 @@ export function UserFilters({
       ? array.filter((item) => item !== value)
       : [...array, value];
   };
+
+  const genderOptions = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "other", label: "Other" },
+  ];
 
   return (
     <div className="space-y-4">
@@ -101,6 +110,31 @@ export function UserFilters({
       </div>
 
       <div className="flex flex-wrap gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline">
+              Gender ({selectedGenders.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <div className="p-2">
+              {genderOptions.map((gender) => (
+                <div key={gender.value} className="flex items-center space-x-2 p-2">
+                  <Checkbox
+                    checked={selectedGenders.includes(gender.value)}
+                    onCheckedChange={() => {
+                      setSelectedGenders(
+                        toggleArrayValue(selectedGenders, gender.value)
+                      );
+                    }}
+                  />
+                  <label className="text-sm">{gender.label}</label>
+                </div>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
+
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
