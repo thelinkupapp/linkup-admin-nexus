@@ -443,7 +443,7 @@ const formatCurrency = (amount: number) => {
 type SortField = 'hosted' | 'attended' | 'earnings' | 'joined';
 type SortDirection = 'asc' | 'desc';
 
-const UserTable = () => {
+export default function UserTable() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const [selectedNationalities, setSelectedNationalities] = useState<string[]>([]);
@@ -562,7 +562,7 @@ const UserTable = () => {
                 >
                   <Crown className="h-4 w-4 text-muted-foreground" />
                   <span>Hosted</span>
-                  <ArrowUpDown className="h-3 w-3" />
+                  <ArrowUpDown className="h-4 w-4" />
                 </div>
               </TableHead>
               <TableHead className="w-[8%]">
@@ -572,7 +572,7 @@ const UserTable = () => {
                 >
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
-                  <ArrowUpDown className="h-3 w-3" />
+                  <ArrowUpDown className="h-4 w-4" />
                 </div>
               </TableHead>
               <TableHead className="w-[10%]">
@@ -582,7 +582,7 @@ const UserTable = () => {
                 >
                   <Coins className="h-4 w-4 text-muted-foreground" />
                   <span>Earnings</span>
-                  <ArrowUpDown className="h-3 w-3" />
+                  <ArrowUpDown className="h-5 w-5" />
                 </div>
               </TableHead>
               <TableHead className="w-[10%]">
@@ -592,7 +592,7 @@ const UserTable = () => {
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
-                  <ArrowUpDown className="h-3 w-3" />
+                  <ArrowUpDown className="h-5 w-5" />
                 </div>
               </TableHead>
               <TableHead className="w-[12%] text-right">Actions</TableHead>
@@ -814,6 +814,4 @@ const UserTable = () => {
       </div>
     </div>
   );
-};
-
-export default UserTable;
+}
