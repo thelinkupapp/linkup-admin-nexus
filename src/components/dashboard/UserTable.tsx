@@ -81,6 +81,35 @@ const getNationalityLabel = (countryCode: string): string => {
   return nationalityMap[countryCode] || countryCode;
 };
 
+const getCountryEmoji = (country: string) => {
+  const emojiMap: { [key: string]: string } = {
+    'UK': '🇬🇧',
+    'USA': '🇺🇸',
+    'UAE': '🇦🇪',
+    'Ireland': '🇮🇪',
+    'Singapore': '🇸🇬',
+    'Spain': '🇪🇸',
+    'Japan': '🇯🇵',
+    'Australia': '🇦🇺',
+    'Brazil': '🇧🇷',
+    'Germany': '🇩🇪',
+    'France': '🇫🇷',
+    'Canada': '🇨🇦',
+    'Italy': '🇮🇹',
+    'Indonesia': '🇮🇩',
+    'Portugal': '🇵🇹',
+    'Netherlands': '🇳🇱',
+    'Belgium': '🇧🇪',
+    'Switzerland': '🇨🇭',
+    'Austria': '🇦🇹',
+    'Sweden': '🇸🇪',
+    'Denmark': '🇩🇰',
+    'Norway': '🇳🇴',
+    'Finland': '🇫🇮'
+  };
+  return emojiMap[country] || '🌍';
+};
+
 export const users: User[] = [
   {
     id: "1",
@@ -406,35 +435,6 @@ const generateAdditionalUsers = (): User[] => {
 };
 
 users.push(...generateAdditionalUsers());
-
-const getCountryEmoji = (country: string) => {
-  const emojiMap: { [key: string]: string } = {
-    'UK': '🇬🇧',
-    'USA': '🇺🇸',
-    'UAE': '🇦🇪',
-    'Ireland': '🇮🇪',
-    'Singapore': '🇸🇬',
-    'Spain': '🇪🇸',
-    'Japan': '🇯🇵',
-    'Australia': '🇦🇺',
-    'Brazil': '🇧🇷',
-    'Germany': '🇩🇪',
-    'France': '🇫🇷',
-    'Canada': '🇨🇦',
-    'Italy': '🇮🇹',
-    'Indonesia': '🇮🇩',
-    'Portugal': '🇵🇹',
-    'Netherlands': '🇳🇱',
-    'Belgium': '🇧🇪',
-    'Switzerland': '🇨🇭',
-    'Austria': '🇦🇹',
-    'Sweden': '🇸🇪',
-    'Denmark': '🇩🇰',
-    'Norway': '🇳🇴',
-    'Finland': '🇫🇮'
-  };
-  return emojiMap[country] || '🌍';
-};
 
 const formatCurrency = (amount: number) => {
   return `£${amount.toLocaleString('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
