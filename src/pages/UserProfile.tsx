@@ -1,9 +1,48 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { 
+  ArrowLeft,
+  CheckCircle, 
+  Crown, 
+  Mail, 
+  MapPin, 
+  Calendar,
+  Phone,
+  Globe,
+  Briefcase,
+  Flag,
+  Instagram,
+  Twitter,
+  Linkedin,
+  User as UserIcon,
+  Shield,
+  AlertTriangle,
+  Users as UsersIcon,
+  CreditCard,
+  Check,
+  X,
+  MessageSquare,
+  Clock,
+  CalendarDays
+} from "lucide-react";
+import { formatJoinDate } from "@/utils/dateFormatting";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
+import { getCountryEmoji, getGenderEmoji } from "@/utils/countryUtils";
 
 const user = {
   id: "1",
@@ -139,7 +178,7 @@ const UserProfile = () => {
         <main className="p-6">
           <UserProfileHeader user={user} />
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">
               <TabsTrigger value="profile-details">Profile Details</TabsTrigger>
               <TabsTrigger value="verification">Verification</TabsTrigger>
@@ -154,39 +193,47 @@ const UserProfile = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
                   <CardHeader>
-                    <CardTitle>About</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Personal Information
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Occupation</p>
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="h-4 w-4 text-muted-foreground" />
-                          <p>{user.occupation}</p>
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Full Name</p>
+                        <p>{user.name}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Bio</p>
-                        <p>{user.bio}</p>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Username</p>
+                        <p>@{user.username}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Languages</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.languages.map((language) => (
-                            <Badge key={language} variant="secondary">{language}</Badge>
-                          ))}
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
+                        <p>{user.email}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Interests</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.interests.map((interest) => (
-                            <Badge key={interest} variant="outline">{interest}</Badge>
-                          ))}
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
+                        <p>{user.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Date of Birth</p>
+                        <p>{new Date(user.dob).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Age</p>
+                        <p>{user.age} years old</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Gender</p>
+                        <p>{user.gender}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Nationality</p>
+                        <p>
+                          <span className="mr-1">{getCountryEmoji(user.nationality)}</span>
+                          {user.nationality}
+                        </p>
                       </div>
                     </div>
                   </CardContent>
