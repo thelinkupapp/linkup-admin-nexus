@@ -476,34 +476,27 @@ export default function UserTable() {
 
   const filteredUsers = users
     .filter(user => {
-      // Search filter
       const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase()) || 
                             user.username.toLowerCase().includes(searchValue.toLowerCase()) ||
                             user.email.toLowerCase().includes(searchValue.toLowerCase());
       
-      // Nationality filter
       const matchesNationality = selectedNationalities.length === 0 || 
                               selectedNationalities.some(natId => {
                                 const nat = nationalities.find(n => n.id === natId);
                                 return nat && getNationalityLabel(user.nationality) === nat.label;
                               });
       
-      // Gender filter - check against the user's gender (case insensitive)
       const matchesGender = selectedGenders.length === 0 || 
                            selectedGenders.includes(user.gender.toLowerCase());
       
-      // Location filter - check if country name appears in location string
       const matchesLocation = selectedLocations.length === 0 || 
                              selectedLocations.some(location => 
                                user.location.includes(location));
       
-      // Age filter - check if user's age is within the specified range
       const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
       
-      // Verified filter
       const matchesVerified = !showVerifiedOnly || user.isVerified;
       
-      // Linkup Plus filter
       const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
       
       return matchesSearch && matchesNationality && matchesGender && 
@@ -648,10 +641,15 @@ export default function UserTable() {
                     className="flex items-center gap-3 cursor-pointer hover:opacity-80"
                     onClick={() => handleUserClick(user.id)}
                   >
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
+                    <div className="relative">
+                      <Avatar>
+                        <AvatarImage src={user.avatar} alt={user.name} />
+                        <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs">
+                        {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
+                      </div>
+                    </div>
                     <div className="min-w-0">
                       <div className="font-medium truncate">{user.name}</div>
                       <div className="text-sm text-muted-foreground truncate">@{user.username}</div>
