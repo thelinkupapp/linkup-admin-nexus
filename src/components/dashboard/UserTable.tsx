@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -391,7 +390,7 @@ export const users: User[] = [
     email: "alex@example.com",
     age: 24,
     joinDate: "2025-04-18T10:30:00Z",
-    location: "🇯���� Tokyo, Japan",
+    location: "������� Tokyo, Japan",
     isLinkupPlus: false,
     isVerified: false,
     nationality: "Japan",
@@ -699,8 +698,8 @@ export default function UserTable() {
                       </TooltipProvider>
                     </div>
                     <div className="min-w-0">
-                      <div className="font-medium truncate">{user.name}</div>
-                      <div className="text-sm text-muted-foreground truncate">@{user.username}</div>
+                      <div className="font-medium">{user.name}</div>
+                      <div className="text-sm text-muted-foreground">@{user.username}</div>
                       <div className="flex items-center gap-1 mt-0.5">
                         {user.isVerified && (
                           <TooltipProvider>
@@ -755,7 +754,7 @@ export default function UserTable() {
                   </div>
                 </TableCell>
                 <TableCell>{user.age}</TableCell>
-                <TableCell className="truncate">
+                <TableCell className="max-w-[150px]">
                   <div className="truncate">{user.location}</div>
                 </TableCell>
                 <TableCell>
@@ -808,7 +807,6 @@ export default function UserTable() {
       {totalPages > 1 && (
         <Pagination className="mt-4">
           <PaginationContent>
-            {/* Fixed: removed disabled property and conditionally render the component */}
             {currentPage > 1 ? (
               <PaginationPrevious 
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
@@ -849,7 +847,6 @@ export default function UserTable() {
               </>
             )}
             
-            {/* Fixed: removed disabled property and conditionally render the component */}
             {currentPage < totalPages ? (
               <PaginationNext 
                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
