@@ -107,11 +107,23 @@ const PaginationEllipsis = ({
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"
 
+const PaginationItemsPerPage = ({
+  className,
+  ...props
+}: React.ComponentProps<"div">) => (
+  <div
+    className={cn("flex items-center gap-2 text-sm text-muted-foreground", className)}
+    {...props}
+  />
+)
+PaginationItemsPerPage.displayName = "PaginationItemsPerPage"
+
 export {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
+  PaginationItemsPerPage,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,

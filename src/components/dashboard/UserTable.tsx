@@ -1,10 +1,14 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
   Ban,
   ArrowUpDown,
   Eye,
-  Trash2
+  Trash2,
+  ChevronLeft,
+  ChevronRight,
+  Users
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
