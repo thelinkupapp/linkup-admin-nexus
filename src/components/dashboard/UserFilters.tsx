@@ -272,14 +272,16 @@ export function UserFilters({
             </SelectItem>
             <SelectItem 
               value="verified" 
-              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center justify-between"
             >
-              <span>Verified</span>
-              <img 
-                src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                alt="Verified" 
-                className="h-4 w-4 ml-1" 
-              />
+              <div className="flex items-center gap-2">
+                <span>Verified</span>
+                <img 
+                  src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                  alt="Verified" 
+                  className="h-4 w-4" 
+                />
+              </div>
             </SelectItem>
             <SelectItem 
               value="unverified" 
