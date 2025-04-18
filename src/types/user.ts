@@ -2,7 +2,8 @@
 export interface User {
   id: string;
   avatar: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   username: string;
   email: string;
   age: number;
@@ -11,7 +12,7 @@ export interface User {
   isLinkupPlus: boolean;
   isVerified: boolean;
   nationality: string;
-  gender: 'Male' | 'Female' | 'Non-binary';
+  gender: 'Male' | 'Female' | 'Non-binary' | '💁‍♂️ Male' | '💁‍♀️ Female';
   hostedLinkups: number;
   attendedLinkups: number;
   totalEarnings: number;

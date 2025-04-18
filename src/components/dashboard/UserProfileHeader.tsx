@@ -14,7 +14,9 @@ interface UserProfileHeaderProps {
   user: {
     id: string;
     avatar: string;
-    name: string;
+    firstName?: string;
+    lastName?: string;
+    name?: string;
     username: string;
     email: string;
     location: string;
@@ -29,6 +31,11 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  // Generate a display name from firstName and lastName if available, otherwise use name
+  const displayName = user.firstName && user.lastName 
+    ? `${user.firstName} ${user.lastName}` 
+    : user.name || user.username;
 
   const handleSuspendClick = () => {
     if (user.isLinkupPlus) {
@@ -86,13 +93,13 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
         <div className="relative p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
             <Avatar className="h-24 w-24 border-4 border-background">
-              <AvatarImage src={user.avatar} alt={user.name} />
-              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={user.avatar} alt={displayName} />
+              <AvatarFallback>{displayName.charAt(0)}</AvatarFallback>
             </Avatar>
             
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl font-bold">{user.name}</h1>
+                <h1 className="text-2xl font-bold">{displayName}</h1>
                 {user.isVerified && (
                   <TooltipProvider>
                     <Tooltip>
@@ -156,7 +163,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
         userId={user.id}
         username={user.username}
         userAvatar={user.avatar}
-        userName={user.name}
+        userName={displayName}
       />
 
       <DeleteUserDialog 
@@ -165,7 +172,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
         userId={user.id}
         username={user.username}
         userAvatar={user.avatar}
-        userName={user.name}
+        userName={displayName}
       />
     </>
   );

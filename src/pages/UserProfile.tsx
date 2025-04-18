@@ -175,13 +175,28 @@ const UserProfile = () => {
     }
   ];
 
+  // Prepare user data for the UserProfileHeader component
+  const userHeaderData = {
+    id: user.id,
+    avatar: user.avatar,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    username: user.username,
+    email: user.email,
+    location: user.location,
+    joinDate: user.joinDate,
+    isVerified: user.isVerified,
+    isLinkupPlus: user.isLinkupPlus,
+    hostingLinkups: user.hostingLinkups
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 pl-64">
         <Header title="User Profile" />
         <main className="p-6">
-          <UserProfileHeader user={user} />
+          <UserProfileHeader user={userHeaderData} />
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">
@@ -846,7 +861,7 @@ const UserProfile = () => {
         userId={user.id}
         username={user.username}
         userAvatar={user.avatar}
-        userName={user.name}
+        userName={`${user.firstName} ${user.lastName}`}
       />
     </div>
   );
