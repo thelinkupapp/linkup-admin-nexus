@@ -556,44 +556,44 @@ export default function UserTable() {
               <TableHead className="w-[12%]">Location</TableHead>
               <TableHead className="w-[12%]">Nationality</TableHead>
               <TableHead className="w-[8%]">
-                <div 
-                  className="flex items-center gap-1 cursor-pointer"
+                <button 
+                  className="flex items-center gap-1 cursor-pointer focus:outline-none"
                   onClick={() => handleSort('hosted')}
                 >
                   <Crown className="h-4 w-4 text-muted-foreground" />
                   <span>Hosted</span>
                   <ArrowUpDown className="h-4 w-4" />
-                </div>
+                </button>
               </TableHead>
               <TableHead className="w-[8%]">
-                <div 
-                  className="flex items-center gap-1 cursor-pointer"
+                <button 
+                  className="flex items-center gap-1 cursor-pointer focus:outline-none"
                   onClick={() => handleSort('attended')}
                 >
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
                   <ArrowUpDown className="h-4 w-4" />
-                </div>
+                </button>
               </TableHead>
               <TableHead className="w-[10%]">
-                <div 
-                  className="flex items-center gap-1 cursor-pointer"
+                <button 
+                  className="flex items-center gap-1 cursor-pointer focus:outline-none"
                   onClick={() => handleSort('earnings')}
                 >
                   <Coins className="h-4 w-4 text-muted-foreground" />
                   <span>Earnings</span>
                   <ArrowUpDown className="h-4 w-4" />
-                </div>
+                </button>
               </TableHead>
               <TableHead className="w-[10%]">
-                <div 
-                  className="flex items-center gap-1 cursor-pointer"
+                <button 
+                  className="flex items-center gap-1 cursor-pointer focus:outline-none"
                   onClick={() => handleSort('joined')}
                 >
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
                   <ArrowUpDown className="h-4 w-4" />
-                </div>
+                </button>
               </TableHead>
               <TableHead className="w-[12%] text-right">Actions</TableHead>
             </TableRow>

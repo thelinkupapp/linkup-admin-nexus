@@ -1,6 +1,7 @@
 
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import UserTable from "@/components/dashboard/UserTable";
+import { Toaster } from "@/components/ui/toaster";
 
 const UserManagement = () => {
   return (
@@ -20,6 +21,7 @@ const UserManagement = () => {
           <UserTable />
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
