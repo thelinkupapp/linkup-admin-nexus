@@ -804,4 +804,56 @@ export default function UserTable() {
               <PaginationPrevious 
                 onClick={() => handlePageChange(currentPage - 1)}
                 className={cn(
-                  "cursor
+                  "cursor-pointer",
+                  currentPage === 1 && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(pageNumber)}
+                    isActive={currentPage === pageNumber}
+                    className="cursor-pointer"
+                  >
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+
+            {totalPages > 5 && (
+              <>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => handlePageChange(totalPages)}
+                    isActive={currentPage === totalPages}
+                    className="cursor-pointer"
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={cn(
+                  "cursor-pointer",
+                  currentPage === totalPages && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
+  );
+}
