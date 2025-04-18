@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   Search, 
@@ -342,7 +343,7 @@ export const users: User[] = [
 const generateAdditionalUsers = (): User[] => {
   const additionalUsers: User[] = [];
   const nationalities = ['France', 'Italy', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Sweden', 'Denmark', 'Norway', 'Finland'];
-  const genders = ['Male', 'Female', 'Non-binary'];
+  const genders: Array<'Male' | 'Female' | 'Non-binary'> = ['Male', 'Female', 'Non-binary'];
 
   for (let i = 16; i <= 110; i++) {
     const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
@@ -374,7 +375,7 @@ users.push(...generateAdditionalUsers());
 
 const getCountryEmoji = (country: string) => {
   const emojiMap: { [key: string]: string } = {
-    'UK': '��🇧',
+    'UK': '🇬🇧',
     'USA': '🇺🇸',
     'UAE': '🇦🇪',
     'Ireland': '🇮🇪',
