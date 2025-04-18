@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -44,18 +43,19 @@ import {
 
 const user = {
   id: "2",
-  avatar: "https://i.pravatar.cc/300?img=3",
-  name: "Jack Peagam",
-  username: "jack_p",
+  avatar: "/lovable-uploads/03ae0b73-0e7e-42b1-a69b-8646589f09bf.png",
+  firstName: "Jack",
+  lastName: "Peagam",
+  username: "jackpeagam",
   email: "jack@linkupapp.io",
-  phone: "+1 (555) 987-6543",
-  dob: "1990-03-22",
-  age: 34,
-  gender: "Male",
-  nationality: "United States",
+  phone: "+44 784 139 2122",
+  dob: "1995-02-21",
+  age: 30,
+  gender: "💁‍♂️ Male",
+  nationality: "British",
   joinDate: "2022-11-15",
   location: "San Francisco, CA",
-  isLinkupPlus: false,
+  isLinkupPlus: true,
   isVerified: true,
   verificationDetails: {
     selfie: "https://i.pravatar.cc/300?img=3",
@@ -209,8 +209,12 @@ const UserProfile = () => {
                   <CardContent>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Full Name</p>
-                        <p>{user.name}</p>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">First Name</p>
+                        <p>{user.firstName}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Last Name</p>
+                        <p>{user.lastName}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Username</p>
@@ -226,7 +230,7 @@ const UserProfile = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Date of Birth</p>
-                        <p>{new Date(user.dob).toLocaleDateString()}</p>
+                        <p>{new Date(user.dob).toLocaleDateString('en-GB')}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Age</p>
@@ -239,7 +243,7 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Nationality</p>
                         <p>
-                          <span className="mr-1">{getCountryEmoji(user.nationality)}</span>
+                          <span className="mr-1">🇬🇧</span>
                           {user.nationality}
                         </p>
                       </div>
