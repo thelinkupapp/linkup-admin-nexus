@@ -1,13 +1,11 @@
+
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Mail, MapPin, Clock, Crown, Flag } from "lucide-react";
-import { formatJoinDate } from "@/utils/dateFormatting";
-import { getCountryEmoji, getGenderEmoji } from "@/utils/countryUtils";
-import { Card } from "@/components/ui/card";
+import { Flag, Trash2 } from "lucide-react";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
+import { Card } from "@/components/ui/card";
 
 interface UserProfileHeaderProps {
   user: {
@@ -42,24 +40,10 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       <Card className="mb-6">
         <div className="relative p-6">
           <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <div className="relative">
-              <Avatar className="h-24 w-24 border-4 border-background">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-background flex items-center justify-center shadow-sm border border-border transition-transform hover:scale-110">
-                      {getGenderEmoji(user.gender)}
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{user.gender} User</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
+            <Avatar className="h-24 w-24 border-4 border-background">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
+            </Avatar>
             
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
@@ -98,21 +82,6 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
                 )}
               </div>
               <p className="text-muted-foreground">@{user.username}</p>
-              
-              <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mt-3">
-                <div className="flex items-center gap-1.5">
-                  <Mail className="h-4 w-4" />
-                  <span>{user.email}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <MapPin className="h-4 w-4" />
-                  <span>{user.location}</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Clock className="h-4 w-4" />
-                  <span>Joined {formatJoinDate(user.joinDate)}</span>
-                </div>
-              </div>
             </div>
             
             <div className="flex gap-2 self-start md:self-center">
@@ -122,6 +91,12 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
               >
                 <Flag className="h-4 w-4 mr-2" />
                 Suspend User
+              </Button>
+              <Button 
+                variant="destructive"
+              >
+                <Trash2 className="h-4 w-4 mr-2" />
+                Delete User
               </Button>
             </div>
           </div>

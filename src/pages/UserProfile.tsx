@@ -259,8 +259,8 @@ const UserProfile = () => {
             </TabsList>
             
             <TabsContent value="basic-info" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <Card className="col-span-1 md:col-span-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <UserIcon className="h-5 w-5 text-linkup-purple" />
@@ -307,6 +307,59 @@ const UserProfile = () => {
                     </div>
                   </CardContent>
                 </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="profile-info" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="col-span-1 md:col-span-2">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Profile Information
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Bio</p>
+                        <p className="text-sm">{user.bio}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Occupation</p>
+                        <div className="flex items-center gap-2">
+                          <Briefcase className="h-4 w-4 text-muted-foreground" />
+                          <p className="text-sm">{user.occupation}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Interests</p>
+                        <div className="flex flex-wrap gap-2">
+                          {user.interests.map((interest, index) => (
+                            <Badge key={index} variant="outline" className="bg-muted/50">
+                              <Heart className="h-3 w-3 mr-1 text-linkup-purple" />
+                              {interest}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
+                        <div className="flex flex-wrap gap-2">
+                          {user.languages.map((language, index) => (
+                            <Badge key={index} variant="outline" className="bg-muted/50">
+                              <Languages className="h-3 w-3 mr-1 text-linkup-purple" />
+                              {language}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
                 <Card>
                   <CardHeader>
@@ -341,57 +394,6 @@ const UserProfile = () => {
                   </CardContent>
                 </Card>
               </div>
-            </TabsContent>
-
-            <TabsContent value="profile-info" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <UserIcon className="h-5 w-5 text-linkup-purple" />
-                    Profile Information
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Bio</p>
-                      <p className="text-sm">{user.bio}</p>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Occupation</p>
-                      <div className="flex items-center gap-2">
-                        <Briefcase className="h-4 w-4 text-muted-foreground" />
-                        <p className="text-sm">{user.occupation}</p>
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Interests</p>
-                      <div className="flex flex-wrap gap-2">
-                        {user.interests.map((interest, index) => (
-                          <Badge key={index} variant="outline" className="bg-muted/50">
-                            <Heart className="h-3 w-3 mr-1 text-linkup-purple" />
-                            {interest}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
-                      <div className="flex flex-wrap gap-2">
-                        {user.languages.map((language, index) => (
-                          <Badge key={index} variant="outline" className="bg-muted/50">
-                            <Languages className="h-3 w-3 mr-1 text-linkup-purple" />
-                            {language}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
             </TabsContent>
 
             <TabsContent value="verification" className="space-y-6">
@@ -802,116 +804,3 @@ const UserProfile = () => {
                               <p className="text-sm text-muted-foreground">@{friend.username}</p>
                             </div>
                           </div>
-                          <Button variant="ghost" size="sm">View Profile</Button>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <div className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Pending Friend Requests</CardTitle>
-                      <CardDescription>Requests waiting for approval</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {user.pendingFriendRequests.received.length === 0 ? (
-                        <p className="text-muted-foreground">No pending friend requests</p>
-                      ) : (
-                        <div className="space-y-4">
-                          {user.pendingFriendRequests.received.map((request) => (
-                            <div key={request.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar>
-                                  <AvatarImage src={request.avatar} alt={request.name} />
-                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium">{request.name}</p>
-                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
-                                </div>
-                              </div>
-                              <div className="flex gap-2">
-                                <Button variant="outline" size="sm">Deny</Button>
-                                <Button size="sm">Accept</Button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Sent Friend Requests</CardTitle>
-                      <CardDescription>Requests sent by this user</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      {user.pendingFriendRequests.sent.length === 0 ? (
-                        <p className="text-muted-foreground">No sent friend requests</p>
-                      ) : (
-                        <div className="space-y-4">
-                          {user.pendingFriendRequests.sent.map((request) => (
-                            <div key={request.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar>
-                                  <AvatarImage src={request.avatar} alt={request.name} />
-                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium">{request.name}</p>
-                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
-                                </div>
-                              </div>
-                              <Button variant="outline" size="sm">Cancel</Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="photos">
-              <ProfilePhotos photos={userPhotos} />
-            </TabsContent>
-
-            <TabsContent value="activity">
-              <UserActivity 
-                chatActivity={userChatActivity}
-                linkupActivity={userLinkupActivity}
-              />
-            </TabsContent>
-          </Tabs>
-
-          <div className="fixed bottom-8 right-8">
-            <Button 
-              variant="destructive" 
-              size="lg"
-              className="shadow-lg"
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete User
-            </Button>
-          </div>
-
-          <DeleteUserDialog
-            isOpen={isDeleteDialogOpen}
-            onClose={() => setIsDeleteDialogOpen(false)}
-            userId={user.id}
-            username={user.username}
-            userAvatar={user.avatar}
-            userName={user.name}
-          />
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
