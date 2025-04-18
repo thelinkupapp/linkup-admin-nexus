@@ -62,16 +62,16 @@ const user = {
     verificationPhoto: "https://i.pravatar.cc/300?img=3",
     submittedAt: "2023-05-10T14:30:00Z"
   },
-  occupation: "Software Engineer",
-  bio: "Tech enthusiast, avid traveler, and coffee lover. Building cool things at the intersection of technology and community.",
+  occupation: "Co-Founder & CEO of this very app",
+  bio: "Decided to make this app before I wanted to meet more like-minded people on my travels. Turns out it was kinda a good idea and lots of people used it and so I later sold it 5 years later for $5 billion.",
   socials: {
-    instagram: "@jack_tech",
+    instagram: "@jackpeagam",
     twitter: "@jackpeagam",
-    linkedin: "jackpeagam",
-    tiktok: "@techwithjack"
+    linkedin: "/jackpeagam",
+    tiktok: "@jackpeagam"
   },
-  interests: ["Technology", "Hiking", "Photography", "Coding", "Travel"],
-  languages: ["English", "Spanish"],
+  interests: ["🪂 Skydiving", "💻 Technology", "📚 Personal Growth", "💼 Startups", "🎉 Festivals"],
+  languages: ["🇬🇧 English", "🇪🇸 Spanish", "🇨🇳 Mandarin"],
   wallet: {
     lifetimeEarnings: 350,
     availableBalance: 80,
@@ -273,6 +273,7 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="profile-info" className="space-y-6">
+              <ProfileImageCarousel photos={userPhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
                   <CardHeader>
@@ -309,7 +310,7 @@ const UserProfile = () => {
                       </div>
                       
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages Spoken</p>
                         <div className="flex flex-wrap gap-2">
                           {user.languages.map((language, index) => (
                             <Badge key={index} variant="outline" className="bg-muted/50">
