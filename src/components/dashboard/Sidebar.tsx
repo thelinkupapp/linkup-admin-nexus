@@ -2,11 +2,8 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
-  Users, 
+  Users,
   Map,
-  AlertTriangle,
-  Mail,
-  Crown,
   Settings,
   BarChart3,
   Bell,
@@ -15,7 +12,10 @@ import {
   ChevronDown,
   Shield,
   Megaphone,
-  FileText
+  FileText,
+  AlertTriangle,
+  Trash2,
+  Mail
 } from "lucide-react";
 import {
   Collapsible,
@@ -25,14 +25,31 @@ import {
 
 const navItems = [
   {
-    title: "Dashboard",
-    href: "/",
-    icon: BarChart3
-  },
-  {
     title: "Users",
-    href: "/users",
-    icon: Users
+    type: "dropdown",
+    icon: Users,
+    items: [
+      {
+        title: "Management",
+        href: "/users/management",
+        icon: Users
+      },
+      {
+        title: "Statistics",
+        href: "/users/statistics",
+        icon: BarChart3
+      },
+      {
+        title: "Reports",
+        href: "/users/reports",
+        icon: FileText
+      },
+      {
+        title: "Suspended",
+        href: "/users/suspended",
+        icon: AlertTriangle
+      }
+    ]
   },
   {
     title: "Linkups",
@@ -45,26 +62,19 @@ const navItems = [
         icon: Map
       },
       {
-        title: "Stats",
-        href: "/linkups/stats",
+        title: "Statistics",
+        href: "/linkups/statistics",
         icon: BarChart3
-      }
-    ]
-  },
-  {
-    title: "Reports",
-    type: "dropdown",
-    icon: FileText,
-    items: [
-      {
-        title: "User Reports",
-        href: "/reports/users",
-        icon: Users
       },
       {
-        title: "Linkup Reports",
-        href: "/reports/linkups",
-        icon: Map
+        title: "Reports",
+        href: "/linkups/reports",
+        icon: FileText
+      },
+      {
+        title: "Removed",
+        href: "/linkups/removed",
+        icon: Trash2
       }
     ]
   },
@@ -84,11 +94,6 @@ const navItems = [
         icon: Bell
       }
     ]
-  },
-  {
-    title: "Linkup Plus",
-    href: "/linkup-plus",
-    icon: Crown
   },
   {
     title: "Linkup Staff",
@@ -159,17 +164,13 @@ export function Sidebar() {
               );
             }
 
-            const isActive = location.pathname === item.href || 
-              (item.href !== "/" && location.pathname.startsWith(item.href));
-
             return (
               <Link
                 key={item.href}
                 to={item.href}
                 className={cn(
                   "flex items-center gap-3 px-3 py-2.5 rounded-lg text-base transition-colors hover:bg-secondary",
-                  isActive && "bg-secondary font-medium",
-                  location.pathname === "/linkup-plus" && item.href === "/linkup-plus" && "bg-purple-100"
+                  location.pathname === item.href && "bg-secondary"
                 )}
               >
                 <item.icon className="h-5 w-5" />

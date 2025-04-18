@@ -1,25 +1,8 @@
 
-import React, { useEffect } from "react";
-import { Sidebar } from "@/components/dashboard/Sidebar";
-import { Header } from "@/components/dashboard/Header";
-import UserTable from "@/components/dashboard/UserTable";
+import { Navigate } from "react-router-dom";
 
 const Users = () => {
-  useEffect(() => {
-    console.log("Users component mounted");
-  }, []);
-
-  return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      <div className="flex-1 pl-64">
-        <Header title="User Management" />
-        <main className="p-6">
-          <UserTable />
-        </main>
-      </div>
-    </div>
-  );
+  return <Navigate to="/users/management" replace />;
 };
 
 export default Users;
