@@ -136,7 +136,7 @@ export function Sidebar() {
       <div className="p-4">
         <div className="flex items-center gap-3 mb-8">
           <img 
-            src="/lovable-uploads/2d43509e-db1a-41c7-a82b-2e30835e9fd6.png"
+            src="/lovable-uploads/8be47164-879f-4e71-9457-a380cd0fbf40.png"
             alt="Linkup Logo"
             className="h-12 w-12 rounded-xl"
           />
