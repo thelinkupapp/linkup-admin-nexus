@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Search, 
@@ -342,29 +341,64 @@ export const users: User[] = [
 
 const generateAdditionalUsers = (): User[] => {
   const additionalUsers: User[] = [];
-  const nationalities = ['France', 'Italy', 'Germany', 'Spain', 'Portugal', 'Netherlands', 'Belgium', 'Switzerland', 'Austria', 'Sweden', 'Denmark', 'Norway', 'Finland'];
+  const citiesByCountry: { [key: string]: string[] } = {
+    'France': ['Paris', 'Lyon', 'Marseille', 'Bordeaux', 'Nice'],
+    'Italy': ['Rome', 'Milan', 'Florence', 'Venice', 'Naples'],
+    'Germany': ['Berlin', 'Munich', 'Hamburg', 'Frankfurt', 'Cologne'],
+    'Spain': ['Madrid', 'Barcelona', 'Valencia', 'Seville', 'Bilbao'],
+    'Portugal': ['Lisbon', 'Porto', 'Faro', 'Braga', 'Coimbra'],
+    'Netherlands': ['Amsterdam', 'Rotterdam', 'The Hague', 'Utrecht', 'Eindhoven'],
+    'Belgium': ['Brussels', 'Antwerp', 'Ghent', 'Bruges', 'Liege'],
+    'Switzerland': ['Zurich', 'Geneva', 'Basel', 'Bern', 'Lausanne'],
+    'Austria': ['Vienna', 'Salzburg', 'Innsbruck', 'Graz', 'Linz'],
+    'Sweden': ['Stockholm', 'Gothenburg', 'Malmo', 'Uppsala', 'Vasteras'],
+    'Denmark': ['Copenhagen', 'Aarhus', 'Odense', 'Aalborg', 'Esbjerg'],
+    'Norway': ['Oslo', 'Bergen', 'Trondheim', 'Stavanger', 'Tromso'],
+    'Finland': ['Helsinki', 'Tampere', 'Turku', 'Oulu', 'Espoo']
+  };
+
+  const firstNames = [
+    'Emma', 'Liam', 'Sophia', 'Noah', 'Olivia', 'Lucas', 'Isabella', 'Mason',
+    'Ava', 'Ethan', 'Mia', 'Oliver', 'Charlotte', 'Elijah', 'Amelia', 'William',
+    'Harper', 'James', 'Evelyn', 'Alexander', 'Abigail', 'Benjamin', 'Emily',
+    'Sebastian', 'Elizabeth', 'Jack', 'Sofia', 'Daniel', 'Avery', 'Samuel'
+  ];
+
+  const lastNames = [
+    'Smith', 'Johnson', 'Brown', 'Taylor', 'Anderson', 'Wilson', 'Martinez',
+    'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Hernandez', 'Lopez', 'Gonzalez',
+    'Williams', 'Lee', 'Walker', 'Hall', 'Young', 'King', 'Wright', 'Scott',
+    'Green', 'Baker', 'Adams', 'Nelson', 'Carter', 'Mitchell', 'Parker', 'Collins'
+  ];
+
   const genders: Array<'Male' | 'Female' | 'Non-binary'> = ['Male', 'Female', 'Non-binary'];
+  const nationalities = Object.keys(citiesByCountry);
 
   for (let i = 16; i <= 110; i++) {
     const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
+    const cities = citiesByCountry[nationality];
+    const city = cities[Math.floor(Math.random() * cities.length)];
+    const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}`;
     const gender = genders[Math.floor(Math.random() * genders.length)];
     
     additionalUsers.push({
       id: i.toString(),
-      avatar: `https://i.pravatar.cc/150?u=user${i}`,
-      name: `User ${i}`,
-      username: `user_${i}`,
-      email: `user${i}@example.com`,
+      avatar: `https://i.pravatar.cc/150?u=${username}`,
+      name: `${firstName} ${lastName}`,
+      username: username,
+      email: `${username}@example.com`,
       age: Math.floor(Math.random() * (50 - 20 + 1)) + 20,
       joinDate: new Date(Date.now() - Math.floor(Math.random() * 365 * 24 * 60 * 60 * 1000)).toISOString(),
-      location: `🌍 City, ${nationality}`,
+      location: `${getCountryEmoji(nationality)} ${city}, ${nationality}`,
       isLinkupPlus: Math.random() > 0.5,
       isVerified: Math.random() > 0.3,
       nationality: nationality,
       gender: gender,
       hostedLinkups: Math.floor(Math.random() * 30),
       attendedLinkups: Math.floor(Math.random() * 40),
-      totalEarnings: Math.random() * 5000
+      totalEarnings: Math.floor(Math.random() * 5000 * 100) / 100
     });
   }
 
@@ -388,9 +422,18 @@ const getCountryEmoji = (country: string) => {
     'France': '🇫🇷',
     'Canada': '🇨🇦',
     'Italy': '🇮🇹',
-    'Indonesia': '🇮🇩'
+    'Indonesia': '🇮🇩',
+    'Portugal': '🇵🇹',
+    'Netherlands': '🇳🇱',
+    'Belgium': '🇧🇪',
+    'Switzerland': '🇨🇭',
+    'Austria': '🇦🇹',
+    'Sweden': '🇸🇪',
+    'Denmark': '🇩🇰',
+    'Norway': '🇳🇴',
+    'Finland': '🇫🇮'
   };
-  return emojiMap[country] || '';
+  return emojiMap[country] || '🌍';
 };
 
 const formatCurrency = (amount: number) => {
