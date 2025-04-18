@@ -455,6 +455,8 @@ export default function UserTable() {
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [suspendUserId, setSuspendUserId] = useState<string | null>(null);
   const [suspendUsername, setSuspendUsername] = useState<string>("");
+  const [suspendUserAvatar, setSuspendUserAvatar] = useState<string>("");
+  const [suspendUserName, setSuspendUserName] = useState<string>("");
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -510,7 +512,7 @@ export default function UserTable() {
     navigate(`/users/${userId}`);
   };
 
-  const handleUserAction = (action: string, userId: string, username?: string) => {
+  const handleUserAction = (action: string, userId: string, username?: string, avatar?: string, name?: string) => {
     switch (action) {
       case 'view':
         navigate(`/users/${userId}`);
@@ -518,6 +520,8 @@ export default function UserTable() {
       case 'suspend':
         setSuspendUserId(userId);
         setSuspendUsername(username || "");
+        setSuspendUserAvatar(avatar || "");
+        setSuspendUserName(name || "");
         break;
       default:
         break;
@@ -527,6 +531,8 @@ export default function UserTable() {
   const handleCloseSuspendDialog = () => {
     setSuspendUserId(null);
     setSuspendUsername("");
+    setSuspendUserAvatar("");
+    setSuspendUserName("");
   };
 
   return (
@@ -676,7 +682,7 @@ export default function UserTable() {
                         View Profile
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id, user.username)}
+                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
                         className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
                       >
                         <Ban className="mr-2 h-4 w-4" />
@@ -696,6 +702,8 @@ export default function UserTable() {
         onClose={handleCloseSuspendDialog}
         userId={suspendUserId || ""}
         username={suspendUsername}
+        userAvatar={suspendUserAvatar}
+        userName={suspendUserName}
       />
 
       <div className="flex items-center justify-between">

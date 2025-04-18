@@ -19,12 +19,15 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface SuspendUserDialogProps {
   isOpen: boolean;
   onClose: () => void;
   userId: string;
   username: string;
+  userAvatar?: string;
+  userName?: string;
 }
 
 const suspensionReasons = [
@@ -36,7 +39,14 @@ const suspensionReasons = [
   "Other"
 ] as const;
 
-export function SuspendUserDialog({ isOpen, onClose, userId, username }: SuspendUserDialogProps) {
+export function SuspendUserDialog({ 
+  isOpen, 
+  onClose, 
+  userId, 
+  username,
+  userAvatar,
+  userName 
+}: SuspendUserDialogProps) {
   const [reason, setReason] = useState<string>("");
   const [notes, setNotes] = useState("");
   const { toast } = useToast();
@@ -70,6 +80,16 @@ export function SuspendUserDialog({ isOpen, onClose, userId, username }: Suspend
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Suspend User</AlertDialogTitle>
+          <div className="flex items-center space-x-4 p-4 bg-muted/20 rounded-lg mb-4">
+            <Avatar className="h-12 w-12">
+              <AvatarImage src={userAvatar} alt={userName} />
+              <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
+            </Avatar>
+            <div>
+              <h3 className="font-medium">{userName}</h3>
+              <p className="text-sm text-muted-foreground">@{username}</p>
+            </div>
+          </div>
           <AlertDialogDescription>
             Are you sure you want to suspend this user? This action can be reversed later.
           </AlertDialogDescription>
@@ -120,3 +140,4 @@ export function SuspendUserDialog({ isOpen, onClose, userId, username }: Suspend
     </AlertDialog>
   );
 }
+
