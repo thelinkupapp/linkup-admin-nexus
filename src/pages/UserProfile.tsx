@@ -1,176 +1,77 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { DeleteUserDialog } from "@/components/dashboard/DeleteUserDialog";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { 
-  ArrowLeft,
-  CheckCircle, 
-  Crown, 
-  Mail, 
-  MapPin, 
-  Calendar,
-  Phone,
-  Globe,
-  Briefcase,
-  Flag,
-  Instagram,
-  Twitter,
-  Linkedin,
-  User as UserIcon,
-  Shield,
-  AlertTriangle,
-  Users as UsersIcon,
-  CreditCard,
-  Check,
-  X,
-  MessageSquare,
-  Clock,
-  CalendarDays,
-  Languages,
-  Heart,
-  Trash2
-} from "lucide-react";
-import { formatJoinDate } from "@/utils/dateFormatting";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
-import { getCountryEmoji, getGenderEmoji } from "@/utils/countryUtils";
-import { ProfilePhotos } from "@/components/dashboard/ProfilePhotos";
-import { UserActivity } from "@/components/dashboard/UserActivity";
 
 const user = {
-  id: "1",
-  avatar: "https://i.pravatar.cc/300?img=1",
-  name: "Emma Thompson",
-  username: "emma_t",
-  email: "emma@example.com",
-  phone: "+1 (555) 123-4567",
-  dob: "1996-05-15",
-  age: 28,
-  gender: "Female",
+  id: "2",
+  avatar: "https://i.pravatar.cc/300?img=3",
+  name: "Jack Peagam",
+  username: "jack_p",
+  email: "jack@linkupapp.io",
+  phone: "+1 (555) 987-6543",
+  dob: "1990-03-22",
+  age: 34,
+  gender: "Male",
   nationality: "United States",
-  joinDate: "2023-03-15",
-  location: "Los Angeles, CA",
-  isLinkupPlus: true,
+  joinDate: "2022-11-15",
+  location: "San Francisco, CA",
+  isLinkupPlus: false,
   isVerified: true,
   verificationDetails: {
-    selfie: "https://i.pravatar.cc/300?img=1",
-    verificationPhoto: "https://i.pravatar.cc/300?img=1",
-    submittedAt: "2023-04-10T14:30:00Z"
+    selfie: "https://i.pravatar.cc/300?img=3",
+    verificationPhoto: "https://i.pravatar.cc/300?img=3",
+    submittedAt: "2023-05-10T14:30:00Z"
   },
-  occupation: "UX Designer",
-  bio: "Travel enthusiast and coffee addict. Always looking for new adventures and connections.",
+  occupation: "Software Engineer",
+  bio: "Tech enthusiast, avid traveler, and coffee lover. Building cool things at the intersection of technology and community.",
   socials: {
-    instagram: "@emma_designs",
-    twitter: "@emmathompson",
-    linkedin: "emmathompson",
-    tiktok: "@emma_t"
+    instagram: "@jack_tech",
+    twitter: "@jackpeagam",
+    linkedin: "jackpeagam",
+    tiktok: "@techwithjack"
   },
-  interests: ["Travel", "Photography", "Hiking", "Coffee", "Art", "Music"],
+  interests: ["Technology", "Hiking", "Photography", "Coding", "Travel"],
   languages: ["English", "Spanish"],
   wallet: {
-    lifetimeEarnings: 450,
-    availableBalance: 120,
-    inTransit: 75,
-    lastWithdrawal: "2023-12-15",
+    lifetimeEarnings: 350,
+    availableBalance: 80,
+    inTransit: 50,
+    lastWithdrawal: "2023-11-15",
     payoutHistory: [
-      { amount: 100, date: "2023-12-15", status: "Complete", method: "PayPal" },
-      { amount: 150, date: "2023-10-28", status: "Complete", method: "Bank Transfer" },
-      { amount: 200, date: "2023-09-05", status: "Complete", method: "PayPal" }
+      { amount: 75, date: "2023-11-15", status: "Complete", method: "PayPal" },
+      { amount: 125, date: "2023-09-28", status: "Complete", method: "Bank Transfer" },
+      { amount: 150, date: "2023-08-05", status: "Complete", method: "PayPal" }
     ],
     linkupPlus: {
-      startDate: "2023-05-20",
+      startDate: null,
       cancelDate: null
     }
   },
   linkupStats: {
-    hosted: 15,
-    joined: 28
+    hosted: 8,
+    joined: 15
   },
   privacySettings: {
     hideAge: false,
     allowFemaleFriendRequests: true,
     allowMaleFriendRequests: true,
-    socialsVisibleToFriendsOnly: true,
+    socialsVisibleToFriendsOnly: false,
     friendsCanSeeUpcomingAttendance: true,
     showLocationOnMap: true,
     appearOnNearbyPeople: true,
-    showLinkupsToEveryone: false,
-    showLinkupsToFriendsOnly: true
+    showLinkupsToEveryone: true,
+    showLinkupsToFriendsOnly: false
   },
-  reports: [
-    {
-      id: "r1",
-      reporter: {
-        name: "John Smith",
-        username: "johnsmith"
-      },
-      reason: "Inappropriate behavior",
-      timestamp: "2023-11-10T09:15:00Z",
-      resolved: true
-    },
-    {
-      id: "r2",
-      reporter: {
-        name: "Alice Brown",
-        username: "alice_b"
-      },
-      reason: "Misleading profile information",
-      timestamp: "2024-01-22T16:45:00Z",
-      resolved: false
-    }
-  ],
-  friends: [
-    {
-      id: "f1",
-      name: "James Wilson",
-      username: "james_w",
-      avatar: "https://i.pravatar.cc/150?img=4"
-    },
-    {
-      id: "f2",
-      name: "Sophia Rodriguez",
-      username: "sophia_r",
-      avatar: "https://i.pravatar.cc/150?img=3"
-    },
-    {
-      id: "f3",
-      name: "Michael Chen",
-      username: "mike_chen",
-      avatar: "https://i.pravatar.cc/150?img=2"
-    }
-  ],
+  reports: [],
+  friends: [],
   pendingFriendRequests: {
-    received: [
-      {
-        id: "fr1",
-        name: "Olivia Johnson",
-        username: "olivia_j",
-        avatar: "https://i.pravatar.cc/150?img=5"
-      }
-    ],
-    sent: [
-      {
-        id: "fs1",
-        name: "Daniel Brown",
-        username: "daniel_b",
-        avatar: "https://i.pravatar.cc/150?img=13"
-      }
-    ]
-  }
+    received: [],
+    sent: []
+  },
+  hostingLinkups: 2
 };
 
 const UserProfile = () => {
