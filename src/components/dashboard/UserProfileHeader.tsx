@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useState } from "react";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface UserProfileHeaderProps {
   user: {
@@ -20,12 +21,59 @@ interface UserProfileHeaderProps {
     joinDate: string;
     isVerified: boolean;
     isLinkupPlus: boolean;
+    // Add these new properties to the user interface
+    hostingLinkups?: number;
   };
 }
 
 export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { toast } = useToast();
+
+  const handleSuspendClick = () => {
+    if (user.isLinkupPlus) {
+      toast({
+        variant: "destructive",
+        title: "Unable to Suspend User",
+        description: "This user has an active Linkup Plus subscription. Please cancel their subscription before proceeding with suspension.",
+      });
+      return;
+    }
+
+    if (user.hostingLinkups && user.hostingLinkups > 0) {
+      toast({
+        variant: "destructive",
+        title: "Unable to Suspend User",
+        description: `This user is currently hosting ${user.hostingLinkups} linkup${user.hostingLinkups > 1 ? 's' : ''}. Please remove their hosted linkups before proceeding with suspension.`,
+      });
+      return;
+    }
+
+    setIsSuspendDialogOpen(true);
+  };
+
+  const handleDeleteClick = () => {
+    if (user.isLinkupPlus) {
+      toast({
+        variant: "destructive",
+        title: "Unable to Delete User",
+        description: "This user has an active Linkup Plus subscription. Please cancel their subscription before proceeding with account deletion.",
+      });
+      return;
+    }
+
+    if (user.hostingLinkups && user.hostingLinkups > 0) {
+      toast({
+        variant: "destructive",
+        title: "Unable to Delete User",
+        description: `This user is currently hosting ${user.hostingLinkups} linkup${user.hostingLinkups > 1 ? 's' : ''}. Please remove their hosted linkups before proceeding with account deletion.`,
+      });
+      return;
+    }
+
+    setIsDeleteDialogOpen(true);
+  };
 
   return (
     <>
@@ -92,14 +140,14 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
               <Button 
                 variant="outline" 
                 className="text-destructive border-destructive/20 hover:bg-destructive/10"
-                onClick={() => setIsSuspendDialogOpen(true)}
+                onClick={handleSuspendClick}
               >
                 <Flag className="h-4 w-4 mr-2" />
                 Suspend User
               </Button>
               <Button 
                 variant="destructive"
-                onClick={() => setIsDeleteDialogOpen(true)}
+                onClick={handleDeleteClick}
               >
                 <Trash2 className="h-4 w-4 mr-2" />
                 Delete User
@@ -129,4 +177,3 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
     </>
   );
 };
-
