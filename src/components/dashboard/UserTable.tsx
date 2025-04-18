@@ -734,8 +734,14 @@ export default function UserTable() {
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent 
-                          className="w-80 !bg-[#FFFFFF] border !border-solid !border-gray-200 rounded-xl !shadow-xl text-gray-900 p-4"
-                          style={{ backgroundColor: '#FFFFFF' }}
+                          className="w-80 rounded-xl p-4"
+                          style={{ 
+                            backgroundColor: '#FFFFFF',
+                            border: '1px solid #e5e7eb',
+                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                            color: '#111827',
+                            zIndex: 9999
+                          }}
                         >
                           <div className="flex justify-between space-x-4">
                             <Avatar className="h-16 w-16 border-2 border-linkup-purple">
