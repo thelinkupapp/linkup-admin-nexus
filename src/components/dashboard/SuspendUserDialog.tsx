@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   AlertDialog,
@@ -158,12 +157,12 @@ export function SuspendUserDialog({
                 <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
               </Avatar>
               <div className="text-center">
-                <div className="font-bold text-lg">@{username}</div>
+                <div className="font-light text-lg text-gray-500">@{username}</div>
               </div>
             </div>
             
             <AlertDialogTitle className="text-2xl mb-2">
-              Bye bye, {firstName}! 👋
+              Bye bye for now, {firstName}! 👋
             </AlertDialogTitle>
             
             <AlertDialogDescription className="text-md mb-6 px-4">
@@ -185,4 +184,3 @@ export function SuspendUserDialog({
     </AlertDialog>
   );
 }
-
