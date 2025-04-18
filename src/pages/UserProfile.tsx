@@ -119,16 +119,10 @@ const UserProfile = () => {
 
   const userPhotos = [
     {
-      id: "2",
-      url: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png",
-      uploadDate: "2023-12-20T15:45:00Z",
-      isProfilePicture: false
-    },
-    {
-      id: "3",
-      url: "/lovable-uploads/d7a67652-89cc-4a47-a04a-ab1c95394062.png",
-      uploadDate: "2023-11-05T09:20:00Z",
-      isProfilePicture: false
+      id: "1",
+      url: user.avatar,
+      uploadDate: "2024-01-15T10:30:00Z",
+      isProfilePicture: true
     },
     {
       id: "4",
