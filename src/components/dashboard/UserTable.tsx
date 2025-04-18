@@ -179,6 +179,23 @@ const generateAdditionalUsers = (): User[] => {
 
 export const users: User[] = [
   {
+    id: "0",
+    avatar: "/lovable-uploads/a165dd8e-2635-4f3a-a050-ce01c92a0a6f.png",
+    name: "Jack Peagam",
+    username: "jackpeagam",
+    email: "jack@example.com",
+    age: 30,
+    joinDate: "2025-02-21T18:30:00Z",
+    location: "🇮🇩 Canggu, Indonesia",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "UK",
+    gender: "Male",
+    hostedLinkups: 50,
+    attendedLinkups: 35,
+    totalEarnings: 1000000.00
+  },
+  {
     id: "1",
     avatar: "https://i.pravatar.cc/150?img=57",
     name: "Sophie Parker",
@@ -781,79 +798,4 @@ export default function UserTable() {
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
               setItemsPerPage(parseInt(value));
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder="25" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground">
-            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length}
-          </p>
-        </div>
-
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => handlePageChange(currentPage - 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === 1 && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
-              const pageNumber = i + 1;
-              return (
-                <PaginationItem key={pageNumber}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(pageNumber)}
-                    isActive={currentPage === pageNumber}
-                    className="cursor-pointer"
-                  >
-                    {pageNumber}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            })}
-
-            {totalPages > 5 && (
-              <>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => handlePageChange(totalPages)}
-                    isActive={currentPage === totalPages}
-                    className="cursor-pointer"
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => handlePageChange(currentPage + 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === totalPages && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </div>
-  );
-}
+              setCurrentPage(
