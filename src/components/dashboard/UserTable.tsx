@@ -61,8 +61,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import VerifiedIcon from "@/assets/icons/verified.png";
-import LinkupPlusIcon from "@/assets/icons/linkup-plus.png";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -621,7 +619,11 @@ const UserTable = () => {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" />
+                                  <img 
+                                    src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                                    alt="Verified" 
+                                    className="h-4 w-4" 
+                                  />
                                 </span>
                               </TooltipTrigger>
                               <TooltipContent>

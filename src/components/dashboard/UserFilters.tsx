@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Search, Filter, CheckCircle2 } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -91,7 +92,11 @@ export function UserFilters({
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
             >
               Verified
-              <CheckCircle2 className="h-4 w-4 text-blue-500" />
+              <img 
+                src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                alt="Verified" 
+                className="h-4 w-4" 
+              />
             </label>
           </div>
           <div className="flex items-center space-x-2">

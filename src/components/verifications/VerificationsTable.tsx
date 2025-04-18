@@ -1,8 +1,9 @@
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, XCircle } from "lucide-react";
 
 export function VerificationsTable() {
-  // This is a placeholder component - will be filled with real data later
   return (
     <div className="rounded-md border">
       <Table>
@@ -32,12 +33,22 @@ export function VerificationsTable() {
               </span>
             </TableCell>
             <TableCell className="space-x-2">
-              <button className="rounded-md bg-green-100 px-2 py-1 text-xs font-semibold text-green-800">
+              <Button 
+                className="rounded-md bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
+                variant="ghost"
+                size="sm"
+              >
+                <CheckCircle className="mr-1 h-3 w-3" />
                 Approve
-              </button>
-              <button className="rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-800">
+              </Button>
+              <Button 
+                className="rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-800"
+                variant="ghost"
+                size="sm"
+              >
+                <XCircle className="mr-1 h-3 w-3" />
                 Deny
-              </button>
+              </Button>
             </TableCell>
           </TableRow>
         </TableBody>
