@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -537,47 +538,47 @@ export default function UserTable() {
         <Table className="w-full table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[25%]">User</TableHead>
+              <TableHead className="w-[30%]">User</TableHead>
               <TableHead className="w-[5%]">Age</TableHead>
-              <TableHead className="w-[12%]">Location</TableHead>
-              <TableHead className="w-[12%]">Nationality</TableHead>
-              <TableHead className="w-[8%]">
+              <TableHead className="w-[15%]">Location</TableHead>
+              <TableHead className="w-[15%]">Nationality</TableHead>
+              <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-start hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('hosted')}
                 >
-                  <span>Hosted</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
+                  <span className="mr-2">Hosted</span>
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0" />
                 </button>
               </TableHead>
-              <TableHead className="w-[8%]">
+              <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-start hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('attended')}
                 >
-                  <span>Attended</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
+                  <span className="mr-2">Attended</span>
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0" />
                 </button>
               </TableHead>
               <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-start hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('earnings')}
                 >
-                  <span>Earnings</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
+                  <span className="mr-2">Earnings</span>
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0" />
                 </button>
               </TableHead>
               <TableHead className="w-[10%]">
                 <button 
-                  className="flex items-center justify-between hover:text-foreground focus:outline-none w-full"
+                  className="flex items-center justify-start hover:text-foreground focus:outline-none w-full"
                   onClick={() => handleSort('joined')}
                 >
-                  <span>Joined</span>
-                  <ArrowUpDown className="h-4 w-4 flex-shrink-0 ml-2" />
+                  <span className="mr-2">Joined</span>
+                  <ArrowUpDown className="h-4 w-4 flex-shrink-0" />
                 </button>
               </TableHead>
-              <TableHead className="w-[10%] text-right">Actions</TableHead>
+              <TableHead className="w-[5%] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
