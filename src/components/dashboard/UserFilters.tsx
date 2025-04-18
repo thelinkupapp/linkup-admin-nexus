@@ -264,18 +264,29 @@ export function UserFilters({
             <SelectValue placeholder="Verification" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Users</SelectItem>
-            <SelectItem value="verified">
-              <div className="flex items-center gap-2">
-                Verified
-                <img 
-                  src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                  alt="Verified" 
-                  className="h-4 w-4" 
-                />
-              </div>
+            <SelectItem 
+              value="all" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              All Users
             </SelectItem>
-            <SelectItem value="unverified">Unverified</SelectItem>
+            <SelectItem 
+              value="verified" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
+            >
+              Verified
+              <img 
+                src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                alt="Verified" 
+                className="h-4 w-4" 
+              />
+            </SelectItem>
+            <SelectItem 
+              value="unverified" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              Unverified
+            </SelectItem>
           </SelectContent>
         </Select>
 
@@ -284,13 +295,24 @@ export function UserFilters({
             <SelectValue placeholder="Membership" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">All Users</SelectItem>
-            <SelectItem value="free">Free User</SelectItem>
-            <SelectItem value="plus">
-              <div className="flex items-center gap-2">
-                Linkup Plus
-                <span className="text-amber-500">👑</span>
-              </div>
+            <SelectItem 
+              value="all" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              All Users
+            </SelectItem>
+            <SelectItem 
+              value="free" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              Free User
+            </SelectItem>
+            <SelectItem 
+              value="plus" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
+            >
+              Linkup Plus
+              <span className="text-amber-500">👑</span>
             </SelectItem>
           </SelectContent>
         </Select>
