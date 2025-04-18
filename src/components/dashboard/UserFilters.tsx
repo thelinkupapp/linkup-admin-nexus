@@ -72,14 +72,14 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Nationality</label>
           <Select
-            value={selectedNationalities.length > 0 ? selectedNationalities[0] : ""}
-            onValueChange={(value) => setSelectedNationalities(value === "" ? [] : [value])}
+            value={selectedNationalities.length > 0 ? selectedNationalities[0] : "all_nationalities"}
+            onValueChange={(value) => setSelectedNationalities(value === "all_nationalities" ? [] : [value])}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select nationalities" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All nationalities</SelectItem>
+              <SelectItem value="all_nationalities">All nationalities</SelectItem>
               {nationalities.map((nationality) => (
                 <SelectItem key={nationality.id} value={nationality.id}>
                   {nationality.label}
@@ -92,14 +92,14 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Gender</label>
           <Select
-            value={selectedGenders.length > 0 ? selectedGenders[0] : ""}
-            onValueChange={(value) => setSelectedGenders(value === "" ? [] : [value])}
+            value={selectedGenders.length > 0 ? selectedGenders[0] : "all_genders"}
+            onValueChange={(value) => setSelectedGenders(value === "all_genders" ? [] : [value])}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select genders" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All genders</SelectItem>
+              <SelectItem value="all_genders">All genders</SelectItem>
               <SelectItem value="male">Male</SelectItem>
               <SelectItem value="female">Female</SelectItem>
               <SelectItem value="non-binary">Non-binary</SelectItem>

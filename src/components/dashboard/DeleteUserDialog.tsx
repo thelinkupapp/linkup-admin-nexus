@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Trash2 } from "lucide-react";
 import {
@@ -51,7 +51,6 @@ export function DeleteUserDialog({
   const [notes, setNotes] = useState("");
   const [reason, setReason] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const { toast } = useToast();
 
   const handleDelete = () => {
     if (!reason) {
