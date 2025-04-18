@@ -223,7 +223,7 @@ export const users: User[] = [
     location: "🇦🇪 Dubai, United Arab Emirates",
     isLinkupPlus: true,
     isVerified: true,
-    nationality: "Lebanon",
+    nationality: "Lebanese",
     gender: "Male",
     hostedLinkups: 36,
     attendedLinkups: 21,
