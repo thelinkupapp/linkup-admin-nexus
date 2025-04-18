@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, Filter, Users, User, Crown, ArrowUpCircle, CheckCircle2, XCircle } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -96,6 +97,31 @@ export function UserFilters({
     ageRange[1] !== 100 ||
     searchValue !== "";
 
+  // State for the selected account type
+  const [selectedAccountType, setSelectedAccountType] = React.useState<string>("");
+  
+  // Handle account type selection
+  const handleAccountTypeChange = (value: string) => {
+    setSelectedAccountType(value);
+    
+    // Reset all account type filters first
+    setShowVerifiedOnly(false);
+    setShowUnverifiedOnly(false);
+    setShowLinkupPlusOnly(false);
+    setShowFreeUsersOnly(false);
+    
+    // Set the selected filter
+    if (value === "verified") {
+      setShowVerifiedOnly(true);
+    } else if (value === "unverified") {
+      setShowUnverifiedOnly(true);
+    } else if (value === "linkup-plus") {
+      setShowLinkupPlusOnly(true);
+    } else if (value === "free-users") {
+      setShowFreeUsersOnly(true);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -111,7 +137,7 @@ export function UserFilters({
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+        <Select>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
@@ -127,7 +153,7 @@ export function UserFilters({
           </SelectContent>
         </Select>
 
-        <Select value={selectedGenders} onValueChange={setSelectedGenders}>
+        <Select>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
@@ -159,7 +185,7 @@ export function UserFilters({
           </SelectContent>
         </Select>
 
-        <Select>
+        <Select value={selectedAccountType} onValueChange={handleAccountTypeChange}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Account Type" />
           </SelectTrigger>
