@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, Crown, CheckCircle2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -70,13 +71,13 @@ export function UserFilters({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="relative">
+        <div className="relative flex-grow">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search users..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 w-full sm:w-80"
+            className="pl-9 w-full"
           />
         </div>
         <div className="flex flex-wrap items-center gap-2">
