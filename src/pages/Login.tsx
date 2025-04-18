@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -53,7 +52,6 @@ export default function Login() {
 
   const handleConfirmReset = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate sending a reset code
     setResetStep("enter-code");
     toast({
       title: "Code Sent",
@@ -263,7 +261,7 @@ export default function Login() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <img 
-            src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png"
+            src="/lovable-uploads/108c3143-87e9-491c-96ec-f3c4a43ba199.png"
             alt="Linkup Logo"
             className="mx-auto mb-4 object-contain h-24 w-auto max-w-full"
           />
@@ -288,4 +286,3 @@ export default function Login() {
     </div>
   );
 }
-
