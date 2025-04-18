@@ -1,35 +1,54 @@
-
-import React from 'react';
-import { nationalities } from "@/constants/filterOptions";
+import React from "react";
+import { Search, Filter, Users } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue
+  SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+
+import {
+  countries,
+  nationalities,
+} from "@/constants/filterOptions";
 
 interface UserFiltersProps {
   searchValue: string;
-  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  setSearchValue: (value: string) => void;
   selectedNationalities: string[];
-  setSelectedNationalities: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedGenders: string[];
-  setSelectedGenders: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedNationalities: (value: string[]) => void;
   selectedLocations: string[];
-  setSelectedLocations: React.Dispatch<React.SetStateAction<string[]>>;
+  setSelectedLocations: (value: string[]) => void;
+  selectedGenders: string[];
+  setSelectedGenders: (value: string[]) => void;
   showVerifiedOnly: boolean;
-  setShowVerifiedOnly: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowVerifiedOnly: (value: boolean) => void;
   showLinkupPlusOnly: boolean;
-  setShowLinkupPlusOnly: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowLinkupPlusOnly: (value: boolean) => void;
   verificationStatus: string;
-  setVerificationStatus: React.Dispatch<React.SetStateAction<string>>;
+  setVerificationStatus: (value: string) => void;
   membershipStatus: string;
-  setMembershipStatus: React.Dispatch<React.SetStateAction<string>>;
+  setMembershipStatus: (value: string) => void;
   ageRange: number[];
-  setAgeRange: React.Dispatch<React.SetStateAction<number[]>>;
+  setAgeRange: (value: number[]) => void;
   filteredCount: number;
   totalCount: number;
 }
@@ -39,10 +58,10 @@ export function UserFilters({
   setSearchValue,
   selectedNationalities,
   setSelectedNationalities,
-  selectedGenders,
-  setSelectedGenders,
   selectedLocations,
   setSelectedLocations,
+  selectedGenders,
+  setSelectedGenders,
   showVerifiedOnly,
   setShowVerifiedOnly,
   showLinkupPlusOnly,
@@ -56,131 +75,249 @@ export function UserFilters({
   filteredCount,
   totalCount,
 }: UserFiltersProps) {
+  const toggleArrayValue = (array: string[], value: string) => {
+    return array.includes(value)
+      ? array.filter((item) => item !== value)
+      : [...array, value];
+  };
+
+  const genderOptions = [
+    { value: "male", label: "Male 💁‍♂️" },
+    { value: "female", label: "Female 💁‍♀️" },
+    { value: "non-binary", label: "Non-binary 💖" },
+  ];
+
+  const hasActiveFilters = selectedNationalities.length > 0 || 
+    selectedLocations.length > 0 || 
+    selectedGenders.length > 0 || 
+    verificationStatus !== "" || 
+    membershipStatus !== "" || 
+    ageRange[0] !== 18 || 
+    ageRange[1] !== 100 ||
+    searchValue !== "";
+
+  const handleVerificationChange = (value: string) => {
+    if (value === "all") {
+      setVerificationStatus("");
+    } else {
+      setVerificationStatus(value);
+    }
+  };
+
+  const handleMembershipChange = (value: string) => {
+    if (value === "all") {
+      setMembershipStatus("");
+    } else {
+      setMembershipStatus(value);
+    }
+  };
+
   return (
-    <div>
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Search</label>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-muted-foreground" />
+          <span className="text-lg font-semibold text-foreground">
+            {hasActiveFilters ? (
+              <>Showing <span className="font-bold text-primary">{filteredCount}</span> of <span className="font-bold text-primary">{totalCount}</span> users</>
+            ) : (
+              <><span className="font-bold text-primary">{totalCount}</span> total users</>
+            )}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative flex-grow max-w-[300px]">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name, username, or email..."
+            placeholder="Search users..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            className="pl-9 w-full"
           />
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Nationality</label>
-          <Select
-            onValueChange={(value) => {
-              // Handle single selection as we can't use multiple in this component
-              setSelectedNationalities(value === "" ? [] : [value]);
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select nationalities" />
-            </SelectTrigger>
-            <SelectContent>
-              {nationalities.map((nationality) => (
-                <SelectItem key={nationality.id} value={nationality.id}>
-                  {nationality.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Gender</label>
-          <Select
-            onValueChange={(value) => {
-              // Handle single selection as we can't use multiple in this component
-              setSelectedGenders(value === "" ? [] : [value]);
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select genders" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="male">Male</SelectItem>
-              <SelectItem value="female">Female</SelectItem>
-              <SelectItem value="non-binary">Non-binary</SelectItem>
-            </SelectContent>
-          </Select>
         </div>
       </div>
 
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mt-4">
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Location Contains</label>
-          <Input
-            placeholder="Enter location keyword..."
-            value={selectedLocations[0] || ""}
-            onChange={(e) => setSelectedLocations(e.target.value ? [e.target.value] : [])}
-          />
-        </div>
+      <div className="flex flex-wrap gap-2">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="font-medium">
+              Gender ({selectedGenders.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <div className="p-2">
+              {genderOptions.map((gender) => (
+                <div key={gender.value} className="flex items-center space-x-2 p-2">
+                  <Checkbox
+                    checked={selectedGenders.includes(gender.value)}
+                    onCheckedChange={() => {
+                      setSelectedGenders(
+                        toggleArrayValue(selectedGenders, gender.value)
+                      );
+                    }}
+                  />
+                  <label className="text-sm">{gender.label}</label>
+                </div>
+              ))}
+            </div>
+          </PopoverContent>
+        </Popover>
 
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Age Range</label>
-          <div className="flex items-center space-x-2">
-            <Input
-              type="number"
-              placeholder="Min"
-              className="w-24"
-              value={ageRange[0].toString()}
-              onChange={(e) => setAgeRange([Number(e.target.value), ageRange[1]])}
-            />
-            <Input
-              type="number"
-              placeholder="Max"
-              className="w-24"
-              value={ageRange[1].toString()}
-              onChange={(e) => setAgeRange([ageRange[0], Number(e.target.value)])}
-            />
-          </div>
-          <Slider
-            defaultValue={ageRange}
-            max={100}
-            min={18}
-            step={1}
-            onValueChange={(value) => setAgeRange(value)}
-          />
-        </div>
-        
-        <div className="space-y-2">
-          <label className="text-sm font-medium">Verification Status</label>
-          <div className="flex space-x-2">
-            <button
-              className={`
-                py-1 px-3 rounded-md text-sm transition-all
-                ${verificationStatus === "verified" 
-                  ? "bg-status-verified text-white" 
-                  : "bg-muted/20 text-muted-foreground hover:bg-status-verified/20 hover:text-status-verified"
-                }
-              `}
-              onClick={() => setVerificationStatus(verificationStatus === "verified" ? "" : "verified")}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="font-medium">
+              Age ({ageRange[0]} - {ageRange[1]})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-4">
+            <div className="space-y-4">
+              <div className="flex justify-between text-sm">
+                <span>{ageRange[0]}</span>
+                <span>{ageRange[1]}</span>
+              </div>
+              <Slider
+                min={18}
+                max={100}
+                step={1}
+                value={ageRange}
+                onValueChange={setAgeRange}
+                className="mb-6"
+              />
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="font-medium">
+              Location ({selectedLocations.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search location..." />
+              <CommandEmpty>No location found.</CommandEmpty>
+              <ScrollArea className="h-60">
+                <CommandGroup>
+                  {countries.map((country) => (
+                    <CommandItem
+                      key={country.id}
+                      onSelect={() => {
+                        setSelectedLocations(
+                          toggleArrayValue(selectedLocations, country.value)
+                        );
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedLocations.includes(country.value)}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="mr-2">{country.emoji}</span>
+                      {country.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="font-medium">
+              Nationality ({selectedNationalities.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0">
+            <Command>
+              <CommandInput placeholder="Search nationality..." />
+              <CommandEmpty>No nationality found.</CommandEmpty>
+              <ScrollArea className="h-60">
+                <CommandGroup>
+                  {nationalities.map((nationality) => (
+                    <CommandItem
+                      key={nationality.id}
+                      onSelect={() => {
+                        setSelectedNationalities(
+                          toggleArrayValue(selectedNationalities, nationality.id)
+                        );
+                      }}
+                    >
+                      <Checkbox
+                        checked={selectedNationalities.includes(nationality.id)}
+                        className="mr-2 h-4 w-4"
+                      />
+                      <span className="mr-2">{nationality.emoji}</span>
+                      {nationality.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
+            </Command>
+          </PopoverContent>
+        </Popover>
+
+        <Select value={verificationStatus} onValueChange={handleVerificationChange}>
+          <SelectTrigger className="w-[140px] font-medium">
+            <SelectValue placeholder="Verification" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem 
+              value="all" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
             >
-              Verified
-            </button>
-            <button
-              className={`
-                py-1 px-3 rounded-md text-sm transition-all
-                ${verificationStatus === "unverified" 
-                  ? "bg-destructive text-white" 
-                  : "bg-muted/20 text-muted-foreground hover:bg-destructive/20 hover:text-destructive"
-                }
-              `}
-              onClick={() => setVerificationStatus(verificationStatus === "unverified" ? "" : "unverified")}
+              All Users
+            </SelectItem>
+            <SelectItem 
+              value="verified" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <span>Verified</span>
+                <img 
+                  src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                  alt="Verified" 
+                  className="h-4 w-4" 
+                />
+              </div>
+            </SelectItem>
+            <SelectItem 
+              value="unverified" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
             >
               Unverified
-            </button>
-          </div>
-        </div>
-      </div>
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
-      <div className="mt-4">
-        <p className="text-sm text-muted-foreground">
-          Displaying {filteredCount} of {totalCount} users
-        </p>
+        <Select value={membershipStatus} onValueChange={handleMembershipChange}>
+          <SelectTrigger className="w-[140px] font-medium">
+            <SelectValue placeholder="Membership" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem 
+              value="all" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              All Users
+            </SelectItem>
+            <SelectItem 
+              value="free" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              Free User
+            </SelectItem>
+            <SelectItem 
+              value="plus" 
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
+            >
+              <span>Linkup Plus</span>
+              <span className="text-amber-500 ml-1">👑</span>
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   );

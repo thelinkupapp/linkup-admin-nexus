@@ -698,7 +698,6 @@ export default function UserTable() {
           <TableBody>
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
-                
                 <TableCell className="max-w-0">
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -709,8 +708,7 @@ export default function UserTable() {
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs 
-                              hover:bg-accent hover:scale-110 transition-all cursor-help">
+                            <div className="absolute -top-1 -left-1 w-5 h-5 rounded-full bg-background flex items-center justify-center shadow-sm border border-border text-xs">
                               {user.gender === 'Male' ? '💁‍♂️' : user.gender === 'Female' ? '💁‍♀️' : '💖'}
                             </div>
                           </TooltipTrigger>
@@ -722,7 +720,7 @@ export default function UserTable() {
                     </div>
                     <div className="min-w-0">
                       <div 
-                        className="font-medium hover:underline cursor-pointer hover:text-primary transition-colors"
+                        className="font-medium hover:underline cursor-pointer"
                         onClick={() => handleUserClick(user.id)}
                       >
                         {user.name}
@@ -733,7 +731,7 @@ export default function UserTable() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="inline-flex hover:scale-110 transition-transform cursor-help">
+                                <span className="inline-flex">
                                   {(user.username === "jackpeagam" || 
                                     user.username === "benwhatson" || 
                                     user.username === "elieabousamra") ? (
@@ -763,7 +761,7 @@ export default function UserTable() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <span className="inline-flex hover:scale-110 transition-transform cursor-help">
+                                <span className="inline-flex">
                                   {renderLinkupPlusIcon()}
                                 </span>
                               </TooltipTrigger>
@@ -777,7 +775,6 @@ export default function UserTable() {
                     </div>
                   </div>
                 </TableCell>
-                
                 <TableCell>{user.age}</TableCell>
                 <TableCell>{user.location}</TableCell>
                 <TableCell>
@@ -792,29 +789,22 @@ export default function UserTable() {
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="hover:bg-muted">
+                      <Button variant="ghost" size="icon">
                         <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="bg-popover border border-border w-48">
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('view', user.id)}
-                        className="cursor-pointer hover:bg-muted focus:bg-muted"
-                      >
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
                         <Eye className="mr-2 h-4 w-4" />
                         <span>View Profile</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 hover:text-destructive focus:text-destructive"
-                      >
+                      <DropdownMenuItem onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}>
                         <Ban className="mr-2 h-4 w-4" />
                         <span>Suspend User</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive" 
                         onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 hover:text-destructive focus:text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         <span>Delete User</span>
@@ -828,85 +818,87 @@ export default function UserTable() {
         </Table>
       </div>
 
-      <div className="flex gap-4 justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Show</span>
-          <Select
-            value={itemsPerPage.toString()}
-            onValueChange={(value) => {
-              setItemsPerPage(Number(value));
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[80px]">
-              <SelectValue>{itemsPerPage}</SelectValue>
-            </SelectTrigger>
-            <SelectContent className="bg-popover border border-border">
-              {itemsPerPageOptions.map((option) => (
-                <SelectItem key={option} value={option.toString()}>
-                  {option}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <span className="text-sm">per page</span>
-        </div>
+      {filteredUsers.length > 0 ? (
+        <div className="flex justify-between items-center mt-4">
+          <div className="flex-1">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-muted-foreground">Show</span>
+              <Select
+                value={String(itemsPerPage)}
+                onValueChange={(value) => setItemsPerPage(Number(value))}
+              >
+                <SelectTrigger className="w-[70px]">
+                  <SelectValue placeholder={itemsPerPage.toString()} />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemsPerPageOptions.map(option => (
+                    <SelectItem key={option} value={option.toString()}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-muted-foreground">per page</span>
+            </div>
+          </div>
 
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious
-                className={cn(
-                  "hover:bg-muted",
-                  currentPage === 1 && "opacity-50 cursor-not-allowed hover:bg-transparent"
-                )}
-                onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              const pageToShow = totalPages <= 5
-                ? i + 1
-                : currentPage <= 3
-                  ? i + 1
-                  : currentPage >= totalPages - 2
-                    ? totalPages - 4 + i
-                    : currentPage - 2 + i;
-                    
-              return pageToShow > 0 && pageToShow <= totalPages ? (
-                <PaginationItem key={pageToShow}>
-                  <PaginationLink
-                    className={cn(
-                      "hover:bg-muted",
-                      currentPage === pageToShow && "bg-primary text-primary-foreground hover:bg-primary/90"
-                    )}
-                    onClick={() => handlePageChange(pageToShow)}
-                    isActive={currentPage === pageToShow}
-                  >
-                    {pageToShow}
-                  </PaginationLink>
-                </PaginationItem>
-              ) : null;
-            })}
-            
-            {totalPages > 5 && currentPage < totalPages - 2 && (
+          <Pagination>
+            <PaginationContent>
               <PaginationItem>
-                <PaginationEllipsis />
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
               </PaginationItem>
-            )}
-            
-            <PaginationItem>
-              <PaginationNext
-                className={cn(
-                  "hover:bg-muted",
-                  currentPage === totalPages && "opacity-50 cursor-not-allowed hover:bg-transparent"
-                )}
-                onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+              
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const page = i + 1;
+                
+                if (
+                  page === 1 ||
+                  page === totalPages ||
+                  (page >= currentPage - 1 && page <= currentPage + 1)
+                ) {
+                  return (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        isActive={page === currentPage}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                }
+                
+                if (
+                  (page === 2 && currentPage > 3) ||
+                  (page === totalPages - 1 && currentPage < totalPages - 2)
+                ) {
+                  return <PaginationEllipsis key={`ellipsis-${page}`} />;
+                }
+                
+                return null;
+              })}
+              
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-8 text-center">
+          <Users className="h-12 w-12 text-muted-foreground mb-4" />
+          <h3 className="text-lg font-medium">No users found</h3>
+          <p className="text-muted-foreground mt-1">
+            Try adjusting your search or filter criteria
+          </p>
+        </div>
+      )}
 
       {suspendUserId && (
         <SuspendUserDialog
