@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
   Users,
@@ -42,6 +42,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const navItems = [
   {
@@ -150,9 +151,12 @@ const navItems = [
 export function Sidebar() {
   const location = useLocation();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    console.log("User logged out");
+    logout();
+    navigate("/login");
   };
 
   return (
