@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -134,9 +135,11 @@ export function Sidebar() {
     <div className="h-screen w-64 fixed left-0 top-0 bg-background border-r">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-8">
-          <div className="h-12 w-12 rounded-xl bg-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-            L
-          </div>
+          <img 
+            src="/lovable-uploads/2d64ad0d-4d5f-4824-ba97-1512c0b4a0700.png"
+            alt="Linkup Logo"
+            className="h-12 w-12 rounded-xl"
+          />
           <span className="text-xl font-semibold">Linkup Admin</span>
         </div>
 
