@@ -216,6 +216,23 @@ export const users: User[] = [
     hostedLinkups: 45,
     attendedLinkups: 38,
     totalEarnings: 5250.25
+  },
+  {
+    id: "11",
+    avatar: "https://i.pravatar.cc/150?img=11",
+    name: "Alex Newman",
+    username: "alex_n",
+    email: "alex@example.com",
+    age: 24,
+    joinDate: "2025-04-18T10:30:00Z",
+    location: "Dublin, Ireland",
+    isLinkupPlus: false,
+    isVerified: false,
+    nationality: "Ireland",
+    gender: "Non-binary",
+    hostedLinkups: 0,
+    attendedLinkups: 0,
+    totalEarnings: 0
   }
 ];
 
