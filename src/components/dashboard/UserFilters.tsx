@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { nationalities } from "@/constants/filterOptions";
 import {
@@ -149,7 +150,8 @@ export function UserFilters({
                 py-1 px-3 rounded-md text-sm transition-all
                 ${verificationStatus === "verified" 
                   ? "bg-status-verified text-white" 
-                  : "bg-muted/20 text-muted-foreground hover:bg-status-verified/20 hover:text-status-verified"}
+                  : "bg-muted/20 text-muted-foreground hover:bg-status-verified/20 hover:text-status-verified"
+                }
               `}
               onClick={() => setVerificationStatus(verificationStatus === "verified" ? "" : "verified")}
             >
@@ -160,7 +162,8 @@ export function UserFilters({
                 py-1 px-3 rounded-md text-sm transition-all
                 ${verificationStatus === "unverified" 
                   ? "bg-destructive text-white" 
-                  : "bg-muted/20 text-muted-foreground hover:bg-destructive/20 hover:text-destructive"}
+                  : "bg-muted/20 text-muted-foreground hover:bg-destructive/20 hover:text-destructive"
+                }
               `}
               onClick={() => setVerificationStatus(verificationStatus === "unverified" ? "" : "unverified")}
             >
