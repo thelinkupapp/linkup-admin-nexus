@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -390,7 +391,7 @@ export const users: User[] = [
     email: "alex@example.com",
     age: 24,
     joinDate: "2025-04-18T10:30:00Z",
-    location: "������� Tokyo, Japan",
+    location: "🇯🇵 Tokyo, Japan",
     isLinkupPlus: false,
     isVerified: false,
     nationality: "Japan",
