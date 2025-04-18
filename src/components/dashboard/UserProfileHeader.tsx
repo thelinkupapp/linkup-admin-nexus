@@ -48,7 +48,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       toast({
         variant: "destructive",
         title: "Unable to Delete User",
-        description: `This user is currently hosting ${user.hostingLinkups} linkup${user.hostingLinkups > 1 ? 's' : ''}. Please remove their hosted linkups before proceeding with account deletion.`,
+        description: "This user is a host of an upcoming linkup. Please remove the linkup(s) before proceeding with account deletion.",
       });
       return;
     }
