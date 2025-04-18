@@ -296,7 +296,8 @@ export default function Login() {
              resetStep === "enter-code" ? "Enter the verification code from your email" :
              "Choose a new password for your account"}
           </p>
-          <Alert variant="info" className="mt-2 bg-blue-50 border-blue-100">
+          {/* Change the variant from "info" to "default" since "info" is not a valid variant */}
+          <Alert variant="default" className="mt-2 bg-blue-50 border-blue-100">
             <AlertDescription className="text-sm">
               For demo: Use <strong>jack@linkupapp.io</strong> and password <strong>linkup</strong>
             </AlertDescription>
