@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { 
@@ -37,7 +36,7 @@ import {
 const navItems = [
   {
     title: "Dashboard",
-    href: "/dashboard",
+    href: "/",
     icon: LayoutDashboard
   },
   {
@@ -223,24 +222,18 @@ export function Sidebar() {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem asChild>
-              <Link to="/profile">
-                <User className="mr-2 h-4 w-4" />
-                <span>My Profile</span>
-              </Link>
+            <DropdownMenuItem>
+              <User className="mr-2 h-4 w-4" />
+              <span>My Profile</span>
             </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link to="/settings">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Account Settings</span>
-              </Link>
+            <DropdownMenuItem>
+              <Settings className="mr-2 h-4 w-4" />
+              <span>Account Settings</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link to="/help">
-                <HelpCircle className="mr-2 h-4 w-4" />
-                <span>Help & Support</span>
-              </Link>
+            <DropdownMenuItem>
+              <HelpCircle className="mr-2 h-4 w-4" />
+              <span>Help & Support</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive focus:text-destructive">
