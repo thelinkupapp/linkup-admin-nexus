@@ -914,20 +914,22 @@ const UserTable = () => {
       
       {suspendUserId && (
         <SuspendUserDialog
+          isOpen={!!suspendUserId}
           userId={suspendUserId}
           username={suspendUsername}
-          avatar={suspendUserAvatar}
-          name={suspendUserName}
+          userAvatar={suspendUserAvatar}
+          userName={suspendUserName}
           onClose={handleCloseSuspendDialog}
         />
       )}
       
       {deleteUserId && (
         <DeleteUserDialog
+          isOpen={!!deleteUserId}
           userId={deleteUserId}
           username={deleteUsername}
-          avatar={deleteUserAvatar}
-          name={deleteUserName}
+          userAvatar={deleteUserAvatar}
+          userName={deleteUserName}
           onClose={handleCloseDeleteDialog}
         />
       )}
