@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -15,12 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { 
-  ArrowLeft, 
+  ArrowLeft,
   CheckCircle, 
   Crown, 
+  Mail, 
   MapPin, 
-  Calendar, 
-  Mail,
+  Calendar,
   Phone,
   Globe,
   Briefcase,
@@ -28,18 +27,21 @@ import {
   Instagram,
   Twitter,
   Linkedin,
-  User,
+  User as UserIcon,
   Shield,
   AlertTriangle,
   Users as UsersIcon,
   CreditCard,
   Check,
   X,
-  MessageSquare
+  MessageSquare,
+  Clock,
+  CalendarDays
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 // Mock data for a user profile
 const user = {
@@ -168,8 +170,6 @@ const UserProfile = () => {
   const { userId } = useParams();
   const [activeTab, setActiveTab] = useState("basic-info");
   
-  // In a real app, we would fetch the user data based on userId
-  
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -177,61 +177,166 @@ const UserProfile = () => {
         <Header title="User Profile" />
         <main className="p-6">
           <div className="mb-6">
-            <Button variant="ghost" className="gap-1 text-muted-foreground">
+            <Button 
+              variant="ghost" 
+              className="gap-2 text-muted-foreground hover:text-foreground transition-colors"
+            >
               <ArrowLeft className="h-4 w-4" />
               Back to Users
             </Button>
           </div>
 
-          <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-              <Avatar className="h-24 w-24">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              
-              <div className="flex-1">
-                <div className="flex flex-col md:flex-row md:items-center gap-2 mb-1">
-                  <h1 className="text-2xl font-bold">{user.name}</h1>
-                  <div className="flex flex-wrap gap-2">
-                    {user.isVerified && (
-                      <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20">
-                        <CheckCircle className="h-3 w-3 mr-1" /> Verified
-                      </Badge>
-                    )}
-                    {user.isLinkupPlus && (
-                      <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
-                        <Crown className="h-3 w-3 mr-1" /> Linkup Plus
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-                <p className="text-muted-foreground">@{user.username}</p>
+          <Card className="mb-6 overflow-hidden">
+            <div className="h-32 bg-gradient-to-r from-linkup-light-purple to-linkup-soft-blue" />
+            <CardContent className="relative pt-0">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 -mt-12">
+                <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+                  <AvatarImage src={user.avatar} alt={user.name} />
+                  <AvatarFallback className="bg-linkup-purple text-white text-xl">
+                    {user.name.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
                 
-                <div className="flex flex-col sm:flex-row gap-3 mt-3">
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Mail className="h-4 w-4" />
-                    {user.email}
+                <div className="flex-1 space-y-2">
+                  <div className="flex flex-col md:flex-row md:items-center gap-2">
+                    <h1 className="text-2xl font-bold">{user.name}</h1>
+                    <div className="flex flex-wrap gap-2">
+                      {user.isVerified && (
+                        <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20 animate-fade-in">
+                          <CheckCircle className="h-3 w-3 mr-1" /> Verified
+                        </Badge>
+                      )}
+                      {user.isLinkupPlus && (
+                        <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20 animate-fade-in">
+                          <Crown className="h-3 w-3 mr-1" /> Linkup Plus
+                        </Badge>
+                      )}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    {user.location}
-                  </div>
-                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Calendar className="h-4 w-4" />
-                    Joined {new Date(user.joinDate).toLocaleDateString()}
+                  <p className="text-muted-foreground">@{user.username}</p>
+                  
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2">
+                    <div className="flex items-center gap-1.5">
+                      <Mail className="h-4 w-4" />
+                      <span className="hover:text-foreground transition-colors">
+                        {user.email}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="h-4 w-4" />
+                      <span>{user.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-4 w-4" />
+                      <span>Joined {formatJoinDate(user.joinDate)}</span>
+                    </div>
                   </div>
                 </div>
+                
+                <div className="flex gap-2 self-start pt-2 md:pt-0">
+                  <Button 
+                    variant="outline" 
+                    className="text-destructive border-destructive/20 hover:bg-destructive/10"
+                  >
+                    <Flag className="h-4 w-4 mr-2" />
+                    Suspend User
+                  </Button>
+                  <Button>
+                    <UserIcon className="h-4 w-4 mr-2" />
+                    Edit Profile
+                  </Button>
+                </div>
               </div>
-              
-              <div className="flex gap-2 self-start">
-                <Button variant="outline" className="text-destructive border-destructive/20">Suspend User</Button>
-                <Button>Edit Profile</Button>
-              </div>
-            </div>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <UserIcon className="h-5 w-5 text-linkup-purple" />
+                  Personal Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
+                  {[
+                    { label: "Full Name", value: user.name, icon: UserIcon },
+                    { label: "Username", value: `@${user.username}`, icon: Globe },
+                    { label: "Email Address", value: user.email, icon: Mail },
+                    { label: "Phone Number", value: user.phone, icon: Phone },
+                    { label: "Date of Birth", value: new Date(user.dob).toLocaleDateString(), icon: CalendarDays },
+                    { label: "Age", value: `${user.age} years old`, icon: UserIcon },
+                    { label: "Gender", value: user.gender, icon: UserIcon },
+                    { label: "Nationality", value: user.nationality, icon: Globe },
+                    { label: "Join Date", value: formatJoinDate(user.joinDate), icon: Calendar },
+                    { label: "Last Known Location", value: user.location, icon: MapPin }
+                  ].map((item, index) => (
+                    <div key={index} className="space-y-1.5">
+                      <dt className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
+                        <item.icon className="h-4 w-4" />
+                        {item.label}
+                      </dt>
+                      <dd className="text-foreground">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-linkup-purple" />
+                  Account Status
+                </CardTitle>
+                <CardDescription>
+                  User account overview and current status
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  <div className="p-4 rounded-lg bg-linkup-light-purple">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <p className="font-semibold text-linkup-purple">Linkup Plus Member</p>
+                        <p className="text-sm text-linkup-dark-purple">Since {new Date(user.wallet.linkupPlus.startDate).toLocaleDateString()}</p>
+                      </div>
+                      <Crown className="h-5 w-5 text-linkup-purple" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 rounded-lg bg-linkup-soft-green">
+                      <p className="text-2xl font-bold">{user.linkupStats.hosted}</p>
+                      <p className="text-sm text-muted-foreground">Linkups Hosted</p>
+                    </div>
+                    <div className="p-4 rounded-lg bg-linkup-soft-blue">
+                      <p className="text-2xl font-bold">{user.linkupStats.joined}</p>
+                      <p className="text-sm text-muted-foreground">Linkups Joined</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t">
+                    <p className="text-sm font-medium text-muted-foreground mb-3">Verification Status</p>
+                    {user.isVerified ? (
+                      <div className="flex items-center gap-2 text-status-verified">
+                        <CheckCircle className="h-5 w-5" />
+                        <span>Account Verified</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-status-pending">
+                        <Clock className="h-5 w-5" />
+                        <span>Verification Pending</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">
               <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
               <TabsTrigger value="profile-details">Profile Details</TabsTrigger>
