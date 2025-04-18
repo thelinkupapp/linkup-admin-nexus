@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search, Filter, Users, User, Crown, ArrowUpCircle, CheckCircle2, XCircle } from "lucide-react";
+import { Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -18,13 +17,6 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 import {
   countries,
@@ -44,10 +36,6 @@ interface UserFiltersProps {
   setShowVerifiedOnly: (value: boolean) => void;
   showLinkupPlusOnly: boolean;
   setShowLinkupPlusOnly: (value: boolean) => void;
-  showUnverifiedOnly: boolean;
-  setShowUnverifiedOnly: (value: boolean) => void;
-  showFreeUsersOnly: boolean;
-  setShowFreeUsersOnly: (value: boolean) => void;
   ageRange: number[];
   setAgeRange: (value: number[]) => void;
   filteredCount: number;
@@ -67,10 +55,6 @@ export function UserFilters({
   setShowVerifiedOnly,
   showLinkupPlusOnly,
   setShowLinkupPlusOnly,
-  showUnverifiedOnly,
-  setShowUnverifiedOnly,
-  showFreeUsersOnly,
-  setShowFreeUsersOnly,
   ageRange,
   setAgeRange,
   filteredCount,
@@ -97,130 +81,68 @@ export function UserFilters({
     ageRange[1] !== 100 ||
     searchValue !== "";
 
-  // State for the selected account type
-  const [selectedAccountType, setSelectedAccountType] = React.useState<string>("");
-  
-  // Handle account type selection
-  const handleAccountTypeChange = (value: string) => {
-    setSelectedAccountType(value);
-    
-    // Reset all account type filters first
-    setShowVerifiedOnly(false);
-    setShowUnverifiedOnly(false);
-    setShowLinkupPlusOnly(false);
-    setShowFreeUsersOnly(false);
-    
-    // Set the selected filter
-    if (value === "verified") {
-      setShowVerifiedOnly(true);
-    } else if (value === "unverified") {
-      setShowUnverifiedOnly(true);
-    } else if (value === "linkup-plus") {
-      setShowLinkupPlusOnly(true);
-    } else if (value === "free-users") {
-      setShowFreeUsersOnly(true);
-    }
-  };
-
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="relative">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <Users className="h-5 w-5 text-muted-foreground" />
+          <span className="text-lg font-semibold text-foreground">
+            {hasActiveFilters ? (
+              <>Showing <span className="font-bold text-primary">{filteredCount}</span> of <span className="font-bold text-primary">{totalCount}</span> users</>
+            ) : (
+              <><span className="font-bold text-primary">{totalCount}</span> total users</>
+            )}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="relative flex-grow max-w-[300px]">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search users..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 w-full sm:w-80"
+            className="pl-9 w-full"
           />
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="verified"
+              checked={showVerifiedOnly}
+              onCheckedChange={() => setShowVerifiedOnly(!showVerifiedOnly)}
+            />
+            <label
+              htmlFor="verified"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+            >
+              Verified
+              <img 
+                src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
+                alt="Verified" 
+                className="h-4 w-4" 
+              />
+            </label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="linkupPlus"
+              checked={showLinkupPlusOnly}
+              onCheckedChange={() => setShowLinkupPlusOnly(!showLinkupPlusOnly)}
+            />
+            <label
+              htmlFor="linkupPlus"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex items-center gap-2"
+            >
+              Linkup Plus
+              <span className="text-amber-500 text-sm">👑</span>
+            </label>
+          </div>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="All Categories" />
-          </SelectTrigger>
-          <SelectContent>
-            {countries.map((country) => (
-              <SelectItem key={country.id} value={country.value}>
-                <div className="flex items-center gap-2">
-                  <span>{country.emoji}</span>
-                  <span>{country.label}</span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="All Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="Upcoming">
-              <div className="flex items-center gap-2">
-                <ArrowUpCircle className="h-4 w-4" />
-                <span>Upcoming</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="Happened">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4" />
-                <span>Happened</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="Cancelled">
-              <div className="flex items-center gap-2">
-                <XCircle className="h-4 w-4" />
-                <span>Cancelled</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="Removed">
-              <div className="flex items-center gap-2">
-                <XCircle className="h-4 w-4" />
-                <span>Removed</span>
-              </div>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedAccountType} onValueChange={handleAccountTypeChange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Account Type" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="verified">
-              <div className="flex items-center gap-2">
-                <img 
-                  src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
-                  alt="Verified" 
-                  className="h-4 w-4" 
-                />
-                <span>Verified Users</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="unverified">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Unverified Users</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="linkup-plus">
-              <div className="flex items-center gap-2">
-                <Crown className="h-4 w-4 text-amber-500" />
-                <span>Linkup Plus</span>
-              </div>
-            </SelectItem>
-            <SelectItem value="free-users">
-              <div className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Free Users</span>
-              </div>
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline">
