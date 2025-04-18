@@ -36,4 +36,3 @@ export function formatJoinDate(date: string | Date): string {
 
   return `${format(joinDate, 'MMM d')} at ${time}`; // Returns month and day like "Mar 21"
 }
-
