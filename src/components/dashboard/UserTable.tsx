@@ -56,11 +56,6 @@ import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -704,7 +699,7 @@ export default function UserTable() {
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
                 <TableCell className="max-w-0">
-                  <div className="flex items-center gap-3 cursor-pointer hover:opacity-80">
+                  <div className="flex items-center gap-3">
                     <div className="relative">
                       <Avatar>
                         <AvatarImage src={user.avatar} alt={user.name} />
@@ -724,62 +719,12 @@ export default function UserTable() {
                       </TooltipProvider>
                     </div>
                     <div className="min-w-0">
-                      <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <div 
-                            className="font-medium hover:underline cursor-pointer"
-                            onClick={() => handleUserClick(user.id)}
-                          >
-                            {user.name}
-                          </div>
-                        </HoverCardTrigger>
-                        <HoverCardContent 
-                          className="w-80 rounded-xl p-4 !bg-white"
-                          style={{ 
-                            backgroundColor: '#FFFFFF !important',
-                            border: '1px solid #e5e7eb',
-                            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-                            color: '#111827',
-                            zIndex: 9999,
-                            backdropFilter: 'none',
-                            WebkitBackdropFilter: 'none',
-                            opacity: '1 !important'
-                          }}
-                        >
-                          <div className="flex justify-between space-x-4 bg-white">
-                            <Avatar className="h-16 w-16 border-2 border-linkup-purple">
-                              <AvatarImage src={user.avatar} />
-                              <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div className="space-y-1.5 flex-1">
-                              <h4 className="text-sm font-semibold flex items-center gap-2">
-                                {user.name}
-                                {user.isLinkupPlus && renderLinkupPlusIcon()}
-                              </h4>
-                              <p className="text-sm text-gray-500">@{user.username}</p>
-                              <p className="text-sm">
-                                {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
-                              </p>
-                              <div className="flex items-center gap-4 mt-1">
-                                <div className="text-sm">
-                                  <span className="text-gray-500">Created:</span>{" "}
-                                  {user.hostedLinkups}
-                                </div>
-                                <div className="text-sm">
-                                  <span className="text-gray-500">Attended:</span>{" "}
-                                  {user.attendedLinkups}
-                                </div>
-                              </div>
-                              <Button 
-                                className="w-full mt-2 bg-linkup-purple hover:bg-linkup-purple/90 text-white" 
-                                onClick={() => handleUserClick(user.id)}
-                              >
-                                View Profile
-                              </Button>
-                            </div>
-                          </div>
-                        </HoverCardContent>
-                      </HoverCard>
+                      <div 
+                        className="font-medium hover:underline cursor-pointer"
+                        onClick={() => handleUserClick(user.id)}
+                      >
+                        {user.name}
+                      </div>
                       <div className="text-sm text-muted-foreground">@{user.username}</div>
                       <div className="flex items-center gap-1 mt-0.5">
                         {user.isVerified && (
@@ -788,8 +733,8 @@ export default function UserTable() {
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
                                   {(user.username === "jackpeagam" || 
-                                  user.username === "benwhatson" || 
-                                  user.username === "elieabousamra") ? (
+                                    user.username === "benwhatson" || 
+                                    user.username === "elieabousamra") ? (
                                     <img 
                                       src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
                                       alt="Staff Member" 
