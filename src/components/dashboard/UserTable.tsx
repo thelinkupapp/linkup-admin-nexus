@@ -797,14 +797,14 @@ export default function UserTable() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 transition-colors duration-200"
+                        className="cursor-pointer text-destructive hover:bg-destructive/20 hover:text-destructive focus:bg-destructive/20 focus:text-destructive transition-colors duration-200"
                       >
                         <Ban className="mr-2 h-4 w-4" />
                         Suspend User
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 transition-colors duration-200"
+                        className="cursor-pointer text-destructive hover:bg-destructive/20 hover:text-destructive focus:bg-destructive/20 focus:text-destructive transition-colors duration-200"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         Delete User
