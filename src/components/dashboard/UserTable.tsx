@@ -486,7 +486,7 @@ const renderLinkupPlusIcon = () => (
     <Tooltip>
       <TooltipTrigger asChild>
         <span className="inline-flex transition-transform duration-200 hover:scale-110 hover:rotate-6 cursor-help">
-          <Crown className="text-amber-500" />
+          <span className="text-amber-500">👑</span>
         </span>
       </TooltipTrigger>
       <TooltipContent>

@@ -316,7 +316,7 @@ export function UserFilters({
               className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors flex items-center gap-2"
             >
               <span>Linkup Plus</span>
-              <Crown className="h-4 w-4 text-amber-500" />
+              <span className="text-amber-500 ml-1">👑</span>
             </SelectItem>
           </SelectContent>
         </Select>
