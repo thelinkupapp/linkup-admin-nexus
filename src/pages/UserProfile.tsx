@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
+import { DeleteUserDialog } from "@/components/dashboard/DeleteUserDialog";
 import { 
   Card, 
   CardContent, 
@@ -38,7 +39,10 @@ import {
   X,
   MessageSquare,
   Clock,
-  CalendarDays
+  CalendarDays,
+  Languages,
+  Heart,
+  Trash2
 } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { UserProfileHeader } from "@/components/dashboard/UserProfileHeader";
@@ -168,7 +172,8 @@ const user = {
 
 const UserProfile = () => {
   const { userId } = useParams();
-  const [activeTab, setActiveTab] = useState("profile-details");
+  const [activeTab, setActiveTab] = useState("basic-info");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   
   return (
     <div className="flex min-h-screen bg-background">
@@ -180,7 +185,8 @@ const UserProfile = () => {
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">
-              <TabsTrigger value="profile-details">Profile Details</TabsTrigger>
+              <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
+              <TabsTrigger value="profile-info">Profile Info</TabsTrigger>
               <TabsTrigger value="verification">Verification</TabsTrigger>
               <TabsTrigger value="wallet">Wallet & Billing</TabsTrigger>
               <TabsTrigger value="linkups">Linkups</TabsTrigger>
@@ -189,13 +195,13 @@ const UserProfile = () => {
               <TabsTrigger value="friends">Friends</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="profile-details" className="space-y-6">
+            <TabsContent value="basic-info" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Personal Information
+                      Basic Information
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -272,6 +278,57 @@ const UserProfile = () => {
                   </CardContent>
                 </Card>
               </div>
+            </TabsContent>
+
+            <TabsContent value="profile-info" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <UserIcon className="h-5 w-5 text-linkup-purple" />
+                    Profile Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Bio</p>
+                      <p className="text-sm">{user.bio}</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Occupation</p>
+                      <div className="flex items-center gap-2">
+                        <Briefcase className="h-4 w-4 text-muted-foreground" />
+                        <p className="text-sm">{user.occupation}</p>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Interests</p>
+                      <div className="flex flex-wrap gap-2">
+                        {user.interests.map((interest, index) => (
+                          <Badge key={index} variant="outline" className="bg-muted/50">
+                            <Heart className="h-3 w-3 mr-1 text-linkup-purple" />
+                            {interest}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
+                      <div className="flex flex-wrap gap-2">
+                        {user.languages.map((language, index) => (
+                          <Badge key={index} variant="outline" className="bg-muted/50">
+                            <Languages className="h-3 w-3 mr-1 text-linkup-purple" />
+                            {language}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="verification" className="space-y-6">
@@ -756,6 +813,27 @@ const UserProfile = () => {
               </div>
             </TabsContent>
           </Tabs>
+
+          <div className="fixed bottom-8 right-8">
+            <Button 
+              variant="destructive" 
+              size="lg"
+              className="shadow-lg"
+              onClick={() => setIsDeleteDialogOpen(true)}
+            >
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete User
+            </Button>
+          </div>
+
+          <DeleteUserDialog
+            isOpen={isDeleteDialogOpen}
+            onClose={() => setIsDeleteDialogOpen(false)}
+            userId={user.id}
+            username={user.username}
+            userAvatar={user.avatar}
+            userName={user.name}
+          />
         </main>
       </div>
     </div>

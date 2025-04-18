@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -51,7 +50,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-background flex items-center justify-center shadow-sm border border-border">
+                    <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-background flex items-center justify-center shadow-sm border border-border transition-transform hover:scale-110">
                       {getGenderEmoji(user.gender)}
                     </div>
                   </TooltipTrigger>
@@ -69,7 +68,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="inline-flex">
+                        <span className="inline-flex transition-transform hover:scale-110">
                           <img 
                             src="/lovable-uploads/560d8a54-e5fd-4af3-84b1-62f333f56b27.png" 
                             alt="Verified" 
@@ -87,7 +86,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <span className="inline-flex text-amber-500">
+                        <span className="inline-flex text-amber-500 transition-transform hover:scale-110">
                           👑
                         </span>
                       </TooltipTrigger>
@@ -123,9 +122,6 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
               >
                 <Flag className="h-4 w-4 mr-2" />
                 Suspend User
-              </Button>
-              <Button className="bg-primary">
-                Edit Profile
               </Button>
             </div>
           </div>
