@@ -214,6 +214,23 @@ export const users: User[] = [
   },
   {
     id: "2",
+    avatar: "/lovable-uploads/f1cb2afb-e7ab-44e6-95c2-037da6ccad60.png",
+    name: "Elie Abou Samra",
+    username: "elieabousamra",
+    email: "elie@example.com",
+    age: 39,
+    joinDate: "2025-04-21T12:31:00Z",
+    location: "🇦🇪 Dubai, United Arab Emirates",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "Lebanon",
+    gender: "Male",
+    hostedLinkups: 36,
+    attendedLinkups: 21,
+    totalEarnings: 999999.00
+  },
+  {
+    id: "3",
     avatar: "https://i.pravatar.cc/150?img=62",
     name: "Marcus Chen",
     username: "marcus_c",
@@ -230,7 +247,7 @@ export const users: User[] = [
     totalEarnings: 2555.00
   },
   {
-    id: "3",
+    id: "4",
     avatar: "https://i.pravatar.cc/150?img=45",
     name: "Emma Williams",
     username: "emma_w",
@@ -247,7 +264,7 @@ export const users: User[] = [
     totalEarnings: 1202.00
   },
   {
-    id: "4",
+    id: "5",
     avatar: "https://i.pravatar.cc/150?img=68",
     name: "Raj Patel",
     username: "raj_p",
@@ -264,7 +281,7 @@ export const users: User[] = [
     totalEarnings: 4499.00
   },
   {
-    id: "5",
+    id: "6",
     avatar: "https://i.pravatar.cc/150?img=33",
     name: "Isabella Rodriguez",
     username: "bella_r",
@@ -281,7 +298,7 @@ export const users: User[] = [
     totalEarnings: 2794.00
   },
   {
-    id: "6",
+    id: "7",
     avatar: "https://i.pravatar.cc/150?img=73",
     name: "Thomas Anderson",
     username: "thomas_a",
@@ -298,7 +315,7 @@ export const users: User[] = [
     totalEarnings: 1774.00
   },
   {
-    id: "7",
+    id: "8",
     avatar: "https://i.pravatar.cc/150?img=41",
     name: "Maria Silva",
     username: "maria_s",
@@ -315,7 +332,7 @@ export const users: User[] = [
     totalEarnings: 1417.00
   },
   {
-    id: "8",
+    id: "9",
     avatar: "https://i.pravatar.cc/150?img=60",
     name: "James O'Connor",
     username: "james_o",
@@ -332,7 +349,7 @@ export const users: User[] = [
     totalEarnings: 137.00
   },
   {
-    id: "9",
+    id: "10",
     avatar: "https://i.pravatar.cc/150?img=47",
     name: "Lucy Chen",
     username: "lucy_c",
@@ -349,7 +366,7 @@ export const users: User[] = [
     totalEarnings: 2850.50
   },
   {
-    id: "10",
+    id: "11",
     avatar: "https://i.pravatar.cc/150?img=63",
     name: "Hans Schmidt",
     username: "hans_s",
@@ -366,7 +383,7 @@ export const users: User[] = [
     totalEarnings: 5250.25
   },
   {
-    id: "11",
+    id: "12",
     avatar: "https://i.pravatar.cc/150?img=39",
     name: "Alex Morgan",
     username: "alex_m",
@@ -383,7 +400,7 @@ export const users: User[] = [
     totalEarnings: 0
   },
   {
-    id: "12",
+    id: "13",
     avatar: "https://i.pravatar.cc/150?img=70",
     name: "William Wright",
     username: "will_w",
@@ -400,7 +417,7 @@ export const users: User[] = [
     totalEarnings: 1850.00
   },
   {
-    id: "13",
+    id: "14",
     avatar: "https://i.pravatar.cc/150?img=31",
     name: "Sofia Martinez",
     username: "sofia_m",
@@ -417,7 +434,7 @@ export const users: User[] = [
     totalEarnings: 920.00
   },
   {
-    id: "14",
+    id: "15",
     avatar: "https://i.pravatar.cc/150?img=43",
     name: "Emily Thompson",
     username: "emily_t",
@@ -434,7 +451,7 @@ export const users: User[] = [
     totalEarnings: 1750.00
   },
   {
-    id: "15",
+    id: "16",
     avatar: "https://i.pravatar.cc/150?img=64",
     name: "Luca Rossi",
     username: "luca_r",
@@ -689,7 +706,9 @@ export default function UserTable() {
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span className="inline-flex">
-                                  {(user.username === "jackpeagam" || user.username === "benwhatson") ? (
+                                  {(user.username === "jackpeagam" || 
+                                  user.username === "benwhatson" || 
+                                  user.username === "elieabousamra") ? (
                                     <img 
                                       src="/lovable-uploads/ce94f2b9-bb63-4eac-9d34-41eec7475422.png" 
                                       alt="Staff Member" 
@@ -762,125 +781,4 @@ export default function UserTable() {
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
-                      >
-                        <Ban className="mr-2 h-4 w-4" />
-                        Suspend User
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
-                        className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete User
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-
-      <SuspendUserDialog
-        isOpen={!!suspendUserId}
-        onClose={handleCloseSuspendDialog}
-        userId={suspendUserId || ""}
-        username={suspendUsername}
-        userAvatar={suspendUserAvatar}
-        userName={suspendUserName}
-      />
-
-      <DeleteUserDialog
-        isOpen={!!deleteUserId}
-        onClose={handleCloseDeleteDialog}
-        userId={deleteUserId || ""}
-        username={deleteUsername}
-        userAvatar={deleteUserAvatar}
-        userName={deleteUserName}
-      />
-
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm text-muted-foreground">Items per page</p>
-          <Select
-            value={itemsPerPage.toString()}
-            onValueChange={(value) => {
-              setItemsPerPage(parseInt(value));
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="h-8 w-[70px]">
-              <SelectValue placeholder="25" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
-            </SelectContent>
-          </Select>
-          <p className="text-sm text-muted-foreground">
-            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length}
-          </p>
-        </div>
-
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => handlePageChange(currentPage - 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === 1 && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-            
-            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
-              const pageNumber = i + 1;
-              return (
-                <PaginationItem key={pageNumber}>
-                  <PaginationLink
-                    onClick={() => handlePageChange(pageNumber)}
-                    isActive={currentPage === pageNumber}
-                    className="cursor-pointer"
-                  >
-                    {pageNumber}
-                  </PaginationLink>
-                </PaginationItem>
-              );
-            })}
-
-            {totalPages > 5 && (
-              <>
-                <PaginationItem>
-                  <PaginationEllipsis />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink
-                    onClick={() => handlePageChange(totalPages)}
-                    isActive={currentPage === totalPages}
-                    className="cursor-pointer"
-                  >
-                    {totalPages}
-                  </PaginationLink>
-                </PaginationItem>
-              </>
-            )}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => handlePageChange(currentPage + 1)}
-                className={cn(
-                  "cursor-pointer",
-                  currentPage === totalPages && "pointer-events-none opacity-50"
-                )}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
-    </div>
-  );
-}
+                        className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive
