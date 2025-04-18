@@ -12,6 +12,7 @@ import UserManagement from "./pages/users/Management";
 import UserStatistics from "./pages/users/Statistics";
 import UserReports from "./pages/users/Reports";
 import UserSuspended from "./pages/users/Suspended";
+import UserDeleted from "./pages/users/Deleted";
 
 // Linkup routes
 import Linkups from "./pages/Linkups";
@@ -52,6 +53,7 @@ const App = () => {
             <Route path="/users/statistics" element={<UserStatistics />} />
             <Route path="/users/reports" element={<UserReports />} />
             <Route path="/users/suspended" element={<UserSuspended />} />
+            <Route path="/users/deleted" element={<UserDeleted />} />
             <Route path="/verifications" element={<UserVerifications />} />
             
             {/* Linkup routes */}

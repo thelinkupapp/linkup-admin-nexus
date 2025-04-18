@@ -55,6 +55,11 @@ const navItems = [
         icon: AlertTriangle
       },
       {
+        title: "Deleted",
+        href: "/users/deleted",
+        icon: Trash2
+      },
+      {
         title: "Verifications",
         href: "/verifications",
         icon: ShieldCheck
