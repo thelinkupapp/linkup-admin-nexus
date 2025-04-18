@@ -249,7 +249,25 @@ export const users: User[] = [
     hostedLinkups: 0,
     attendedLinkups: 0,
     totalEarnings: 0
-  }
+  },
+  // Adding more users to demonstrate pagination
+  ...Array.from({ length: 114 }, (_, index) => ({
+    id: `${index + 12}`,
+    avatar: `https://i.pravatar.cc/150?img=${index + 12}`,
+    name: `Test User ${index + 12}`,
+    username: `user_${index + 12}`,
+    email: `user${index + 12}@example.com`,
+    age: Math.floor(Math.random() * (50 - 18) + 18),
+    joinDate: new Date(2024, Math.floor(Math.random() * 12), Math.floor(Math.random() * 28) + 1).toISOString(),
+    location: "London, UK",
+    isLinkupPlus: Math.random() > 0.5,
+    isVerified: Math.random() > 0.5,
+    nationality: "UK",
+    gender: Math.random() > 0.5 ? "Male" : "Female",
+    hostedLinkups: Math.floor(Math.random() * 30),
+    attendedLinkups: Math.floor(Math.random() * 40),
+    totalEarnings: Math.floor(Math.random() * 5000)
+  }))
 ];
 
 const getCountryEmoji = (country: string) => {
