@@ -734,7 +734,7 @@ export default function UserTable() {
                           </div>
                         </HoverCardTrigger>
                         <HoverCardContent 
-                          className="w-80 bg-linkup-dark-purple border border-white/20 rounded-xl shadow-2xl backdrop-blur-sm text-white p-4"
+                          className="w-80 bg-white border border-gray-200 rounded-xl shadow-lg text-gray-900 p-4"
                         >
                           <div className="flex justify-between space-x-4">
                             <Avatar className="h-16 w-16 border-2 border-linkup-purple">
@@ -746,17 +746,17 @@ export default function UserTable() {
                                 {user.name}
                                 {user.isLinkupPlus && renderLinkupPlusIcon()}
                               </h4>
-                              <p className="text-sm text-white/70">@{user.username}</p>
+                              <p className="text-sm text-gray-500">@{user.username}</p>
                               <p className="text-sm">
                                 {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
                               </p>
                               <div className="flex items-center gap-4 mt-1">
                                 <div className="text-sm">
-                                  <span className="text-white/50">Created:</span>{" "}
+                                  <span className="text-gray-500">Created:</span>{" "}
                                   {user.hostedLinkups}
                                 </div>
                                 <div className="text-sm">
-                                  <span className="text-white/50">Attended:</span>{" "}
+                                  <span className="text-gray-500">Attended:</span>{" "}
                                   {user.attendedLinkups}
                                 </div>
                               </div>
