@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -127,7 +126,7 @@ export function UserFilters({
       <div className="flex flex-wrap gap-2">
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
+            <Button variant="outline" className="font-medium">
               Gender ({selectedGenders.length})
             </Button>
           </PopoverTrigger>
@@ -152,7 +151,7 @@ export function UserFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
+            <Button variant="outline" className="font-medium">
               Age ({ageRange[0]} - {ageRange[1]})
             </Button>
           </PopoverTrigger>
@@ -176,7 +175,7 @@ export function UserFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
+            <Button variant="outline" className="font-medium">
               Location ({selectedLocations.length})
             </Button>
           </PopoverTrigger>
@@ -211,7 +210,7 @@ export function UserFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline">
+            <Button variant="outline" className="font-medium">
               Nationality ({selectedNationalities.length})
             </Button>
           </PopoverTrigger>
@@ -245,7 +244,7 @@ export function UserFilters({
         </Popover>
 
         <Select value={verificationStatus} onValueChange={setVerificationStatus}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[140px] font-medium">
             <SelectValue placeholder="Verification" />
           </SelectTrigger>
           <SelectContent>
@@ -265,7 +264,7 @@ export function UserFilters({
         </Select>
 
         <Select value={membershipStatus} onValueChange={setMembershipStatus}>
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-[140px] font-medium">
             <SelectValue placeholder="Membership" />
           </SelectTrigger>
           <SelectContent>
