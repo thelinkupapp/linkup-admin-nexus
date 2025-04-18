@@ -309,14 +309,18 @@ const getCountryEmoji = (country: string) => {
   const emojiMap: { [key: string]: string } = {
     'UK': '🇬🇧',
     'USA': '🇺🇸',
-    'Canada': '🇨🇦',
-    'Australia': '🇦🇺',
-    'France': '🇫🇷',
-    'Germany': '🇩🇪',
-    'Italy': '🇮🇹',
+    'UAE': '🇦🇪',
+    'Ireland': '🇮🇪',
+    'Singapore': '🇸🇬',
     'Spain': '🇪🇸',
     'Japan': '🇯🇵',
-    'Singapore': '🇸🇬'
+    'Australia': '🇦🇺',
+    'Brazil': '🇧🇷',
+    'Germany': '🇩🇪',
+    'France': '🇫🇷',
+    'Canada': '🇨🇦',
+    'Italy': '🇮🇹',
+    'Indonesia': '🇮🇩'
   };
   return emojiMap[country] || '';
 };
