@@ -160,7 +160,7 @@ export function Sidebar() {
   };
 
   return (
-    <div className="h-screen w-64 fixed left-0 top-0 bg-background border-r">
+    <div className="h-screen w-64 fixed left-0 top-0 bg-background border-r z-50">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-8">
           <img 
