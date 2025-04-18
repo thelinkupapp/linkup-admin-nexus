@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -708,7 +709,7 @@ export default function UserTable() {
                         Suspend User
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleUserAction('delete', user.id)}
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
                         className="cursor-pointer text-destructive hover:bg-destructive hover:text-destructive-foreground focus:bg-destructive focus:text-destructive-foreground transition-colors duration-200"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
@@ -828,4 +829,16 @@ export default function UserTable() {
 
             <PaginationItem>
               <PaginationNext
-                onClick={()
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={cn(
+                  "cursor-pointer",
+                  currentPage === totalPages && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
+  );
+}
