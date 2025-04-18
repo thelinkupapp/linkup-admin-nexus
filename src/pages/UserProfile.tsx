@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -28,7 +29,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { 
   Briefcase, 
-  Heart, 
   Languages, 
   Instagram, 
   Twitter, 
@@ -778,3 +778,18 @@ const UserProfile = () => {
                             <Button variant="outline" size="sm">View Profile</Button>
                           </div>
                         ))
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
+
