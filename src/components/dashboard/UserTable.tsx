@@ -798,4 +798,79 @@ export default function UserTable() {
             value={itemsPerPage.toString()}
             onValueChange={(value) => {
               setItemsPerPage(parseInt(value));
-              setCurrentPage(
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder="25" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+          <p className="text-sm text-muted-foreground">
+            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length}
+          </p>
+        </div>
+
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={() => handlePageChange(currentPage - 1)}
+                className={cn(
+                  "cursor-pointer",
+                  currentPage === 1 && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+            
+            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+              const pageNumber = i + 1;
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink
+                    onClick={() => handlePageChange(pageNumber)}
+                    isActive={currentPage === pageNumber}
+                    className="cursor-pointer"
+                  >
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              );
+            })}
+
+            {totalPages > 5 && (
+              <>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink
+                    onClick={() => handlePageChange(totalPages)}
+                    isActive={currentPage === totalPages}
+                    className="cursor-pointer"
+                  >
+                    {totalPages}
+                  </PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+            
+            <PaginationItem>
+              <PaginationNext 
+                onClick={() => handlePageChange(currentPage + 1)}
+                className={cn(
+                  "cursor-pointer",
+                  currentPage === totalPages && "pointer-events-none opacity-50"
+                )}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
+  );
+}

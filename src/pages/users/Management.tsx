@@ -2,7 +2,6 @@
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import UserTable from "@/components/dashboard/UserTable";
 import { Toaster } from "@/components/ui/toaster";
-import { Users } from "lucide-react";
 
 const UserManagement = () => {
   return (
