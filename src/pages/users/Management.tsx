@@ -14,7 +14,7 @@ const UserManagement = () => {
           <div className="mb-8">
             <h1 className="text-3xl font-bold mb-2">User Management</h1>
             <p className="text-muted-foreground">
-              View and manage all users registered on the platform
+              View and manage all users registered on the app
             </p>
           </div>
 
@@ -27,3 +27,4 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
+
