@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { 
@@ -40,7 +40,6 @@ import {
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import { formatJoinDate } from "@/utils/dateFormatting";
 
 // Mock data for a user profile
@@ -168,7 +167,7 @@ const user = {
 
 const UserProfile = () => {
   const { userId } = useParams();
-  const [activeTab, setActiveTab] = useState("basic-info");
+  const [activeTab, setActiveTab] = useState("profile-details");
   
   return (
     <div className="flex min-h-screen bg-background">
@@ -177,24 +176,23 @@ const UserProfile = () => {
         <Header title="User Profile" />
         <main className="p-6">
           <div className="mb-6">
-            <Button 
-              variant="ghost" 
-              className="gap-2 text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Users
-            </Button>
+            <Link to="/users">
+              <Button 
+                variant="ghost" 
+                className="gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Users
+              </Button>
+            </Link>
           </div>
 
-          <Card className="mb-6 overflow-hidden">
-            <div className="h-32 bg-gradient-to-r from-linkup-light-purple to-linkup-soft-blue" />
-            <CardContent className="relative pt-0">
-              <div className="flex flex-col md:flex-row items-start md:items-center gap-6 -mt-12">
-                <Avatar className="h-24 w-24 border-4 border-background shadow-lg">
+          <Card className="mb-6">
+            <div className="relative p-6 pb-0">
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+                <Avatar className="h-24 w-24 border-4 border-background">
                   <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="bg-linkup-purple text-white text-xl">
-                    {user.name.charAt(0)}
-                  </AvatarFallback>
+                  <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                 </Avatar>
                 
                 <div className="flex-1 space-y-2">
@@ -202,12 +200,12 @@ const UserProfile = () => {
                     <h1 className="text-2xl font-bold">{user.name}</h1>
                     <div className="flex flex-wrap gap-2">
                       {user.isVerified && (
-                        <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20 animate-fade-in">
+                        <Badge variant="outline" className="bg-status-verified/10 text-status-verified border-status-verified/20">
                           <CheckCircle className="h-3 w-3 mr-1" /> Verified
                         </Badge>
                       )}
                       {user.isLinkupPlus && (
-                        <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20 animate-fade-in">
+                        <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
                           <Crown className="h-3 w-3 mr-1" /> Linkup Plus
                         </Badge>
                       )}
@@ -215,12 +213,10 @@ const UserProfile = () => {
                   </div>
                   <p className="text-muted-foreground">@{user.username}</p>
                   
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2">
+                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1.5">
                       <Mail className="h-4 w-4" />
-                      <span className="hover:text-foreground transition-colors">
-                        {user.email}
-                      </span>
+                      <span>{user.email}</span>
                     </div>
                     <div className="flex items-center gap-1.5">
                       <MapPin className="h-4 w-4" />
@@ -233,7 +229,7 @@ const UserProfile = () => {
                   </div>
                 </div>
                 
-                <div className="flex gap-2 self-start pt-2 md:pt-0">
+                <div className="flex gap-2 self-start md:self-center">
                   <Button 
                     variant="outline" 
                     className="text-destructive border-destructive/20 hover:bg-destructive/10"
@@ -247,98 +243,11 @@ const UserProfile = () => {
                   </Button>
                 </div>
               </div>
-            </CardContent>
+            </div>
           </Card>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <UserIcon className="h-5 w-5 text-linkup-purple" />
-                  Personal Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-                  {[
-                    { label: "Full Name", value: user.name, icon: UserIcon },
-                    { label: "Username", value: `@${user.username}`, icon: Globe },
-                    { label: "Email Address", value: user.email, icon: Mail },
-                    { label: "Phone Number", value: user.phone, icon: Phone },
-                    { label: "Date of Birth", value: new Date(user.dob).toLocaleDateString(), icon: CalendarDays },
-                    { label: "Age", value: `${user.age} years old`, icon: UserIcon },
-                    { label: "Gender", value: user.gender, icon: UserIcon },
-                    { label: "Nationality", value: user.nationality, icon: Globe },
-                    { label: "Join Date", value: formatJoinDate(user.joinDate), icon: Calendar },
-                    { label: "Last Known Location", value: user.location, icon: MapPin }
-                  ].map((item, index) => (
-                    <div key={index} className="space-y-1.5">
-                      <dt className="text-sm font-medium text-muted-foreground flex items-center gap-1.5">
-                        <item.icon className="h-4 w-4" />
-                        {item.label}
-                      </dt>
-                      <dd className="text-foreground">{item.value}</dd>
-                    </div>
-                  ))}
-                </dl>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Crown className="h-5 w-5 text-linkup-purple" />
-                  Account Status
-                </CardTitle>
-                <CardDescription>
-                  User account overview and current status
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  <div className="p-4 rounded-lg bg-linkup-light-purple">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="font-semibold text-linkup-purple">Linkup Plus Member</p>
-                        <p className="text-sm text-linkup-dark-purple">Since {new Date(user.wallet.linkupPlus.startDate).toLocaleDateString()}</p>
-                      </div>
-                      <Crown className="h-5 w-5 text-linkup-purple" />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg bg-linkup-soft-green">
-                      <p className="text-2xl font-bold">{user.linkupStats.hosted}</p>
-                      <p className="text-sm text-muted-foreground">Linkups Hosted</p>
-                    </div>
-                    <div className="p-4 rounded-lg bg-linkup-soft-blue">
-                      <p className="text-2xl font-bold">{user.linkupStats.joined}</p>
-                      <p className="text-sm text-muted-foreground">Linkups Joined</p>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t">
-                    <p className="text-sm font-medium text-muted-foreground mb-3">Verification Status</p>
-                    {user.isVerified ? (
-                      <div className="flex items-center gap-2 text-status-verified">
-                        <CheckCircle className="h-5 w-5" />
-                        <span>Account Verified</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2 text-status-pending">
-                        <Clock className="h-5 w-5" />
-                        <span>Verification Pending</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">
-              <TabsTrigger value="basic-info">Basic Info</TabsTrigger>
               <TabsTrigger value="profile-details">Profile Details</TabsTrigger>
               <TabsTrigger value="verification">Verification</TabsTrigger>
               <TabsTrigger value="wallet">Wallet & Billing</TabsTrigger>
@@ -347,96 +256,49 @@ const UserProfile = () => {
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="friends">Friends</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="basic-info" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Personal Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Full Name</p>
-                      <p>{user.name}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Username</p>
-                      <p>@{user.username}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
-                      <p>{user.email}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
-                      <p>{user.phone}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Date of Birth</p>
-                      <p>{new Date(user.dob).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Age</p>
-                      <p>{user.age} years old</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Gender</p>
-                      <p>{user.gender}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Nationality</p>
-                      <p>{user.nationality}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Join Date</p>
-                      <p>{new Date(user.joinDate).toLocaleDateString()}</p>
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Last Known Location</p>
-                      <p>{user.location}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
 
             <TabsContent value="profile-details" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
                   <CardHeader>
-                    <CardTitle>About</CardTitle>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Personal Information
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Occupation</p>
-                        <div className="flex items-center gap-2">
-                          <Briefcase className="h-4 w-4 text-muted-foreground" />
-                          <p>{user.occupation}</p>
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Full Name</p>
+                        <p>{user.name}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Bio</p>
-                        <p>{user.bio}</p>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Username</p>
+                        <p>@{user.username}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Languages</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.languages.map((language) => (
-                            <Badge key={language} variant="secondary">{language}</Badge>
-                          ))}
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
+                        <p>{user.email}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">Interests</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.interests.map((interest) => (
-                            <Badge key={interest} variant="outline">{interest}</Badge>
-                          ))}
-                        </div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
+                        <p>{user.phone}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Date of Birth</p>
+                        <p>{new Date(user.dob).toLocaleDateString()}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Age</p>
+                        <p>{user.age} years old</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Gender</p>
+                        <p>{user.gender}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Nationality</p>
+                        <p>{user.nationality}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -938,31 +800,4 @@ const UserProfile = () => {
                         <div className="space-y-4">
                           {user.pendingFriendRequests.sent.map((request) => (
                             <div key={request.id} className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                <Avatar>
-                                  <AvatarImage src={request.avatar} alt={request.name} />
-                                  <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
-                                </Avatar>
-                                <div>
-                                  <p className="font-medium">{request.name}</p>
-                                  <p className="text-sm text-muted-foreground">@{request.username}</p>
-                                </div>
-                              </div>
-                              <Button variant="outline" size="sm">Cancel</Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
+                              <div className="flex items-center gap-
