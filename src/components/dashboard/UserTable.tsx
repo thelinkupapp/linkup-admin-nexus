@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
@@ -62,7 +63,16 @@ const getNationalityLabel = (countryCode: string): string => {
     'Germany': 'German',
     'France': 'French',
     'Canada': 'Canadian',
-    'Italy': 'Italian'
+    'Italy': 'Italian',
+    'Netherlands': 'Dutch',
+    'Norway': 'Norwegian',
+    'Finland': 'Finnish',
+    'Austria': 'Austrian',
+    'Portugal': 'Portuguese',
+    'Switzerland': 'Swiss',
+    'Belgium': 'Belgian',
+    'Sweden': 'Swedish',
+    'Denmark': 'Danish'
   };
   return nationalityMap[countryCode] || countryCode;
 };
