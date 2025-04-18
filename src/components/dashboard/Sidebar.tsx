@@ -207,7 +207,7 @@ export function Sidebar() {
       <div className="absolute bottom-4 left-4 right-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="p-3 rounded-lg bg-secondary cursor-pointer hover:bg-secondary/80 transition-colors">
+            <div className="p-3 rounded-lg bg-secondary cursor-pointer hover:bg-secondary/80 transition-colors group">
               <p className="text-xs text-muted-foreground mb-2">Logged in as</p>
               <div className="flex items-center gap-3">
                 <img 
@@ -215,8 +215,8 @@ export function Sidebar() {
                   alt="Jack Peagam" 
                   className="h-9 w-9 rounded-full object-cover"
                 />
-                <div>
-                  <p className="text-sm font-medium">Jack Peagam</p>
+                <div className="flex-1">
+                  <p className="text-sm font-medium group-hover:text-primary transition-colors">Jack Peagam</p>
                   <p className="text-xs text-muted-foreground">jack@linkupapp.io</p>
                 </div>
               </div>
@@ -224,13 +224,18 @@ export function Sidebar() {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem asChild>
-              <Link to="/account">
+              <Link 
+                to="/account" 
+                className="cursor-pointer hover:bg-secondary/50 transition-colors flex items-center"
+              >
                 <User className="mr-2 h-4 w-4" />
                 <span>Account</span>
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-destructive focus:text-destructive">
+            <DropdownMenuItem 
+              className="text-destructive focus:text-destructive cursor-pointer hover:bg-destructive/10 transition-colors"
+            >
               <LogOut className="mr-2 h-4 w-4" />
               <span>Log Out</span>
             </DropdownMenuItem>
