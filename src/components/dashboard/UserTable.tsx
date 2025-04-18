@@ -1,7 +1,9 @@
+
 import React, { useState } from "react";
 import { 
   MoreVertical, 
-  Ban, 
+  Ban,
+  ArrowUpDown 
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -20,6 +22,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { UserFilters } from "./UserFilters";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from "@/components/ui/select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { formatJoinDate } from "@/utils/dateFormatting";
 import type { User } from "@/types/user";
 
 const getNationalityLabel = (countryCode: string): string => {
