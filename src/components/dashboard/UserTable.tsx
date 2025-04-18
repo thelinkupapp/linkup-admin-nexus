@@ -41,7 +41,6 @@ import {
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationItemsPerPage,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
@@ -803,11 +802,9 @@ export default function UserTable() {
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <img 
-                                  src="/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png" 
-                                  alt="Linkup Plus" 
-                                  className="h-4 w-4 ml-0.5" 
-                                />
+                                <span className="inline-flex">
+                                  <Crown className="h-4 w-4 text-linkup-purple" />
+                                </span>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>Linkup Plus Member</p>
