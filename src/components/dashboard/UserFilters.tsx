@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
 
 interface UserFiltersProps {
   searchValue: string;
@@ -72,14 +71,15 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Nationality</label>
           <Select
-            value={selectedNationalities.length > 0 ? selectedNationalities[0] : "all_nationalities"}
-            onValueChange={(value) => setSelectedNationalities(value === "all_nationalities" ? [] : [value])}
+            onValueChange={(value) => {
+              // Handle single selection as we can't use multiple in this component
+              setSelectedNationalities(value === "" ? [] : [value]);
+            }}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select nationalities" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all_nationalities">All nationalities</SelectItem>
               {nationalities.map((nationality) => (
                 <SelectItem key={nationality.id} value={nationality.id}>
                   {nationality.label}
@@ -92,14 +92,15 @@ export function UserFilters({
         <div className="space-y-2">
           <label className="text-sm font-medium">Gender</label>
           <Select
-            value={selectedGenders.length > 0 ? selectedGenders[0] : "all_genders"}
-            onValueChange={(value) => setSelectedGenders(value === "all_genders" ? [] : [value])}
+            onValueChange={(value) => {
+              // Handle single selection as we can't use multiple in this component
+              setSelectedGenders(value === "" ? [] : [value]);
+            }}
           >
             <SelectTrigger>
               <SelectValue placeholder="Select genders" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all_genders">All genders</SelectItem>
               <SelectItem value="male">Male</SelectItem>
               <SelectItem value="female">Female</SelectItem>
               <SelectItem value="non-binary">Non-binary</SelectItem>
@@ -127,8 +128,6 @@ export function UserFilters({
               className="w-24"
               value={ageRange[0].toString()}
               onChange={(e) => setAgeRange([Number(e.target.value), ageRange[1]])}
-              min={18}
-              max={ageRange[1]}
             />
             <Input
               type="number"
@@ -136,8 +135,6 @@ export function UserFilters({
               className="w-24"
               value={ageRange[1].toString()}
               onChange={(e) => setAgeRange([ageRange[0], Number(e.target.value)])}
-              min={ageRange[0]}
-              max={100}
             />
           </div>
           <Slider
@@ -145,30 +142,37 @@ export function UserFilters({
             max={100}
             min={18}
             step={1}
-            value={ageRange}
             onValueChange={(value) => setAgeRange(value)}
-            className="mt-2"
           />
         </div>
         
         <div className="space-y-2">
           <label className="text-sm font-medium">Verification Status</label>
           <div className="flex space-x-2">
-            <Button
-              size="sm"
-              variant={verificationStatus === "verified" ? "default" : "outline"}
-              className={verificationStatus === "verified" ? "bg-status-verified" : ""}
+            <button
+              className={`
+                py-1 px-3 rounded-md text-sm transition-all
+                ${verificationStatus === "verified" 
+                  ? "bg-status-verified text-white" 
+                  : "bg-muted/20 text-muted-foreground hover:bg-status-verified/20 hover:text-status-verified"
+                }
+              `}
               onClick={() => setVerificationStatus(verificationStatus === "verified" ? "" : "verified")}
             >
               Verified
-            </Button>
-            <Button
-              size="sm"
-              variant={verificationStatus === "unverified" ? "destructive" : "outline"}
+            </button>
+            <button
+              className={`
+                py-1 px-3 rounded-md text-sm transition-all
+                ${verificationStatus === "unverified" 
+                  ? "bg-destructive text-white" 
+                  : "bg-muted/20 text-muted-foreground hover:bg-destructive/20 hover:text-destructive"
+                }
+              `}
               onClick={() => setVerificationStatus(verificationStatus === "unverified" ? "" : "unverified")}
             >
               Unverified
-            </Button>
+            </button>
           </div>
         </div>
       </div>

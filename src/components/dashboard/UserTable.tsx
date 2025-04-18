@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   MoreVertical, 
@@ -699,6 +698,7 @@ export default function UserTable() {
           <TableBody>
             {paginatedUsers.map((user) => (
               <TableRow key={user.id}>
+                
                 <TableCell className="max-w-0">
                   <div className="flex items-center gap-3">
                     <div className="relative">
@@ -777,6 +777,7 @@ export default function UserTable() {
                     </div>
                   </div>
                 </TableCell>
+                
                 <TableCell>{user.age}</TableCell>
                 <TableCell>{user.location}</TableCell>
                 <TableCell>
@@ -791,26 +792,32 @@ export default function UserTable() {
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
+                      <Button variant="ghost" size="icon" className="hover:bg-muted">
                         <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => handleUserAction('view', user.id)}>
+                    <DropdownMenuContent align="end" className="bg-popover border border-border w-48">
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('view', user.id)}
+                        className="cursor-pointer hover:bg-muted focus:bg-muted"
+                      >
                         <Eye className="mr-2 h-4 w-4" />
-                        View Profile
+                        <span>View Profile</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => 
-                        handleUserAction('suspend', user.id, user.username, user.avatar, user.name)
-                      }>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('suspend', user.id, user.username, user.avatar, user.name)}
+                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 hover:text-destructive focus:text-destructive"
+                      >
                         <Ban className="mr-2 h-4 w-4" />
-                        Suspend User
+                        <span>Suspend User</span>
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => 
-                        handleUserAction('delete', user.id, user.username, user.avatar, user.name)
-                      }>
+                      <DropdownMenuItem 
+                        onClick={() => handleUserAction('delete', user.id, user.username, user.avatar, user.name)}
+                        className="cursor-pointer text-destructive hover:bg-destructive/10 focus:bg-destructive/10 hover:text-destructive focus:text-destructive"
+                      >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Delete User
+                        <span>Delete User</span>
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -820,60 +827,87 @@ export default function UserTable() {
           </TableBody>
         </Table>
       </div>
-      
-      {totalPages > 1 && (
-        <Pagination className="mt-4">
+
+      <div className="flex gap-4 justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">Show</span>
+          <Select
+            value={itemsPerPage.toString()}
+            onValueChange={(value) => {
+              setItemsPerPage(Number(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-[80px]">
+              <SelectValue>{itemsPerPage}</SelectValue>
+            </SelectTrigger>
+            <SelectContent className="bg-popover border border-border">
+              {itemsPerPageOptions.map((option) => (
+                <SelectItem key={option} value={option.toString()}>
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <span className="text-sm">per page</span>
+        </div>
+
+        <Pagination>
           <PaginationContent>
             <PaginationItem>
-              <PaginationPrevious 
+              <PaginationPrevious
+                className={cn(
+                  "hover:bg-muted",
+                  currentPage === 1 && "opacity-50 cursor-not-allowed hover:bg-transparent"
+                )}
                 onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
-                className={currentPage === 1 ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>
             
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <PaginationItem key={page}>
-                <PaginationLink 
-                  isActive={currentPage === page}
-                  onClick={() => handlePageChange(page)}
-                >
-                  {page}
-                </PaginationLink>
+            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+              const pageToShow = totalPages <= 5
+                ? i + 1
+                : currentPage <= 3
+                  ? i + 1
+                  : currentPage >= totalPages - 2
+                    ? totalPages - 4 + i
+                    : currentPage - 2 + i;
+                    
+              return pageToShow > 0 && pageToShow <= totalPages ? (
+                <PaginationItem key={pageToShow}>
+                  <PaginationLink
+                    className={cn(
+                      "hover:bg-muted",
+                      currentPage === pageToShow && "bg-primary text-primary-foreground hover:bg-primary/90"
+                    )}
+                    onClick={() => handlePageChange(pageToShow)}
+                    isActive={currentPage === pageToShow}
+                  >
+                    {pageToShow}
+                  </PaginationLink>
+                </PaginationItem>
+              ) : null;
+            })}
+            
+            {totalPages > 5 && currentPage < totalPages - 2 && (
+              <PaginationItem>
+                <PaginationEllipsis />
               </PaginationItem>
-            ))}
+            )}
             
             <PaginationItem>
-              <PaginationNext 
+              <PaginationNext
+                className={cn(
+                  "hover:bg-muted",
+                  currentPage === totalPages && "opacity-50 cursor-not-allowed hover:bg-transparent"
+                )}
                 onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
-                className={currentPage === totalPages ? "cursor-not-allowed opacity-50" : "cursor-pointer"}
               />
             </PaginationItem>
           </PaginationContent>
         </Pagination>
-      )}
-      
-      <div className="flex justify-end items-center space-x-2 mt-4">
-        <span className="text-sm text-muted-foreground">Items per page:</span>
-        <Select
-          value={itemsPerPage.toString()}
-          onValueChange={(value) => {
-            setItemsPerPage(Number(value));
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-20">
-            <SelectValue placeholder={itemsPerPage.toString()} />
-          </SelectTrigger>
-          <SelectContent>
-            {itemsPerPageOptions.map((value) => (
-              <SelectItem key={value} value={value.toString()}>
-                {value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
       </div>
-      
+
       {suspendUserId && (
         <SuspendUserDialog
           isOpen={!!suspendUserId}
@@ -884,7 +918,7 @@ export default function UserTable() {
           userName={suspendUserName}
         />
       )}
-      
+
       {deleteUserId && (
         <DeleteUserDialog
           isOpen={!!deleteUserId}
