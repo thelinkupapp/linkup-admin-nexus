@@ -79,6 +79,9 @@ export function SuspendUserDialog({
     onClose();
   };
 
+  // Extract first name (first word of userName)
+  const firstName = userName?.split(' ')[0] || username;
+
   return (
     <AlertDialog open={isOpen} onOpenChange={handleClose}>
       <AlertDialogContent className="sm:max-w-[425px]">
@@ -149,18 +152,21 @@ export function SuspendUserDialog({
               <UserRoundX className="h-12 w-12" />
             </div>
             
-            <div className="flex justify-center mb-4">
-              <Avatar className="h-16 w-16">
+            <div className="flex flex-col items-center mb-4 space-y-2">
+              <Avatar className="h-16 w-16 border-4 border-red-100">
                 <AvatarImage src={userAvatar} alt={userName} />
                 <AvatarFallback>{userName?.[0] ?? username[0]}</AvatarFallback>
               </Avatar>
+              <div className="text-center">
+                <div className="font-bold text-lg">@{username}</div>
+              </div>
             </div>
             
             <AlertDialogTitle className="text-2xl mb-2">
-              Bye bye, {userName}! 👋
+              Bye bye, {firstName}! 👋
             </AlertDialogTitle>
             
-            <AlertDialogDescription className="text-md mb-6">
+            <AlertDialogDescription className="text-md mb-6 px-4">
               This user has been suspended and moved to the Suspended Users section.
               <br />
               You can always revoke their suspension if needed.
@@ -169,7 +175,7 @@ export function SuspendUserDialog({
             <Button 
               variant="outline" 
               onClick={handleClose}
-              className="w-full"
+              className="w-full max-w-xs mx-auto"
             >
               Close
             </Button>
@@ -179,3 +185,4 @@ export function SuspendUserDialog({
     </AlertDialog>
   );
 }
+
