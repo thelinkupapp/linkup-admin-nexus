@@ -7,7 +7,8 @@ import {
   Trash2,
   ChevronLeft,
   ChevronRight,
-  Users
+  Users,
+  Crown
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { 
@@ -731,17 +732,22 @@ export default function UserTable() {
                         </HoverCardTrigger>
                         <HoverCardContent className="w-80">
                           <div className="flex justify-between space-x-4">
-                            <Avatar className="h-16 w-16">
+                            <Avatar className="h-16 w-16 border-2 border-linkup-purple">
                               <AvatarImage src={user.avatar} />
                               <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <div className="space-y-1 flex-1">
-                              <h4 className="text-sm font-semibold">{user.name}</h4>
+                            <div className="space-y-1.5 flex-1">
+                              <h4 className="text-sm font-semibold flex items-center gap-2">
+                                {user.name}
+                                {user.isLinkupPlus && (
+                                  <Crown className="h-4 w-4 text-linkup-purple" />
+                                )}
+                              </h4>
                               <p className="text-sm text-muted-foreground">@{user.username}</p>
                               <p className="text-sm">
                                 {user.nationality === "🇱🇧" ? "🇱🇧 Lebanese" : `${getCountryEmoji(user.nationality)} ${getNationalityLabel(user.nationality)}`}
                               </p>
-                              <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-4 mt-1">
                                 <div className="text-sm">
                                   <span className="text-muted-foreground">Created:</span>{" "}
                                   {user.hostedLinkups}
@@ -752,7 +758,7 @@ export default function UserTable() {
                                 </div>
                               </div>
                               <Button 
-                                className="w-full mt-2" 
+                                className="w-full mt-2 bg-linkup-purple hover:bg-linkup-purple/90 text-white" 
                                 onClick={() => handleUserClick(user.id)}
                               >
                                 View Profile
