@@ -492,7 +492,8 @@ const renderLinkupPlusIcon = () => (
       <TooltipContent>
         <p>Linkup Plus Member</p>
       </TooltipContent>
-    </TooltipProvider>
+    </Tooltip>
+  </TooltipProvider>
 );
 
 export default function UserTable() {
@@ -785,4 +786,3 @@ export default function UserTable() {
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
-                    <DropdownMenu
