@@ -108,7 +108,8 @@ const user = {
     received: [],
     sent: []
   },
-  hostingLinkups: 2
+  hostingLinkups: 2,
+  lastKnownLocation: "🇮🇩 Canggu, Indonesia"
 };
 
 const UserProfile = () => {
@@ -175,7 +176,6 @@ const UserProfile = () => {
     }
   ];
 
-  // Prepare user data for the UserProfileHeader component
   const userHeaderData = {
     id: user.id,
     avatar: user.avatar,
@@ -261,6 +261,10 @@ const UserProfile = () => {
                           <span className="mr-1">🇬🇧</span>
                           {user.nationality}
                         </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Last Known Location</p>
+                        <p>{user.lastKnownLocation}</p>
                       </div>
                     </div>
                   </CardContent>
