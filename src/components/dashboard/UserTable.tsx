@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { 
   Search, 
@@ -303,10 +302,36 @@ const UserTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
 
-  const [earningsSortDirection, setEarningsSortDirection] = useState<"asc" | "desc" | null>(null);
-  const [hostedSortDirection, setHostedSortDirection] = useState<"asc" | "desc" | null>(null);
-  const [attendedSortDirection, setAttendedSortDirection] = useState<"asc" | "desc" | null>(null);
-  const [joinDateSortDirection, setJoinDateSortDirection] = useState<"asc" | "desc" | null>(null);
+  const filteredUsers = users
+    .filter(user => {
+      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
+      const matchesNationality = selectedNationalities.length === 0 || 
+                                selectedNationalities.includes(user.nationality);
+      const matchesGender = selectedGenders.length === 0 || 
+                           selectedGenders.includes(user.gender.toLowerCase());
+      const matchesLocation = selectedLocations.length === 0 || 
+                             selectedLocations.includes(user.location);
+      const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
+      const matchesVerified = !showVerifiedOnly || user.isVerified;
+      const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
+      
+      return matchesSearch && matchesNationality && matchesGender && 
+             matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
+    })
+    .sort((a, b) => {
+      // Default sort by join date in descending order
+      const dateA = new Date(a.joinDate).getTime();
+      const dateB = new Date(b.joinDate).getTime();
+      return dateB - dateA;
+    });
+
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
@@ -327,78 +352,6 @@ const UserTable = () => {
       default:
         break;
     }
-  };
-
-  const handleSort = (type: "earnings" | "hosted" | "attended" | "joined") => {
-    if (type !== "earnings") setEarningsSortDirection(null);
-    if (type !== "hosted") setHostedSortDirection(null);
-    if (type !== "attended") setAttendedSortDirection(null);
-    if (type !== "joined") setJoinDateSortDirection(null);
-
-    switch (type) {
-      case "joined":
-        setJoinDateSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-      case "earnings":
-        setEarningsSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-      case "hosted":
-        setHostedSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-      case "attended":
-        setAttendedSortDirection(prev => prev === "asc" ? "desc" : "asc");
-        break;
-    }
-  };
-
-  const filteredUsers = users
-    .filter(user => {
-      const matchesSearch = user.name.toLowerCase().includes(searchValue.toLowerCase());
-      const matchesNationality = selectedNationalities.length === 0 || 
-                                selectedNationalities.includes(user.nationality);
-      const matchesGender = selectedGenders.length === 0 || 
-                           selectedGenders.includes(user.gender.toLowerCase());
-      const matchesLocation = selectedLocations.length === 0 || 
-                             selectedLocations.includes(user.location);
-      const matchesAge = user.age >= ageRange[0] && user.age <= ageRange[1];
-      const matchesVerified = !showVerifiedOnly || user.isVerified;
-      const matchesLinkupPlus = !showLinkupPlusOnly || user.isLinkupPlus;
-      
-      return matchesSearch && matchesNationality && matchesGender && 
-             matchesLocation && matchesAge && matchesVerified && matchesLinkupPlus;
-    })
-    .sort((a, b) => {
-      if (joinDateSortDirection) {
-        const dateA = new Date(a.joinDate).getTime();
-        const dateB = new Date(b.joinDate).getTime();
-        return joinDateSortDirection === "asc" 
-          ? dateA - dateB
-          : dateB - dateA;
-      }
-      if (earningsSortDirection) {
-        return earningsSortDirection === "asc" 
-          ? a.totalEarnings - b.totalEarnings
-          : b.totalEarnings - a.totalEarnings;
-      }
-      if (hostedSortDirection) {
-        return hostedSortDirection === "asc"
-          ? a.hostedLinkups - b.hostedLinkups
-          : b.hostedLinkups - a.hostedLinkups;
-      }
-      if (attendedSortDirection) {
-        return attendedSortDirection === "asc"
-          ? a.attendedLinkups - b.attendedLinkups
-          : b.attendedLinkups - a.attendedLinkups;
-      }
-      return 0;
-    });
-
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedUsers = filteredUsers.slice(startIndex, startIndex + itemsPerPage);
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
   };
 
   return (
@@ -429,31 +382,27 @@ const UserTable = () => {
               <TableHead className="w-[140px]">Location</TableHead>
               <TableHead className="w-[120px]">Nationality</TableHead>
               <TableHead className="w-[100px]">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("hosted")}>
+                <div className="flex items-center gap-2 cursor-pointer">
                   <Crown className="h-4 w-4 text-muted-foreground" />
                   <span>Hosted</span>
-                  <ArrowUpDown className={cn("h-4 w-4", hostedSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead className="w-[100px]">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("attended")}>
+                <div className="flex items-center gap-2 cursor-pointer">
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span>Attended</span>
-                  <ArrowUpDown className={cn("h-4 w-4", attendedSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead className="w-[120px]">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("earnings")}>
+                <div className="flex items-center gap-2 cursor-pointer">
                   <Coins className="h-4 w-4 text-muted-foreground" />
                   <span>Earnings</span>
-                  <ArrowUpDown className={cn("h-4 w-4", earningsSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead className="w-[140px]">
-                <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleSort("joined")}>
+                <div className="flex items-center gap-2 cursor-pointer">
                   <Calendar className="h-4 w-4 text-muted-foreground" />
                   <span>Joined</span>
-                  <ArrowUpDown className={cn("h-4 w-4", joinDateSortDirection && "text-primary")} />
                 </div>
               </TableHead>
               <TableHead className="w-[70px]"></TableHead>
