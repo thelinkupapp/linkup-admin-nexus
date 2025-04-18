@@ -859,34 +859,35 @@ export default function UserTable() {
       {filteredUsers.length > 0 ? (
         <div className="flex justify-between items-center mt-4">
           <div className="flex-1">
-            <PaginationItemsPerPage
-              defaultValue={String(itemsPerPage)}
-              onValueChange={(value) => setItemsPerPage(Number(value))}
-            >
-              <PaginationItem>
-                Show
-                <Select>
-                  <SelectTrigger className="w-[70px]">
-                    <SelectValue placeholder={itemsPerPage.toString()} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {itemsPerPageOptions.map(option => (
-                      <SelectItem key={option} value={option.toString()}>
-                        {option}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </PaginationItem>
-            </PaginationItemsPerPage>
+            <div className="flex items-center space-x-2">
+              <span className="text-sm text-muted-foreground">Show</span>
+              <Select
+                value={String(itemsPerPage)}
+                onValueChange={(value) => setItemsPerPage(Number(value))}
+              >
+                <SelectTrigger className="w-[70px]">
+                  <SelectValue placeholder={itemsPerPage.toString()} />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemsPerPageOptions.map(option => (
+                    <SelectItem key={option} value={option.toString()}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <span className="text-sm text-muted-foreground">per page</span>
+            </div>
           </div>
 
           <Pagination>
             <PaginationContent>
-              <PaginationPrevious 
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              />
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
               
               {Array.from({ length: totalPages }).map((_, i) => {
                 const page = i + 1;
@@ -897,13 +898,14 @@ export default function UserTable() {
                   (page >= currentPage - 1 && page <= currentPage + 1)
                 ) {
                   return (
-                    <PaginationLink
-                      key={page}
-                      isActive={page === currentPage}
-                      onClick={() => handlePageChange(page)}
-                    >
-                      {page}
-                    </PaginationLink>
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        isActive={page === currentPage}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
                   );
                 }
                 
@@ -917,10 +919,12 @@ export default function UserTable() {
                 return null;
               })}
               
-              <PaginationNext
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              />
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
             </PaginationContent>
           </Pagination>
         </div>
@@ -936,7 +940,7 @@ export default function UserTable() {
 
       {suspendUserId && (
         <SuspendUserDialog
-          open={!!suspendUserId}
+          isOpen={!!suspendUserId}
           onClose={handleCloseSuspendDialog}
           userId={suspendUserId}
           username={suspendUsername}
@@ -947,7 +951,7 @@ export default function UserTable() {
 
       {deleteUserId && (
         <DeleteUserDialog
-          open={!!deleteUserId}
+          isOpen={!!deleteUserId}
           onClose={handleCloseDeleteDialog}
           userId={deleteUserId}
           username={deleteUsername}
