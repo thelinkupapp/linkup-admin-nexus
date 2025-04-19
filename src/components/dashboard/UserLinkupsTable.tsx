@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -334,16 +333,26 @@ export function UserLinkupsTable() {
     );
   };
 
+  const getFilteredLinkupsCount = (type?: "hosted" | "attended") => {
+    return linkups.filter(linkup => type ? linkup.type === type : true).length;
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold">Linkups</h2>
+        <div className="space-y-1">
+          <h2 className="text-2xl font-semibold">Linkups</h2>
+          <p className="text-lg">
+            <span className="text-[#9b87f5] font-bold">{getFilteredLinkupsCount(activeTab === "all" ? undefined : activeTab as "hosted" | "attended")}</span>
+            {' '}linkups
+          </p>
+        </div>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="hosted">Host</TabsTrigger>
