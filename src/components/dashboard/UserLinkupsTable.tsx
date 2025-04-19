@@ -337,6 +337,18 @@ export function UserLinkupsTable() {
     return linkups.filter(linkup => type ? linkup.type === type : true).length;
   };
 
+  const getLinkupCountText = (tab: string) => {
+    const count = getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended");
+    switch(tab) {
+      case "hosted":
+        return `Host of ${count} linkups`;
+      case "attended":
+        return `Attendee of ${count} linkups`;
+      default:
+        return `${count} linkups`;
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-end">
@@ -345,28 +357,28 @@ export function UserLinkupsTable() {
         </Button>
       </div>
 
-      <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="hosted">Host</TabsTrigger>
-          <TabsTrigger value="attended">Attendee</TabsTrigger>
-        </TabsList>
+      <div className="space-y-2">
+        <p className="text-lg">
+          <span className="text-[#9b87f5] font-bold">{getLinkupCountText(activeTab)}</span>
+        </p>
 
-        {["all", "hosted", "attended"].map((tab) => (
-          <TabsContent key={tab} value={tab}>
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-lg">
-                <span className="text-[#9b87f5] font-bold">{getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended")}</span>
-                {' '}linkups
-              </p>
-            </div>
-            <LinkupsTable 
-              data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended")} 
-              preview={true}
-            />
-          </TabsContent>
-        ))}
-      </Tabs>
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="hosted">Host</TabsTrigger>
+            <TabsTrigger value="attended">Attendee</TabsTrigger>
+          </TabsList>
+
+          {["all", "hosted", "attended"].map((tab) => (
+            <TabsContent key={tab} value={tab}>
+              <LinkupsTable 
+                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended")} 
+                preview={true}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
