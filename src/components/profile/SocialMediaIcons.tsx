@@ -45,7 +45,7 @@ export const SocialMediaIcons = ({ socials }: SocialMediaIconsProps) => {
       {socials.twitter && (
         <div className="flex items-center gap-2">
           <img
-            src="/lovable-uploads/08c01a0c-b394-4d67-8875-445c855a8995.png"
+            src="/lovable-uploads/1ca0cfbb-d37f-4f7a-b2a3-319791d8be1a.png"
             alt="X (Twitter)"
             className="h-6 w-6 object-contain"
           />
