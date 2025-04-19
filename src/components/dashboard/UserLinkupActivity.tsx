@@ -83,6 +83,74 @@ const activities: ActivityItem[] = [
     timestamp: "2024-04-14T14:00:00Z"
   },
   {
+    id: "14",
+    type: "other_joined",
+    linkupName: "Jack's Weekly Meetup",
+    linkupId: "meetup-1",
+    otherUserFirstName: "Alex",
+    otherUserId: "user-alex",
+    timestamp: "2024-04-17T19:00:00Z"
+  },
+  {
+    id: "15",
+    type: "received_join_request",
+    linkupName: "Coding Workshop",
+    linkupId: "coding-1",
+    otherUserFirstName: "Michael",
+    otherUserId: "user-michael",
+    timestamp: "2024-04-16T10:15:00Z"
+  },
+  {
+    id: "16",
+    type: "accept_join_request",
+    linkupName: "Yoga Class",
+    linkupId: "yoga-3",
+    otherUserFirstName: "Jessica",
+    otherUserId: "user-jessica",
+    timestamp: "2024-04-15T08:45:00Z"
+  },
+  {
+    id: "17",
+    type: "decline_join_request",
+    linkupName: "Private Dinner Party",
+    linkupId: "dinner-1",
+    otherUserFirstName: "Ryan",
+    otherUserId: "user-ryan",
+    timestamp: "2024-04-14T17:30:00Z"
+  },
+  {
+    id: "18",
+    type: "join_request_declined",
+    linkupName: "Executive Networking Event",
+    linkupId: "network-2",
+    otherUserFirstName: "Catherine",
+    otherUserId: "user-catherine",
+    timestamp: "2024-04-13T11:45:00Z"
+  },
+  {
+    id: "19",
+    type: "left_linkup",
+    linkupName: "Weekly Book Club",
+    linkupId: "book-2",
+    timestamp: "2024-04-12T16:20:00Z"
+  },
+  {
+    id: "20",
+    type: "removed_from",
+    linkupName: "Private Gaming Session",
+    linkupId: "gaming-1",
+    timestamp: "2024-04-11T20:10:00Z"
+  },
+  {
+    id: "21",
+    type: "removed_user",
+    linkupName: "Meditation Circle",
+    linkupId: "meditation-1",
+    otherUserFirstName: "Daniel",
+    otherUserId: "user-daniel",
+    timestamp: "2024-04-10T09:30:00Z"
+  },
+  {
     id: "4",
     type: "accepted_invite",
     linkupName: "Cooking Class",
@@ -119,6 +187,58 @@ const activities: ActivityItem[] = [
     timestamp: "2024-04-11T16:45:00Z"
   },
   {
+    id: "13",
+    type: "received_invite",
+    linkupName: "Photography Workshop",
+    linkupId: "photo-2",
+    timestamp: "2024-04-05T14:00:00Z",
+    otherUserFirstName: "Emma",
+    otherUserId: "user-emma"
+  },
+  {
+    id: "22",
+    type: "declined_invite",
+    linkupName: "Weekend Camping Trip",
+    linkupId: "camping-1",
+    timestamp: "2024-04-09T13:15:00Z"
+  },
+  {
+    id: "23",
+    type: "received_cohost_invite",
+    linkupName: "Community Fundraiser",
+    linkupId: "fundraiser-1",
+    otherUserFirstName: "Rachel",
+    otherUserId: "user-rachel",
+    timestamp: "2024-04-08T11:00:00Z"
+  },
+  {
+    id: "24",
+    type: "decline_cohost",
+    linkupName: "Corporate Workshop",
+    linkupId: "corporate-1",
+    otherUserFirstName: "Thomas",
+    otherUserId: "user-thomas",
+    timestamp: "2024-04-07T15:45:00Z"
+  },
+  {
+    id: "25",
+    type: "removed_cohost",
+    linkupName: "Art Exhibition",
+    linkupId: "art-3",
+    otherUserFirstName: "Olivia",
+    otherUserId: "user-olivia",
+    timestamp: "2024-04-06T09:20:00Z"
+  },
+  {
+    id: "26",
+    type: "removed_as_cohost",
+    linkupName: "Music Festival",
+    linkupId: "music-1",
+    otherUserFirstName: "Nathan",
+    otherUserId: "user-nathan",
+    timestamp: "2024-04-05T17:30:00Z"
+  },
+  {
     id: "8",
     type: "change_location",
     linkupName: "Networking Event",
@@ -153,15 +273,6 @@ const activities: ActivityItem[] = [
     linkupName: "Art Exhibition",
     linkupId: "art-2",
     timestamp: "2024-04-06T15:00:00Z"
-  },
-  {
-    id: "13",
-    type: "received_invite",
-    linkupName: "Photography Workshop",
-    linkupId: "photo-2",
-    timestamp: "2024-04-05T14:00:00Z",
-    otherUserFirstName: "Emma",
-    otherUserId: "user-emma"
   }
 ];
 
@@ -258,11 +369,25 @@ function getActivityIcon(type: ActivityItem["type"]) {
     case "request_join":
     case "joined":
     case "accepted_join":
-    case "accepted_invite":
+    case "other_joined":
+    case "received_join_request":
+    case "accept_join_request":
+    case "decline_join_request":
+    case "join_request_declined":
+    case "left_linkup":
+    case "removed_from":
+    case "removed_user":
       return <LinkIcon className="h-5 w-5 text-green-500" />;
     case "sent_invite":
+    case "received_invite":
+    case "accepted_invite":
+    case "declined_invite":
     case "invite_cohost":
+    case "received_cohost_invite":
     case "accept_cohost":
+    case "decline_cohost":
+    case "removed_cohost":
+    case "removed_as_cohost":
       return <Mail className="h-5 w-5 text-blue-500" />;
     case "change_location":
     case "reschedule":
