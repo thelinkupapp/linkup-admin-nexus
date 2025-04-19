@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -171,13 +172,13 @@ const LinkupsTable = ({
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead className="cursor-pointer" onClick={() => onSort && onSort('name')}>
+        <TableHead className={cn("cursor-pointer", !preview && "hover:bg-gray-50")} onClick={() => onSort && onSort('name')}>
           <div className="flex items-center">
             Linkup
             {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
           </div>
         </TableHead>
-        <TableHead className="cursor-pointer" onClick={() => onSort && onSort('date')}>
+        <TableHead className={cn("cursor-pointer", !preview && "hover:bg-gray-50")} onClick={() => onSort && onSort('date')}>
           <div className="flex items-center">
             Date & Time
             {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
@@ -255,6 +256,7 @@ export function UserLinkupsTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
+  // Fixed handleCheckedChange function to properly update state
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
       if (checked) {
@@ -265,15 +267,29 @@ export function UserLinkupsTable() {
     });
   };
 
-  const filteredLinkups = linkups.filter(linkup => {
-    if (activeTab !== "all" && linkup.type !== activeTab) return false;
-    
-    if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
-    
-    if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
-    
-    return true;
-  });
+  // Updated filteredLinkups to use the sortConfig
+  const filteredLinkups = linkups
+    .filter(linkup => {
+      if (activeTab !== "all" && linkup.type !== activeTab) return false;
+      
+      if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
+      
+      if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'name') {
+        return sortConfig.direction === 'asc' 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
 
   const totalPages = Math.ceil(filteredLinkups.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -345,8 +361,16 @@ export function UserLinkupsTable() {
       case "attended":
         return `Attendee of ${count} linkups`;
       default:
-        return `${count} linkups`;
+        return `All - ${count} linkups`;
     }
+  };
+
+  // Handler for sorting
+  const handleSort = (field: string) => {
+    setSortConfig(prev => ({
+      field,
+      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
   return (
@@ -413,7 +437,9 @@ export function UserLinkupsTable() {
                           <div 
                             key={option.value} 
                             className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                            onClick={() => {
+                            onClick={(e) => {
+                              // Stop propagation to prevent the popover from closing
+                              e.stopPropagation();
                               handleCheckedChange(option.value, !selectedStatuses.includes(option.value));
                             }}
                           >
@@ -421,13 +447,16 @@ export function UserLinkupsTable() {
                               id={`status-${option.value}`}
                               checked={selectedStatuses.includes(option.value)} 
                               onCheckedChange={(checked) => {
+                                // Stop propagation on the checkbox click as well
                                 handleCheckedChange(option.value, checked === true);
                               }}
+                              onClick={(e) => e.stopPropagation()}
                               className="border-gray-300 data-[state=checked]:bg-[#9b87f5] data-[state=checked]:border-[#9b87f5]"
                             />
                             <label
                               htmlFor={`status-${option.value}`}
                               className="text-sm font-medium leading-none cursor-pointer flex-grow"
+                              onClick={(e) => e.stopPropagation()}
                             >
                               {option.label}
                             </label>
@@ -457,12 +486,7 @@ export function UserLinkupsTable() {
                 <LinkupsTable 
                   data={currentLinkups}
                   preview={false}
-                  onSort={(field) => {
-                    setSortConfig(prev => ({
-                      field,
-                      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
-                    }));
-                  }}
+                  onSort={handleSort}
                 />
               </TabsContent>
             </Tabs>
