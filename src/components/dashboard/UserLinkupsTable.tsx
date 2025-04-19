@@ -119,6 +119,10 @@ const filteredLinkups = (type?: "hosted" | "attended", selectedStatuses?: string
         const dateB = b.type === "hosted" ? createdDateB : joinedDateB;
         
         return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'name') {
+        return sortConfig.direction === 'asc' 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name);
       }
       return 0;
     });
@@ -156,11 +160,16 @@ const LinkupsTable = ({
   <Table>
     <TableHeader>
       <TableRow>
-        <TableHead>Linkup</TableHead>
+        <TableHead className="cursor-pointer" onClick={() => onSort && onSort('name')}>
+          <div className="flex items-center">
+            Linkup
+            {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
+          </div>
+        </TableHead>
         <TableHead className="cursor-pointer" onClick={() => onSort && onSort('date')}>
           <div className="flex items-center">
             Date & Time
-            <ArrowUpDown className="ml-2 h-4 w-4" />
+            {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
           </div>
         </TableHead>
         <TableHead>Status</TableHead>
@@ -179,19 +188,17 @@ const LinkupsTable = ({
                 <span className="text-xl">{linkup.emoji}</span>
                 <span className="font-medium">{linkup.name}</span>
               </Link>
-              <div className="text-sm text-muted-foreground cursor-pointer" onClick={() => onSort && onSort('created')}>
+              <div className="text-sm text-muted-foreground">
                 {linkup.type === "attended" && linkup.joinedDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Joined on {new Date(linkup.joinedDate).toLocaleString()}</span>
-                    {!preview && <ArrowUpDown className="ml-2 h-3.5 w-3.5" />}
                   </div>
                 )}
                 {linkup.type === "hosted" && linkup.createdDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Created on {new Date(linkup.createdDate).toLocaleString()}</span>
-                    {!preview && <ArrowUpDown className="ml-2 h-3.5 w-3.5" />}
                   </div>
                 )}
               </div>
@@ -277,11 +284,11 @@ export function UserLinkupsTable() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pr-8">
               <DialogTitle>All Linkups</DialogTitle>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="ml-auto mr-8">
+                  <Button variant="outline">
                     Status ({selectedStatuses.length})
                   </Button>
                 </PopoverTrigger>
