@@ -5,29 +5,33 @@ import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Check, X, ShieldOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 export function VerificationsTable() {
   const [status, setStatus] = useState<'pending' | 'verified' | 'denied'>('pending');
+  const [statusChangeTime, setStatusChangeTime] = useState<string | null>(null);
 
-  const handleApprove = () => {
-    setStatus('verified');
-    toast({
-      title: "Verification Approved",
-      description: "The user has been successfully verified",
-    });
-  };
-
-  const handleDeny = () => {
-    setStatus('denied');
-    toast({
-      title: "Verification Denied",
-      description: "The user has been notified to resubmit their verification",
-      variant: "destructive",
-    });
+  const handleStatusChange = (newStatus: 'verified' | 'denied') => {
+    setStatus(newStatus);
+    setStatusChangeTime(new Date().toISOString());
+    
+    if (newStatus === 'verified') {
+      toast({
+        title: "Verification Approved",
+        description: "The user has been successfully verified",
+      });
+    } else {
+      toast({
+        title: "Verification Denied",
+        description: "The user has been notified to resubmit their verification",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleRemoveVerification = () => {
     setStatus('denied');
+    setStatusChangeTime(new Date().toISOString());
     toast({
       title: "Verification Removed",
       description: "The user has been notified to resubmit their verification",
@@ -68,21 +72,28 @@ export function VerificationsTable() {
               </div>
             </TableCell>
             <TableCell>
-              <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
-                status === 'verified'
-                  ? "bg-green-100 text-green-800"
-                  : status === 'denied'
-                  ? "bg-red-100 text-red-800"
-                  : "bg-yellow-100 text-yellow-800"
-              }`}>
-                {status === 'verified' ? "Verified" : status === 'denied' ? "Denied" : "Pending"}
-              </span>
+              <div className="space-y-1">
+                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                  status === 'verified'
+                    ? "bg-green-100 text-green-800"
+                    : status === 'denied'
+                    ? "bg-red-100 text-red-800"
+                    : "bg-yellow-100 text-yellow-800"
+                }`}>
+                  {status === 'verified' ? "Verified" : status === 'denied' ? "Denied" : "Pending"}
+                </span>
+                {statusChangeTime && (status === 'verified' || status === 'denied') && (
+                  <div className="text-xs text-muted-foreground">
+                    {formatJoinDate(statusChangeTime)}
+                  </div>
+                )}
+              </div>
             </TableCell>
             <TableCell className="space-x-2">
               {status === 'pending' ? (
                 <>
                   <Button 
-                    onClick={handleApprove}
+                    onClick={() => handleStatusChange('verified')}
                     variant="outline"
                     size="sm"
                     className="text-green-600 hover:text-green-700 hover:bg-green-50"
@@ -91,7 +102,7 @@ export function VerificationsTable() {
                     Approve
                   </Button>
                   <Button 
-                    onClick={handleDeny}
+                    onClick={() => handleStatusChange('denied')}
                     variant="outline"
                     size="sm"
                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
