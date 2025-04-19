@@ -49,12 +49,14 @@ import {
   Flag, 
   AlertTriangle, 
   User as UserIcon, 
-  ShieldOff
+  ShieldOff,
+  ArrowUpRight
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 interface UserData {
   id: string;
@@ -410,6 +412,7 @@ const UserProfile = () => {
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             
+            {/* Basic Info Tab */}
             <TabsContent value="basic-info" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -470,6 +473,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            {/* Profile Info Tab */}
             <TabsContent value="profile-info" className="space-y-6">
               <ProfileImageCarousel photos={userPhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -531,6 +535,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            {/* Verification Tab */}
             <TabsContent value="verification" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -666,6 +671,7 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
+            {/* Wallet Tab */}
             <TabsContent value="wallet" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
@@ -798,6 +804,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            {/* Linkups Tab */}
             <TabsContent value="linkups" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -810,6 +817,4 @@ const UserProfile = () => {
                         <p className="text-3xl font-bold text-linkup-purple">{user.linkupStats.hosted}</p>
                         <p className="text-sm text-linkup-dark-purple">Linkups Hosted</p>
                       </div>
-                      <div className="p-4 rounded-lg bg-linkup-soft-blue flex flex-col items-center justify-center">
-                        <p className="text-3xl font-bold text-blue-500">{user.linkupStats.joined}</p>
-                        <p className="text-sm text
+                      <div
