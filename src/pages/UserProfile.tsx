@@ -133,6 +133,18 @@ interface UserData {
   lastKnownLocation: string;
 }
 
+interface Linkup {
+  id: string;
+  name: string;
+  emoji: string;
+  startDate: string;
+  endDate: string;
+  status: "upcoming" | "happened" | "happening" | "cancelled" | "deleted" | "removed";
+  type: "hosted" | "attended";
+  createdAt?: string;
+  joinedAt?: string;
+}
+
 const linkupPlusTransactions = [
   {
     date: "2024-03-15",
@@ -273,6 +285,59 @@ const user: UserData = {
   hostingLinkups: 2,
   lastKnownLocation: "🇮🇩 Canggu, Indonesia"
 };
+
+const userLinkups: Linkup[] = [
+  {
+    id: "1",
+    name: "Bali Digital Nomad Retreat",
+    emoji: "🌴",
+    startDate: "2024-08-01T18:00:00Z",
+    endDate: "2024-08-03T22:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdAt: "2024-03-15T10:30:00Z"
+  },
+  {
+    id: "2",
+    name: "Evening Social Mixer",
+    emoji: "🍷",
+    startDate: "2024-04-19T20:00:00Z",
+    endDate: "2024-04-19T22:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdAt: "2024-04-01T14:20:00Z"
+  },
+  {
+    id: "3",
+    name: "Afternoon Workshop",
+    emoji: "💻",
+    startDate: "2024-04-20T12:00:00Z",
+    endDate: "2024-04-20T15:00:00Z",
+    status: "upcoming",
+    type: "attended",
+    joinedAt: "2024-04-05T09:15:00Z"
+  },
+  {
+    id: "4",
+    name: "Beach Cleanup Event",
+    emoji: "🏖️",
+    startDate: "2024-04-15T19:00:00Z",
+    endDate: "2024-04-15T23:00:00Z",
+    status: "happened",
+    type: "attended",
+    joinedAt: "2024-03-28T16:45:00Z"
+  },
+  {
+    id: "5",
+    name: "Weekend Mountain Retreat",
+    emoji: "⛰️",
+    startDate: "2024-05-24T15:00:00Z",
+    endDate: "2024-05-26T12:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdAt: "2024-04-12T13:00:00Z"
+  }
+];
 
 const getStatusBadgeStyles = (status: string) => {
   switch (status) {
