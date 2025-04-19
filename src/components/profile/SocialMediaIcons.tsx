@@ -12,7 +12,7 @@ export const SocialMediaIcons = ({ socials }: SocialMediaIconsProps) => {
       {socials.instagram && (
         <div className="flex items-center gap-2">
           <img
-            src="/lovable-uploads/db650785-6efc-4119-afe5-f7fcf1b512d5.png"
+            src="/lovable-uploads/f1d4c5aa-9fa0-4b94-9bbe-d21d2febc373.png"
             alt="Instagram"
             className="h-6 w-6 object-contain"
           />
