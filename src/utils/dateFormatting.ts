@@ -1,3 +1,4 @@
+
 import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes } from "date-fns";
 
 function isLastWeek(date: Date): boolean {
@@ -72,7 +73,7 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
     dateStr = format(start, 'MMM d');
   }
   
-  // If the event spans multiple days, include the end date
+  // Format end date for multi-day events
   const endDateStr = daysDiff > 0 ? ` - ${format(end, 'MMM d')}` : '';
   
   return `${dateStr}\n${startTime} - ${endTime}${endDateStr} (${duration})`;

@@ -22,6 +22,24 @@ interface Linkup {
 const linkups: Linkup[] = [
   {
     id: "1",
+    name: "Bali Digital Nomad Retreat",
+    emoji: "🌴",
+    startDate: "2024-08-01T18:00:00Z",
+    endDate: "2024-08-03T22:00:00Z",
+    status: "upcoming",
+    type: "hosted"
+  },
+  {
+    id: "2",
+    name: "Summer Music Festival Weekend",
+    emoji: "🎵",
+    startDate: "2024-07-15T12:00:00Z",
+    endDate: "2024-07-17T23:00:00Z",
+    status: "upcoming",
+    type: "attended"
+  },
+  {
+    id: "3",
     name: "Sunset Beach Volleyball",
     emoji: "🏐",
     startDate: "2024-04-20T18:00:00Z",
@@ -30,7 +48,7 @@ const linkups: Linkup[] = [
     type: "attended"
   },
   {
-    id: "2",
+    id: "4",
     name: "Downtown Art Gallery Opening",
     emoji: "🎨",
     startDate: "2024-04-15T19:00:00Z",
@@ -39,13 +57,22 @@ const linkups: Linkup[] = [
     type: "hosted"
   },
   {
-    id: "3",
+    id: "5",
     name: "Rooftop Yoga Session",
     emoji: "🧘",
     startDate: "2024-04-10T08:00:00Z",
     endDate: "2024-04-10T09:30:00Z",
     status: "happened",
     type: "attended"
+  },
+  {
+    id: "6",
+    name: "Weekend Camping Trip",
+    emoji: "⛺️",
+    startDate: "2024-05-24T15:00:00Z",
+    endDate: "2024-05-26T12:00:00Z",
+    status: "upcoming",
+    type: "hosted"
   }
 ];
 
