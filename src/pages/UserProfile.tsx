@@ -41,6 +41,8 @@ import {
   User as UserIcon 
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
+import { toast } from "react-toastify";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const user = {
   id: "2",
@@ -117,6 +119,7 @@ const UserProfile = () => {
   const { userId } = useParams();
   const [activeTab, setActiveTab] = useState("basic-info");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
 
   const userPhotos = [
     {
@@ -189,6 +192,22 @@ const UserProfile = () => {
     isVerified: user.isVerified,
     isLinkupPlus: user.isLinkupPlus,
     hostingLinkups: user.hostingLinkups
+  };
+
+  const handleApprove = () => {
+    setIsVerified(true);
+    toast({
+      title: "Verification Approved",
+      description: "The user has been successfully verified",
+    });
+  };
+
+  const handleDeny = () => {
+    toast({
+      title: "Verification Denied",
+      description: "The user's verification request has been denied",
+      variant: "destructive",
+    });
   };
 
   return (
@@ -339,32 +358,21 @@ const UserProfile = () => {
                 <CardHeader>
                   <CardTitle>Verification Status</CardTitle>
                   <CardDescription>
-                    {user.isVerified
-                      ? "This user is verified."
-                      : "This user has applied for verification."}
+                    {isVerified ? "This user is verified." : "This user has applied for verification."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
                     <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-3">Verification Photos</p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                          <p className="text-sm mb-2">Selfie</p>
+                      <p className="text-sm font-medium text-muted-foreground mb-3">Verification Photo</p>
+                      <div className="w-[180px]">
+                        <AspectRatio ratio={9/16}>
                           <img
                             src={user.verificationDetails.selfie}
                             alt="Verification Selfie"
-                            className="w-full h-auto max-h-80 object-cover rounded-lg"
+                            className="w-full h-full object-cover rounded-lg"
                           />
-                        </div>
-                        <div>
-                          <p className="text-sm mb-2">Verification Photo</p>
-                          <img
-                            src={user.verificationDetails.verificationPhoto}
-                            alt="Verification Photo"
-                            className="w-full h-auto max-h-80 object-cover rounded-lg"
-                          />
-                        </div>
+                        </AspectRatio>
                       </div>
                     </div>
 
@@ -375,24 +383,34 @@ const UserProfile = () => {
 
                     <div>
                       <p className="text-sm font-medium text-muted-foreground mb-3">Status</p>
-                      {user.isVerified ? (
-                        <Badge className="badge-verified">
-                          <CheckCircle className="h-3 w-3 mr-1" /> Verified
-                        </Badge>
-                      ) : (
-                        <Badge className="badge-pending">
-                          Pending Review
-                        </Badge>
-                      )}
+                      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                        isVerified 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-yellow-100 text-yellow-800"
+                      }`}>
+                        {isVerified ? "Verified" : "Pending"}
+                      </span>
                     </div>
 
-                    {!user.isVerified && (
+                    {!isVerified && (
                       <div className="flex gap-2">
-                        <Button variant="outline" className="gap-1">
-                          <X className="h-4 w-4" /> Deny
+                        <Button 
+                          onClick={handleDeny}
+                          variant="outline"
+                          size="sm"
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <X className="mr-1 h-4 w-4" />
+                          Deny
                         </Button>
-                        <Button className="gap-1">
-                          <Check className="h-4 w-4" /> Approve
+                        <Button 
+                          onClick={handleApprove}
+                          variant="outline"
+                          size="sm"
+                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                        >
+                          <Check className="mr-1 h-4 w-4" />
+                          Approve
                         </Button>
                       </div>
                     )}
