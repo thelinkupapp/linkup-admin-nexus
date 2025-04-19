@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -391,6 +390,24 @@ const UserProfile = () => {
     }
   ];
 
+  const linkupPlusTransactions = [
+    {
+      date: "2024-03-15",
+      amount: 14.99,
+      description: "Linkup Plus Monthly Subscription"
+    },
+    {
+      date: "2024-02-15",
+      amount: 14.99,
+      description: "Linkup Plus Monthly Subscription"
+    },
+    {
+      date: "2024-01-15",
+      amount: 14.99,
+      description: "Linkup Plus Monthly Subscription"
+    }
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -413,7 +430,6 @@ const UserProfile = () => {
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             
-            {/* Basic Info Tab */}
             <TabsContent value="basic-info" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -474,7 +490,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            {/* Profile Info Tab */}
             <TabsContent value="profile-info" className="space-y-6">
               <ProfileImageCarousel photos={userPhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -536,7 +551,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            {/* Verification Tab */}
             <TabsContent value="verification" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -672,7 +686,6 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
-            {/* Wallet Tab */}
             <TabsContent value="wallet" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
@@ -805,7 +818,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            {/* Linkups Tab */}
             <TabsContent value="linkups" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -866,7 +878,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            {/* Privacy Settings Tab */}
             <TabsContent value="privacy" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -912,7 +923,6 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
-            {/* Reports Tab */}
             <TabsContent value="reports" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -930,7 +940,6 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
-            {/* Friends Tab */}
             <TabsContent value="friends" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -956,12 +965,10 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
-            {/* Photos Tab */}
             <TabsContent value="photos" className="space-y-6">
               <ProfilePhotos photos={userPhotos} />
             </TabsContent>
 
-            {/* Activity Tab */}
             <TabsContent value="activity" className="space-y-6">
               <UserActivity 
                 chatActivity={userChatActivity}
@@ -972,11 +979,10 @@ const UserProfile = () => {
         </main>
       </div>
 
-      {/* Dialogs */}
       <PayoutHistoryDialog 
         open={isPayoutHistoryOpen} 
         onOpenChange={setIsPayoutHistoryOpen}
-        payouts={user.wallet.payoutHistory}
+        payoutHistory={user.wallet.payoutHistory}
       />
       
       <EarningsBreakdownDialog 
@@ -988,12 +994,18 @@ const UserProfile = () => {
       <LinkupPlusHistoryDialog 
         open={isLinkupPlusHistoryOpen} 
         onOpenChange={setIsLinkupPlusHistoryOpen}
+        startDate={user.wallet.linkupPlus.startDate ?? "2023-12-15"}
+        plan="annual"
+        transactions={linkupPlusTransactions}
       />
       
       <DeleteUserDialog 
-        open={isDeleteDialogOpen} 
-        onOpenChange={setIsDeleteDialogOpen} 
+        isOpen={isDeleteDialogOpen} 
+        onClose={() => setIsDeleteDialogOpen(false)} 
         userId={user.id} 
+        username={user.username}
+        userAvatar={user.avatar}
+        userName={`${user.firstName} ${user.lastName}`}
       />
     </div>
   );
