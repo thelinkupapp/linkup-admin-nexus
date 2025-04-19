@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -147,7 +147,9 @@ const UserProfile = () => {
   const { userId } = useParams();
   const [activeTab, setActiveTab] = useState("basic-info");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isVerified, setIsVerified] = useState(false);
+  const [isVerified, setIsVerified] = useState(
+    user.verificationDetails?.attempts[0]?.status === 'approved'
+  );
   const [verificationAttempts, setVerificationAttempts] = useState<VerificationAttempt[]>(
     user.verificationDetails.attempts as VerificationAttempt[]
   );
@@ -225,6 +227,22 @@ const UserProfile = () => {
     hostingLinkups: user.hostingLinkups
   };
 
+  const [userWithVerification, setUserWithVerification] = useState({
+    ...user,
+    isVerified: isVerified
+  });
+
+  useEffect(() => {
+    setUserWithVerification(prev => ({
+      ...prev,
+      isVerified: isVerified,
+      verificationDetails: {
+        attempts: verificationAttempts
+      }
+    }));
+    console.log("UserProfile - Verification status updated:", isVerified);
+  }, [isVerified, verificationAttempts]);
+
   const handleVerificationAction = (action: 'approve' | 'deny' | 'remove') => {
     const newAttempts = [...verificationAttempts];
     const currentTime = new Date().toISOString();
@@ -268,6 +286,7 @@ const UserProfile = () => {
         statusChangeTime: currentTime
       };
       setVerificationAttempts(newAttempts);
+      setIsVerified(false);
       toast({
         title: "Verification Denied",
         description: "The user has been notified to resubmit their verification",
@@ -282,7 +301,7 @@ const UserProfile = () => {
       <div className="flex-1 pl-64">
         <Header title="User Profile" />
         <main className="p-6">
-          <UserProfileHeader user={userHeaderData} />
+          <UserProfileHeader user={userWithVerification} />
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
             <TabsList className="mb-6">

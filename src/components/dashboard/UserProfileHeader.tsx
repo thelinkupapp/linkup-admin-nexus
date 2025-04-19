@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { useToast } from "@/hooks/use-toast";
@@ -35,9 +35,10 @@ interface UserProfileHeaderProps {
 export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isVerified, setIsVerified] = useState(
-    user.verificationDetails?.attempts[0]?.status === 'approved'
-  );
+  
+  // Use either the verification details from attempts or the isVerified flag
+  const isVerified = user.verificationDetails?.attempts[0]?.status === 'approved' || user.isVerified;
+  
   const { toast } = useToast();
 
   const displayName = user.firstName && user.lastName 
@@ -78,6 +79,12 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
 
     setIsDeleteDialogOpen(true);
   };
+
+  // For debugging
+  useEffect(() => {
+    console.log("UserProfileHeader - Verification status:", isVerified);
+    console.log("User verification details:", user.verificationDetails?.attempts[0]?.status);
+  }, [isVerified, user.verificationDetails]);
 
   return (
     <>
