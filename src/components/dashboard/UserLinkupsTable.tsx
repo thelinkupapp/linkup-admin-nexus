@@ -339,14 +339,7 @@ export function UserLinkupsTable() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <h2 className="text-2xl font-semibold">Linkups</h2>
-          <p className="text-lg">
-            <span className="text-[#9b87f5] font-bold">{getFilteredLinkupsCount(activeTab === "all" ? undefined : activeTab as "hosted" | "attended")}</span>
-            {' '}linkups
-          </p>
-        </div>
+      <div className="flex items-center justify-end">
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
@@ -361,6 +354,12 @@ export function UserLinkupsTable() {
 
         {["all", "hosted", "attended"].map((tab) => (
           <TabsContent key={tab} value={tab}>
+            <div className="flex items-center justify-between mb-2">
+              <p className="text-lg">
+                <span className="text-[#9b87f5] font-bold">{getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended")}</span>
+                {' '}linkups
+              </p>
+            </div>
             <LinkupsTable 
               data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended")} 
               preview={true}
