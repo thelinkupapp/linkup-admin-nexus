@@ -8,7 +8,6 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 import { formatJoinDate } from "@/utils/dateFormatting";
 
 interface EarningItem {
@@ -47,8 +46,8 @@ export function EarningsBreakdownDialog({
         </DialogHeader>
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="earnings">Linkup Earnings (Hosted)</TabsTrigger>
-            <TabsTrigger value="payments">Linkup Payments (Attended)</TabsTrigger>
+            <TabsTrigger value="earnings">Linkup Earnings</TabsTrigger>
+            <TabsTrigger value="payments">Linkup Payments</TabsTrigger>
           </TabsList>
           
           <TabsContent value="earnings">
@@ -60,17 +59,12 @@ export function EarningsBreakdownDialog({
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Link 
-                          to={`/linkups/${item.linkupId}`} 
-                          className="font-medium hover:underline"
-                        >
-                          {item.description}
-                        </Link>
-                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                          Hosted
-                        </Badge>
-                      </div>
+                      <Link 
+                        to={`/linkups/${item.linkupId}`} 
+                        className="font-medium hover:underline"
+                      >
+                        {item.description}
+                      </Link>
                       <p className="text-sm text-muted-foreground">
                         {formatJoinDate(item.timestamp)}
                       </p>
@@ -93,17 +87,12 @@ export function EarningsBreakdownDialog({
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <Link 
-                          to={`/linkups/${item.linkupId}`}
-                          className="font-medium hover:underline"
-                        >
-                          {item.description}
-                        </Link>
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                          Attended
-                        </Badge>
-                      </div>
+                      <Link 
+                        to={`/linkups/${item.linkupId}`}
+                        className="font-medium hover:underline"
+                      >
+                        {item.description}
+                      </Link>
                       <p className="text-sm text-muted-foreground">
                         {formatJoinDate(item.timestamp)}
                       </p>
