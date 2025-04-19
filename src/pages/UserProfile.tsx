@@ -375,18 +375,6 @@ const UserProfile = () => {
       timestamp: "2024-04-19T18:31:00Z",
       status: "earned" as const,
       linkupId: "cardio-123"
-    },
-    {
-      description: "Withdrawal failed – please update your payout settings.",
-      amount: 0,
-      timestamp: "2024-04-18T15:45:00Z",
-      status: "failed" as const
-    },
-    {
-      description: "Payout from Ryft deposited to bank account - Arrived on Aug 10",
-      amount: 75.00,
-      timestamp: "2024-04-17T18:31:00Z",
-      status: "withdrawn" as const
     }
   ];
 
@@ -729,12 +717,7 @@ const UserProfile = () => {
                             <p className="font-medium">£{payout.amount.toFixed(2)}</p>
                             <p className="text-sm text-muted-foreground">Ryft Pay</p>
                           </div>
-                          <div className="text-right">
-                            <p>{new Date(payout.date).toLocaleDateString()}</p>
-                            <Badge variant="outline" className="badge-active">
-                              {payout.status}
-                            </Badge>
-                          </div>
+                          <p>{new Date(payout.date).toLocaleDateString()}</p>
                         </div>
                       ))}
                     </div>
@@ -750,42 +733,20 @@ const UserProfile = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {earningsBreakdown.slice(0, 3).map((item, index) => (
+                      {earningsBreakdown.map((item, index) => (
                         <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
                           <div>
-                            {item.status === "earned" && item.linkupId ? (
-                              <HoverCard>
-                                <HoverCardTrigger asChild>
-                                  <p className="font-medium cursor-pointer hover:text-linkup-purple transition-colors">
-                                    {item.description}
-                                  </p>
-                                </HoverCardTrigger>
-                                <HoverCardContent className="w-80">
-                                  <div className="flex justify-between space-x-4">
-                                    <div className="space-y-1">
-                                      <h4 className="text-sm font-semibold">{item.description}</h4>
-                                      <p className="text-sm text-muted-foreground">
-                                        Click to view linkup details
-                                      </p>
-                                    </div>
-                                    <Button asChild variant="ghost" size="icon">
-                                      <Link to={`/linkups/${item.linkupId}`}>
-                                        <ArrowUpRight className="h-4 w-4" />
-                                      </Link>
-                                    </Button>
-                                  </div>
-                                </HoverCardContent>
-                              </HoverCard>
-                            ) : (
+                            <Link 
+                              to={`/linkups/${item.linkupId}`} 
+                              className="hover:underline"
+                            >
                               <p className="font-medium">{item.description}</p>
-                            )}
+                            </Link>
                             <p className="text-sm text-muted-foreground">
                               {formatJoinDate(item.timestamp)}
                             </p>
                           </div>
-                          {item.status === "earned" && (
-                            <p className="font-medium">£{item.amount.toFixed(2)}</p>
-                          )}
+                          <p className="font-medium">£{item.amount.toFixed(2)}</p>
                         </div>
                       ))}
                     </div>
