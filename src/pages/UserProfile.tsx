@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -237,7 +238,8 @@ const UserProfile = () => {
       ...prev,
       isVerified: isVerified,
       verificationDetails: {
-        attempts: verificationAttempts
+        attempts: verificationAttempts,
+        hasSubmitted: user.verificationDetails.hasSubmitted
       }
     }));
     console.log("UserProfile - Verification status updated:", isVerified);

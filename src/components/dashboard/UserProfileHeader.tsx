@@ -28,6 +28,7 @@ interface UserProfileHeaderProps {
       attempts: {
         status: 'pending' | 'approved' | 'denied';
       }[];
+      hasSubmitted: boolean;
     };
   };
 }
