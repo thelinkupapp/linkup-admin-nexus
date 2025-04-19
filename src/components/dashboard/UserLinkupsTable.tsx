@@ -336,7 +336,8 @@ export function UserLinkupsTable() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end mb-4"> {/* Changed to justify-end */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Linkups</h2>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
