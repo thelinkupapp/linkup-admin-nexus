@@ -298,7 +298,6 @@ const UserProfile = () => {
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             
-            
             <TabsContent value="basic-info" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -359,7 +358,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            
             <TabsContent value="profile-info" className="space-y-6">
               <ProfileImageCarousel photos={userPhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -421,7 +419,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            
             <TabsContent value="verification" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -544,7 +541,6 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
-            
             <TabsContent value="wallet" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
@@ -624,7 +620,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            
             <TabsContent value="linkups" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -685,7 +680,6 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
-            
             <TabsContent value="privacy" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -806,4 +800,59 @@ const UserProfile = () => {
                         </span>
                       </Label>
                       <Switch
-                        id="
+                        id="linkups-friends"
+                        checked={user.privacySettings.showLinkupsToFriendsOnly}
+                      />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="reports" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>User Reports</CardTitle>
+                  <CardDescription>Reports filed against this user</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                    <p className="text-muted-foreground">No reports filed against this user</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="friends" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Friends</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="text-center py-8">
+                    <UserIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                    <p className="text-muted-foreground">User has no friends yet</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="photos" className="space-y-6">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+
+            <TabsContent value="activity" className="space-y-6">
+              <UserActivity 
+                chatActivity={userChatActivity}
+                linkupActivity={userLinkupActivity}
+              />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
