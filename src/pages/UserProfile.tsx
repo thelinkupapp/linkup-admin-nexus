@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -26,6 +27,12 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger
+} from "@/components/ui/dialog";
 import { 
   Briefcase, 
   Languages, 
@@ -43,12 +50,6 @@ import {
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Separator } from "@/components/ui/separator";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger
-} from "@/components/ui/dialog";
 
 interface VerificationAttempt {
   selfie: string;
@@ -78,12 +79,12 @@ const user = {
       {
         selfie: "https://i.pravatar.cc/300?img=3",
         submittedAt: "2024-04-18T14:30:00Z",
-        status: 'pending'
+        status: 'pending' as 'pending' | 'approved' | 'denied'
       },
       {
         selfie: "https://i.pravatar.cc/300?img=4",
         submittedAt: "2024-04-15T10:15:00Z",
-        status: 'denied'
+        status: 'denied' as 'pending' | 'approved' | 'denied'
       }
     ],
     hasSubmitted: true
@@ -144,7 +145,7 @@ const UserProfile = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
   const [verificationAttempts, setVerificationAttempts] = useState<VerificationAttempt[]>(
-    user.verificationDetails.attempts
+    user.verificationDetails.attempts as VerificationAttempt[]
   );
 
   const userPhotos = [
