@@ -225,29 +225,41 @@ const UserProfile = () => {
     const newAttempts = [...verificationAttempts];
     
     if (action === 'remove') {
+      const newAttempt = {
+        ...newAttempts[0],
+        status: 'denied' as 'denied',
+        notificationSent: true
+      };
+      newAttempts[0] = newAttempt;
+      setVerificationAttempts(newAttempts);
       setIsVerified(false);
       toast({
         title: "Verification Removed",
-        description: "The user's verified status has been removed",
+        description: "The user has been notified to resubmit their verification",
         variant: "destructive",
       });
       return;
     }
 
-    newAttempts[0] = {
-      ...newAttempts[0],
-      status: action === 'approve' ? 'approved' : 'denied',
-      notificationSent: action === 'deny' ? true : undefined
-    };
-    setVerificationAttempts(newAttempts);
-    
     if (action === 'approve') {
+      newAttempts[0] = {
+        ...newAttempts[0],
+        status: 'approved',
+        notificationSent: undefined
+      };
+      setVerificationAttempts(newAttempts);
       setIsVerified(true);
       toast({
         title: "Verification Approved",
         description: "The user has been successfully verified",
       });
     } else {
+      newAttempts[0] = {
+        ...newAttempts[0],
+        status: 'denied',
+        notificationSent: true
+      };
+      setVerificationAttempts(newAttempts);
       toast({
         title: "Verification Denied",
         description: "The user has been notified to resubmit their verification",
