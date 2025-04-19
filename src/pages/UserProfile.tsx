@@ -79,14 +79,16 @@ const user = {
   verificationDetails: {
     attempts: [
       {
-        selfie: "https://i.pravatar.cc/300?img=3",
+        selfie: "/lovable-uploads/e22f3ff4-2b21-42d3-9d5f-cc3b7cfba248.png",
         submittedAt: "2024-04-18T14:30:00Z",
         status: 'pending' as 'pending' | 'approved' | 'denied'
       },
       {
-        selfie: "https://i.pravatar.cc/300?img=4",
+        selfie: "/lovable-uploads/efe02853-0a89-411c-9ab1-35117eef0ff9.png",
         submittedAt: "2024-04-15T10:15:00Z",
-        status: 'denied' as 'pending' | 'approved' | 'denied'
+        status: 'denied' as 'pending' | 'approved' | 'denied',
+        statusChangeTime: "2024-04-15T11:30:00Z",
+        notificationSent: true
       }
     ],
     hasSubmitted: true
@@ -799,73 +801,4 @@ const UserProfile = () => {
                       </Label>
                       <Switch
                         id="linkups-friends"
-                        checked={user.privacySettings.showLinkupsToFriendsOnly}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="reports" className="space-y-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>User Reports</CardTitle>
-                    <CardDescription>Reports submitted about this user</CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {user.reports.length === 0 ? (
-                    <div className="text-center py-8">
-                      <AlertTriangle className="mx-auto h-10 w-10 text-muted-foreground/50 mb-4" />
-                      <p className="text-muted-foreground">No reports have been filed against this user</p>
-                    </div>
-                  ) : (
-                    <div>
-                      {/* Reports list would go here */}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="friends" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Friends</CardTitle>
-                  <CardDescription>User's friendship connections</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {user.friends.length === 0 ? (
-                    <div className="text-center py-8">
-                      <UserIcon className="mx-auto h-10 w-10 text-muted-foreground/50 mb-4" />
-                      <p className="text-muted-foreground">This user has no friends yet</p>
-                    </div>
-                  ) : (
-                    <div>
-                      {/* Friends list would go here */}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="photos" className="space-y-6">
-              <ProfilePhotos photos={userPhotos} />
-            </TabsContent>
-            
-            <TabsContent value="activity" className="space-y-6">
-              <UserActivity
-                chatActivity={userChatActivity}
-                linkupActivity={userLinkupActivity}
-              />
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
+                        checked={user.privacy
