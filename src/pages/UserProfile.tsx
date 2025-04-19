@@ -50,12 +50,14 @@ import {
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 interface VerificationAttempt {
   selfie: string;
   submittedAt: string;
   status: 'pending' | 'approved' | 'denied';
   notificationSent?: boolean;
+  statusChangeTime?: string;
 }
 
 const user = {
@@ -223,12 +225,14 @@ const UserProfile = () => {
 
   const handleVerificationAction = (action: 'approve' | 'deny' | 'remove') => {
     const newAttempts = [...verificationAttempts];
+    const currentTime = new Date().toISOString();
     
     if (action === 'remove') {
       const newAttempt = {
         ...newAttempts[0],
         status: 'denied' as 'denied',
-        notificationSent: true
+        notificationSent: true,
+        statusChangeTime: currentTime
       };
       newAttempts[0] = newAttempt;
       setVerificationAttempts(newAttempts);
@@ -245,7 +249,8 @@ const UserProfile = () => {
       newAttempts[0] = {
         ...newAttempts[0],
         status: 'approved',
-        notificationSent: undefined
+        notificationSent: undefined,
+        statusChangeTime: currentTime
       };
       setVerificationAttempts(newAttempts);
       setIsVerified(true);
@@ -257,7 +262,8 @@ const UserProfile = () => {
       newAttempts[0] = {
         ...newAttempts[0],
         status: 'denied',
-        notificationSent: true
+        notificationSent: true,
+        statusChangeTime: currentTime
       };
       setVerificationAttempts(newAttempts);
       toast({
@@ -480,6 +486,11 @@ const UserProfile = () => {
                             }`}>
                               {attempt.status.charAt(0).toUpperCase() + attempt.status.slice(1)}
                             </span>
+                            {attempt.statusChangeTime && (attempt.status === 'approved' || attempt.status === 'denied') && (
+                              <div className="mt-1 text-xs text-muted-foreground">
+                                {formatJoinDate(attempt.statusChangeTime)}
+                              </div>
+                            )}
                             {attempt.status === 'denied' && attempt.notificationSent && (
                               <p className="mt-2 text-sm text-muted-foreground">
                                 User has been notified to resubmit their verification photo
@@ -800,92 +811,4 @@ const UserProfile = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle>User Reports</CardTitle>
-                    <CardDescription>
-                      {user.reports.length} total reports, {user.reports.filter(r => r.resolved).length} resolved
-                    </CardDescription>
-                  </div>
-                  <Button variant="outline" size="sm">Export Reports</Button>
-                </CardHeader>
-                <CardContent>
-                  {user.reports.length === 0 ? (
-                    <div className="text-center py-6">
-                      <Flag className="mx-auto h-8 w-8 text-muted-foreground opacity-50 mb-2" />
-                      <p className="text-muted-foreground">No reports against this user</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {user.reports.map((report) => (
-                        <div key={report.id} className="p-4 border rounded-lg">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <AlertTriangle className="h-4 w-4 text-amber-500" />
-                              <p className="font-medium">Reported by @{report.reporter.username}</p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(report.timestamp).toLocaleString()}
-                              </p>
-                              {report.resolved ? (
-                                <Badge variant="outline" className="badge-active">Resolved</Badge>
-                              ) : (
-                                <Badge variant="outline" className="badge-pending">Open</Badge>
-                              )}
-                            </div>
-                          </div>
-                          <p className="mb-3">{report.reason}</p>
-                          {!report.resolved && (
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">Dismiss</Button>
-                              <Button size="sm">Mark Resolved</Button>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="friends" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Friends</CardTitle>
-                    <CardDescription>{user.friends.length} total friends</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {user.friends.length === 0 ? (
-                        <p className="text-muted-foreground text-center py-4">No friends yet</p>
-                      ) : (
-                        user.friends.map((friend) => (
-                          <div key={friend.id} className="flex items-center justify-between">
-                            <div className="flex items-center gap-3">
-                              <Avatar>
-                                <AvatarImage src={friend.avatar} alt={friend.name} />
-                                <AvatarFallback>{friend.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <p className="font-medium">{friend.name}</p>
-                                <p className="text-sm text-muted-foreground">@{friend.username}</p>
-                              </div>
-                            </div>
-                            <Button variant="outline" size="sm">View Profile</Button>
-                          </div>
-                        ))
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
+                    <CardTitle
