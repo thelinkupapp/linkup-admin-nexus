@@ -140,16 +140,14 @@ export function UserLinkupActivity() {
   );
 
   return (
-    <>
-      <div className="space-y-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Activity</h2>
-          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-            View All
-          </Button>
-        </div>
-        <ActivityList data={activities.slice(0, 5)} />
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Activity</h2>
+        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+          View All
+        </Button>
       </div>
+      <ActivityList data={activities.slice(0, 5)} />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
@@ -161,6 +159,6 @@ export function UserLinkupActivity() {
           </ScrollArea>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

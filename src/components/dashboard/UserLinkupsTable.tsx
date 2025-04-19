@@ -111,7 +111,7 @@ export function UserLinkupsTable() {
             </TableCell>
             <TableCell>
               <Badge variant="outline">
-                {linkup.type === "hosted" ? "👑 Hosted" : "👋 Attended"}
+                {linkup.type === "hosted" ? "👑 Host" : "👋 Attendee"}
               </Badge>
             </TableCell>
           </TableRow>
@@ -132,8 +132,8 @@ export function UserLinkupsTable() {
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="hosted">Hosted</TabsTrigger>
-          <TabsTrigger value="attended">Attended</TabsTrigger>
+          <TabsTrigger value="hosted">Host</TabsTrigger>
+          <TabsTrigger value="attended">Attendee</TabsTrigger>
         </TabsList>
 
         {["all", "hosted", "attended"].map((tab) => (
@@ -154,8 +154,8 @@ export function UserLinkupsTable() {
             <Tabs defaultValue="all" className="w-full">
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
-                <TabsTrigger value="hosted">Hosted</TabsTrigger>
-                <TabsTrigger value="attended">Attended</TabsTrigger>
+                <TabsTrigger value="hosted">Host</TabsTrigger>
+                <TabsTrigger value="attended">Attendee</TabsTrigger>
               </TabsList>
 
               {["all", "hosted", "attended"].map((tab) => (
