@@ -147,6 +147,39 @@ const linkupPlusTransactions = [
   }
 ];
 
+const attendedLinkupPayments = [
+  {
+    description: "Cooking Class with Chef Maria",
+    amount: 45.00,
+    timestamp: "2024-04-18T15:00:00Z",
+    linkupId: "cooking-123"
+  },
+  {
+    description: "Wine Tasting Experience",
+    amount: 35.00,
+    timestamp: "2024-04-15T18:30:00Z",
+    linkupId: "wine-456"
+  },
+  {
+    description: "Spanish Language Exchange",
+    amount: 15.00,
+    timestamp: "2024-04-12T19:00:00Z",
+    linkupId: "spanish-789"
+  },
+  {
+    description: "Photography Workshop",
+    amount: 65.00,
+    timestamp: "2024-04-10T14:00:00Z",
+    linkupId: "photo-101"
+  },
+  {
+    description: "Salsa Dancing Night",
+    amount: 25.00,
+    timestamp: "2024-04-08T20:00:00Z",
+    linkupId: "salsa-202"
+  }
+];
+
 const user: UserData = {
   id: "2",
   avatar: "/lovable-uploads/03ae0b73-0e7e-42b1-a69b-8646589f09bf.png",
@@ -1020,6 +1053,7 @@ const UserProfile = () => {
         open={isEarningsBreakdownOpen} 
         onOpenChange={setIsEarningsBreakdownOpen}
         earnings={earningsBreakdown}
+        attendancePayments={attendedLinkupPayments}
       />
       
       <LinkupPlusHistoryDialog 
