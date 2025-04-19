@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -45,7 +44,8 @@ import {
   Crown, 
   Flag, 
   AlertTriangle, 
-  User as UserIcon 
+  User as UserIcon, 
+  ShieldOff
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
@@ -221,8 +221,19 @@ const UserProfile = () => {
     hostingLinkups: user.hostingLinkups
   };
 
-  const handleVerificationAction = (action: 'approve' | 'deny') => {
+  const handleVerificationAction = (action: 'approve' | 'deny' | 'remove') => {
     const newAttempts = [...verificationAttempts];
+    
+    if (action === 'remove') {
+      setIsVerified(false);
+      toast({
+        title: "Verification Removed",
+        description: "The user's verified status has been removed",
+        variant: "destructive",
+      });
+      return;
+    }
+
     newAttempts[0] = {
       ...newAttempts[0],
       status: action === 'approve' ? 'approved' : 'denied',
@@ -485,6 +496,17 @@ const UserProfile = () => {
                                 Approve
                               </Button>
                             </div>
+                          )}
+                          {attempt.status === 'approved' && (
+                            <Button 
+                              onClick={() => handleVerificationAction('remove')}
+                              variant="outline"
+                              size="sm"
+                              className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                            >
+                              <ShieldOff className="mr-1 h-4 w-4" />
+                              Remove Verification
+                            </Button>
                           )}
                         </div>
                       ))}
