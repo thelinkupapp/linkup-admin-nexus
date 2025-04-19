@@ -1,7 +1,5 @@
+import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes } from "date-fns";
 
-import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek } from "date-fns";
-
-// Custom implementation since isLastWeek is not exported from date-fns
 function isLastWeek(date: Date): boolean {
   const now = new Date();
   const startOfCurrentWeek = startOfWeek(now);
@@ -36,4 +34,46 @@ export function formatJoinDate(date: string | Date): string {
   }
 
   return `${format(joinDate, 'MMM d')} at ${time}`; // Returns month and day like "Mar 21"
+}
+
+export function formatLinkupDateTime(startDate: string, endDate: string): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  // Format the times
+  const startTime = format(start, 'HH:mm');
+  const endTime = format(end, 'HH:mm');
+  
+  // Calculate duration
+  const hoursDiff = differenceInHours(end, start);
+  const minutesDiff = differenceInMinutes(end, start);
+  const daysDiff = differenceInDays(end, start);
+  
+  let duration;
+  if (daysDiff > 0) {
+    duration = `${daysDiff}d`;
+  } else if (hoursDiff > 0) {
+    duration = `${hoursDiff}h`;
+  } else {
+    duration = `${minutesDiff}m`;
+  }
+  
+  // Format the date part
+  let dateStr;
+  if (isToday(start)) {
+    dateStr = 'Today';
+  } else if (isYesterday(start)) {
+    dateStr = 'Yesterday';
+  } else if (isThisWeek(start)) {
+    dateStr = format(start, 'EEEE'); // Full day name
+  } else if (differenceInYears(new Date(), start) > 0) {
+    dateStr = format(start, 'MMM d yyyy');
+  } else {
+    dateStr = format(start, 'MMM d');
+  }
+  
+  // If the event spans multiple days, include the end date
+  const endDateStr = daysDiff > 0 ? ` - ${format(end, 'MMM d')}` : '';
+  
+  return `${dateStr}\n${startTime} - ${endTime}${endDateStr} (${duration})`;
 }
