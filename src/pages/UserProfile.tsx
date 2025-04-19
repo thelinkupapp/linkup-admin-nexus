@@ -129,6 +129,24 @@ interface UserData {
   lastKnownLocation: string;
 }
 
+const linkupPlusTransactions = [
+  {
+    date: "2024-03-15",
+    amount: 79.99,
+    description: "Linkup Plus Annual Subscription"
+  },
+  {
+    date: "2023-03-15",
+    amount: 79.99,
+    description: "Linkup Plus Annual Subscription"
+  },
+  {
+    date: "2022-03-15",
+    amount: 79.99,
+    description: "Linkup Plus Annual Subscription"
+  }
+];
+
 const user: UserData = {
   id: "2",
   avatar: "/lovable-uploads/03ae0b73-0e7e-42b1-a69b-8646589f09bf.png",
@@ -190,7 +208,7 @@ const user: UserData = {
       { amount: 120, date: "2023-01-15", status: "Complete", method: "Bank Transfer" }
     ],
     linkupPlus: {
-      startDate: null,
+      startDate: "2022-03-15",
       cancelDate: null
     }
   },
@@ -445,24 +463,6 @@ const UserProfile = () => {
       timestamp: "2024-04-10T16:00:00Z",
       status: "earned" as const,
       linkupId: "climb-707"
-    }
-  ];
-
-  const linkupPlusTransactions = [
-    {
-      date: "2024-03-15",
-      amount: 14.99,
-      description: "Linkup Plus Monthly Subscription"
-    },
-    {
-      date: "2024-02-15",
-      amount: 14.99,
-      description: "Linkup Plus Monthly Subscription"
-    },
-    {
-      date: "2024-01-15",
-      amount: 14.99,
-      description: "Linkup Plus Monthly Subscription"
     }
   ];
 
