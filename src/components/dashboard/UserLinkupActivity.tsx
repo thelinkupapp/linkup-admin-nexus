@@ -1,9 +1,9 @@
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatJoinDate } from "@/utils/dateFormatting";
-import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -209,7 +209,7 @@ function getActivityMessage(activity: ActivityItem) {
     case "removed_user":
       return <span>Jack removed {otherUserLink} from {linkupLink}</span>;
 
-    // Invites & Co-hosting
+    // Invites & Co-Hosting
     case "sent_invite":
       return <span>Jack invited {otherUserLink} to join {linkupLink}</span>;
     case "received_invite":
