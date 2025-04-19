@@ -57,8 +57,10 @@ import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { formatLinkupDateTime } from "@/utils/dateFormatting";
+import { Calendar } from "lucide-react";
 
 interface UserData {
   id: string;
@@ -271,6 +273,80 @@ const user: UserData = {
   hostingLinkups: 2,
   lastKnownLocation: "🇮🇩 Canggu, Indonesia"
 };
+
+const getStatusBadgeStyles = (status: string) => {
+  switch (status) {
+    case "upcoming":
+      return "bg-blue-50 text-blue-700 border-blue-200";
+    case "happening":
+      return "bg-purple-50 text-purple-700 border-purple-200";
+    case "happened":
+      return "bg-green-50 text-green-700 border-green-200";
+    case "cancelled":
+      return "bg-red-50 text-red-700 border-red-200";
+    case "deleted":
+      return "bg-gray-50 text-gray-700 border-gray-200";
+    default:
+      return "bg-blue-50 text-blue-700 border-blue-200";
+  }
+};
+
+const ProfileLinkupsTable = () => (
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>Linkup</TableHead>
+        <TableHead>Date & Time</TableHead>
+        <TableHead>Status</TableHead>
+        <TableHead>Type</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {userLinkups.map((linkup) => (
+        <TableRow key={linkup.id}>
+          <TableCell>
+            <div className="space-y-1">
+              <Link 
+                to={`/linkups/${linkup.id}`} 
+                className="flex items-center gap-2 hover:underline"
+              >
+                <span className="text-xl">{linkup.emoji}</span>
+                <span className="font-medium">{linkup.name}</span>
+              </Link>
+              <div className="text-xs text-muted-foreground">
+                {linkup.type === "hosted" ? 
+                  `Created on ${formatJoinDate(linkup.createdAt || "")}` :
+                  `Joined on ${formatJoinDate(linkup.joinedAt || "")}`
+                }
+              </div>
+            </div>
+          </TableCell>
+          <TableCell>
+            <div className="flex flex-col gap-1 text-sm">
+              <div className="flex items-center gap-2">
+                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <span>{formatLinkupDateTime(linkup.startDate, linkup.endDate)}</span>
+              </div>
+            </div>
+          </TableCell>
+          <TableCell>
+            <Badge
+              variant="outline"
+              className={getStatusBadgeStyles(linkup.status)}
+            >
+              {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
+            </Badge>
+          </TableCell>
+          <TableCell>
+            <Badge variant="outline">
+              {linkup.type === "hosted" ? "👑 Host" : "👋 Attendee"}
+            </Badge>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
 
 const UserProfile = () => {
   const { userId } = useParams();
@@ -892,7 +968,7 @@ const UserProfile = () => {
                   <CardTitle>Linkups</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <UserLinkupsTable />
+                  <ProfileLinkupsTable />
                 </CardContent>
               </Card>
 
