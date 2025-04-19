@@ -98,7 +98,7 @@ const getStatusBadgeStyles = (status: Linkup["status"]) => {
   }
 };
 
-const LinkupsTable = ({ data }: { data: Linkup[] }) => (
+const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boolean }) => (
   <Table>
     <TableHeader>
       <TableRow>
@@ -109,7 +109,7 @@ const LinkupsTable = ({ data }: { data: Linkup[] }) => (
       </TableRow>
     </TableHeader>
     <TableBody>
-      {data.map((linkup) => (
+      {(preview ? data.slice(0, 3) : data).map((linkup) => (
         <TableRow key={linkup.id}>
           <TableCell>
             <Link 
@@ -170,6 +170,7 @@ export function UserLinkupsTable() {
           <TabsContent key={tab} value={tab}>
             <LinkupsTable 
               data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended")} 
+              preview={true}
             />
           </TabsContent>
         ))}
@@ -192,6 +193,7 @@ export function UserLinkupsTable() {
                 <TabsContent key={tab} value={tab}>
                   <LinkupsTable 
                     data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended")} 
+                    preview={false}
                   />
                 </TabsContent>
               ))}
