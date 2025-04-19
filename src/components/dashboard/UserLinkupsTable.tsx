@@ -241,11 +241,13 @@ export function UserLinkupsTable() {
   const [activeTab, setActiveTab] = useState("all");
 
   const handleCheckedChange = (value: string, checked: boolean) => {
-    if (checked) {
-      setSelectedStatuses(prev => [...prev, value]);
-    } else {
-      setSelectedStatuses(prev => prev.filter(status => status !== value));
-    }
+    setSelectedStatuses(prev => {
+      if (checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter(item => item !== value);
+      }
+    });
   };
   
   const handleSort = (field: string) => {
@@ -284,7 +286,7 @@ export function UserLinkupsTable() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
-            <div className="flex items-center justify-between pr-8">
+            <div className="flex items-center justify-between pr-12">
               <DialogTitle>All Linkups</DialogTitle>
               <Popover>
                 <PopoverTrigger asChild>
@@ -295,17 +297,18 @@ export function UserLinkupsTable() {
                 <PopoverContent className="w-[220px] p-4" align="end">
                   <div className="space-y-4">
                     {statusOptions.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-2">
+                      <div key={option.value} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors">
                         <Checkbox
                           id={`status-${option.value}`}
                           checked={selectedStatuses.includes(option.value)}
                           onCheckedChange={(checked) => {
                             handleCheckedChange(option.value, checked === true);
                           }}
+                          className="cursor-pointer"
                         />
                         <label
                           htmlFor={`status-${option.value}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          className="text-sm font-medium leading-none cursor-pointer flex-grow peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                           {option.label}
                         </label>
