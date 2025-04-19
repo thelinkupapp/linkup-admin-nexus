@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,6 +11,8 @@ import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
 
 interface Linkup {
   id: string;
@@ -97,7 +98,7 @@ const statusOptions = [
   { label: "Removed", value: "removed" }
 ];
 
-const filteredLinkups = (type?: "hosted" | "attended", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
+const filteredLinkupsData = (type?: "hosted" | "attended", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
   let filtered = type ? linkups.filter(linkup => linkup.type === type) : linkups;
   
   if (selectedStatuses && selectedStatuses.length > 0) {
@@ -241,6 +242,7 @@ export function UserLinkupsTable() {
   });
   const [activeTab, setActiveTab] = useState("all");
   const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
@@ -251,12 +253,64 @@ export function UserLinkupsTable() {
       }
     });
   };
-  
-  const handleSort = (field: string) => {
-    setSortConfig(prev => ({
-      field,
-      direction: prev.field === field && prev.direction === 'desc' ? 'asc' : 'desc'
-    }));
+
+  const filteredLinkups = linkups.filter(linkup => {
+    // Filter by tab (all/hosted/attended)
+    if (activeTab !== "all" && linkup.type !== activeTab) return false;
+    
+    // Filter by status
+    if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
+    
+    // Filter by search query
+    if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    
+    return true;
+  });
+
+  const totalLinkups = linkups.filter(linkup => 
+    activeTab === "all" ? true : linkup.type === activeTab
+  ).length;
+
+  const getHeaderText = () => {
+    const filteredCount = filteredLinkups.length;
+    const roleText = activeTab === "hosted" ? "Host" : activeTab === "attended" ? "Attendee" : "";
+    
+    if (roleText) {
+      return (
+        <div className="flex items-center gap-2">
+          <span>{roleText} of </span>
+          <span className="text-[#9b87f5]">{totalLinkups}</span>
+          <span> linkups</span>
+          {(selectedStatuses.length > 0 || searchQuery) && (
+            <>
+              <span className="mx-1">•</span>
+              <span>showing </span>
+              <span className="text-[#9b87f5]">{filteredCount}</span>
+              <span> of </span>
+              <span className="text-[#9b87f5]">{totalLinkups}</span>
+              <span> linkups</span>
+            </>
+          )}
+        </div>
+      );
+    }
+    
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-[#9b87f5]">{totalLinkups}</span>
+        <span className="text-[#1A1F2C]">total linkups</span>
+        {(selectedStatuses.length > 0 || searchQuery) && (
+          <>
+            <span className="mx-1">•</span>
+            <span>showing </span>
+            <span className="text-[#9b87f5]">{filteredCount}</span>
+            <span> of </span>
+            <span className="text-[#9b87f5]">{totalLinkups}</span>
+            <span> linkups</span>
+          </>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -278,7 +332,7 @@ export function UserLinkupsTable() {
         {["all", "hosted", "attended"].map((tab) => (
           <TabsContent key={tab} value={tab}>
             <LinkupsTable 
-              data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended")} 
+              data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended")} 
               preview={true}
             />
           </TabsContent>
@@ -288,46 +342,62 @@ export function UserLinkupsTable() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
-            <div className="flex items-center justify-between pr-12">
-              <DialogTitle>All Linkups</DialogTitle>
-              <Popover 
-                open={statusPopoverOpen} 
-                onOpenChange={setStatusPopoverOpen}
-              >
-                <PopoverTrigger asChild>
-                  <Button variant="outline">
-                    Status ({selectedStatuses.length})
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[220px] p-4 bg-white" align="end">
-                  <div className="space-y-2">
-                    {statusOptions.map((option) => (
-                      <div 
-                        key={option.value} 
-                        className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          // Stop event propagation to prevent PopoverContent from closing
-                          e.stopPropagation();
-                        }}
-                      >
-                        <Checkbox 
-                          id={`status-${option.value}`}
-                          checked={selectedStatuses.includes(option.value)} 
-                          onCheckedChange={(checked) => {
-                            handleCheckedChange(option.value, checked === true);
-                          }}
-                        />
-                        <label
-                          htmlFor={`status-${option.value}`}
-                          className="text-sm font-medium leading-none cursor-pointer flex-grow"
-                        >
-                          {option.label}
-                        </label>
-                      </div>
-                    ))}
+            <div className="flex flex-col gap-4 pr-12">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  <DialogTitle>All Linkups</DialogTitle>
+                  {getHeaderText()}
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search linkups..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 w-[200px]"
+                    />
                   </div>
-                </PopoverContent>
-              </Popover>
+                  <Popover 
+                    open={statusPopoverOpen} 
+                    onOpenChange={setStatusPopoverOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">
+                        Status ({selectedStatuses.length})
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[220px] p-4 bg-white" align="end">
+                      <div className="space-y-2">
+                        {statusOptions.map((option) => (
+                          <div 
+                            key={option.value} 
+                            className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                            }}
+                          >
+                            <Checkbox 
+                              id={`status-${option.value}`}
+                              checked={selectedStatuses.includes(option.value)} 
+                              onCheckedChange={(checked) => {
+                                handleCheckedChange(option.value, checked === true);
+                              }}
+                              className="border-gray-300 data-[state=checked]:bg-[#9b87f5] data-[state=checked]:border-[#9b87f5]"
+                            />
+                            <label
+                              htmlFor={`status-${option.value}`}
+                              className="text-sm font-medium leading-none cursor-pointer flex-grow"
+                            >
+                              {option.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
             </div>
           </DialogHeader>
           <ScrollArea className="h-[600px] pr-4">
@@ -343,19 +413,12 @@ export function UserLinkupsTable() {
                 <TabsTrigger value="attended">Attendee</TabsTrigger>
               </TabsList>
 
-              {["all", "hosted", "attended"].map((tab) => (
-                <TabsContent key={tab} value={tab}>
-                  <LinkupsTable 
-                    data={filteredLinkups(
-                      tab === "all" ? undefined : tab as "hosted" | "attended",
-                      selectedStatuses,
-                      sortConfig
-                    )} 
-                    preview={false}
-                    onSort={handleSort}
-                  />
-                </TabsContent>
-              ))}
+              <TabsContent value={activeTab}>
+                <LinkupsTable 
+                  data={filteredLinkups}
+                  preview={false}
+                />
+              </TabsContent>
             </Tabs>
           </ScrollArea>
         </DialogContent>
