@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Check, X, ShieldOff, ArrowUpDown, Search, Eye } from "lucide-react";
+import { Check, X, ShieldOff, ArrowUpDown, Search, Eye, MoreVertical, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { MoreVertical, Users } from "lucide-react";
 
 // Define verification user type
 interface VerificationUser {
@@ -757,5 +756,3 @@ export function VerificationsTable() {
     </div>
   );
 }
-
-import { MoreVertical, Users } from "lucide-react";
