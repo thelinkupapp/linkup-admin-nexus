@@ -57,6 +57,8 @@ import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
+import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 
 interface UserData {
   id: string;
@@ -885,63 +887,23 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="linkups" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Linkup Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="p-4 rounded-lg bg-linkup-light-purple flex flex-col items-center justify-center">
-                        <p className="text-3xl font-bold text-linkup-purple">{user.linkupStats.hosted}</p>
-                        <p className="text-sm text-linkup-dark-purple">Linkups Hosted</p>
-                      </div>
-                      <div className="p-4 rounded-lg bg-linkup-soft-blue flex flex-col items-center justify-center">
-                        <p className="text-3xl font-bold text-blue-500">{user.linkupStats.joined}</p>
-                        <p className="text-sm text-blue-700">Linkups Joined</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkups</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UserLinkupsTable />
+                </CardContent>
+              </Card>
 
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Recent Activity</CardTitle>
-                    <Button variant="outline" size="sm">View All</Button>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🏐
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Joined "Sunset Beach Volleyball"</p>
-                          <p className="text-sm text-muted-foreground">2 days ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🎨
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Hosted "Downtown Art Gallery Opening"</p>
-                          <p className="text-sm text-muted-foreground">1 week ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🧘
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Joined "Rooftop Yoga Session"</p>
-                          <p className="text-sm text-muted-foreground">2 weeks ago</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between">
+                  <CardTitle>Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UserLinkupActivity />
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="privacy" className="space-y-6">
