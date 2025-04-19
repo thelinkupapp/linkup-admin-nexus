@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -269,7 +268,7 @@ export function UserLinkupActivity() {
 
   const getHeaderText = () => {
     let tabText = "";
-    let countText = `${totalFiltered} activity${totalFiltered !== 1 ? 'ies' : 'y'}`;
+    let countText = `${totalFiltered} activities`;
     
     switch (activeTab) {
       case "all":
