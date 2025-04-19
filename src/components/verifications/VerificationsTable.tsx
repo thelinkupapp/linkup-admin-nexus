@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -272,6 +273,9 @@ export function VerificationsTable() {
     }
   };
 
+  const pendingCount = users.filter(user => user.status === 'pending').length;
+  const approvedCount = users.filter(user => user.status === 'approved').length;
+  const deniedCount = users.filter(user => user.status === 'denied').length;
   const totalUserVerifications = users.length;
 
   return (
@@ -279,7 +283,7 @@ export function VerificationsTable() {
       <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
           <span className="text-xl font-semibold">
-            <span className="text-linkup-purple">{totalUserVerifications}</span> total verification requests
+            <span className="text-linkup-purple">{getHeaderText()}</span>
           </span>
         </div>
       </div>
