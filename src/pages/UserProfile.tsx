@@ -9,6 +9,9 @@ import { UserActivity } from "@/components/dashboard/UserActivity";
 import { ProfileImageCarousel } from "@/components/profile/ProfileImageCarousel";
 import { getCountryEmoji } from "@/utils/countryUtils";
 import { VerificationAttempt } from "@/types/user";
+import { PayoutHistoryDialog } from "@/components/wallet/PayoutHistoryDialog";
+import { EarningsBreakdownDialog } from "@/components/wallet/EarningsBreakdownDialog";
+import { LinkupPlusHistoryDialog } from "@/components/wallet/LinkupPlusHistoryDialog";
 import { 
   Tabs, 
   TabsList, 
