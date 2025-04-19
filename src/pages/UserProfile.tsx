@@ -522,7 +522,20 @@ const UserProfile = () => {
                               </Button>
                             </div>
                           )}
-                          {attempt.status === 'approved' && (
+                          {index === 0 && attempt.status === 'denied' && (
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={() => handleVerificationAction('approve')}
+                                variant="outline"
+                                size="sm"
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              >
+                                <Check className="mr-1 h-4 w-4" />
+                                Approve Now
+                              </Button>
+                            </div>
+                          )}
+                          {index === 0 && attempt.status === 'approved' && (
                             <Button 
                               onClick={() => handleVerificationAction('remove')}
                               variant="outline"
