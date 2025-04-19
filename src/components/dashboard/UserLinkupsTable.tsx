@@ -1,15 +1,15 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "lucide-react";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface Linkup {
   id: string;
@@ -86,10 +86,19 @@ const linkups: Linkup[] = [
   }
 ];
 
-const filteredLinkups = (type?: "hosted" | "attended", status?: string) => {
+const statusOptions = [
+  { label: "Upcoming", value: "upcoming" },
+  { label: "Happening", value: "happening" },
+  { label: "Happened", value: "happened" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Deleted", value: "deleted" },
+  { label: "Removed", value: "removed" }
+];
+
+const filteredLinkups = (type?: "hosted" | "attended", selectedStatuses?: string[]) => {
   let filtered = type ? linkups.filter(linkup => linkup.type === type) : linkups;
-  if (status && status !== "all") {
-    filtered = filtered.filter(linkup => linkup.status === status.toLowerCase());
+  if (selectedStatuses && selectedStatuses.length > 0) {
+    filtered = filtered.filter(linkup => selectedStatuses.includes(linkup.status));
   }
   return filtered;
 };
@@ -178,28 +187,12 @@ const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boo
 
 export function UserLinkupsTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <h2 className="text-2xl font-bold">Linkups</h2>
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Status</SelectItem>
-              <SelectItem value="upcoming">Upcoming</SelectItem>
-              <SelectItem value="happening">Happening</SelectItem>
-              <SelectItem value="happened">Happened</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
-              <SelectItem value="deleted">Deleted</SelectItem>
-              <SelectItem value="removed">Removed</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        <h2 className="text-2xl font-bold">Linkups</h2>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
@@ -215,7 +208,7 @@ export function UserLinkupsTable() {
         {["all", "hosted", "attended"].map((tab) => (
           <TabsContent key={tab} value={tab}>
             <LinkupsTable 
-              data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended", selectedStatus)} 
+              data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended")} 
               preview={true}
             />
           </TabsContent>
@@ -225,7 +218,41 @@ export function UserLinkupsTable() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle>All Linkups</DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle>All Linkups</DialogTitle>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="ml-auto">
+                    Status ({selectedStatuses.length})
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[200px] p-4" align="end">
+                  <div className="space-y-4">
+                    {statusOptions.map((option) => (
+                      <div key={option.value} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={option.value}
+                          checked={selectedStatuses.includes(option.value)}
+                          onCheckedChange={(checked) => {
+                            setSelectedStatuses(
+                              checked
+                                ? [...selectedStatuses, option.value]
+                                : selectedStatuses.filter((value) => value !== option.value)
+                            );
+                          }}
+                        />
+                        <label
+                          htmlFor={option.value}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {option.label}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </DialogHeader>
           <ScrollArea className="h-[600px] pr-4">
             <Tabs defaultValue="all" className="w-full">
@@ -238,7 +265,7 @@ export function UserLinkupsTable() {
               {["all", "hosted", "attended"].map((tab) => (
                 <TabsContent key={tab} value={tab}>
                   <LinkupsTable 
-                    data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended", selectedStatus)} 
+                    data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended", selectedStatuses)} 
                     preview={false}
                   />
                 </TabsContent>
