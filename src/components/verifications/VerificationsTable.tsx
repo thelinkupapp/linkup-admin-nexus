@@ -272,26 +272,27 @@ export function VerificationsTable() {
     }
   };
 
+  const totalUserVerifications = users.length;
+
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+    <div className="space-y-4 p-6">
+      <div className="flex items-center gap-4 mb-4">
         <div className="flex items-center gap-2">
-          <Users className="h-5 w-5 text-muted-foreground" />
-          <span className="text-lg font-medium">
-            {getHeaderText()}
+          <span className="text-xl font-semibold">
+            <span className="text-linkup-purple">{totalUserVerifications}</span> total verification requests
           </span>
         </div>
-        
-        <div className="relative w-full sm:w-auto">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            type="search"
-            placeholder="Search users..."
-            className="w-full sm:w-[250px] pl-8"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-        </div>
+      </div>
+      
+      <div className="relative w-full max-w-md mb-4">
+        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+        <Input
+          type="search"
+          placeholder="Search users..."
+          className="w-full pl-8"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
       </div>
 
       <Tabs defaultValue="pending" value={activeTab} onValueChange={setActiveTab} className="w-full">
