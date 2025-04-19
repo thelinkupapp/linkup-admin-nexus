@@ -34,7 +34,6 @@ import {
 import { cn } from "@/lib/utils";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
-// Define verification user type
 interface VerificationUser {
   id: string;
   avatar: string;
@@ -48,7 +47,6 @@ interface VerificationUser {
   verificationPhoto: string;
 }
 
-// Generate mock verification data
 const generateVerificationUsers = (): VerificationUser[] => {
   const users: VerificationUser[] = [
     {
@@ -60,7 +58,7 @@ const generateVerificationUsers = (): VerificationUser[] => {
       submissionDate: "May 10, 2023",
       submissionTime: "15:30:00",
       status: "pending",
-      verificationPhoto: "/lovable-uploads/450d74c3-6ea4-449f-80b8-6aac987c12d6.png"
+      verificationPhoto: "/lovable-uploads/9ff9aa7e-af28-42ed-9877-d7b3bd322e48.png"
     },
     {
       id: "2",
@@ -135,7 +133,6 @@ const generateVerificationUsers = (): VerificationUser[] => {
     }
   ];
   
-  // Generate additional verification users
   for (let i = 8; i <= 50; i++) {
     const statuses: ('pending' | 'approved' | 'denied')[] = ['pending', 'approved', 'denied'];
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
@@ -143,7 +140,6 @@ const generateVerificationUsers = (): VerificationUser[] => {
     const lastName = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis"][Math.floor(Math.random() * 8)];
     const username = `${firstName.toLowerCase()}_${lastName.toLowerCase()}${Math.floor(Math.random() * 100)}`;
     
-    // Generate random date within last 6 months
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"];
     const randomMonth = months[Math.floor(Math.random() * months.length)];
     const randomDay = Math.floor(Math.random() * 28) + 1;
@@ -178,10 +174,8 @@ export function VerificationsTable() {
   const [itemsPerPage, setItemsPerPage] = useState(25);
   const [itemsPerPageOptions] = useState([25, 50, 100]);
   
-  // State for verification users
   const [users, setUsers] = useState<VerificationUser[]>(verificationUsers);
   
-  // Handle status change
   const handleStatusChange = (userId: string, newStatus: 'approved' | 'denied') => {
     setUsers(prevUsers => prevUsers.map(user => {
       if (user.id === userId) {
@@ -208,7 +202,6 @@ export function VerificationsTable() {
     }
   };
 
-  // Handle remove verification
   const handleRemoveVerification = (userId: string) => {
     setUsers(prevUsers => prevUsers.map(user => {
       if (user.id === userId) {
@@ -228,7 +221,6 @@ export function VerificationsTable() {
     });
   };
   
-  // Filter users based on search and status
   const filteredUsers = users.filter(user => {
     const fullName = `${user.firstName} ${user.lastName}`;
     const matchesSearch = fullName.toLowerCase().includes(searchValue.toLowerCase()) || 
@@ -238,7 +230,6 @@ export function VerificationsTable() {
     return matchesSearch && matchesStatus;
   });
   
-  // Sort users based on submission date
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     const dateA = new Date(`${a.submissionDate} ${a.submissionTime}`).getTime();
     const dateB = new Date(`${b.submissionDate} ${b.submissionTime}`).getTime();
@@ -246,33 +237,27 @@ export function VerificationsTable() {
     return sortDirection === 'asc' ? dateA - dateB : dateB - dateA;
   });
   
-  // Get paginated users
   const totalUsers = sortedUsers.length;
   const totalPages = Math.ceil(totalUsers / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedUsers = sortedUsers.slice(startIndex, startIndex + itemsPerPage);
   
-  // Handle page change
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
   
-  // Handle user profile click
   const handleUserClick = (userId: string) => {
     navigate(`/users/${userId}`);
   };
   
-  // Toggle sort direction
   const toggleSortDirection = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
   
-  // Count users by status
   const pendingCount = users.filter(user => user.status === 'pending').length;
   const approvedCount = users.filter(user => user.status === 'approved').length;
   const deniedCount = users.filter(user => user.status === 'denied').length;
 
-  // Get the appropriate header text based on active tab
   const getHeaderText = () => {
     const count = filteredUsers.length;
     switch (activeTab) {
