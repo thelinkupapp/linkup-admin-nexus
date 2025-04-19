@@ -113,6 +113,13 @@ export function VerificationsTable() {
               ) : null}
             </TableCell>
           </TableRow>
+          {status === 'denied' && (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-sm text-muted-foreground bg-red-50 py-3">
+                User has been notified to resubmit their verification photo
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
     </div>
