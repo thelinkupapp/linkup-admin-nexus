@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -253,7 +252,6 @@ export function UserLinkupsTable() {
   const [activeTab, setActiveTab] = useState("all");
   const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  // Add pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
@@ -268,19 +266,15 @@ export function UserLinkupsTable() {
   };
 
   const filteredLinkups = linkups.filter(linkup => {
-    // Filter by tab (all/hosted/attended)
     if (activeTab !== "all" && linkup.type !== activeTab) return false;
     
-    // Filter by status
     if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
     
-    // Filter by search query
     if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     
     return true;
   });
 
-  // Calculate pagination
   const totalPages = Math.ceil(filteredLinkups.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -342,7 +336,6 @@ export function UserLinkupsTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Linkups</h2>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
