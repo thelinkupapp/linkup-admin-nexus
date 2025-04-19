@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -289,7 +290,10 @@ export function UserLinkupsTable() {
           <DialogHeader>
             <div className="flex items-center justify-between pr-12">
               <DialogTitle>All Linkups</DialogTitle>
-              <Popover open={statusPopoverOpen} onOpenChange={setStatusPopoverOpen}>
+              <Popover 
+                open={statusPopoverOpen} 
+                onOpenChange={setStatusPopoverOpen}
+              >
                 <PopoverTrigger asChild>
                   <Button variant="outline">
                     Status ({selectedStatuses.length})
@@ -301,6 +305,10 @@ export function UserLinkupsTable() {
                       <div 
                         key={option.value} 
                         className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          // Stop event propagation to prevent PopoverContent from closing
+                          e.stopPropagation();
+                        }}
                       >
                         <Checkbox 
                           id={`status-${option.value}`}
@@ -308,7 +316,6 @@ export function UserLinkupsTable() {
                           onCheckedChange={(checked) => {
                             handleCheckedChange(option.value, checked === true);
                           }}
-                          className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
                         />
                         <label
                           htmlFor={`status-${option.value}`}
