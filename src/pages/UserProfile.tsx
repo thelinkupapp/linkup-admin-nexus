@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -45,6 +44,12 @@ import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
+interface VerificationAttempt {
+  selfie: string;
+  submittedAt: string;
+  status: 'pending' | 'approved' | 'denied';
+}
+
 const user = {
   id: "2",
   avatar: "/lovable-uploads/03ae0b73-0e7e-42b1-a69b-8646589f09bf.png",
@@ -62,9 +67,19 @@ const user = {
   isLinkupPlus: true,
   isVerified: true,
   verificationDetails: {
-    selfie: "https://i.pravatar.cc/300?img=3",
-    verificationPhoto: "https://i.pravatar.cc/300?img=3",
-    submittedAt: "2023-05-10T14:30:00Z"
+    attempts: [
+      {
+        selfie: "https://i.pravatar.cc/300?img=3",
+        submittedAt: "2024-04-18T14:30:00Z",
+        status: 'pending'
+      },
+      {
+        selfie: "https://i.pravatar.cc/300?img=4",
+        submittedAt: "2024-04-15T10:15:00Z",
+        status: 'denied'
+      }
+    ],
+    hasSubmitted: true
   },
   occupation: "Co-Founder & CEO of this very app",
   bio: "Decided to make this app before I wanted to meet more like-minded people on my travels. Turns out it was kinda a good idea and lots of people used it and so I later sold it 5 years later for $5 billion.",
@@ -195,20 +210,23 @@ const UserProfile = () => {
     hostingLinkups: user.hostingLinkups
   };
 
-  const handleApprove = () => {
-    setIsVerified(true);
-    toast({
-      title: "Verification Approved",
-      description: "The user has been successfully verified",
-    });
-  };
-
-  const handleDeny = () => {
-    toast({
-      title: "Verification Denied",
-      description: "The user's verification request has been denied",
-      variant: "destructive",
-    });
+  const handleVerificationAction = (action: 'approve' | 'deny') => {
+    const newAttempts = [...user.verificationDetails.attempts];
+    newAttempts[0].status = action === 'approve' ? 'approved' : 'denied';
+    
+    if (action === 'approve') {
+      setIsVerified(true);
+      toast({
+        title: "Verification Approved",
+        description: "The user has been successfully verified",
+      });
+    } else {
+      toast({
+        title: "Verification Denied",
+        description: "The user's verification request has been denied",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -359,63 +377,95 @@ const UserProfile = () => {
                 <CardHeader>
                   <CardTitle>Verification Status</CardTitle>
                   <CardDescription>
-                    {isVerified ? "This user is verified." : "This user has applied for verification."}
+                    {!user.verificationDetails.hasSubmitted && "User has not submitted any verification photos yet."}
+                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'pending' && "This user has applied for verification."}
+                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'approved' && "This user is verified."}
+                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'denied' && "This user's verification was denied."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-3">Verification Photo</p>
-                      <div className="w-[180px]">
-                        <AspectRatio ratio={9/16}>
-                          <img
-                            src={user.verificationDetails.selfie}
-                            alt="Verification Selfie"
-                            className="w-full h-full object-cover rounded-lg"
-                          />
-                        </AspectRatio>
-                      </div>
+                  {!user.verificationDetails.hasSubmitted ? (
+                    <div className="text-center py-8">
+                      <UserIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                      <p className="text-muted-foreground">No verification photo submitted</p>
                     </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {user.verificationDetails.attempts.map((attempt, index) => (
+                        <div key={attempt.submittedAt} className="space-y-4">
+                          {index > 0 && <Separator className="my-6" />}
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {index === 0 ? "Latest Submission" : `Previous Attempt (${new Date(attempt.submittedAt).toLocaleDateString()})`}
+                          </p>
+                          
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <div className="w-[180px] cursor-pointer group">
+                                <AspectRatio ratio={9/16}>
+                                  <img
+                                    src={attempt.selfie}
+                                    alt={`Verification selfie from ${new Date(attempt.submittedAt).toLocaleString()}`}
+                                    className="w-full h-full object-cover rounded-lg"
+                                  />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                                    <span className="text-white text-sm">Click to enlarge</span>
+                                  </div>
+                                </AspectRatio>
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl">
+                              <img
+                                src={attempt.selfie}
+                                alt={`Verification selfie from ${new Date(attempt.submittedAt).toLocaleString()}`}
+                                className="w-full h-auto max-h-[80vh] object-contain"
+                              />
+                            </DialogContent>
+                          </Dialog>
 
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-1">Submitted</p>
-                      <p>{new Date(user.verificationDetails.submittedAt).toLocaleString()}</p>
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Submitted</p>
+                            <p>{new Date(attempt.submittedAt).toLocaleString()}</p>
+                          </div>
+
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground mb-3">Status</p>
+                            <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                              attempt.status === 'approved' 
+                                ? "bg-green-100 text-green-800"
+                                : attempt.status === 'denied'
+                                ? "bg-red-100 text-red-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}>
+                              {attempt.status.charAt(0).toUpperCase() + attempt.status.slice(1)}
+                            </span>
+                          </div>
+
+                          {index === 0 && attempt.status === 'pending' && (
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={() => handleVerificationAction('deny')}
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <X className="mr-1 h-4 w-4" />
+                                Deny
+                              </Button>
+                              <Button 
+                                onClick={() => handleVerificationAction('approve')}
+                                variant="outline"
+                                size="sm"
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              >
+                                <Check className="mr-1 h-4 w-4" />
+                                Approve
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      ))}
                     </div>
-
-                    <div>
-                      <p className="text-sm font-medium text-muted-foreground mb-3">Status</p>
-                      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
-                        isVerified 
-                          ? "bg-green-100 text-green-800" 
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}>
-                        {isVerified ? "Verified" : "Pending"}
-                      </span>
-                    </div>
-
-                    {!isVerified && (
-                      <div className="flex gap-2">
-                        <Button 
-                          onClick={handleDeny}
-                          variant="outline"
-                          size="sm"
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                        >
-                          <X className="mr-1 h-4 w-4" />
-                          Deny
-                        </Button>
-                        <Button 
-                          onClick={handleApprove}
-                          variant="outline"
-                          size="sm"
-                          className="text-green-600 hover:text-green-700 hover:bg-green-50"
-                        >
-                          <Check className="mr-1 h-4 w-4" />
-                          Approve
-                        </Button>
-                      </div>
-                    )}
-                  </div>
+                  )}
                 </CardContent>
               </Card>
             </TabsContent>
