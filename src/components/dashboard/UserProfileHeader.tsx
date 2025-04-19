@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ArrowLeft, Flag, Trash2, MoreVertical, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -35,9 +36,11 @@ interface UserProfileHeaderProps {
 export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isVerified, setIsVerified] = useState(user.isVerified);
   const { toast } = useToast();
 
   const handleVerificationApproval = () => {
+    setIsVerified(true);
     toast({
       title: "Verification Approved",
       description: "The user has been successfully verified",
@@ -108,7 +111,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold">{displayName}</h1>
-                {user.isVerified ? (
+                {isVerified ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
