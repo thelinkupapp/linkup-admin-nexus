@@ -7,10 +7,10 @@ import { Check, X, ShieldOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export function VerificationsTable() {
-  const [isVerified, setIsVerified] = useState(false);
+  const [status, setStatus] = useState<'pending' | 'verified' | 'denied'>('pending');
 
   const handleApprove = () => {
-    setIsVerified(true);
+    setStatus('verified');
     toast({
       title: "Verification Approved",
       description: "The user has been successfully verified",
@@ -18,19 +18,19 @@ export function VerificationsTable() {
   };
 
   const handleDeny = () => {
-    setIsVerified(false);
+    setStatus('denied');
     toast({
       title: "Verification Denied",
-      description: "The user's verification request has been denied",
+      description: "The user has been notified to resubmit their verification",
       variant: "destructive",
     });
   };
 
   const handleRemoveVerification = () => {
-    setIsVerified(false);
+    setStatus('denied');
     toast({
       title: "Verification Removed",
-      description: "The user's verified status has been removed",
+      description: "The user has been notified to resubmit their verification",
       variant: "destructive",
     });
   };
@@ -69,15 +69,17 @@ export function VerificationsTable() {
             </TableCell>
             <TableCell>
               <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
-                isVerified 
-                  ? "bg-green-100 text-green-800" 
+                status === 'verified'
+                  ? "bg-green-100 text-green-800"
+                  : status === 'denied'
+                  ? "bg-red-100 text-red-800"
                   : "bg-yellow-100 text-yellow-800"
               }`}>
-                {isVerified ? "Verified" : "Pending"}
+                {status === 'verified' ? "Verified" : status === 'denied' ? "Denied" : "Pending"}
               </span>
             </TableCell>
             <TableCell className="space-x-2">
-              {!isVerified ? (
+              {status === 'pending' ? (
                 <>
                   <Button 
                     onClick={handleApprove}
@@ -98,7 +100,7 @@ export function VerificationsTable() {
                     Deny
                   </Button>
                 </>
-              ) : (
+              ) : status === 'verified' ? (
                 <Button 
                   onClick={handleRemoveVerification}
                   variant="outline"
@@ -108,7 +110,7 @@ export function VerificationsTable() {
                   <ShieldOff className="mr-1 h-4 w-4" />
                   Remove Verification
                 </Button>
-              )}
+              ) : null}
             </TableCell>
           </TableRow>
         </TableBody>
