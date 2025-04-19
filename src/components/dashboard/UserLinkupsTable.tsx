@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -6,9 +5,16 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "lucide-react";
-import { formatLinkupDateTime } from "@/utils/dateFormatting";
+import { formatLinkupDateTime, formatJoinDate } from "@/utils/dateFormatting";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Linkup {
   id: string;
@@ -16,8 +22,10 @@ interface Linkup {
   emoji: string;
   startDate: string;
   endDate: string;
-  status: "upcoming" | "happened" | "happening" | "cancelled" | "deleted";
+  status: "upcoming" | "happened" | "happening" | "cancelled" | "deleted" | "removed";
   type: "hosted" | "attended";
+  createdAt?: string;
+  joinedAt?: string;
 }
 
 const linkups: Linkup[] = [
@@ -28,7 +36,8 @@ const linkups: Linkup[] = [
     startDate: "2024-08-01T18:00:00Z",
     endDate: "2024-08-03T22:00:00Z",
     status: "upcoming",
-    type: "hosted"
+    type: "hosted",
+    createdAt: "2024-03-15T10:30:00Z"
   },
   {
     id: "2",
@@ -37,7 +46,8 @@ const linkups: Linkup[] = [
     startDate: "2024-04-19T20:00:00Z",
     endDate: "2024-04-19T22:00:00Z",
     status: "upcoming",
-    type: "hosted"
+    type: "hosted",
+    createdAt: "2024-04-01T14:20:00Z"
   },
   {
     id: "3",
@@ -46,7 +56,8 @@ const linkups: Linkup[] = [
     startDate: "2024-04-20T12:00:00Z",
     endDate: "2024-04-20T15:00:00Z",
     status: "upcoming",
-    type: "attended"
+    type: "attended",
+    joinedAt: "2024-04-05T09:15:00Z"
   },
   {
     id: "4",
@@ -55,7 +66,8 @@ const linkups: Linkup[] = [
     startDate: "2024-04-22T15:00:00Z",
     endDate: "2024-04-22T21:00:00Z",
     status: "upcoming",
-    type: "hosted"
+    type: "hosted",
+    createdAt: "2024-04-08T11:00:00Z"
   },
   {
     id: "5",
@@ -64,7 +76,8 @@ const linkups: Linkup[] = [
     startDate: "2024-04-15T19:00:00Z",
     endDate: "2024-04-15T23:00:00Z",
     status: "happened",
-    type: "hosted"
+    type: "hosted",
+    createdAt: "2024-03-28T16:45:00Z"
   },
   {
     id: "6",
@@ -73,14 +86,10 @@ const linkups: Linkup[] = [
     startDate: "2024-05-24T15:00:00Z",
     endDate: "2024-05-26T12:00:00Z",
     status: "upcoming",
-    type: "hosted"
+    type: "hosted",
+    createdAt: "2024-04-12T13:00:00Z"
   }
 ];
-
-const filteredLinkups = (type?: "hosted" | "attended") => {
-  if (!type) return linkups;
-  return linkups.filter(linkup => linkup.type === type);
-};
 
 const getStatusBadgeStyles = (status: Linkup["status"]) => {
   switch (status) {
@@ -113,13 +122,21 @@ const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boo
       {(preview ? data.slice(0, 3) : data).map((linkup) => (
         <TableRow key={linkup.id}>
           <TableCell>
-            <Link 
-              to={`/linkups/${linkup.id}`} 
-              className="flex items-center gap-2 hover:underline"
-            >
-              <span className="text-xl">{linkup.emoji}</span>
-              <span className="font-medium">{linkup.name}</span>
-            </Link>
+            <div className="space-y-1">
+              <Link 
+                to={`/linkups/${linkup.id}`} 
+                className="flex items-center gap-2 hover:underline"
+              >
+                <span className="text-xl">{linkup.emoji}</span>
+                <span className="font-medium">{linkup.name}</span>
+              </Link>
+              <div className="text-xs text-muted-foreground">
+                {linkup.type === "hosted" ? 
+                  `Created on ${formatJoinDate(linkup.createdAt || "")}` :
+                  `Joined on ${formatJoinDate(linkup.joinedAt || "")}`
+                }
+              </div>
+            </div>
           </TableCell>
           <TableCell>
             <div className="flex flex-col gap-1 text-sm">
@@ -150,11 +167,42 @@ const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boo
 
 export function UserLinkupsTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
+
+  const filteredLinkups = (type?: "hosted" | "attended") => {
+    let filtered = linkups;
+    
+    if (type) {
+      filtered = filtered.filter(linkup => linkup.type === type);
+    }
+    
+    if (selectedStatus) {
+      filtered = filtered.filter(linkup => linkup.status === selectedStatus.toLowerCase());
+    }
+    
+    return filtered;
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Linkups</h2>
+        <div className="flex items-center gap-4">
+          <h2 className="text-2xl font-bold">Linkups</h2>
+          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="All Status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">All Status</SelectItem>
+              <SelectItem value="upcoming">Upcoming</SelectItem>
+              <SelectItem value="happened">Happened</SelectItem>
+              <SelectItem value="happening">Happening</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="deleted">Deleted</SelectItem>
+              <SelectItem value="removed">Removed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
