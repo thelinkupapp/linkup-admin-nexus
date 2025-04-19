@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -444,7 +443,7 @@ const UserProfile = () => {
                         <div key={attempt.submittedAt} className="space-y-4">
                           {index > 0 && <Separator className="my-6" />}
                           <p className="text-sm font-medium text-muted-foreground">
-                            {index === 0 ? "Latest Submission" : `Previous Attempt (${new Date(attempt.submittedAt).toLocaleDateString()})`}
+                            {index === 0 ? "Latest Submission" : `Previous Attempt (${formatJoinDate(attempt.submittedAt)})`}
                           </p>
                           
                           <Dialog>
@@ -473,7 +472,7 @@ const UserProfile = () => {
 
                           <div>
                             <p className="text-sm font-medium text-muted-foreground mb-1">Submitted</p>
-                            <p>{new Date(attempt.submittedAt).toLocaleString()}</p>
+                            <p>{formatJoinDate(attempt.submittedAt)}</p>
                           </div>
 
                           <div>
@@ -487,9 +486,9 @@ const UserProfile = () => {
                             }`}>
                               {attempt.status.charAt(0).toUpperCase() + attempt.status.slice(1)}
                             </span>
-                            {attempt.statusChangeTime && (attempt.status === 'approved' || attempt.status === 'denied') && (
+                            {(attempt.status === 'approved' || attempt.status === 'denied') && (
                               <div className="mt-1 text-xs text-muted-foreground">
-                                {formatJoinDate(attempt.statusChangeTime)}
+                                {attempt.statusChangeTime ? formatJoinDate(attempt.statusChangeTime) : formatJoinDate(attempt.submittedAt)}
                               </div>
                             )}
                             {attempt.status === 'denied' && attempt.notificationSent && (
