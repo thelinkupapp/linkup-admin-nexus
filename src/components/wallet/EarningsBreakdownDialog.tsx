@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { Badge } from "@/components/ui/badge";
 
 interface EarningItem {
   description: string;
@@ -46,8 +47,18 @@ export function EarningsBreakdownDialog({
         </DialogHeader>
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="earnings">Linkup Earnings (Hosted)</TabsTrigger>
-            <TabsTrigger value="payments">Linkup Payments (Attended)</TabsTrigger>
+            <TabsTrigger value="earnings" className="flex items-center gap-2">
+              Linkup Earnings
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 ml-1">
+                Hosted
+              </Badge>
+            </TabsTrigger>
+            <TabsTrigger value="payments" className="flex items-center gap-2">
+              Linkup Payments
+              <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 ml-1">
+                Attended
+              </Badge>
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="earnings">

@@ -846,9 +846,6 @@ const UserProfile = () => {
                               >
                                 {item.description}
                               </Link>
-                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                                Hosted
-                              </Badge>
                             </div>
                             <p className="text-sm text-muted-foreground">
                               {formatJoinDate(item.timestamp)}
