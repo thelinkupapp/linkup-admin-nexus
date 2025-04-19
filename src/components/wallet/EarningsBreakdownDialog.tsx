@@ -53,9 +53,13 @@ export function EarningsBreakdownDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
-        <DialogHeader>
-          <DialogTitle>Payments Breakdown</DialogTitle>
+        <DialogHeader className="flex flex-row items-center justify-between">
+          <DialogTitle className="text-2xl">Payments Breakdown</DialogTitle>
+          <button className="text-sm text-muted-foreground hover:text-foreground">
+            View All
+          </button>
         </DialogHeader>
+
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
             <TabsTrigger 
@@ -81,27 +85,26 @@ export function EarningsBreakdownDialog({
           </TabsList>
           
           <TabsContent value="earnings">
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-4">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-6">
                 {sortedEarnings.map((item, index) => (
                   <div
                     key={`earnings-${index}`}
-                    className="flex items-center justify-between py-3 border-b last:border-0"
+                    className="flex flex-col space-y-1"
                   >
-                    <div className="flex-1">
-                      <Link 
-                        to={`/linkups/${item.linkupId}`} 
-                        className="font-medium hover:underline"
-                      >
-                        {item.description}
-                      </Link>
-                      <p className="text-sm text-muted-foreground">
-                        {formatJoinDate(item.timestamp)}
-                      </p>
-                    </div>
+                    <Link 
+                      to={`/linkups/${item.linkupId}`} 
+                      className="text-lg font-semibold hover:underline"
+                    >
+                      {item.description}
+                    </Link>
+                    <p className="text-muted-foreground">
+                      {formatJoinDate(item.timestamp)}
+                    </p>
                     {item.status === "earned" && (
-                      <p className="font-medium text-green-600">+£{item.amount.toFixed(2)}</p>
+                      <p className="text-lg font-medium text-green-600">+£{item.amount.toFixed(2)}</p>
                     )}
+                    <div className="h-px bg-border mt-4" />
                   </div>
                 ))}
               </div>
@@ -109,25 +112,24 @@ export function EarningsBreakdownDialog({
           </TabsContent>
 
           <TabsContent value="payments">
-            <ScrollArea className="h-[400px] pr-4">
-              <div className="space-y-4">
+            <ScrollArea className="h-[400px]">
+              <div className="space-y-6">
                 {sortedAttendancePayments.map((item, index) => (
                   <div
                     key={`payments-${index}`}
-                    className="flex items-center justify-between py-3 border-b last:border-0"
+                    className="flex flex-col space-y-1"
                   >
-                    <div className="flex-1">
-                      <Link 
-                        to={`/linkups/${item.linkupId}`}
-                        className="font-medium hover:underline"
-                      >
-                        {item.description}
-                      </Link>
-                      <p className="text-sm text-muted-foreground">
-                        {formatJoinDate(item.timestamp)}
-                      </p>
-                    </div>
-                    <p className="font-medium text-red-600">-£{item.amount.toFixed(2)}</p>
+                    <Link 
+                      to={`/linkups/${item.linkupId}`}
+                      className="text-lg font-semibold hover:underline"
+                    >
+                      {item.description}
+                    </Link>
+                    <p className="text-muted-foreground">
+                      {formatJoinDate(item.timestamp)}
+                    </p>
+                    <p className="text-lg font-medium text-red-600">-£{item.amount.toFixed(2)}</p>
+                    <div className="h-px bg-border mt-4" />
                   </div>
                 ))}
               </div>
@@ -138,4 +140,3 @@ export function EarningsBreakdownDialog({
     </Dialog>
   );
 }
-
