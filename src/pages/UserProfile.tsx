@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -811,4 +812,61 @@ const UserProfile = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
                   <div>
-                    <CardTitle
+                    <CardTitle>User Reports</CardTitle>
+                    <CardDescription>Reports submitted about this user</CardDescription>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  {user.reports.length === 0 ? (
+                    <div className="text-center py-8">
+                      <AlertTriangle className="mx-auto h-10 w-10 text-muted-foreground/50 mb-4" />
+                      <p className="text-muted-foreground">No reports have been filed against this user</p>
+                    </div>
+                  ) : (
+                    <div>
+                      {/* Reports list would go here */}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="friends" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Friends</CardTitle>
+                  <CardDescription>User's friendship connections</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {user.friends.length === 0 ? (
+                    <div className="text-center py-8">
+                      <UserIcon className="mx-auto h-10 w-10 text-muted-foreground/50 mb-4" />
+                      <p className="text-muted-foreground">This user has no friends yet</p>
+                    </div>
+                  ) : (
+                    <div>
+                      {/* Friends list would go here */}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="photos" className="space-y-6">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+            
+            <TabsContent value="activity" className="space-y-6">
+              <UserActivity
+                chatActivity={userChatActivity}
+                linkupActivity={userLinkupActivity}
+              />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
