@@ -43,6 +43,12 @@ import {
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger
+} from "@/components/ui/dialog";
 
 interface VerificationAttempt {
   selfie: string;
