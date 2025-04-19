@@ -4,6 +4,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { useState } from "react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationItemsPerPage
+} from "@/components/ui/pagination";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Search } from "lucide-react";
 
 interface ActivityItem {
   id: string;
@@ -115,6 +127,30 @@ function getActivityMessage(activity: ActivityItem) {
 
 export function UserLinkupActivity() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+
+  const handleStatusChange = (status: string) => {
+    setSelectedStatuses(prev => {
+      if (prev.includes(status)) {
+        return prev.filter(s => s !== status);
+      }
+      return [...prev, status];
+    });
+  };
+
+  const filteredActivities = activities.filter(activity => {
+    const matchesSearch = activity.linkupName.toLowerCase().includes(searchValue.toLowerCase());
+    const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(activity.type);
+    return matchesSearch && matchesStatus;
+  });
+
+  const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentActivities = filteredActivities.slice(startIndex, endIndex);
 
   const ActivityList = ({ data }: { data: ActivityItem[] }) => (
     <div className="space-y-6">
@@ -139,6 +175,40 @@ export function UserLinkupActivity() {
     </div>
   );
 
+  const getHeaderText = () => {
+    const total = filteredActivities.length;
+    const showing = currentActivities.length;
+    return (
+      <div className="flex flex-col gap-1">
+        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+        <div className="flex items-center gap-2 text-lg">
+          <span className="text-[#1A1F2C]">
+            {activeTab === "hosted" ? "Host of " : 
+             activeTab === "attended" ? "Attendee of " : ""}
+          </span>
+          <span className="text-[#9b87f5] font-bold">{total}</span>
+          <span className="text-[#1A1F2C]">linkups</span>
+          {(selectedStatuses.length > 0 || searchValue) && (
+            <>
+              <span className="mx-1">•</span>
+              <span>showing </span>
+              <span className="text-[#9b87f5] font-bold">{showing}</span>
+              <span> of </span>
+              <span className="text-[#9b87f5] font-bold">{total}</span>
+              <span> linkups</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const statusOptions = [
+    { label: "Upcoming", value: "upcoming" },
+    { label: "Happened", value: "happened" },
+    { label: "Cancelled", value: "cancelled" }
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -150,13 +220,91 @@ export function UserLinkupActivity() {
       <ActivityList data={activities.slice(0, 5)} />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh]">
+        <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle>All Activity</DialogTitle>
+            {getHeaderText()}
+            <div className="flex items-center justify-between mt-4">
+              <div className="relative w-[300px]">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search linkups..."
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+              <div className="space-y-4">
+                <div className="font-medium">Status</div>
+                {statusOptions.map((status) => (
+                  <div 
+                    key={status.value}
+                    className="flex items-center space-x-2 group cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors"
+                  >
+                    <Checkbox
+                      id={`status-${status.value}`}
+                      checked={selectedStatuses.includes(status.value)}
+                      onCheckedChange={() => handleStatusChange(status.value)}
+                      className="border-gray-300 data-[state=checked]:bg-[#9b87f5] data-[state=checked]:border-[#9b87f5]"
+                    />
+                    <label
+                      htmlFor={`status-${status.value}`}
+                      className="text-sm font-medium leading-none cursor-pointer flex-grow"
+                    >
+                      {status.label}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
           </DialogHeader>
-          <ScrollArea className="h-[600px] pr-4">
-            <ActivityList data={activities} />
+          <ScrollArea className="h-[500px] pr-4">
+            <ActivityList data={currentActivities} />
           </ScrollArea>
+          <div className="mt-4 flex items-center justify-between">
+            <PaginationItemsPerPage className="flex items-center gap-2">
+              <span>Items per page:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded px-2 py-1"
+              >
+                {[5, 10, 15].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </PaginationItemsPerPage>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(page)}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
