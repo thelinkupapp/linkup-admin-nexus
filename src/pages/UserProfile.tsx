@@ -829,7 +829,7 @@ const UserProfile = () => {
                 
                 <Card className="col-span-1 md:col-span-3">
                   <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Earnings Breakdown</CardTitle>
+                    <CardTitle>Payments Breakdown</CardTitle>
                     <Button variant="outline" size="sm" onClick={() => setIsEarningsBreakdownOpen(true)}>
                       View All
                     </Button>
@@ -839,17 +839,22 @@ const UserProfile = () => {
                       {earningsBreakdown.slice(0, 3).map((item, index) => (
                         <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
                           <div>
-                            <Link 
-                              to={`/linkups/${item.linkupId}`} 
-                              className="hover:underline"
-                            >
-                              <p className="font-medium">{item.description}</p>
-                            </Link>
+                            <div className="flex items-center gap-2">
+                              <Link 
+                                to={`/linkups/${item.linkupId}`} 
+                                className="font-medium hover:underline"
+                              >
+                                {item.description}
+                              </Link>
+                              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                Hosted
+                              </Badge>
+                            </div>
                             <p className="text-sm text-muted-foreground">
                               {formatJoinDate(item.timestamp)}
                             </p>
                           </div>
-                          <p className="font-medium">£{item.amount.toFixed(2)}</p>
+                          <p className="font-medium text-green-600">+£{item.amount.toFixed(2)}</p>
                         </div>
                       ))}
                     </div>

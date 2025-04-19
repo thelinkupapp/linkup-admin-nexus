@@ -6,11 +6,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { formatJoinDate } from "@/utils/dateFormatting";
 
 interface EarningItem {
@@ -45,12 +43,12 @@ export function EarningsBreakdownDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Financial History</DialogTitle>
+          <DialogTitle>Payments Breakdown</DialogTitle>
         </DialogHeader>
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="earnings">Earnings</TabsTrigger>
-            <TabsTrigger value="payments">Linkup Payments</TabsTrigger>
+            <TabsTrigger value="earnings">Linkup Earnings (Hosted)</TabsTrigger>
+            <TabsTrigger value="payments">Linkup Payments (Attended)</TabsTrigger>
           </TabsList>
           
           <TabsContent value="earnings">
@@ -62,32 +60,17 @@ export function EarningsBreakdownDialog({
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
-                      {item.status === "earned" && item.linkupId ? (
-                        <HoverCard>
-                          <HoverCardTrigger asChild>
-                            <p className="font-medium cursor-pointer hover:text-linkup-purple transition-colors">
-                              {item.description}
-                            </p>
-                          </HoverCardTrigger>
-                          <HoverCardContent className="w-80">
-                            <div className="flex justify-between space-x-4">
-                              <div className="space-y-1">
-                                <h4 className="text-sm font-semibold">{item.description}</h4>
-                                <p className="text-sm text-muted-foreground">
-                                  Click to view linkup details
-                                </p>
-                              </div>
-                              <Button asChild variant="ghost" size="icon">
-                                <Link to={`/linkups/${item.linkupId}`}>
-                                  <ArrowUpRight className="h-4 w-4" />
-                                </Link>
-                              </Button>
-                            </div>
-                          </HoverCardContent>
-                        </HoverCard>
-                      ) : (
-                        <p className="font-medium">{item.description}</p>
-                      )}
+                      <div className="flex items-center gap-2">
+                        <Link 
+                          to={`/linkups/${item.linkupId}`} 
+                          className="font-medium hover:underline"
+                        >
+                          {item.description}
+                        </Link>
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                          Hosted
+                        </Badge>
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         {formatJoinDate(item.timestamp)}
                       </p>
@@ -110,28 +93,17 @@ export function EarningsBreakdownDialog({
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
-                      <HoverCard>
-                        <HoverCardTrigger asChild>
-                          <p className="font-medium cursor-pointer hover:text-linkup-purple transition-colors">
-                            {item.description}
-                          </p>
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-80">
-                          <div className="flex justify-between space-x-4">
-                            <div className="space-y-1">
-                              <h4 className="text-sm font-semibold">{item.description}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                Click to view linkup details
-                              </p>
-                            </div>
-                            <Button asChild variant="ghost" size="icon">
-                              <Link to={`/linkups/${item.linkupId}`}>
-                                <ArrowUpRight className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </div>
-                        </HoverCardContent>
-                      </HoverCard>
+                      <div className="flex items-center gap-2">
+                        <Link 
+                          to={`/linkups/${item.linkupId}`}
+                          className="font-medium hover:underline"
+                        >
+                          {item.description}
+                        </Link>
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                          Attended
+                        </Badge>
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         {formatJoinDate(item.timestamp)}
                       </p>
