@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -153,6 +154,7 @@ export function UserLinkupsTable() {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Linkups</h2>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
