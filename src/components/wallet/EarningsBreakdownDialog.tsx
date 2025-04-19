@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -55,9 +54,7 @@ export function EarningsBreakdownDialog({
       <DialogContent className="max-w-2xl">
         <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle className="text-2xl">Payments Breakdown</DialogTitle>
-          <button className="text-sm text-muted-foreground hover:text-foreground">
-            View All
-          </button>
+          {/* Removed "View All" button */}
         </DialogHeader>
 
         <Tabs defaultValue="earnings" className="w-full">
