@@ -5,7 +5,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatJoinDate } from "@/utils/dateFormatting";
 
@@ -15,7 +14,6 @@ interface PayoutHistoryDialogProps {
   payoutHistory: Array<{
     amount: number;
     date: string;
-    status: string;
     method: string;
   }>;
 }
@@ -40,16 +38,10 @@ export function PayoutHistoryDialog({
               >
                 <div>
                   <p className="font-medium">£{payout.amount.toFixed(2)}</p>
-                  <p className="text-sm text-muted-foreground">Ryft Pay</p>
+                  <p className="text-sm text-muted-foreground">{payout.method}</p>
                 </div>
                 <div className="text-right">
                   <p>{formatJoinDate(payout.date)}</p>
-                  <Badge
-                    variant="outline"
-                    className={payout.status === "Complete" ? "bg-green-50 text-green-700" : ""}
-                  >
-                    {payout.status}
-                  </Badge>
                 </div>
               </div>
             ))}

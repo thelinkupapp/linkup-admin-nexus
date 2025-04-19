@@ -178,9 +178,16 @@ const user: UserData = {
     inTransit: 50,
     lastWithdrawal: "2023-11-15",
     payoutHistory: [
-      { amount: 75, date: "2023-11-15", status: "Complete", method: "PayPal" },
-      { amount: 125, date: "2023-09-28", status: "Complete", method: "Bank Transfer" },
-      { amount: 150, date: "2023-08-05", status: "Complete", method: "PayPal" }
+      { amount: 75, date: "2023-11-15", method: "PayPal" },
+      { amount: 125, date: "2023-09-28", method: "Bank Transfer" },
+      { amount: 150, date: "2023-08-05", method: "PayPal" },
+      { amount: 80, date: "2023-07-15", method: "Bank Transfer" },
+      { amount: 95, date: "2023-06-22", method: "PayPal" },
+      { amount: 110, date: "2023-05-18", method: "Bank Transfer" },
+      { amount: 65, date: "2023-04-12", method: "PayPal" },
+      { amount: 140, date: "2023-03-25", method: "Bank Transfer" },
+      { amount: 85, date: "2023-02-08", method: "PayPal" },
+      { amount: 120, date: "2023-01-15", method: "Bank Transfer" }
     ],
     linkupPlus: {
       startDate: null,
@@ -370,11 +377,74 @@ const UserProfile = () => {
 
   const earningsBreakdown = [
     {
-      description: "Sunset Cardio Session",
-      amount: 20.00,
+      description: "Sunset Beach Yoga Session",
+      amount: 35.00,
       timestamp: "2024-04-19T18:31:00Z",
       status: "earned" as const,
-      linkupId: "cardio-123"
+      linkupId: "yoga-123"
+    },
+    {
+      description: "City Walking Tour",
+      amount: 45.00,
+      timestamp: "2024-04-18T14:30:00Z",
+      status: "earned" as const,
+      linkupId: "walk-456"
+    },
+    {
+      description: "Tennis Coaching",
+      amount: 50.00,
+      timestamp: "2024-04-17T10:00:00Z",
+      status: "earned" as const,
+      linkupId: "tennis-789"
+    },
+    {
+      description: "Pottery Workshop",
+      amount: 60.00,
+      timestamp: "2024-04-16T15:30:00Z",
+      status: "earned" as const,
+      linkupId: "pottery-101"
+    },
+    {
+      description: "Dance Class",
+      amount: 40.00,
+      timestamp: "2024-04-15T19:00:00Z",
+      status: "earned" as const,
+      linkupId: "dance-202"
+    },
+    {
+      description: "Photography Walk",
+      amount: 30.00,
+      timestamp: "2024-04-14T11:00:00Z",
+      status: "earned" as const,
+      linkupId: "photo-303"
+    },
+    {
+      description: "Cooking Workshop",
+      amount: 55.00,
+      timestamp: "2024-04-13T17:30:00Z",
+      status: "earned" as const,
+      linkupId: "cook-404"
+    },
+    {
+      description: "Surfing Lesson",
+      amount: 70.00,
+      timestamp: "2024-04-12T09:00:00Z",
+      status: "earned" as const,
+      linkupId: "surf-505"
+    },
+    {
+      description: "Meditation Session",
+      amount: 25.00,
+      timestamp: "2024-04-11T08:00:00Z",
+      status: "earned" as const,
+      linkupId: "meditation-606"
+    },
+    {
+      description: "Rock Climbing Class",
+      amount: 65.00,
+      timestamp: "2024-04-10T16:00:00Z",
+      status: "earned" as const,
+      linkupId: "climb-707"
     }
   ];
 
@@ -733,7 +803,7 @@ const UserProfile = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {earningsBreakdown.map((item, index) => (
+                      {earningsBreakdown.slice(0, 3).map((item, index) => (
                         <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
                           <div>
                             <Link 
