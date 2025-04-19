@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -817,4 +818,185 @@ const UserProfile = () => {
                         <p className="text-3xl font-bold text-linkup-purple">{user.linkupStats.hosted}</p>
                         <p className="text-sm text-linkup-dark-purple">Linkups Hosted</p>
                       </div>
-                      <div
+                      <div className="p-4 rounded-lg bg-linkup-soft-blue flex flex-col items-center justify-center">
+                        <p className="text-3xl font-bold text-blue-500">{user.linkupStats.joined}</p>
+                        <p className="text-sm text-blue-700">Linkups Joined</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Recent Activity</CardTitle>
+                    <Button variant="outline" size="sm">View All</Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
+                          🏐
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">Joined "Sunset Beach Volleyball"</p>
+                          <p className="text-sm text-muted-foreground">2 days ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
+                          🎨
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">Hosted "Downtown Art Gallery Opening"</p>
+                          <p className="text-sm text-muted-foreground">1 week ago</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
+                          🧘
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium">Joined "Rooftop Yoga Session"</p>
+                          <p className="text-sm text-muted-foreground">2 weeks ago</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Privacy Settings Tab */}
+            <TabsContent value="privacy" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Privacy Settings</CardTitle>
+                  <CardDescription>Manage how user information is displayed and shared</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Hide Age</p>
+                        <p className="text-sm text-muted-foreground">Don't show age on profile</p>
+                      </div>
+                      <Switch checked={user.privacySettings.hideAge} />
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Allow Friend Requests</p>
+                        <p className="text-sm text-muted-foreground">Control who can send friend requests</p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="female-requests" className="text-sm">Female</Label>
+                          <Switch id="female-requests" checked={user.privacySettings.allowFemaleFriendRequests} />
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="male-requests" className="text-sm">Male</Label>
+                          <Switch id="male-requests" checked={user.privacySettings.allowMaleFriendRequests} />
+                        </div>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium">Social Media Privacy</p>
+                        <p className="text-sm text-muted-foreground">Only friends can see social media accounts</p>
+                      </div>
+                      <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Reports Tab */}
+            <TabsContent value="reports" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Flag className="h-5 w-5 text-red-500" />
+                    Reports
+                  </CardTitle>
+                  <CardDescription>This user has no active reports</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-center h-40">
+                    <p className="text-muted-foreground">No reports have been filed against this user</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Friends Tab */}
+            <TabsContent value="friends" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Friends</CardTitle>
+                  <CardDescription>This user has 0 friends</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-center h-40">
+                    <p className="text-muted-foreground">No friends to display</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Pending Friend Requests</CardTitle>
+                  <CardDescription>No pending friend requests</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-center h-40">
+                    <p className="text-muted-foreground">No pending friend requests to display</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Photos Tab */}
+            <TabsContent value="photos" className="space-y-6">
+              <ProfilePhotos photos={userPhotos} />
+            </TabsContent>
+
+            {/* Activity Tab */}
+            <TabsContent value="activity" className="space-y-6">
+              <UserActivity 
+                chatActivity={userChatActivity}
+                linkupActivity={userLinkupActivity}
+              />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+
+      {/* Dialogs */}
+      <PayoutHistoryDialog 
+        open={isPayoutHistoryOpen} 
+        onOpenChange={setIsPayoutHistoryOpen}
+        payouts={user.wallet.payoutHistory}
+      />
+      
+      <EarningsBreakdownDialog 
+        open={isEarningsBreakdownOpen} 
+        onOpenChange={setIsEarningsBreakdownOpen}
+        earnings={earningsBreakdown}
+      />
+      
+      <LinkupPlusHistoryDialog 
+        open={isLinkupPlusHistoryOpen} 
+        onOpenChange={setIsLinkupPlusHistoryOpen}
+      />
+      
+      <DeleteUserDialog 
+        open={isDeleteDialogOpen} 
+        onOpenChange={setIsDeleteDialogOpen} 
+        userId={user.id} 
+      />
+    </div>
+  );
+};
+
+export default UserProfile;
