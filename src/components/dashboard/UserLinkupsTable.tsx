@@ -6,7 +6,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar } from "lucide-react";
+import { Calendar, ArrowUpDown } from "lucide-react";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -96,11 +96,34 @@ const statusOptions = [
   { label: "Removed", value: "removed" }
 ];
 
-const filteredLinkups = (type?: "hosted" | "attended", selectedStatuses?: string[]) => {
+const filteredLinkups = (type?: "hosted" | "attended", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
   let filtered = type ? linkups.filter(linkup => linkup.type === type) : linkups;
+  
   if (selectedStatuses && selectedStatuses.length > 0) {
     filtered = filtered.filter(linkup => selectedStatuses.includes(linkup.status));
   }
+  
+  if (sortConfig) {
+    return [...filtered].sort((a, b) => {
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'created') {
+        const createdDateA = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+        const createdDateB = b.createdDate ? new Date(b.createdDate).getTime() : 0;
+        const joinedDateA = a.joinedDate ? new Date(a.joinedDate).getTime() : 0;
+        const joinedDateB = b.joinedDate ? new Date(b.joinedDate).getTime() : 0;
+        
+        const dateA = a.type === "hosted" ? createdDateA : joinedDateA;
+        const dateB = b.type === "hosted" ? createdDateB : joinedDateB;
+        
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      }
+      return 0;
+    });
+  }
+  
   return filtered;
 };
 
@@ -121,12 +144,25 @@ const getStatusBadgeStyles = (status: Linkup["status"]) => {
   }
 };
 
-const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boolean }) => (
+const LinkupsTable = ({ 
+  data, 
+  preview = false,
+  onSort
+}: { 
+  data: Linkup[], 
+  preview?: boolean,
+  onSort?: (field: string) => void
+}) => (
   <Table>
     <TableHeader>
       <TableRow>
         <TableHead>Linkup</TableHead>
-        <TableHead>Date & Time</TableHead>
+        <TableHead className="cursor-pointer" onClick={() => onSort && onSort('date')}>
+          <div className="flex items-center">
+            Date & Time
+            <ArrowUpDown className="ml-2 h-4 w-4" />
+          </div>
+        </TableHead>
         <TableHead>Status</TableHead>
         <TableHead>Type</TableHead>
       </TableRow>
@@ -143,17 +179,19 @@ const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boo
                 <span className="text-xl">{linkup.emoji}</span>
                 <span className="font-medium">{linkup.name}</span>
               </Link>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-muted-foreground cursor-pointer" onClick={() => onSort && onSort('created')}>
                 {linkup.type === "attended" && linkup.joinedDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Joined on {new Date(linkup.joinedDate).toLocaleString()}</span>
+                    {!preview && <ArrowUpDown className="ml-2 h-3.5 w-3.5" />}
                   </div>
                 )}
                 {linkup.type === "hosted" && linkup.createdDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Created on {new Date(linkup.createdDate).toLocaleString()}</span>
+                    {!preview && <ArrowUpDown className="ml-2 h-3.5 w-3.5" />}
                   </div>
                 )}
               </div>
@@ -189,6 +227,11 @@ const LinkupsTable = ({ data, preview = false }: { data: Linkup[], preview?: boo
 export function UserLinkupsTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [sortConfig, setSortConfig] = useState<{ field: string, direction: 'asc' | 'desc' }>({
+    field: 'date',
+    direction: 'desc'
+  });
+  const [activeTab, setActiveTab] = useState("all");
 
   const handleCheckedChange = (value: string, checked: boolean) => {
     if (checked) {
@@ -196,6 +239,13 @@ export function UserLinkupsTable() {
     } else {
       setSelectedStatuses(prev => prev.filter(status => status !== value));
     }
+  };
+  
+  const handleSort = (field: string) => {
+    setSortConfig(prev => ({
+      field,
+      direction: prev.field === field && prev.direction === 'desc' ? 'asc' : 'desc'
+    }));
   };
 
   return (
@@ -231,11 +281,11 @@ export function UserLinkupsTable() {
               <DialogTitle>All Linkups</DialogTitle>
               <Popover>
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="ml-auto">
+                  <Button variant="outline" className="ml-auto mr-8">
                     Status ({selectedStatuses.length})
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-4" align="end">
+                <PopoverContent className="w-[220px] p-4" align="end">
                   <div className="space-y-4">
                     {statusOptions.map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
@@ -260,7 +310,12 @@ export function UserLinkupsTable() {
             </div>
           </DialogHeader>
           <ScrollArea className="h-[600px] pr-4">
-            <Tabs defaultValue="all" className="w-full">
+            <Tabs 
+              defaultValue="all" 
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="hosted">Host</TabsTrigger>
@@ -270,8 +325,13 @@ export function UserLinkupsTable() {
               {["all", "hosted", "attended"].map((tab) => (
                 <TabsContent key={tab} value={tab}>
                   <LinkupsTable 
-                    data={filteredLinkups(tab === "all" ? undefined : tab as "hosted" | "attended", selectedStatuses)} 
+                    data={filteredLinkups(
+                      tab === "all" ? undefined : tab as "hosted" | "attended",
+                      selectedStatuses,
+                      sortConfig
+                    )} 
                     preview={false}
+                    onSort={handleSort}
                   />
                 </TabsContent>
               ))}
