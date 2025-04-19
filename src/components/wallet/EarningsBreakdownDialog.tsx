@@ -10,6 +10,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Badge } from "@/components/ui/badge";
+import React, { useMemo } from "react";
 
 interface EarningItem {
   description: string;
@@ -39,6 +40,16 @@ export function EarningsBreakdownDialog({
   earnings,
   attendancePayments = [],
 }: EarningsBreakdownDialogProps) {
+  const sortedEarnings = useMemo(() => 
+    earnings.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
+    [earnings]
+  );
+
+  const sortedAttendancePayments = useMemo(() => 
+    attendancePayments.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
+    [attendancePayments]
+  );
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
@@ -47,13 +58,21 @@ export function EarningsBreakdownDialog({
         </DialogHeader>
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="earnings" className="flex items-center gap-2">
+            <TabsTrigger 
+              key="earnings-tab" 
+              value="earnings" 
+              className="flex items-center gap-2"
+            >
               Linkup Earnings
               <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 ml-1">
                 Hosted
               </Badge>
             </TabsTrigger>
-            <TabsTrigger value="payments" className="flex items-center gap-2">
+            <TabsTrigger 
+              key="payments-tab"
+              value="payments" 
+              className="flex items-center gap-2"
+            >
               Linkup Payments
               <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200 ml-1">
                 Attended
@@ -64,9 +83,9 @@ export function EarningsBreakdownDialog({
           <TabsContent value="earnings">
             <ScrollArea className="h-[400px] pr-4">
               <div className="space-y-4">
-                {earnings.map((item, index) => (
+                {sortedEarnings.map((item, index) => (
                   <div
-                    key={index}
+                    key={`earnings-${index}`}
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
@@ -92,9 +111,9 @@ export function EarningsBreakdownDialog({
           <TabsContent value="payments">
             <ScrollArea className="h-[400px] pr-4">
               <div className="space-y-4">
-                {attendancePayments.map((item, index) => (
+                {sortedAttendancePayments.map((item, index) => (
                   <div
-                    key={index}
+                    key={`payments-${index}`}
                     className="flex items-center justify-between py-3 border-b last:border-0"
                   >
                     <div className="flex-1">
@@ -119,3 +138,4 @@ export function EarningsBreakdownDialog({
     </Dialog>
   );
 }
+
