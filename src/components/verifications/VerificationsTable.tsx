@@ -58,7 +58,7 @@ const generateVerificationUsers = (): VerificationUser[] => {
       submissionDate: "May 10, 2023",
       submissionTime: "15:30:00",
       status: "pending",
-      verificationPhoto: "/lovable-uploads/9ff9aa7e-af28-42ed-9877-d7b3bd322e48.png"
+      verificationPhoto: "/lovable-uploads/96315a2c-30e4-429b-a4de-b2f55e46e7bd.png"
     },
     {
       id: "2",
@@ -82,7 +82,7 @@ const generateVerificationUsers = (): VerificationUser[] => {
       submissionTime: "08:20:00",
       status: "denied",
       statusChangeTime: "2023-06-07T09:15:00Z",
-      verificationPhoto: "/lovable-uploads/3a92fc9e-fe93-44e4-8c0e-0b14a7085082.png"
+      verificationPhoto: "/lovable-uploads/5467e609-0f42-4ba4-b807-24ae0a72808e.png"
     },
     {
       id: "4",
