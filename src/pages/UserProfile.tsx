@@ -298,6 +298,7 @@ const UserProfile = () => {
               <TabsTrigger value="activity">Activity</TabsTrigger>
             </TabsList>
             
+            
             <TabsContent value="basic-info" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -358,6 +359,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            
             <TabsContent value="profile-info" className="space-y-6">
               <ProfileImageCarousel photos={userPhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -419,6 +421,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            
             <TabsContent value="verification" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -541,6 +544,7 @@ const UserProfile = () => {
               </Card>
             </TabsContent>
 
+            
             <TabsContent value="wallet" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
@@ -620,6 +624,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            
             <TabsContent value="linkups" className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
@@ -680,6 +685,7 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            
             <TabsContent value="privacy" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -800,5 +806,4 @@ const UserProfile = () => {
                         </span>
                       </Label>
                       <Switch
-                        id="linkups-friends"
-                        checked={user.privacy
+                        id="
