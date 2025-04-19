@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -373,7 +372,7 @@ const UserProfile = () => {
       amount: 20.00,
       timestamp: "2024-04-19T18:31:00Z",
       status: "earned" as const,
-      linkupId: "cardio-123" // Added linkupId
+      linkupId: "cardio-123"
     },
     {
       description: "Withdrawal failed – please update your payout settings.",
@@ -723,6 +722,57 @@ const UserProfile = () => {
                 </Card>
                 
                 <Card className="col-span-1 md:col-span-3">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Earnings Breakdown</CardTitle>
+                    <Button variant="outline" size="sm" onClick={() => setIsEarningsBreakdownOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {earningsBreakdown.slice(0, 3).map((item, index) => (
+                        <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            {item.status === "earned" && item.linkupId ? (
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <p className="font-medium cursor-pointer hover:text-linkup-purple transition-colors">
+                                    {item.description}
+                                  </p>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="w-80">
+                                  <div className="flex justify-between space-x-4">
+                                    <div className="space-y-1">
+                                      <h4 className="text-sm font-semibold">{item.description}</h4>
+                                      <p className="text-sm text-muted-foreground">
+                                        Click to view linkup details
+                                      </p>
+                                    </div>
+                                    <Button asChild variant="ghost" size="icon">
+                                      <Link to={`/linkups/${item.linkupId}`}>
+                                        <ArrowUpRight className="h-4 w-4" />
+                                      </Link>
+                                    </Button>
+                                  </div>
+                                </HoverCardContent>
+                              </HoverCard>
+                            ) : (
+                              <p className="font-medium">{item.description}</p>
+                            )}
+                            <p className="text-sm text-muted-foreground">
+                              {formatJoinDate(item.timestamp)}
+                            </p>
+                          </div>
+                          {item.status === "earned" && (
+                            <p className="font-medium">£{item.amount.toFixed(2)}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="col-span-1 md:col-span-3">
                   <CardHeader>
                     <CardTitle>Linkup Plus Subscription</CardTitle>
                   </CardHeader>
@@ -762,241 +812,4 @@ const UserProfile = () => {
                       </div>
                       <div className="p-4 rounded-lg bg-linkup-soft-blue flex flex-col items-center justify-center">
                         <p className="text-3xl font-bold text-blue-500">{user.linkupStats.joined}</p>
-                        <p className="text-sm text-blue-700">Linkups Joined</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
-                    <CardTitle>Recent Activity</CardTitle>
-                    <Button variant="outline" size="sm">View All</Button>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🏐
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Joined "Sunset Beach Volleyball"</p>
-                          <p className="text-sm text-muted-foreground">2 days ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🎨
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Hosted "Downtown Art Gallery Opening"</p>
-                          <p className="text-sm text-muted-foreground">1 week ago</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-lg">
-                          🧘
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium">Joined "Rooftop Yoga Session"</p>
-                          <p className="text-sm text-muted-foreground">2 weeks ago</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="privacy" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Privacy Settings</CardTitle>
-                  <CardDescription>Manage how user information is displayed and shared</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="hide-age">Hide Age</Label>
-                        <p className="text-sm text-muted-foreground">
-                          Hide age from other users viewing your profile
-                        </p>
-                      </div>
-                      <Switch id="hide-age" checked={user.privacySettings.hideAge} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="female-friend-requests">
-                          Allow Female Friend Requests
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          Receive friend requests from female users
-                        </p>
-                      </div>
-                      <Switch id="female-friend-requests" checked={user.privacySettings.allowFemaleFriendRequests} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="male-friend-requests">
-                          Allow Male Friend Requests
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          Receive friend requests from male users
-                        </p>
-                      </div>
-                      <Switch id="male-friend-requests" checked={user.privacySettings.allowMaleFriendRequests} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="socials-privacy">
-                          Social Media Privacy
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          Only show social media links to friends
-                        </p>
-                      </div>
-                      <Switch id="socials-privacy" checked={user.privacySettings.socialsVisibleToFriendsOnly} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="show-location">
-                          Show Location on Map
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          Allow your approximate location to be shown on map
-                        </p>
-                      </div>
-                      <Switch id="show-location" checked={user.privacySettings.showLocationOnMap} />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <Label className="text-base" htmlFor="appear-nearby">
-                          Appear on Nearby People
-                        </Label>
-                        <p className="text-sm text-muted-foreground">
-                          Allow your profile to be discovered by nearby users
-                        </p>
-                      </div>
-                      <Switch id="appear-nearby" checked={user.privacySettings.appearOnNearbyPeople} />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="reports" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Report History</CardTitle>
-                  <CardDescription>Reports associated with this user</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {user.reports && user.reports.length > 0 ? (
-                    <div className="space-y-4">
-                      {/* Report items would go here */}
-                      <p>No reports found.</p>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <CheckCircle className="mx-auto h-12 w-12 text-green-500 mb-4" />
-                      <p className="text-muted-foreground">No reports have been filed against this user</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="friends" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Friends List</CardTitle>
-                  <CardDescription>People connected with this user</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {user.friends && user.friends.length > 0 ? (
-                    <div className="space-y-4">
-                      {/* Friend items would go here */}
-                      <p>No friends found.</p>
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <UserIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
-                      <p className="text-muted-foreground">User doesn't have any friends yet</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pending Friend Requests</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-medium mb-3">Received Requests</h3>
-                      {user.pendingFriendRequests.received && user.pendingFriendRequests.received.length > 0 ? (
-                        <div className="space-y-4">
-                          {/* Received friend requests would go here */}
-                          <p>No pending friend requests received.</p>
-                        </div>
-                      ) : (
-                        <p className="text-muted-foreground text-sm">No pending friend requests received</p>
-                      )}
-                    </div>
-                    
-                    <div>
-                      <h3 className="text-lg font-medium mb-3">Sent Requests</h3>
-                      {user.pendingFriendRequests.sent && user.pendingFriendRequests.sent.length > 0 ? (
-                        <div className="space-y-4">
-                          {/* Sent friend requests would go here */}
-                          <p>No pending friend requests sent.</p>
-                        </div>
-                      ) : (
-                        <p className="text-muted-foreground text-sm">No pending friend requests sent</p>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="photos" className="space-y-6">
-              <ProfilePhotos photos={userPhotos} />
-            </TabsContent>
-
-            <TabsContent value="activity" className="space-y-6">
-              <UserActivity chatActivity={userChatActivity} linkupActivity={userLinkupActivity} />
-            </TabsContent>
-          </Tabs>
-
-          <PayoutHistoryDialog
-            open={isPayoutHistoryOpen}
-            onOpenChange={setIsPayoutHistoryOpen}
-            payoutHistory={user.wallet.payoutHistory}
-          />
-
-          <EarningsBreakdownDialog
-            open={isEarningsBreakdownOpen}
-            onOpenChange={setIsEarningsBreakdownOpen}
-            earnings={earningsBreakdown}
-          />
-
-          <LinkupPlusHistoryDialog
-            open={isLinkupPlusHistoryOpen}
-            onOpenChange={setIsLinkupPlusHistoryOpen}
-            startDate={user.wallet.linkupPlus.startDate}
-            plan="annual"
-            transactions={[
-              { date: "2024-03-15", amount: 49.99, description: "Annual Linkup Plus Subscription" },
-              { date: "2023-03-15", amount: 49.99, description: "Annual Linkup Plus Subscription" }
-            ]}
-          />
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default UserProfile;
+                        <p className="text-sm text
