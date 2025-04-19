@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { useToast } from "@/hooks/use-toast";
+import { VerificationAttempt } from "@/types/user";
 
 interface UserProfileHeaderProps {
   user: {
@@ -25,9 +26,7 @@ interface UserProfileHeaderProps {
     isLinkupPlus: boolean;
     hostingLinkups?: number;
     verificationDetails?: {
-      attempts: {
-        status: 'pending' | 'approved' | 'denied';
-      }[];
+      attempts: VerificationAttempt[];
       hasSubmitted: boolean;
     };
   };

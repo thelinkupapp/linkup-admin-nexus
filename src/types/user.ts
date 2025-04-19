@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   avatar: string;
@@ -16,6 +15,14 @@ export interface User {
   hostedLinkups: number;
   attendedLinkups: number;
   totalEarnings: number;
+}
+
+export interface VerificationAttempt {
+  selfie: string;
+  submittedAt: string;
+  status: 'pending' | 'approved' | 'denied';
+  statusChangeTime?: string;
+  notificationSent?: boolean;
 }
 
 export interface SocialMediaLinks {

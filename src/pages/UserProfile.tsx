@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -9,6 +8,7 @@ import { ProfilePhotos } from "@/components/dashboard/ProfilePhotos";
 import { UserActivity } from "@/components/dashboard/UserActivity";
 import { ProfileImageCarousel } from "@/components/profile/ProfileImageCarousel";
 import { getCountryEmoji } from "@/utils/countryUtils";
+import { VerificationAttempt } from "@/types/user";
 import { 
   Tabs, 
   TabsList, 
@@ -53,15 +53,78 @@ import { toast } from "@/hooks/use-toast";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { formatJoinDate } from "@/utils/dateFormatting";
 
-interface VerificationAttempt {
-  selfie: string;
-  submittedAt: string;
-  status: 'pending' | 'approved' | 'denied';
-  notificationSent?: boolean;
-  statusChangeTime?: string;
+interface UserData {
+  id: string;
+  avatar: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  phone: string;
+  dob: string;
+  age: number;
+  gender: string;
+  nationality: string;
+  joinDate: string;
+  location: string;
+  isLinkupPlus: boolean;
+  isVerified: boolean;
+  verificationDetails: {
+    attempts: VerificationAttempt[];
+    hasSubmitted: boolean;
+  };
+  occupation: string;
+  bio: string;
+  socials: {
+    instagram?: string;
+    twitter?: string;
+    linkedin?: string;
+    tiktok?: string;
+  };
+  interests: string[];
+  languages: string[];
+  wallet: {
+    lifetimeEarnings: number;
+    availableBalance: number;
+    inTransit: number;
+    lastWithdrawal: string;
+    payoutHistory: {
+      amount: number;
+      date: string;
+      status: string;
+      method: string;
+    }[];
+    linkupPlus: {
+      startDate: string | null;
+      cancelDate: string | null;
+    };
+  };
+  linkupStats: {
+    hosted: number;
+    joined: number;
+  };
+  privacySettings: {
+    hideAge: boolean;
+    allowFemaleFriendRequests: boolean;
+    allowMaleFriendRequests: boolean;
+    socialsVisibleToFriendsOnly: boolean;
+    friendsCanSeeUpcomingAttendance: boolean;
+    showLocationOnMap: boolean;
+    appearOnNearbyPeople: boolean;
+    showLinkupsToEveryone: boolean;
+    showLinkupsToFriendsOnly: boolean;
+  };
+  reports: any[];
+  friends: any[];
+  pendingFriendRequests: {
+    received: any[];
+    sent: any[];
+  };
+  hostingLinkups: number;
+  lastKnownLocation: string;
 }
 
-const user = {
+const user: UserData = {
   id: "2",
   avatar: "/lovable-uploads/03ae0b73-0e7e-42b1-a69b-8646589f09bf.png",
   firstName: "Jack",
@@ -152,7 +215,7 @@ const UserProfile = () => {
     user.verificationDetails?.attempts[0]?.status === 'approved'
   );
   const [verificationAttempts, setVerificationAttempts] = useState<VerificationAttempt[]>(
-    user.verificationDetails.attempts as VerificationAttempt[]
+    user.verificationDetails.attempts
   );
 
   const userPhotos = [
@@ -228,7 +291,7 @@ const UserProfile = () => {
     hostingLinkups: user.hostingLinkups
   };
 
-  const [userWithVerification, setUserWithVerification] = useState({
+  const [userWithVerification, setUserWithVerification] = useState<UserData>({
     ...user,
     isVerified: isVerified
   });
@@ -271,7 +334,6 @@ const UserProfile = () => {
       newAttempts[0] = {
         ...newAttempts[0],
         status: 'approved',
-        notificationSent: undefined,
         statusChangeTime: currentTime
       };
       setVerificationAttempts(newAttempts);
