@@ -30,13 +30,20 @@ interface UserProfileHeaderProps {
     isVerified: boolean;
     isLinkupPlus: boolean;
     hostingLinkups?: number;
+    verificationDetails?: {
+      attempts: {
+        status: 'pending' | 'approved' | 'denied';
+      }[];
+    };
   };
 }
 
 export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isSuspendDialogOpen, setIsSuspendDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [isVerified, setIsVerified] = useState(user.isVerified);
+  const [isVerified, setIsVerified] = useState(
+    user.verificationDetails?.attempts[0]?.status === 'approved'
+  );
   const { toast } = useToast();
 
   const handleVerificationApproval = () => {
