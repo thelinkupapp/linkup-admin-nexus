@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -167,7 +168,7 @@ export function UserLinkupActivity() {
             {activeTab === "hosted" ? "Host of " : 
              activeTab === "attended" ? "Attendee of " : ""}
           </span>
-          <span className="text-[#9b87f5] font-bold">{total}</span>
+          <span className="text-[#9b87f5] font-bold text-xl">{total}</span>
           <span className="text-[#1A1F2C]">{linkupText}</span>
           {(selectedStatuses.length > 0 || searchValue) && (
             <>
@@ -176,7 +177,7 @@ export function UserLinkupActivity() {
               <span className="text-[#9b87f5] font-bold">{totalFiltered}</span>
               <span> of </span>
               <span className="text-[#9b87f5] font-bold">{total}</span>
-              <span> {linkupText}</span>
+              <span> {totalFiltered === 1 ? "linkup" : "linkups"}</span>
             </>
           )}
         </div>

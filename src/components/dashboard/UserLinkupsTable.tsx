@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -13,6 +14,15 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationItemsPerPage
+} from "@/components/ui/pagination";
 
 interface Linkup {
   id: string;
@@ -243,6 +253,9 @@ export function UserLinkupsTable() {
   const [activeTab, setActiveTab] = useState("all");
   const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  // Add pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
@@ -267,6 +280,12 @@ export function UserLinkupsTable() {
     return true;
   });
 
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredLinkups.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentLinkups = filteredLinkups.slice(startIndex, endIndex);
+
   const totalLinkups = linkups.filter(linkup => 
     activeTab === "all" ? true : linkup.type === activeTab
   ).length;
@@ -274,41 +293,48 @@ export function UserLinkupsTable() {
   const getHeaderText = () => {
     const filteredCount = filteredLinkups.length;
     const roleText = activeTab === "hosted" ? "Host" : activeTab === "attended" ? "Attendee" : "";
+    const linkupText = totalLinkups === 1 ? "linkup" : "linkups";
     
     if (roleText) {
       return (
-        <div className="flex items-center gap-2">
-          <span>{roleText} of </span>
-          <span className="text-[#9b87f5]">{totalLinkups}</span>
-          <span> linkups</span>
-          {(selectedStatuses.length > 0 || searchQuery) && (
-            <>
-              <span className="mx-1">•</span>
-              <span>showing </span>
-              <span className="text-[#9b87f5]">{filteredCount}</span>
-              <span> of </span>
-              <span className="text-[#9b87f5]">{totalLinkups}</span>
-              <span> linkups</span>
-            </>
-          )}
+        <div className="flex flex-col gap-1">
+          <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+          <div className="flex items-center gap-2 text-lg">
+            <span>{roleText} of </span>
+            <span className="text-[#9b87f5] font-bold text-xl">{totalLinkups}</span>
+            <span> {linkupText}</span>
+            {(selectedStatuses.length > 0 || searchQuery) && (
+              <>
+                <span className="mx-1">•</span>
+                <span>showing </span>
+                <span className="text-[#9b87f5] font-bold">{filteredCount}</span>
+                <span> of </span>
+                <span className="text-[#9b87f5] font-bold">{totalLinkups}</span>
+                <span> {linkupText}</span>
+              </>
+            )}
+          </div>
         </div>
       );
     }
     
     return (
-      <div className="flex items-center gap-2">
-        <span className="text-[#9b87f5]">{totalLinkups}</span>
-        <span className="text-[#1A1F2C]">total linkups</span>
-        {(selectedStatuses.length > 0 || searchQuery) && (
-          <>
-            <span className="mx-1">•</span>
-            <span>showing </span>
-            <span className="text-[#9b87f5]">{filteredCount}</span>
-            <span> of </span>
-            <span className="text-[#9b87f5]">{totalLinkups}</span>
-            <span> linkups</span>
-          </>
-        )}
+      <div className="flex flex-col gap-1">
+        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+        <div className="flex items-center gap-2 text-lg">
+          <span className="text-[#9b87f5] font-bold text-xl">{totalLinkups}</span>
+          <span className="text-[#1A1F2C]">{totalLinkups === 1 ? "linkup" : "linkups"}</span>
+          {(selectedStatuses.length > 0 || searchQuery) && (
+            <>
+              <span className="mx-1">•</span>
+              <span>showing </span>
+              <span className="text-[#9b87f5] font-bold">{filteredCount}</span>
+              <span> of </span>
+              <span className="text-[#9b87f5] font-bold">{totalLinkups}</span>
+              <span> {totalLinkups === 1 ? "linkup" : "linkups"}</span>
+            </>
+          )}
+        </div>
       </div>
     );
   };
@@ -345,7 +371,6 @@ export function UserLinkupsTable() {
             <div className="flex flex-col gap-4 pr-12">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <DialogTitle>All Linkups</DialogTitle>
                   {getHeaderText()}
                 </div>
                 <div className="flex items-center gap-2">
@@ -373,8 +398,8 @@ export function UserLinkupsTable() {
                           <div 
                             key={option.value} 
                             className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
+                            onClick={() => {
+                              handleCheckedChange(option.value, !selectedStatuses.includes(option.value));
                             }}
                           >
                             <Checkbox 
@@ -415,12 +440,63 @@ export function UserLinkupsTable() {
 
               <TabsContent value={activeTab}>
                 <LinkupsTable 
-                  data={filteredLinkups}
+                  data={currentLinkups}
                   preview={false}
+                  onSort={(field) => {
+                    setSortConfig(prev => ({
+                      field,
+                      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+                    }));
+                  }}
                 />
               </TabsContent>
             </Tabs>
           </ScrollArea>
+          <div className="mt-4 flex items-center justify-between">
+            <PaginationItemsPerPage className="flex items-center gap-2">
+              <span>Items per page:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded px-2 py-1"
+              >
+                {[5, 10, 15].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </PaginationItemsPerPage>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => currentPage > 1 && setCurrentPage(p => Math.max(1, p - 1))}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(page)}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => currentPage < totalPages && setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
