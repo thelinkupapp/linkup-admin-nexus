@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -33,6 +32,8 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { MoreVertical, Users } from "lucide-react";
 
 // Define verification user type
 interface VerificationUser {
@@ -272,13 +273,28 @@ export function VerificationsTable() {
   const approvedCount = users.filter(user => user.status === 'approved').length;
   const deniedCount = users.filter(user => user.status === 'denied').length;
 
+  // Get the appropriate header text based on active tab
+  const getHeaderText = () => {
+    const count = filteredUsers.length;
+    switch (activeTab) {
+      case 'pending':
+        return `${count} verification ${count === 1 ? 'submission' : 'submissions'}`;
+      case 'approved':
+        return `${count} verified ${count === 1 ? 'user' : 'users'}`;
+      case 'denied':
+        return `${count} denied ${count === 1 ? 'submission' : 'submissions'}`;
+      default:
+        return `${count} verification ${count === 1 ? 'request' : 'requests'}`;
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Users className="h-5 w-5 text-muted-foreground" />
           <span className="text-lg font-medium">
-            {totalUsers} verification {totalUsers === 1 ? 'request' : 'requests'}
+            {getHeaderText()}
           </span>
         </div>
         
@@ -352,15 +368,29 @@ export function VerificationsTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="w-[120px]">
-                          <AspectRatio ratio={9/16}>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="w-[120px] cursor-pointer group">
+                              <AspectRatio ratio={9/16}>
+                                <img
+                                  src={user.verificationPhoto}
+                                  alt="Verification selfie"
+                                  className="rounded-md object-cover w-full h-full"
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+                                  <span className="text-white text-xs">Click to enlarge</span>
+                                </div>
+                              </AspectRatio>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
                             <img
                               src={user.verificationPhoto}
                               alt="Verification selfie"
-                              className="rounded-md object-cover w-full h-full"
+                              className="w-full h-auto max-h-[80vh] object-contain"
                             />
-                          </AspectRatio>
-                        </div>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
@@ -448,15 +478,29 @@ export function VerificationsTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="w-[120px]">
-                          <AspectRatio ratio={9/16}>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="w-[120px] cursor-pointer group">
+                              <AspectRatio ratio={9/16}>
+                                <img
+                                  src={user.verificationPhoto}
+                                  alt="Verification selfie"
+                                  className="rounded-md object-cover w-full h-full"
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+                                  <span className="text-white text-xs">Click to enlarge</span>
+                                </div>
+                              </AspectRatio>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
                             <img
                               src={user.verificationPhoto}
                               alt="Verification selfie"
-                              className="rounded-md object-cover w-full h-full"
+                              className="w-full h-auto max-h-[80vh] object-contain"
                             />
-                          </AspectRatio>
-                        </div>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
@@ -540,15 +584,29 @@ export function VerificationsTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="w-[120px]">
-                          <AspectRatio ratio={9/16}>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="w-[120px] cursor-pointer group">
+                              <AspectRatio ratio={9/16}>
+                                <img
+                                  src={user.verificationPhoto}
+                                  alt="Verification selfie"
+                                  className="rounded-md object-cover w-full h-full"
+                                />
+                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-md">
+                                  <span className="text-white text-xs">Click to enlarge</span>
+                                </div>
+                              </AspectRatio>
+                            </div>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl">
                             <img
                               src={user.verificationPhoto}
                               alt="Verification selfie"
-                              className="rounded-md object-cover w-full h-full"
+                              className="w-full h-auto max-h-[80vh] object-contain"
                             />
-                          </AspectRatio>
-                        </div>
+                          </DialogContent>
+                        </Dialog>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
