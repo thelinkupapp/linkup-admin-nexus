@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -58,7 +57,7 @@ export function VerificationsTable() {
               <div className="w-[120px]">
                 <AspectRatio ratio={9/16}>
                   <img
-                    src="https://i.pravatar.cc/300?img=3"
+                    src="/lovable-uploads/f85e5796-4ca0-42bd-99b9-a9eaca40db93.png"
                     alt="Verification selfie"
                     className="rounded-md object-cover w-full h-full"
                   />
