@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Check, X } from "lucide-react";
+import { Check, X, ShieldOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 export function VerificationsTable() {
@@ -18,9 +18,19 @@ export function VerificationsTable() {
   };
 
   const handleDeny = () => {
+    setIsVerified(false);
     toast({
       title: "Verification Denied",
       description: "The user's verification request has been denied",
+      variant: "destructive",
+    });
+  };
+
+  const handleRemoveVerification = () => {
+    setIsVerified(false);
+    toast({
+      title: "Verification Removed",
+      description: "The user's verified status has been removed",
       variant: "destructive",
     });
   };
@@ -67,7 +77,7 @@ export function VerificationsTable() {
               </span>
             </TableCell>
             <TableCell className="space-x-2">
-              {!isVerified && (
+              {!isVerified ? (
                 <>
                   <Button 
                     onClick={handleApprove}
@@ -88,6 +98,16 @@ export function VerificationsTable() {
                     Deny
                   </Button>
                 </>
+              ) : (
+                <Button 
+                  onClick={handleRemoveVerification}
+                  variant="outline"
+                  size="sm"
+                  className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                >
+                  <ShieldOff className="mr-1 h-4 w-4" />
+                  Remove Verification
+                </Button>
               )}
             </TableCell>
           </TableRow>
