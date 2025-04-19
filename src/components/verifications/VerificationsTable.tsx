@@ -1,16 +1,36 @@
 
+import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, XCircle } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Check, X } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export function VerificationsTable() {
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleApprove = () => {
+    setIsVerified(true);
+    toast({
+      title: "Verification Approved",
+      description: "The user has been successfully verified",
+    });
+  };
+
+  const handleDeny = () => {
+    toast({
+      title: "Verification Denied",
+      description: "The user's verification request has been denied",
+      variant: "destructive",
+    });
+  };
+
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Username</TableHead>
-            <TableHead>Profile Photo</TableHead>
             <TableHead>Verification Photo</TableHead>
             <TableHead>Date Submitted</TableHead>
             <TableHead>Status</TableHead>
@@ -21,34 +41,54 @@ export function VerificationsTable() {
           <TableRow>
             <TableCell className="font-medium">user123</TableCell>
             <TableCell>
-              <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+              <div className="w-[120px]">
+                <AspectRatio ratio={9/16}>
+                  <img
+                    src="https://i.pravatar.cc/300?img=3"
+                    alt="Verification selfie"
+                    className="rounded-md object-cover w-full h-full"
+                  />
+                </AspectRatio>
+              </div>
             </TableCell>
             <TableCell>
-              <div className="h-10 w-10 rounded-full bg-gray-200"></div>
+              <div className="flex flex-col">
+                <span className="font-medium">May 10, 2023</span>
+                <span className="text-sm text-muted-foreground">15:30:00</span>
+              </div>
             </TableCell>
-            <TableCell>2025-04-10</TableCell>
             <TableCell>
-              <span className="rounded-full bg-yellow-100 px-2 py-1 text-xs font-semibold text-yellow-800">
-                Pending
+              <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                isVerified 
+                  ? "bg-green-100 text-green-800" 
+                  : "bg-yellow-100 text-yellow-800"
+              }`}>
+                {isVerified ? "Verified" : "Pending"}
               </span>
             </TableCell>
             <TableCell className="space-x-2">
-              <Button 
-                className="rounded-md bg-green-100 px-2 py-1 text-xs font-semibold text-green-800"
-                variant="ghost"
-                size="sm"
-              >
-                <CheckCircle className="mr-1 h-3 w-3" />
-                Approve
-              </Button>
-              <Button 
-                className="rounded-md bg-red-100 px-2 py-1 text-xs font-semibold text-red-800"
-                variant="ghost"
-                size="sm"
-              >
-                <XCircle className="mr-1 h-3 w-3" />
-                Deny
-              </Button>
+              {!isVerified && (
+                <>
+                  <Button 
+                    onClick={handleApprove}
+                    variant="outline"
+                    size="sm"
+                    className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                  >
+                    <Check className="mr-1 h-4 w-4" />
+                    Approve
+                  </Button>
+                  <Button 
+                    onClick={handleDeny}
+                    variant="outline"
+                    size="sm"
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <X className="mr-1 h-4 w-4" />
+                    Deny
+                  </Button>
+                </>
+              )}
             </TableCell>
           </TableRow>
         </TableBody>
