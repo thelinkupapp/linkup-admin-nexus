@@ -5,12 +5,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Calendar, ArrowUpDown } from "lucide-react";
+import { Calendar, ArrowUpDown, Check } from "lucide-react";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface Linkup {
   id: string;
@@ -239,6 +239,7 @@ export function UserLinkupsTable() {
     direction: 'desc'
   });
   const [activeTab, setActiveTab] = useState("all");
+  const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
 
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
@@ -288,27 +289,36 @@ export function UserLinkupsTable() {
           <DialogHeader>
             <div className="flex items-center justify-between pr-12">
               <DialogTitle>All Linkups</DialogTitle>
-              <Popover>
+              <Popover open={statusPopoverOpen} onOpenChange={setStatusPopoverOpen}>
                 <PopoverTrigger asChild>
                   <Button variant="outline">
                     Status ({selectedStatuses.length})
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="w-[220px] p-4" align="end">
-                  <div className="space-y-4">
+                <PopoverContent className="w-[220px] p-4 bg-white" align="end">
+                  <div className="space-y-2">
                     {statusOptions.map((option) => (
-                      <div key={option.value} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-100 p-1 rounded transition-colors">
-                        <Checkbox
-                          id={`status-${option.value}`}
-                          checked={selectedStatuses.includes(option.value)}
-                          onCheckedChange={(checked) => {
-                            handleCheckedChange(option.value, checked === true);
-                          }}
-                          className="cursor-pointer"
-                        />
+                      <div 
+                        key={option.value} 
+                        className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const newChecked = !selectedStatuses.includes(option.value);
+                          handleCheckedChange(option.value, newChecked);
+                        }}
+                      >
+                        <div className={cn(
+                          "h-4 w-4 rounded-sm border flex items-center justify-center",
+                          selectedStatuses.includes(option.value) 
+                            ? "border-primary bg-primary text-primary-foreground" 
+                            : "border-primary"
+                        )}>
+                          {selectedStatuses.includes(option.value) && (
+                            <Check className="h-3 w-3 text-white" />
+                          )}
+                        </div>
                         <label
-                          htmlFor={`status-${option.value}`}
-                          className="text-sm font-medium leading-none cursor-pointer flex-grow peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          className="text-sm font-medium leading-none cursor-pointer flex-grow"
                         >
                           {option.label}
                         </label>
