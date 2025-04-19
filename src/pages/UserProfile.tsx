@@ -54,6 +54,7 @@ interface VerificationAttempt {
   selfie: string;
   submittedAt: string;
   status: 'pending' | 'approved' | 'denied';
+  notificationSent?: boolean;
 }
 
 const user = {
@@ -142,6 +143,9 @@ const UserProfile = () => {
   const [activeTab, setActiveTab] = useState("basic-info");
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
+  const [verificationAttempts, setVerificationAttempts] = useState<VerificationAttempt[]>(
+    user.verificationDetails.attempts
+  );
 
   const userPhotos = [
     {
@@ -217,8 +221,13 @@ const UserProfile = () => {
   };
 
   const handleVerificationAction = (action: 'approve' | 'deny') => {
-    const newAttempts = [...user.verificationDetails.attempts];
-    newAttempts[0].status = action === 'approve' ? 'approved' : 'denied';
+    const newAttempts = [...verificationAttempts];
+    newAttempts[0] = {
+      ...newAttempts[0],
+      status: action === 'approve' ? 'approved' : 'denied',
+      notificationSent: action === 'deny' ? true : undefined
+    };
+    setVerificationAttempts(newAttempts);
     
     if (action === 'approve') {
       setIsVerified(true);
@@ -229,7 +238,7 @@ const UserProfile = () => {
     } else {
       toast({
         title: "Verification Denied",
-        description: "The user's verification request has been denied",
+        description: "The user has been notified to resubmit their verification",
         variant: "destructive",
       });
     }
@@ -384,9 +393,12 @@ const UserProfile = () => {
                   <CardTitle>Verification Status</CardTitle>
                   <CardDescription>
                     {!user.verificationDetails.hasSubmitted && "User has not submitted any verification photos yet."}
-                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'pending' && "This user has applied for verification."}
-                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'approved' && "This user is verified."}
-                    {user.verificationDetails.hasSubmitted && user.verificationDetails.attempts[0].status === 'denied' && "This user's verification was denied."}
+                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'pending' && 
+                      "This user has applied for verification."}
+                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'approved' && 
+                      "This user is verified."}
+                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'denied' && 
+                      "This user's verification was denied. They have been notified to resubmit."}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -397,7 +409,7 @@ const UserProfile = () => {
                     </div>
                   ) : (
                     <div className="space-y-6">
-                      {user.verificationDetails.attempts.map((attempt, index) => (
+                      {verificationAttempts.map((attempt, index) => (
                         <div key={attempt.submittedAt} className="space-y-4">
                           {index > 0 && <Separator className="my-6" />}
                           <p className="text-sm font-medium text-muted-foreground">
@@ -444,6 +456,11 @@ const UserProfile = () => {
                             }`}>
                               {attempt.status.charAt(0).toUpperCase() + attempt.status.slice(1)}
                             </span>
+                            {attempt.status === 'denied' && attempt.notificationSent && (
+                              <p className="mt-2 text-sm text-muted-foreground">
+                                User has been notified to resubmit their verification photo
+                              </p>
+                            )}
                           </div>
 
                           {index === 0 && attempt.status === 'pending' && (
