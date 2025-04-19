@@ -37,7 +37,8 @@ interface ActivityItem {
     | "reschedule"
     | "update_details"
     | "cancel"
-    | "delete";
+    | "delete"
+    | "received_invite";
   linkupName: string;
   linkupId: string;
   timestamp: string;
@@ -139,6 +140,15 @@ const activities: ActivityItem[] = [
     linkupName: "Art Exhibition",
     linkupId: "art-2",
     timestamp: "2024-04-06T15:00:00Z"
+  },
+  {
+    id: "13",
+    type: "received_invite",
+    linkupName: "Photography Workshop",
+    linkupId: "photo-2",
+    timestamp: "2024-04-05T14:00:00Z",
+    otherUserFirstName: "Emma",
+    otherUserId: "user-emma"
   }
 ];
 
@@ -190,6 +200,8 @@ function getActivityMessage(activity: ActivityItem) {
       return <span>Jack cancelled {linkupLink}</span>;
     case "delete":
       return <span>Jack deleted {linkupLink}</span>;
+    case "received_invite":
+      return <span>Jack received an invite from {otherUserLink} to join {linkupLink}</span>;
     default:
       return null;
   }
@@ -223,7 +235,7 @@ function activityMatchesTab(activity: ActivityItem, tab: string): boolean {
     case "participation":
       return ["request_join", "joined", "accepted_join", "accepted_invite"].includes(activity.type);
     case "invites":
-      return ["sent_invite", "invite_cohost", "accept_cohost"].includes(activity.type);
+      return ["sent_invite", "invite_cohost", "accept_cohost", "received_invite"].includes(activity.type);
     case "edits":
       return ["change_location", "reschedule", "update_details"].includes(activity.type);
     case "cancellations":
