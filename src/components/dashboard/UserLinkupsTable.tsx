@@ -31,44 +31,44 @@ const linkups: Linkup[] = [
   },
   {
     id: "2",
-    name: "Summer Music Festival Weekend",
-    emoji: "🎵",
-    startDate: "2024-07-15T12:00:00Z",
-    endDate: "2024-07-17T23:00:00Z",
+    name: "Evening Social Mixer",
+    emoji: "🍷",
+    startDate: "2024-04-19T20:00:00Z",
+    endDate: "2024-04-19T22:00:00Z",
     status: "upcoming",
-    type: "attended"
+    type: "hosted"
   },
   {
     id: "3",
-    name: "Sunset Beach Volleyball",
-    emoji: "🏐",
-    startDate: "2024-04-20T18:00:00Z",
-    endDate: "2024-04-20T22:00:00Z",
+    name: "Afternoon Workshop",
+    emoji: "💻",
+    startDate: "2024-04-20T12:00:00Z",
+    endDate: "2024-04-20T15:00:00Z",
     status: "upcoming",
     type: "attended"
   },
   {
     id: "4",
-    name: "Downtown Art Gallery Opening",
-    emoji: "🎨",
+    name: "Monday Tech Meetup",
+    emoji: "🚀",
+    startDate: "2024-04-22T15:00:00Z",
+    endDate: "2024-04-22T21:00:00Z",
+    status: "upcoming",
+    type: "hosted"
+  },
+  {
+    id: "5",
+    name: "Beach Cleanup Event",
+    emoji: "🏖️",
     startDate: "2024-04-15T19:00:00Z",
     endDate: "2024-04-15T23:00:00Z",
     status: "happened",
     type: "hosted"
   },
   {
-    id: "5",
-    name: "Rooftop Yoga Session",
-    emoji: "🧘",
-    startDate: "2024-04-10T08:00:00Z",
-    endDate: "2024-04-10T09:30:00Z",
-    status: "happened",
-    type: "attended"
-  },
-  {
     id: "6",
-    name: "Weekend Camping Trip",
-    emoji: "⛺️",
+    name: "Weekend Mountain Retreat",
+    emoji: "⛰️",
     startDate: "2024-05-24T15:00:00Z",
     endDate: "2024-05-26T12:00:00Z",
     status: "upcoming",

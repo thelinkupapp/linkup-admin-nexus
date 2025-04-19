@@ -1,4 +1,3 @@
-
 import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes } from "date-fns";
 
 function isLastWeek(date: Date): boolean {
@@ -50,13 +49,12 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   const minutesDiff = differenceInMinutes(end, start);
   const daysDiff = differenceInDays(end, start);
   
+  // Format duration string
   let duration;
   if (daysDiff > 0) {
     duration = `${daysDiff}d`;
-  } else if (hoursDiff > 0) {
-    duration = `${hoursDiff}h`;
   } else {
-    duration = `${minutesDiff}m`;
+    duration = `${hoursDiff}hr`;
   }
   
   // Format the date part
@@ -64,17 +62,22 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   if (isToday(start)) {
     dateStr = 'Today';
   } else if (isYesterday(start)) {
-    dateStr = 'Yesterday';
+    dateStr = 'Tomorrow';
   } else if (isThisWeek(start)) {
     dateStr = format(start, 'EEEE'); // Full day name
   } else if (differenceInYears(new Date(), start) > 0) {
-    dateStr = format(start, 'MMM d yyyy');
+    dateStr = format(start, 'EEEE d MMMM'); // e.g. "Thursday 1 August"
   } else {
-    dateStr = format(start, 'MMM d');
+    dateStr = format(start, 'EEEE d MMMM');
   }
   
-  // Format end date for multi-day events
-  const endDateStr = daysDiff > 0 ? ` - ${format(end, 'MMM d')}` : '';
+  // Format time range
+  let timeRange;
+  if (daysDiff > 0) {
+    timeRange = `${startTime} - ${format(end, 'd MMM')}, ${endTime}`;
+  } else {
+    timeRange = `${startTime} - ${endTime}`;
+  }
   
-  return `${dateStr}\n${startTime} - ${endTime}${endDateStr} (${duration})`;
+  return `${dateStr}\n${timeRange} (${duration})`;
 }
