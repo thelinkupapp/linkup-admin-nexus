@@ -1,6 +1,5 @@
-
 import { Link } from "react-router-dom";
-import { ArrowLeft, Flag, Trash2 } from "lucide-react";
+import { ArrowLeft, Flag, Trash2, MoreVertical, Check } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -9,6 +8,12 @@ import { useState } from "react";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface UserProfileHeaderProps {
   user: {
@@ -32,7 +37,13 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Generate a display name from firstName and lastName if available, otherwise use name
+  const handleVerificationApproval = () => {
+    toast({
+      title: "Verification Approved",
+      description: "The user has been successfully verified",
+    });
+  };
+
   const displayName = user.firstName && user.lastName 
     ? `${user.firstName} ${user.lastName}` 
     : user.name || user.username;
@@ -51,7 +62,6 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
   };
 
   const handleDeleteClick = () => {
-    // Check for hosting linkups first
     if (user.hostingLinkups && user.hostingLinkups > 0) {
       toast({
         variant: "destructive",
@@ -61,7 +71,6 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       return;
     }
     
-    // Then check for Linkup Plus subscription if not hosting any linkups
     if (user.isLinkupPlus) {
       toast({
         variant: "destructive",
@@ -71,7 +80,6 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
       return;
     }
 
-    // If all checks pass, open the delete dialog
     setIsDeleteDialogOpen(true);
   };
 
@@ -100,7 +108,7 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
             <div className="flex-1 space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <h1 className="text-2xl font-bold">{displayName}</h1>
-                {user.isVerified && (
+                {user.isVerified ? (
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -117,6 +125,24 @@ export const UserProfileHeader = ({ user }: UserProfileHeaderProps) => {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
+                ) : (
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem 
+                        onClick={handleVerificationApproval}
+                        className="cursor-pointer text-green-600"
+                      >
+                        <Check className="mr-2 h-4 w-4" />
+                        <span>Approve Now</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 )}
                 {user.isLinkupPlus && (
                   <TooltipProvider>
