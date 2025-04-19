@@ -79,8 +79,8 @@ const user = {
   verificationDetails: {
     attempts: [
       {
-        selfie: "/lovable-uploads/e22f3ff4-2b21-42d3-9d5f-cc3b7cfba248.png",
-        submittedAt: "2024-04-18T14:30:00Z",
+        selfie: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+        submittedAt: "2024-04-19T14:30:00Z",
         status: 'pending' as 'pending' | 'approved' | 'denied'
       },
       {
