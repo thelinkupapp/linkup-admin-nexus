@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -13,10 +14,16 @@ import {
   PaginationPrevious,
   PaginationItemsPerPage
 } from "@/components/ui/pagination";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Search } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { 
+  Link as LinkIcon, 
+  Mail, 
+  Edit, 
+  Trash2, 
+  CheckCircle, 
+  ArrowDown, 
+  ArrowUp 
+} from "lucide-react";
 
 interface ActivityItem {
   id: string;
@@ -42,6 +49,7 @@ interface ActivityItem {
   newDateTime?: string;
 }
 
+// Sample data - in a real app, this would come from an API or props
 const activities: ActivityItem[] = [
   {
     id: "1",
@@ -69,6 +77,84 @@ const activities: ActivityItem[] = [
     linkupId: "yoga-1",
     timestamp: "2024-04-10T09:00:00Z",
     newDateTime: "2024-04-15T08:00:00Z"
+  },
+  {
+    id: "4",
+    type: "request_join",
+    firstName: "Emily",
+    linkupName: "Weekend Hiking Trip",
+    linkupId: "hiking-1",
+    timestamp: "2024-04-16T11:30:00Z"
+  },
+  {
+    id: "5",
+    type: "accepted_join",
+    firstName: "Michael",
+    linkupName: "Book Club Meeting",
+    linkupId: "book-1",
+    timestamp: "2024-04-14T14:00:00Z"
+  },
+  {
+    id: "6",
+    type: "accepted_invite",
+    firstName: "Lisa",
+    otherUserFirstName: "David",
+    otherUserId: "user-david",
+    linkupName: "Cooking Class",
+    linkupId: "cooking-1",
+    timestamp: "2024-04-13T18:30:00Z"
+  },
+  {
+    id: "7",
+    type: "invite_cohost",
+    firstName: "Brian",
+    otherUserFirstName: "Jessica",
+    otherUserId: "user-jessica",
+    linkupName: "Tech Meetup",
+    linkupId: "tech-1",
+    timestamp: "2024-04-12T19:00:00Z"
+  },
+  {
+    id: "8",
+    type: "accept_cohost",
+    firstName: "Amanda",
+    otherUserFirstName: "Robert",
+    otherUserId: "user-robert",
+    linkupName: "Photography Workshop",
+    linkupId: "photo-1",
+    timestamp: "2024-04-11T16:45:00Z"
+  },
+  {
+    id: "9",
+    type: "change_location",
+    firstName: "Daniel",
+    linkupName: "Networking Event",
+    linkupId: "network-1",
+    timestamp: "2024-04-09T12:15:00Z"
+  },
+  {
+    id: "10",
+    type: "update_details",
+    firstName: "Sophie",
+    linkupName: "Yoga in the Park",
+    linkupId: "yoga-2",
+    timestamp: "2024-04-08T08:30:00Z"
+  },
+  {
+    id: "11",
+    type: "cancel",
+    firstName: "Thomas",
+    linkupName: "Movie Night",
+    linkupId: "movie-1",
+    timestamp: "2024-04-07T20:00:00Z"
+  },
+  {
+    id: "12",
+    type: "delete",
+    firstName: "Rachel",
+    linkupName: "Art Exhibition",
+    linkupId: "art-2",
+    timestamp: "2024-04-06T15:00:00Z"
   }
 ];
 
@@ -126,81 +212,121 @@ function getActivityMessage(activity: ActivityItem) {
   }
 }
 
+function getActivityIcon(type: ActivityItem["type"]) {
+  switch (type) {
+    case "request_join":
+    case "joined":
+    case "accepted_join":
+    case "accepted_invite":
+      return <CheckCircle className="h-5 w-5 text-green-500" />;
+    case "sent_invite":
+    case "invite_cohost":
+    case "accept_cohost":
+      return <Mail className="h-5 w-5 text-blue-500" />;
+    case "change_location":
+    case "reschedule":
+    case "update_details":
+      return <Edit className="h-5 w-5 text-amber-500" />;
+    case "cancel":
+    case "delete":
+      return <Trash2 className="h-5 w-5 text-red-500" />;
+    default:
+      return <LinkIcon className="h-5 w-5 text-gray-500" />;
+  }
+}
+
+// Helper function to check if an activity should be in a particular tab
+function activityMatchesTab(activity: ActivityItem, tab: string): boolean {
+  switch (tab) {
+    case "participation":
+      return ["request_join", "joined", "accepted_join", "accepted_invite"].includes(activity.type);
+    case "invites":
+      return ["sent_invite", "invite_cohost", "accept_cohost"].includes(activity.type);
+    case "edits":
+      return ["change_location", "reschedule", "update_details"].includes(activity.type);
+    case "cancellations":
+      return ["cancel", "delete"].includes(activity.type);
+    default:
+      return true; // "all" tab or any other
+  }
+}
+
 export function UserLinkupActivity() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [searchValue, setSearchValue] = useState("");
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const [activeTab, setActiveTab] = useState("all");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  const handleStatusChange = (status: string) => {
-    setSelectedStatuses(prev => 
-      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
-    );
-  };
+  // Filter activities based on selected tab
+  const filteredActivities = activities.filter(activity => 
+    activityMatchesTab(activity, activeTab)
+  );
 
-  const filteredActivities = activities.filter(activity => {
-    const matchesSearch = activity.linkupName.toLowerCase().includes(searchValue.toLowerCase());
-    const matchesStatus = selectedStatuses.length === 0 || selectedStatuses.includes(activity.type);
-    return matchesSearch && matchesStatus;
+  // Sort activities based on timestamp
+  const sortedActivities = [...filteredActivities].sort((a, b) => {
+    const dateA = new Date(a.timestamp).getTime();
+    const dateB = new Date(b.timestamp).getTime();
+    return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
   });
-
-  const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentActivities = filteredActivities.slice(startIndex, endIndex);
 
   const total = activities.length;
   const totalFiltered = filteredActivities.length;
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(sortedActivities.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentActivities = sortedActivities.slice(startIndex, endIndex);
 
+  // Handle tab change
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1); // Reset to first page when changing tabs
+  };
+
+  // Toggle sort direction
+  const toggleSortDirection = () => {
+    setSortDirection(prev => prev === "asc" ? "desc" : "asc");
+  };
+
+  // Generate title text based on active tab
   const getHeaderText = () => {
-    const roleText = activeTab === "hosted" ? "Host of " : 
-                    activeTab === "attended" ? "Attendee of " : "";
-    const linkupText = total === 1 ? "linkup" : "linkups";
+    let tabText = "";
+    let countText = `${totalFiltered} linkup${totalFiltered !== 1 ? 's' : ''}`;
+    
+    switch (activeTab) {
+      case "all":
+        tabText = "All";
+        break;
+      case "participation":
+        tabText = "Participation";
+        break;
+      case "invites":
+        tabText = "Invites & Co-Hosts";
+        break;
+      case "edits":
+        tabText = "Edits & Updates";
+        break;
+      case "cancellations":
+        tabText = "Cancellations & Deletions";
+        break;
+    }
     
     return (
       <div className="flex flex-col gap-1">
-        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
-        <div className="flex items-center gap-2 text-lg">
-          <span className="text-[#1A1F2C]">
-            {activeTab === "hosted" ? "Host of " : 
-             activeTab === "attended" ? "Attendee of " : ""}
-          </span>
-          <span className="text-[#9b87f5] font-bold text-xl">{total}</span>
-          <span className="text-[#1A1F2C]">{linkupText}</span>
-          {(selectedStatuses.length > 0 || searchValue) && (
-            <>
-              <span className="mx-1">•</span>
-              <span>showing </span>
-              <span className="text-[#9b87f5] font-bold">{totalFiltered}</span>
-              <span> of </span>
-              <span className="text-[#9b87f5] font-bold">{total}</span>
-              <span> {totalFiltered === 1 ? "linkup" : "linkups"}</span>
-            </>
-          )}
-        </div>
+        <DialogTitle className="text-2xl">{tabText}</DialogTitle>
+        <div className="text-[#9b87f5] font-bold text-xl">{countText}</div>
       </div>
     );
   };
-
-  const statusOptions = [
-    { label: "Upcoming", value: "upcoming" },
-    { label: "Happened", value: "happened" },
-    { label: "Cancelled", value: "cancelled" }
-  ];
 
   const ActivityList = ({ data }: { data: ActivityItem[] }) => (
     <div className="space-y-6">
       {data.map((activity) => (
         <div key={activity.id} className="flex items-start gap-4">
-          <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
-            <span className="text-lg">
-              {activity.type === "joined" || activity.type === "accepted_join" ? "✅" :
-               activity.type === "sent_invite" || activity.type === "invite_cohost" ? "📨" :
-               activity.type === "reschedule" ? "🕒" :
-               activity.type === "cancel" || activity.type === "delete" ? "❌" : "📝"}
-            </span>
+          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+            {getActivityIcon(activity.type)}
           </div>
           <div className="flex-1">
             <p className="text-sm">{getActivityMessage(activity)}</p>
@@ -210,6 +336,11 @@ export function UserLinkupActivity() {
           </div>
         </div>
       ))}
+      {data.length === 0 && (
+        <div className="flex items-center justify-center p-6">
+          <p className="text-muted-foreground">No activities to display</p>
+        </div>
+      )}
     </div>
   );
 
@@ -227,42 +358,58 @@ export function UserLinkupActivity() {
           <DialogHeader>
             {getHeaderText()}
             <div className="flex items-center justify-between mt-4">
-              <div className="relative w-[300px]">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search linkups..."
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-              <div className="space-y-4">
-                <div className="font-medium">Status</div>
-                {statusOptions.map((status) => (
-                  <div 
-                    key={status.value}
-                    className="flex items-center space-x-2 group cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors"
-                    onClick={() => handleStatusChange(status.value)}
-                  >
-                    <Checkbox
-                      id={`status-${status.value}`}
-                      checked={selectedStatuses.includes(status.value)}
-                      onCheckedChange={() => handleStatusChange(status.value)}
-                      className="border-gray-300 data-[state=checked]:bg-[#9b87f5] data-[state=checked]:border-[#9b87f5]"
-                    />
-                    <label
-                      htmlFor={`status-${status.value}`}
-                      className="text-sm font-medium leading-none cursor-pointer flex-grow"
-                    >
-                      {status.label}
-                    </label>
-                  </div>
-                ))}
-              </div>
+              <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+                <TabsList className="grid grid-cols-5 w-full">
+                  <TabsTrigger value="all">All</TabsTrigger>
+                  <TabsTrigger value="participation" className="flex items-center gap-1">
+                    <LinkIcon className="h-4 w-4" /> 
+                    Participation
+                  </TabsTrigger>
+                  <TabsTrigger value="invites" className="flex items-center gap-1">
+                    <Mail className="h-4 w-4" /> 
+                    Invites
+                  </TabsTrigger>
+                  <TabsTrigger value="edits" className="flex items-center gap-1">
+                    <Edit className="h-4 w-4" /> 
+                    Edits
+                  </TabsTrigger>
+                  <TabsTrigger value="cancellations" className="flex items-center gap-1">
+                    <Trash2 className="h-4 w-4" /> 
+                    Cancellations
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
             </div>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={toggleSortDirection}
+              className="self-end flex items-center gap-1 mt-2"
+            >
+              Sort by {sortDirection === "asc" ? "Oldest" : "Newest"}
+              {sortDirection === "asc" ? (
+                <ArrowUp className="h-4 w-4" />
+              ) : (
+                <ArrowDown className="h-4 w-4" />
+              )}
+            </Button>
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
-            <ActivityList data={currentActivities} />
+            <TabsContent value="all" className="mt-0">
+              <ActivityList data={currentActivities} />
+            </TabsContent>
+            <TabsContent value="participation" className="mt-0">
+              <ActivityList data={currentActivities} />
+            </TabsContent>
+            <TabsContent value="invites" className="mt-0">
+              <ActivityList data={currentActivities} />
+            </TabsContent>
+            <TabsContent value="edits" className="mt-0">
+              <ActivityList data={currentActivities} />
+            </TabsContent>
+            <TabsContent value="cancellations" className="mt-0">
+              <ActivityList data={currentActivities} />
+            </TabsContent>
           </ScrollArea>
           <div className="mt-4 flex items-center justify-between">
             <PaginationItemsPerPage className="flex items-center gap-2">
@@ -275,7 +422,7 @@ export function UserLinkupActivity() {
                 }}
                 className="border rounded px-2 py-1"
               >
-                {[5, 10, 15].map((value) => (
+                {[10, 25, 50].map((value) => (
                   <option key={value} value={value}>
                     {value}
                   </option>
