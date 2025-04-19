@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -47,7 +46,6 @@ interface ActivityItem {
   newDateTime?: string;
 }
 
-// Sample data - all activities involve Jack
 const activities: ActivityItem[] = [
   {
     id: "1",
@@ -242,12 +240,10 @@ export function UserLinkupActivity() {
   const [activeTab, setActiveTab] = useState("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  // Filter activities based on selected tab
   const filteredActivities = activities.filter(activity => 
     activityMatchesTab(activity, activeTab)
   );
 
-  // Sort activities based on timestamp
   const sortedActivities = [...filteredActivities].sort((a, b) => {
     const dateA = new Date(a.timestamp).getTime();
     const dateB = new Date(b.timestamp).getTime();
@@ -256,24 +252,20 @@ export function UserLinkupActivity() {
 
   const totalFiltered = filteredActivities.length;
   
-  // Calculate pagination
   const totalPages = Math.ceil(sortedActivities.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentActivities = sortedActivities.slice(startIndex, endIndex);
 
-  // Handle tab change
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    setCurrentPage(1); // Reset to first page when changing tabs
+    setCurrentPage(1);
   };
 
-  // Toggle sort direction
   const toggleSortDirection = () => {
     setSortDirection(prev => prev === "asc" ? "desc" : "asc");
   };
 
-  // Generate title text based on active tab
   const getHeaderText = () => {
     let tabText = "";
     let countText = `${totalFiltered} activity${totalFiltered !== 1 ? 'ies' : 'y'}`;
@@ -306,6 +298,22 @@ export function UserLinkupActivity() {
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-col gap-4">
+        {activities.slice(0, 3).map((activity) => (
+          <div key={activity.id} className="flex items-start gap-4">
+            <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+              {getActivityIcon(activity.type)}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm">{getActivityMessage(activity)}</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                {formatJoinDate(activity.timestamp)}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <div className="flex justify-end items-center">
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
