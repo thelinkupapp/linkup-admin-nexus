@@ -57,7 +57,7 @@ export function VerificationsTable() {
               <div className="w-[120px]">
                 <AspectRatio ratio={9/16}>
                   <img
-                    src="/lovable-uploads/f85e5796-4ca0-42bd-99b9-a9eaca40db93.png"
+                    src="/lovable-uploads/86fc1136-a3e8-49f3-8cd1-b0c29bc1af83.png"
                     alt="Verification selfie"
                     className="rounded-md object-cover w-full h-full"
                   />
