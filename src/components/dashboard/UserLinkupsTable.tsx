@@ -1,11 +1,11 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, ArrowUpDown, Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar, ArrowUpDown } from "lucide-react";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -301,23 +301,17 @@ export function UserLinkupsTable() {
                       <div 
                         key={option.value} 
                         className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const newChecked = !selectedStatuses.includes(option.value);
-                          handleCheckedChange(option.value, newChecked);
-                        }}
                       >
-                        <div className={cn(
-                          "h-4 w-4 rounded-sm border flex items-center justify-center",
-                          selectedStatuses.includes(option.value) 
-                            ? "border-primary bg-primary text-primary-foreground" 
-                            : "border-primary"
-                        )}>
-                          {selectedStatuses.includes(option.value) && (
-                            <Check className="h-3 w-3 text-white" />
-                          )}
-                        </div>
+                        <Checkbox 
+                          id={`status-${option.value}`}
+                          checked={selectedStatuses.includes(option.value)} 
+                          onCheckedChange={(checked) => {
+                            handleCheckedChange(option.value, checked === true);
+                          }}
+                          className="data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+                        />
                         <label
+                          htmlFor={`status-${option.value}`}
                           className="text-sm font-medium leading-none cursor-pointer flex-grow"
                         >
                           {option.label}
