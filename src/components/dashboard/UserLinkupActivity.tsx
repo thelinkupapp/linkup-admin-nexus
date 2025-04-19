@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -298,6 +299,13 @@ export function UserLinkupActivity() {
 
   return (
     <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Activity</h2>
+        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+          View All
+        </Button>
+      </div>
+
       <div className="flex flex-col gap-4">
         {activities.slice(0, 3).map((activity) => (
           <div key={activity.id} className="flex items-start gap-4">
@@ -312,12 +320,6 @@ export function UserLinkupActivity() {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="flex justify-end items-center">
-        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-          View All
-        </Button>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
