@@ -46,8 +46,8 @@ export function EarningsBreakdownDialog({
         </DialogHeader>
         <Tabs defaultValue="earnings" className="w-full">
           <TabsList className="mb-4">
-            <TabsTrigger value="earnings">Linkup Earnings</TabsTrigger>
-            <TabsTrigger value="payments">Linkup Payments</TabsTrigger>
+            <TabsTrigger value="earnings">Linkup Earnings (Hosted)</TabsTrigger>
+            <TabsTrigger value="payments">Linkup Payments (Attended)</TabsTrigger>
           </TabsList>
           
           <TabsContent value="earnings">
