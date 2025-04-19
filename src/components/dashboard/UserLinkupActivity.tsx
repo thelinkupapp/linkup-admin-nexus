@@ -1,6 +1,9 @@
-
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { useState } from "react";
 
 interface ActivityItem {
   id: string;
@@ -111,9 +114,11 @@ function getActivityMessage(activity: ActivityItem) {
 }
 
 export function UserLinkupActivity() {
-  return (
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const ActivityList = ({ data }: { data: ActivityItem[] }) => (
     <div className="space-y-6">
-      {activities.map((activity) => (
+      {data.map((activity) => (
         <div key={activity.id} className="flex items-start gap-4">
           <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center">
             <span className="text-lg">
@@ -132,5 +137,30 @@ export function UserLinkupActivity() {
         </div>
       ))}
     </div>
+  );
+
+  return (
+    <>
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-bold">Activity</h2>
+          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+            View All
+          </Button>
+        </div>
+        <ActivityList data={activities.slice(0, 5)} />
+      </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle>All Activity</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="h-[600px] pr-4">
+            <ActivityList data={activities} />
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
