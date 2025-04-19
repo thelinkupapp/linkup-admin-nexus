@@ -255,9 +255,11 @@ export function VerificationsTable() {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
   };
   
+  // Define these variables only once
   const pendingCount = users.filter(user => user.status === 'pending').length;
   const approvedCount = users.filter(user => user.status === 'approved').length;
   const deniedCount = users.filter(user => user.status === 'denied').length;
+  const totalUserVerifications = users.length;
 
   const getHeaderText = () => {
     const count = filteredUsers.length;
@@ -272,11 +274,6 @@ export function VerificationsTable() {
         return `${count} verification ${count === 1 ? 'request' : 'requests'}`;
     }
   };
-
-  const pendingCount = users.filter(user => user.status === 'pending').length;
-  const approvedCount = users.filter(user => user.status === 'approved').length;
-  const deniedCount = users.filter(user => user.status === 'denied').length;
-  const totalUserVerifications = users.length;
 
   return (
     <div className="space-y-4 p-6">
