@@ -29,16 +29,29 @@ interface ActivityItem {
     | "request_join" 
     | "joined" 
     | "accepted_join" 
+    | "other_joined"
+    | "received_join_request"
+    | "accept_join_request"
+    | "decline_join_request"
+    | "join_request_declined"
+    | "left_linkup"
+    | "removed_from"
+    | "removed_user"
+    | "sent_invite" 
+    | "received_invite"
     | "accepted_invite"
-    | "sent_invite"
+    | "declined_invite"
     | "invite_cohost"
+    | "received_cohost_invite"
     | "accept_cohost"
+    | "decline_cohost"
+    | "removed_cohost"
+    | "removed_as_cohost"
     | "change_location"
     | "reschedule"
     | "update_details"
     | "cancel"
-    | "delete"
-    | "received_invite";
+    | "delete";
   linkupName: string;
   linkupId: string;
   timestamp: string;
@@ -172,20 +185,53 @@ function getActivityMessage(activity: ActivityItem) {
   );
 
   switch (activity.type) {
+    // Participation
     case "request_join":
       return <span>Jack requested to join {linkupLink}</span>;
     case "joined":
       return <span>Jack joined {linkupLink}</span>;
     case "accepted_join":
-      return <span>Jack got accepted to join {linkupLink}</span>;
+      return <span>Jack was accepted to join {linkupLink}</span>;
+    case "other_joined":
+      return <span>{otherUserLink} joined Jack's linkup {linkupLink}</span>;
+    case "received_join_request":
+      return <span>Jack received a request from {otherUserLink} to join {linkupLink}</span>;
+    case "accept_join_request":
+      return <span>Jack accepted {otherUserLink}'s request to join {linkupLink}</span>;
+    case "decline_join_request":
+      return <span>Jack declined {otherUserLink}'s request to join {linkupLink}</span>;
+    case "join_request_declined":
+      return <span>Jack's request to join {linkupLink} was declined by {otherUserLink}</span>;
+    case "left_linkup":
+      return <span>Jack left {linkupLink}</span>;
+    case "removed_from":
+      return <span>Jack was removed from {linkupLink}</span>;
+    case "removed_user":
+      return <span>Jack removed {otherUserLink} from {linkupLink}</span>;
+
+    // Invites & Co-hosting
+    case "sent_invite":
+      return <span>Jack invited {otherUserLink} to join {linkupLink}</span>;
+    case "received_invite":
+      return <span>Jack received an invite from {otherUserLink} to join {linkupLink}</span>;
     case "accepted_invite":
       return <span>Jack accepted {otherUserLink}'s invite to join {linkupLink}</span>;
-    case "sent_invite":
-      return <span>Jack sent an invite to {otherUserLink} to join their linkup {linkupLink}</span>;
+    case "declined_invite":
+      return <span>Jack declined invite to join {linkupLink}</span>;
     case "invite_cohost":
       return <span>Jack invited {otherUserLink} to co-host their linkup {linkupLink}</span>;
+    case "received_cohost_invite":
+      return <span>Jack received an invite from {otherUserLink} to co-host {linkupLink}</span>;
     case "accept_cohost":
       return <span>Jack accepted {otherUserLink}'s invite to co-host {linkupLink}</span>;
+    case "decline_cohost":
+      return <span>Jack declined co-host invite from {otherUserLink}</span>;
+    case "removed_cohost":
+      return <span>Jack removed {otherUserLink} as co-host of {linkupLink}</span>;
+    case "removed_as_cohost":
+      return <span>Jack was removed as co-host of {linkupLink} by {otherUserLink}</span>;
+
+    // Edits & Updates
     case "change_location":
       return <span>Jack changed the location for {linkupLink}</span>;
     case "reschedule":
@@ -196,12 +242,12 @@ function getActivityMessage(activity: ActivityItem) {
       );
     case "update_details":
       return <span>Jack updated details for {linkupLink}</span>;
+
+    // Cancellations & Deletions
     case "cancel":
       return <span>Jack cancelled {linkupLink}</span>;
     case "delete":
       return <span>Jack deleted {linkupLink}</span>;
-    case "received_invite":
-      return <span>Jack received an invite from {otherUserLink} to join {linkupLink}</span>;
     default:
       return null;
   }
@@ -233,9 +279,32 @@ function getActivityIcon(type: ActivityItem["type"]) {
 function activityMatchesTab(activity: ActivityItem, tab: string): boolean {
   switch (tab) {
     case "participation":
-      return ["request_join", "joined", "accepted_join", "accepted_invite"].includes(activity.type);
+      return [
+        "request_join", 
+        "joined", 
+        "accepted_join", 
+        "other_joined",
+        "received_join_request",
+        "accept_join_request",
+        "decline_join_request",
+        "join_request_declined",
+        "left_linkup",
+        "removed_from",
+        "removed_user"
+      ].includes(activity.type);
     case "invites":
-      return ["sent_invite", "invite_cohost", "accept_cohost", "received_invite"].includes(activity.type);
+      return [
+        "sent_invite",
+        "received_invite",
+        "accepted_invite",
+        "declined_invite",
+        "invite_cohost",
+        "received_cohost_invite",
+        "accept_cohost",
+        "decline_cohost",
+        "removed_cohost",
+        "removed_as_cohost"
+      ].includes(activity.type);
     case "edits":
       return ["change_location", "reschedule", "update_details"].includes(activity.type);
     case "cancellations":
