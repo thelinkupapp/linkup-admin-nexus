@@ -359,6 +359,31 @@ const UserProfile = () => {
     }
   };
 
+  const [isPayoutHistoryOpen, setIsPayoutHistoryOpen] = useState(false);
+  const [isEarningsBreakdownOpen, setIsEarningsBreakdownOpen] = useState(false);
+  const [isLinkupPlusHistoryOpen, setIsLinkupPlusHistoryOpen] = useState(false);
+
+  const earningsBreakdown = [
+    {
+      description: "Sunset Cardio Session",
+      amount: 20.00,
+      timestamp: "2024-04-19T18:31:00Z",
+      status: "earned" as const
+    },
+    {
+      description: "Withdrawal failed – please update your payout settings.",
+      amount: 0,
+      timestamp: "2024-04-18T15:45:00Z",
+      status: "failed" as const
+    },
+    {
+      description: "Payout from Ryft deposited to bank account - Arrived on Aug 10",
+      amount: 75.00,
+      timestamp: "2024-04-17T18:31:00Z",
+      status: "withdrawn" as const
+    }
+  ];
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -644,18 +669,18 @@ const UserProfile = () => {
                     <CardTitle>Wallet Overview</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground">Lifetime Earnings</p>
-                        <p className="text-2xl font-bold">${user.wallet.lifetimeEarnings.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                        <p className="text-2xl font-bold">£{user.wallet.lifetimeEarnings.toFixed(2)}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground">Available Balance</p>
-                        <p className="text-2xl font-bold">${user.wallet.availableBalance.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-muted-foreground">Ready for Payout</p>
+                        <p className="text-xl font-bold text-green-600">£{user.wallet.availableBalance.toFixed(2)}</p>
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground">In-Transit Funds</p>
-                        <p className="text-lg font-semibold">${user.wallet.inTransit.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-muted-foreground">In Transit to Bank</p>
+                        <p className="text-lg font-semibold">£{user.wallet.inTransit.toFixed(2)}</p>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground">Last Withdrawal</p>
@@ -666,16 +691,19 @@ const UserProfile = () => {
                 </Card>
 
                 <Card className="col-span-1 md:col-span-2">
-                  <CardHeader>
+                  <CardHeader className="flex flex-row items-center justify-between">
                     <CardTitle>Payout History</CardTitle>
+                    <Button variant="outline" size="sm" onClick={() => setIsPayoutHistoryOpen(true)}>
+                      View All
+                    </Button>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {user.wallet.payoutHistory.map((payout, index) => (
+                      {user.wallet.payoutHistory.slice(0, 3).map((payout, index) => (
                         <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
                           <div>
-                            <p className="font-medium">${payout.amount.toFixed(2)}</p>
-                            <p className="text-sm text-muted-foreground">{payout.method}</p>
+                            <p className="font-medium">£{payout.amount.toFixed(2)}</p>
+                            <p className="text-sm text-muted-foreground">Ryft Pay</p>
                           </div>
                           <div className="text-right">
                             <p>{new Date(payout.date).toLocaleDateString()}</p>
@@ -706,10 +734,9 @@ const UserProfile = () => {
                         </div>
                         <p>User is currently subscribed to Linkup Plus and receives all premium features.</p>
                       </div>
-                      <div className="flex gap-2">
-                        <Button variant="outline">View Payment History</Button>
-                        <Button variant="destructive">Cancel Subscription</Button>
-                      </div>
+                      <Button variant="outline" onClick={() => setIsLinkupPlusHistoryOpen(true)}>
+                        View Payment History
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -945,6 +972,37 @@ const UserProfile = () => {
               />
             </TabsContent>
           </Tabs>
+
+          <PayoutHistoryDialog
+            open={isPayoutHistoryOpen}
+            onOpenChange={setIsPayoutHistoryOpen}
+            payoutHistory={user.wallet.payoutHistory}
+          />
+
+          <EarningsBreakdownDialog
+            open={isEarningsBreakdownOpen}
+            onOpenChange={setIsEarningsBreakdownOpen}
+            earnings={earningsBreakdown}
+          />
+
+          <LinkupPlusHistoryDialog
+            open={isLinkupPlusHistoryOpen}
+            onOpenChange={setIsLinkupPlusHistoryOpen}
+            startDate={user.wallet.linkupPlus.startDate}
+            plan="annual"
+            transactions={[
+              {
+                date: "2024-04-19",
+                amount: 99.99,
+                description: "Annual Subscription Renewal"
+              },
+              {
+                date: "2023-04-19",
+                amount: 99.99,
+                description: "Annual Subscription Start"
+              }
+            ]}
+          />
         </main>
       </div>
     </div>
