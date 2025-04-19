@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -136,12 +135,9 @@ export function UserLinkupActivity() {
   const [activeTab, setActiveTab] = useState("all");
 
   const handleStatusChange = (status: string) => {
-    setSelectedStatuses(prev => {
-      if (prev.includes(status)) {
-        return prev.filter(s => s !== status);
-      }
-      return [...prev, status];
-    });
+    setSelectedStatuses(prev => 
+      prev.includes(status) ? prev.filter(s => s !== status) : [...prev, status]
+    );
   };
 
   const filteredActivities = activities.filter(activity => {
@@ -154,6 +150,45 @@ export function UserLinkupActivity() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentActivities = filteredActivities.slice(startIndex, endIndex);
+
+  const total = activities.length;
+  const totalFiltered = filteredActivities.length;
+
+  const getHeaderText = () => {
+    const roleText = activeTab === "hosted" ? "Host of " : 
+                    activeTab === "attended" ? "Attendee of " : "";
+    const linkupText = total === 1 ? "linkup" : "linkups";
+    
+    return (
+      <div className="flex flex-col gap-1">
+        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+        <div className="flex items-center gap-2 text-lg">
+          <span className="text-[#1A1F2C]">
+            {activeTab === "hosted" ? "Host of " : 
+             activeTab === "attended" ? "Attendee of " : ""}
+          </span>
+          <span className="text-[#9b87f5] font-bold">{total}</span>
+          <span className="text-[#1A1F2C]">{linkupText}</span>
+          {(selectedStatuses.length > 0 || searchValue) && (
+            <>
+              <span className="mx-1">•</span>
+              <span>showing </span>
+              <span className="text-[#9b87f5] font-bold">{totalFiltered}</span>
+              <span> of </span>
+              <span className="text-[#9b87f5] font-bold">{total}</span>
+              <span> {linkupText}</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const statusOptions = [
+    { label: "Upcoming", value: "upcoming" },
+    { label: "Happened", value: "happened" },
+    { label: "Cancelled", value: "cancelled" }
+  ];
 
   const ActivityList = ({ data }: { data: ActivityItem[] }) => (
     <div className="space-y-6">
@@ -177,40 +212,6 @@ export function UserLinkupActivity() {
       ))}
     </div>
   );
-
-  const getHeaderText = () => {
-    const total = filteredActivities.length;
-    const showing = currentActivities.length;
-    return (
-      <div className="flex flex-col gap-1">
-        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
-        <div className="flex items-center gap-2 text-lg">
-          <span className="text-[#1A1F2C]">
-            {activeTab === "hosted" ? "Host of " : 
-             activeTab === "attended" ? "Attendee of " : ""}
-          </span>
-          <span className="text-[#9b87f5] font-bold">{total}</span>
-          <span className="text-[#1A1F2C]">linkups</span>
-          {(selectedStatuses.length > 0 || searchValue) && (
-            <>
-              <span className="mx-1">•</span>
-              <span>showing </span>
-              <span className="text-[#9b87f5] font-bold">{showing}</span>
-              <span> of </span>
-              <span className="text-[#9b87f5] font-bold">{total}</span>
-              <span> linkups</span>
-            </>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  const statusOptions = [
-    { label: "Upcoming", value: "upcoming" },
-    { label: "Happened", value: "happened" },
-    { label: "Cancelled", value: "cancelled" }
-  ];
 
   return (
     <div className="space-y-4">
@@ -242,6 +243,7 @@ export function UserLinkupActivity() {
                   <div 
                     key={status.value}
                     className="flex items-center space-x-2 group cursor-pointer hover:bg-gray-100 p-2 rounded transition-colors"
+                    onClick={() => handleStatusChange(status.value)}
                   >
                     <Checkbox
                       id={`status-${status.value}`}
