@@ -15,6 +15,7 @@ interface PayoutHistoryDialogProps {
     amount: number;
     date: string;
     method: string;
+    status: string;
   }>;
 }
 

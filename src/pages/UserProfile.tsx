@@ -178,16 +178,16 @@ const user: UserData = {
     inTransit: 50,
     lastWithdrawal: "2023-11-15",
     payoutHistory: [
-      { amount: 75, date: "2023-11-15", method: "PayPal" },
-      { amount: 125, date: "2023-09-28", method: "Bank Transfer" },
-      { amount: 150, date: "2023-08-05", method: "PayPal" },
-      { amount: 80, date: "2023-07-15", method: "Bank Transfer" },
-      { amount: 95, date: "2023-06-22", method: "PayPal" },
-      { amount: 110, date: "2023-05-18", method: "Bank Transfer" },
-      { amount: 65, date: "2023-04-12", method: "PayPal" },
-      { amount: 140, date: "2023-03-25", method: "Bank Transfer" },
-      { amount: 85, date: "2023-02-08", method: "PayPal" },
-      { amount: 120, date: "2023-01-15", method: "Bank Transfer" }
+      { amount: 75, date: "2023-11-15", status: "Complete", method: "PayPal" },
+      { amount: 125, date: "2023-09-28", status: "Complete", method: "Bank Transfer" },
+      { amount: 150, date: "2023-08-05", status: "Complete", method: "PayPal" },
+      { amount: 80, date: "2023-07-15", status: "Complete", method: "Bank Transfer" },
+      { amount: 95, date: "2023-06-22", status: "Complete", method: "PayPal" },
+      { amount: 110, date: "2023-05-18", status: "Complete", method: "Bank Transfer" },
+      { amount: 65, date: "2023-04-12", status: "Complete", method: "PayPal" },
+      { amount: 140, date: "2023-03-25", status: "Complete", method: "Bank Transfer" },
+      { amount: 85, date: "2023-02-08", status: "Complete", method: "PayPal" },
+      { amount: 120, date: "2023-01-15", status: "Complete", method: "Bank Transfer" }
     ],
     linkupPlus: {
       startDate: null,
