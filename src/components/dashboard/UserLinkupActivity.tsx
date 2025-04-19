@@ -20,7 +20,6 @@ import {
   Mail, 
   Edit, 
   Trash2, 
-  CheckCircle, 
   ArrowDown, 
   ArrowUp 
 } from "lucide-react";
@@ -40,102 +39,91 @@ interface ActivityItem {
     | "update_details"
     | "cancel"
     | "delete";
-  firstName: string;
-  otherUserFirstName?: string;
-  otherUserId?: string;
   linkupName: string;
   linkupId: string;
   timestamp: string;
+  otherUserFirstName?: string;
+  otherUserId?: string;
   newDateTime?: string;
 }
 
-// Sample data - in a real app, this would come from an API or props
+// Sample data - all activities involve Jack
 const activities: ActivityItem[] = [
   {
     id: "1",
+    type: "request_join",
+    linkupName: "Weekend Hiking Trip",
+    linkupId: "hiking-1",
+    timestamp: "2024-04-16T11:30:00Z"
+  },
+  {
+    id: "2",
     type: "joined",
-    firstName: "Jack",
     linkupName: "Sunset Beach Volleyball",
     linkupId: "volleyball-1",
     timestamp: "2024-04-18T15:30:00Z"
   },
   {
-    id: "2",
-    type: "sent_invite",
-    firstName: "Jack",
+    id: "3",
+    type: "accepted_join",
+    linkupName: "Book Club Meeting",
+    linkupId: "book-1",
+    timestamp: "2024-04-14T14:00:00Z"
+  },
+  {
+    id: "4",
+    type: "accepted_invite",
+    linkupName: "Cooking Class",
+    linkupId: "cooking-1",
     otherUserFirstName: "Sarah",
     otherUserId: "user-sarah",
+    timestamp: "2024-04-13T18:30:00Z"
+  },
+  {
+    id: "5",
+    type: "sent_invite",
     linkupName: "Downtown Art Gallery Opening",
     linkupId: "art-1",
+    otherUserFirstName: "Emily",
+    otherUserId: "user-emily",
     timestamp: "2024-04-15T10:00:00Z"
   },
   {
-    id: "3",
+    id: "6",
+    type: "invite_cohost",
+    linkupName: "Tech Meetup",
+    linkupId: "tech-1",
+    otherUserFirstName: "David",
+    otherUserId: "user-david",
+    timestamp: "2024-04-12T19:00:00Z"
+  },
+  {
+    id: "7",
+    type: "accept_cohost",
+    linkupName: "Photography Workshop",
+    linkupId: "photo-1",
+    otherUserFirstName: "Lisa",
+    otherUserId: "user-lisa",
+    timestamp: "2024-04-11T16:45:00Z"
+  },
+  {
+    id: "8",
+    type: "change_location",
+    linkupName: "Networking Event",
+    linkupId: "network-1",
+    timestamp: "2024-04-09T12:15:00Z"
+  },
+  {
+    id: "9",
     type: "reschedule",
-    firstName: "Jack",
     linkupName: "Rooftop Yoga Session",
     linkupId: "yoga-1",
     timestamp: "2024-04-10T09:00:00Z",
     newDateTime: "2024-04-15T08:00:00Z"
   },
   {
-    id: "4",
-    type: "request_join",
-    firstName: "Emily",
-    linkupName: "Weekend Hiking Trip",
-    linkupId: "hiking-1",
-    timestamp: "2024-04-16T11:30:00Z"
-  },
-  {
-    id: "5",
-    type: "accepted_join",
-    firstName: "Michael",
-    linkupName: "Book Club Meeting",
-    linkupId: "book-1",
-    timestamp: "2024-04-14T14:00:00Z"
-  },
-  {
-    id: "6",
-    type: "accepted_invite",
-    firstName: "Lisa",
-    otherUserFirstName: "David",
-    otherUserId: "user-david",
-    linkupName: "Cooking Class",
-    linkupId: "cooking-1",
-    timestamp: "2024-04-13T18:30:00Z"
-  },
-  {
-    id: "7",
-    type: "invite_cohost",
-    firstName: "Brian",
-    otherUserFirstName: "Jessica",
-    otherUserId: "user-jessica",
-    linkupName: "Tech Meetup",
-    linkupId: "tech-1",
-    timestamp: "2024-04-12T19:00:00Z"
-  },
-  {
-    id: "8",
-    type: "accept_cohost",
-    firstName: "Amanda",
-    otherUserFirstName: "Robert",
-    otherUserId: "user-robert",
-    linkupName: "Photography Workshop",
-    linkupId: "photo-1",
-    timestamp: "2024-04-11T16:45:00Z"
-  },
-  {
-    id: "9",
-    type: "change_location",
-    firstName: "Daniel",
-    linkupName: "Networking Event",
-    linkupId: "network-1",
-    timestamp: "2024-04-09T12:15:00Z"
-  },
-  {
     id: "10",
     type: "update_details",
-    firstName: "Sophie",
     linkupName: "Yoga in the Park",
     linkupId: "yoga-2",
     timestamp: "2024-04-08T08:30:00Z"
@@ -143,7 +131,6 @@ const activities: ActivityItem[] = [
   {
     id: "11",
     type: "cancel",
-    firstName: "Thomas",
     linkupName: "Movie Night",
     linkupId: "movie-1",
     timestamp: "2024-04-07T20:00:00Z"
@@ -151,7 +138,6 @@ const activities: ActivityItem[] = [
   {
     id: "12",
     type: "delete",
-    firstName: "Rachel",
     linkupName: "Art Exhibition",
     linkupId: "art-2",
     timestamp: "2024-04-06T15:00:00Z"
@@ -179,34 +165,33 @@ function getActivityMessage(activity: ActivityItem) {
 
   switch (activity.type) {
     case "request_join":
-      return <span>{activity.firstName} requested to join {linkupLink}</span>;
+      return <span>Jack requested to join {linkupLink}</span>;
     case "joined":
-      return <span>{activity.firstName} joined {linkupLink}</span>;
+      return <span>Jack joined {linkupLink}</span>;
     case "accepted_join":
-      return <span>{activity.firstName} got accepted to join {linkupLink}</span>;
+      return <span>Jack got accepted to join {linkupLink}</span>;
     case "accepted_invite":
-      return <span>{activity.firstName} accepted {otherUserLink}'s invite to join {linkupLink}</span>;
+      return <span>Jack accepted {otherUserLink}'s invite to join {linkupLink}</span>;
     case "sent_invite":
-      return <span>{activity.firstName} sent an invite to {otherUserLink} to join their linkup {linkupLink}</span>;
+      return <span>Jack sent an invite to {otherUserLink} to join their linkup {linkupLink}</span>;
     case "invite_cohost":
-      return <span>{activity.firstName} invited {otherUserLink} to co-host their linkup {linkupLink}</span>;
+      return <span>Jack invited {otherUserLink} to co-host their linkup {linkupLink}</span>;
     case "accept_cohost":
-      return <span>{activity.firstName} accepted {otherUserLink}'s invite to co-host {linkupLink}</span>;
+      return <span>Jack accepted {otherUserLink}'s invite to co-host {linkupLink}</span>;
     case "change_location":
-      return <span>{activity.firstName} changed the location for {linkupLink}</span>;
+      return <span>Jack changed the location for {linkupLink}</span>;
     case "reschedule":
       return (
         <span>
-          {activity.firstName} rescheduled {linkupLink} to{" "}
-          {formatJoinDate(activity.newDateTime || "")}
+          Jack rescheduled {linkupLink} to {formatJoinDate(activity.newDateTime || "")}
         </span>
       );
     case "update_details":
-      return <span>{activity.firstName} updated details for {linkupLink}</span>;
+      return <span>Jack updated details for {linkupLink}</span>;
     case "cancel":
-      return <span>{activity.firstName} cancelled {linkupLink}</span>;
+      return <span>Jack cancelled {linkupLink}</span>;
     case "delete":
-      return <span>{activity.firstName} deleted {linkupLink}</span>;
+      return <span>Jack deleted {linkupLink}</span>;
     default:
       return null;
   }
@@ -218,7 +203,7 @@ function getActivityIcon(type: ActivityItem["type"]) {
     case "joined":
     case "accepted_join":
     case "accepted_invite":
-      return <CheckCircle className="h-5 w-5 text-green-500" />;
+      return <LinkIcon className="h-5 w-5 text-green-500" />;
     case "sent_invite":
     case "invite_cohost":
     case "accept_cohost":
@@ -235,7 +220,6 @@ function getActivityIcon(type: ActivityItem["type"]) {
   }
 }
 
-// Helper function to check if an activity should be in a particular tab
 function activityMatchesTab(activity: ActivityItem, tab: string): boolean {
   switch (tab) {
     case "participation":
@@ -247,7 +231,7 @@ function activityMatchesTab(activity: ActivityItem, tab: string): boolean {
     case "cancellations":
       return ["cancel", "delete"].includes(activity.type);
     default:
-      return true; // "all" tab or any other
+      return true; // "all" tab
   }
 }
 
@@ -270,7 +254,6 @@ export function UserLinkupActivity() {
     return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
   });
 
-  const total = activities.length;
   const totalFiltered = filteredActivities.length;
   
   // Calculate pagination
@@ -293,23 +276,23 @@ export function UserLinkupActivity() {
   // Generate title text based on active tab
   const getHeaderText = () => {
     let tabText = "";
-    let countText = `${totalFiltered} linkup${totalFiltered !== 1 ? 's' : ''}`;
+    let countText = `${totalFiltered} activity${totalFiltered !== 1 ? 'ies' : 'y'}`;
     
     switch (activeTab) {
       case "all":
-        tabText = "All";
+        tabText = "All Activities";
         break;
       case "participation":
-        tabText = "Participation";
+        tabText = "🔗 Participation";
         break;
       case "invites":
-        tabText = "Invites & Co-Hosts";
+        tabText = "📨 Invites & Co-Hosts";
         break;
       case "edits":
-        tabText = "Edits & Updates";
+        tabText = "🛠️ Edits & Updates";
         break;
       case "cancellations":
-        tabText = "Cancellations & Deletions";
+        tabText = "🗑️ Cancellations & Deletions";
         break;
     }
     
@@ -321,29 +304,6 @@ export function UserLinkupActivity() {
     );
   };
 
-  const ActivityList = ({ data }: { data: ActivityItem[] }) => (
-    <div className="space-y-6">
-      {data.map((activity) => (
-        <div key={activity.id} className="flex items-start gap-4">
-          <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-            {getActivityIcon(activity.type)}
-          </div>
-          <div className="flex-1">
-            <p className="text-sm">{getActivityMessage(activity)}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {formatJoinDate(activity.timestamp)}
-            </p>
-          </div>
-        </div>
-      ))}
-      {data.length === 0 && (
-        <div className="flex items-center justify-center p-6">
-          <p className="text-muted-foreground">No activities to display</p>
-        </div>
-      )}
-    </div>
-  );
-
   return (
     <div className="space-y-4">
       <div className="flex justify-end items-center">
@@ -351,7 +311,6 @@ export function UserLinkupActivity() {
           View All
         </Button>
       </div>
-      <ActivityList data={activities.slice(0, 5)} />
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-4xl max-h-[80vh]">
@@ -371,7 +330,7 @@ export function UserLinkupActivity() {
                   </TabsTrigger>
                   <TabsTrigger value="edits" className="flex items-center gap-1">
                     <Edit className="h-4 w-4" /> 
-                    Edits
+                    Updates
                   </TabsTrigger>
                   <TabsTrigger value="cancellations" className="flex items-center gap-1">
                     <Trash2 className="h-4 w-4" /> 
@@ -395,21 +354,26 @@ export function UserLinkupActivity() {
             </Button>
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
-            <TabsContent value="all" className="mt-0">
-              <ActivityList data={currentActivities} />
-            </TabsContent>
-            <TabsContent value="participation" className="mt-0">
-              <ActivityList data={currentActivities} />
-            </TabsContent>
-            <TabsContent value="invites" className="mt-0">
-              <ActivityList data={currentActivities} />
-            </TabsContent>
-            <TabsContent value="edits" className="mt-0">
-              <ActivityList data={currentActivities} />
-            </TabsContent>
-            <TabsContent value="cancellations" className="mt-0">
-              <ActivityList data={currentActivities} />
-            </TabsContent>
+            <div className="space-y-6">
+              {currentActivities.map((activity) => (
+                <div key={activity.id} className="flex items-start gap-4">
+                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                    {getActivityIcon(activity.type)}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm">{getActivityMessage(activity)}</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {formatJoinDate(activity.timestamp)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              {currentActivities.length === 0 && (
+                <div className="flex items-center justify-center p-6">
+                  <p className="text-muted-foreground">No activities to display</p>
+                </div>
+              )}
+            </div>
           </ScrollArea>
           <div className="mt-4 flex items-center justify-between">
             <PaginationItemsPerPage className="flex items-center gap-2">
