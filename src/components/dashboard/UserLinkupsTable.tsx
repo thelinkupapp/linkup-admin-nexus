@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -17,7 +18,7 @@ interface Linkup {
   emoji: string;
   startDate: string;
   endDate: string;
-  status: "upcoming" | "happened" | "happening" | "cancelled" | "deleted" | "removed";
+  status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
   type: "hosted" | "attended";
   joinedDate?: string;
   createdDate?: string;
@@ -189,6 +190,14 @@ export function UserLinkupsTable() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
 
+  const handleCheckedChange = (value: string, checked: boolean) => {
+    if (checked) {
+      setSelectedStatuses(prev => [...prev, value]);
+    } else {
+      setSelectedStatuses(prev => prev.filter(status => status !== value));
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -231,18 +240,14 @@ export function UserLinkupsTable() {
                     {statusOptions.map((option) => (
                       <div key={option.value} className="flex items-center space-x-2">
                         <Checkbox
-                          id={option.value}
+                          id={`status-${option.value}`}
                           checked={selectedStatuses.includes(option.value)}
                           onCheckedChange={(checked) => {
-                            setSelectedStatuses(
-                              checked
-                                ? [...selectedStatuses, option.value]
-                                : selectedStatuses.filter((value) => value !== option.value)
-                            );
+                            handleCheckedChange(option.value, checked === true);
                           }}
                         />
                         <label
-                          htmlFor={option.value}
+                          htmlFor={`status-${option.value}`}
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                         >
                           {option.label}
