@@ -31,7 +31,7 @@ interface Linkup {
   startDate: string;
   endDate: string;
   status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
-  type: "hosted" | "attended";
+  type: "hosted" | "attended" | "cohost";  // Added cohost type
   joinedDate?: string;
   createdDate?: string;
 }
@@ -201,7 +201,7 @@ const LinkupsTable = ({
                 <span className="font-medium">{linkup.name}</span>
               </Link>
               <div className="text-sm text-muted-foreground">
-                {linkup.type === "attended" && linkup.joinedDate && (
+                {(linkup.type === "attended" || linkup.type === "cohost") && linkup.joinedDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>Joined on {new Date(linkup.joinedDate).toLocaleString()}</span>
@@ -234,7 +234,9 @@ const LinkupsTable = ({
           </TableCell>
           <TableCell>
             <Badge variant="outline">
-              {linkup.type === "hosted" ? "👑 Host" : "👋 Attendee"}
+              {linkup.type === "hosted" ? "👑 Host" : 
+               linkup.type === "cohost" ? "🤝 Co-Host" :
+               "👋 Attendee"}
             </Badge>
           </TableCell>
         </TableRow>
@@ -390,13 +392,14 @@ export function UserLinkupsTable() {
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
             <TabsTrigger value="hosted">Host</TabsTrigger>
+            <TabsTrigger value="cohost">Co-Host</TabsTrigger>
             <TabsTrigger value="attended">Attendee</TabsTrigger>
           </TabsList>
 
-          {["all", "hosted", "attended"].map((tab) => (
+          {["all", "hosted", "cohost", "attended"].map((tab) => (
             <TabsContent key={tab} value={tab}>
               <LinkupsTable 
-                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended")} 
+                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "cohost" | "attended")} 
                 preview={true}
               />
             </TabsContent>
