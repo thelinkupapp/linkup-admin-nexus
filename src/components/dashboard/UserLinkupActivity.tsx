@@ -22,6 +22,8 @@ import {
   ArrowDown, 
   ArrowUp 
 } from "lucide-react";
+import { ActivityFilters } from "@/components/dashboard/ActivityFilters";
+import { DateRangeFilter } from "@/types/activityFilters";
 
 interface ActivityItem {
   id: string;
@@ -446,9 +448,76 @@ export function UserLinkupActivity() {
   const [activeTab, setActiveTab] = useState("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  const filteredActivities = activities.filter(activity => 
-    activityMatchesTab(activity, activeTab)
-  );
+  const [searchQuery, setSearchQuery] useState("");
+  const [filters, setFilters] = useState({
+    dateRange: 'last-7-days' as DateRangeFilter,
+    participation: {
+      type: [],
+      involvement: []
+    },
+    invites: {
+      type: [],
+      status: [],
+      role: []
+    },
+    edits: {
+      changeType: []
+    },
+    cancellations: {
+      action: [],
+      actor: []
+    }
+  });
+
+  const filterActivities = (activities: ActivityItem[]) => {
+    return activities.filter(activity => {
+      // Search filter
+      if (searchQuery) {
+        const searchText = searchQuery.toLowerCase();
+        const matchesLinkup = activity.linkupName.toLowerCase().includes(searchText);
+        const matchesPerson = activity.otherUserFirstName?.toLowerCase().includes(searchText);
+        if (!matchesLinkup && !matchesPerson) {
+          return false;
+        }
+      }
+
+      // Date range filter (you'll need to implement the actual date filtering logic)
+      // This is a placeholder for the date range filtering
+      const activityDate = new Date(activity.timestamp);
+      const now = new Date();
+      
+      if (filters.dateRange === 'last-7-days') {
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        if (activityDate < sevenDaysAgo) {
+          return false;
+        }
+      }
+      // Add other date range conditions as needed
+
+      // Tab-specific filters
+      const tabFilters = filters[activeTab];
+      if (!tabFilters) return true;
+
+      switch (activeTab) {
+        case 'participation':
+          // Add your participation filtering logic
+          return true;
+        case 'invites':
+          // Add your invites filtering logic
+          return true;
+        case 'edits':
+          // Add your edits filtering logic
+          return true;
+        case 'cancellations':
+          // Add your cancellations filtering logic
+          return true;
+        default:
+          return true;
+      }
+    });
+  };
+
+  const filteredActivities = filterActivities(activities);
 
   const sortedActivities = [...filteredActivities].sort((a, b) => {
     const dateA = new Date(a.timestamp).getTime();
@@ -554,23 +623,17 @@ export function UserLinkupActivity() {
                 </TabsList>
               </Tabs>
             </div>
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={toggleSortDirection}
-              className="self-end flex items-center gap-1 mt-2"
-            >
-              Sort by {sortDirection === "asc" ? "Oldest" : "Newest"}
-              {sortDirection === "asc" ? (
-                <ArrowUp className="h-4 w-4" />
-              ) : (
-                <ArrowDown className="h-4 w-4" />
-              )}
-            </Button>
+            <ActivityFilters
+              activeTab={activeTab}
+              selectedFilters={filters}
+              onFilterChange={setFilters}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
-              {currentActivities.map((activity) => (
+              {filteredActivities.slice(startIndex, endIndex).map((activity) => (
                 <div key={activity.id} className="flex items-start gap-4">
                   <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                     {getActivityIcon(activity.type)}
@@ -583,7 +646,7 @@ export function UserLinkupActivity() {
                   </div>
                 </div>
               ))}
-              {currentActivities.length === 0 && (
+              {filteredActivities.length === 0 && (
                 <div className="flex items-center justify-center p-6">
                   <p className="text-muted-foreground">No activities to display</p>
                 </div>
