@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -466,7 +467,14 @@ export function UserLinkupActivity() {
   });
 
   const filterActivities = (activities: ActivityItem[]) => {
-    return activities.filter(activity => {
+    // First filter by the active tab
+    let tabFiltered = activeTab === "all" 
+      ? activities 
+      : activities.filter(activity => activityMatchesTab(activity, activeTab));
+
+    // Then apply additional filters
+    return tabFiltered.filter(activity => {
+      // Apply search filter
       if (searchQuery) {
         const searchText = searchQuery.toLowerCase();
         const matchesLinkup = activity.linkupName.toLowerCase().includes(searchText);
@@ -476,6 +484,7 @@ export function UserLinkupActivity() {
         }
       }
 
+      // Apply date range filter
       const activityDate = new Date(activity.timestamp);
       const now = new Date();
       
@@ -484,23 +493,176 @@ export function UserLinkupActivity() {
         if (activityDate < sevenDaysAgo) {
           return false;
         }
+      } else if (filters.dateRange === 'this-month') {
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        if (activityDate < firstDayOfMonth) {
+          return false;
+        }
+      } else if (filters.dateRange === 'last-month') {
+        const firstDayOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        const firstDayOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+        if (activityDate < firstDayOfLastMonth || activityDate >= firstDayOfThisMonth) {
+          return false;
+        }
       }
+      // Custom date range would be handled separately
 
-      const tabFilters = filters[activeTab];
-      if (!tabFilters) return true;
+      // Apply tab-specific filters
+      const tabFilters = filters[activeTab as keyof typeof filters];
+      if (!tabFilters || typeof tabFilters !== 'object') return true;
 
       switch (activeTab) {
-        case 'participation':
-          return true;
-        case 'invites':
-          return true;
-        case 'edits':
-          return true;
-        case 'cancellations':
-          return true;
-        default:
-          return true;
+        case 'participation': {
+          const participationFilters = filters.participation;
+          
+          // Filter by type if any selected
+          if (participationFilters.type.length > 0) {
+            const typeMap: Record<string, ActivityItem["type"][]> = {
+              "joined": ["joined"],
+              "left_removed": ["left_linkup", "removed_from", "removed_user"],
+              "requested": ["request_join", "received_join_request"],
+              "accepted_declined": ["accepted_join", "accept_join_request", "decline_join_request", "join_request_declined"]
+            };
+            
+            let matchesType = false;
+            for (const filterType of participationFilters.type) {
+              const activityTypes = typeMap[filterType] || [];
+              if (activityTypes.includes(activity.type)) {
+                matchesType = true;
+                break;
+              }
+            }
+            
+            if (!matchesType) return false;
+          }
+          
+          // Filter by involvement if any selected
+          if (participationFilters.involvement.length > 0) {
+            // This would need activity data to include a role/involvement field
+            // For demonstration, we'll assume some types indicate host vs attendee
+            const isHost = ["other_joined", "received_join_request", "accept_join_request", 
+                           "decline_join_request", "removed_user"].includes(activity.type);
+            
+            if (participationFilters.involvement.includes("host") && !isHost) return false;
+            if (participationFilters.involvement.includes("attendee") && isHost) return false;
+          }
+          
+          break;
+        }
+        
+        case 'invites': {
+          const inviteFilters = filters.invites;
+          
+          // Filter by type
+          if (inviteFilters.type.length > 0) {
+            const typeMap: Record<string, ActivityItem["type"][]> = {
+              "invite_join": ["sent_invite", "received_invite", "accepted_invite", "declined_invite"],
+              "invite_cohost": ["invite_cohost", "received_cohost_invite", "accept_cohost", "decline_cohost", "removed_cohost", "removed_as_cohost"]
+            };
+            
+            let matchesType = false;
+            for (const filterType of inviteFilters.type) {
+              const activityTypes = typeMap[filterType] || [];
+              if (activityTypes.includes(activity.type)) {
+                matchesType = true;
+                break;
+              }
+            }
+            
+            if (!matchesType) return false;
+          }
+          
+          // Filter by status
+          if (inviteFilters.status.length > 0) {
+            const statusMap: Record<string, ActivityItem["type"][]> = {
+              "sent": ["sent_invite", "invite_cohost"],
+              "received": ["received_invite", "received_cohost_invite"],
+              "accepted": ["accepted_invite", "accept_cohost"],
+              "declined": ["declined_invite", "decline_cohost"]
+            };
+            
+            let matchesStatus = false;
+            for (const status of inviteFilters.status) {
+              const activityTypes = statusMap[status] || [];
+              if (activityTypes.includes(activity.type)) {
+                matchesStatus = true;
+                break;
+              }
+            }
+            
+            if (!matchesStatus) return false;
+          }
+          
+          // Filter by role
+          if (inviteFilters.role.length > 0) {
+            const isCohost = ["invite_cohost", "received_cohost_invite", "accept_cohost", 
+                             "decline_cohost", "removed_cohost", "removed_as_cohost"].includes(activity.type);
+            const isRegularHost = !isCohost;
+            
+            if (inviteFilters.role.includes("host") && !isRegularHost) return false;
+            if (inviteFilters.role.includes("cohost") && !isCohost) return false;
+          }
+          
+          break;
+        }
+        
+        case 'edits': {
+          const editFilters = filters.edits;
+          
+          // Filter by change type
+          if (editFilters.changeType.length > 0) {
+            const changeTypeMap: Record<string, ActivityItem["type"][]> = {
+              "location": ["change_location"],
+              "datetime": ["reschedule"],
+              "other": ["update_details"]
+            };
+            
+            let matchesChangeType = false;
+            for (const changeType of editFilters.changeType) {
+              const activityTypes = changeTypeMap[changeType] || [];
+              if (activityTypes.includes(activity.type)) {
+                matchesChangeType = true;
+                break;
+              }
+            }
+            
+            if (!matchesChangeType) return false;
+          }
+          
+          break;
+        }
+        
+        case 'cancellations': {
+          const cancellationFilters = filters.cancellations;
+          
+          // Filter by action
+          if (cancellationFilters.action.length > 0) {
+            const actionMap: Record<string, ActivityItem["type"][]> = {
+              "cancelled": ["cancel"],
+              "deleted": ["delete"]
+            };
+            
+            let matchesAction = false;
+            for (const action of cancellationFilters.action) {
+              const activityTypes = actionMap[action] || [];
+              if (activityTypes.includes(activity.type)) {
+                matchesAction = true;
+                break;
+              }
+            }
+            
+            if (!matchesAction) return false;
+          }
+          
+          // Filter by actor
+          // This would need more data in the activity to know who canceled/deleted
+          // For now, we'll assume all are by the user (Me)
+          
+          break;
+        }
       }
+      
+      return true;
     });
   };
 
@@ -620,20 +782,21 @@ export function UserLinkupActivity() {
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
-              {filteredActivities.slice(startIndex, endIndex).map((activity) => (
-                <div key={activity.id} className="flex items-start gap-4">
-                  <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
-                    {getActivityIcon(activity.type)}
+              {filteredActivities.length > 0 ? (
+                filteredActivities.slice(startIndex, endIndex).map((activity) => (
+                  <div key={activity.id} className="flex items-start gap-4">
+                    <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm">{getActivityMessage(activity)}</p>
+                      <p className="text-sm text-muted-foreground mt-1">
+                        {formatJoinDate(activity.timestamp)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm">{getActivityMessage(activity)}</p>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {formatJoinDate(activity.timestamp)}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {filteredActivities.length === 0 && (
+                ))
+              ) : (
                 <div className="flex items-center justify-center p-6">
                   <p className="text-muted-foreground">No activities to display</p>
                 </div>
@@ -658,32 +821,37 @@ export function UserLinkupActivity() {
                 ))}
               </select>
             </PaginationItemsPerPage>
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => currentPage > 1 && setCurrentPage(p => Math.max(1, p - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(page)}
-                      isActive={currentPage === page}
-                    >
-                      {page}
-                    </PaginationLink>
+            {totalPages > 0 && (
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => currentPage > 1 && setCurrentPage(p => Math.max(1, p - 1))}
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    />
                   </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => currentPage < totalPages && setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    const pageNumber = i + 1; // Simple case for first few pages
+                    return (
+                      <PaginationItem key={pageNumber}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(pageNumber)}
+                          isActive={currentPage === pageNumber}
+                        >
+                          {pageNumber}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => currentPage < totalPages && setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </div>
         </DialogContent>
       </Dialog>
