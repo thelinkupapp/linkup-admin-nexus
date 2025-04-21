@@ -298,7 +298,6 @@ function getActivityMessage(activity: ActivityItem) {
   );
 
   switch (activity.type) {
-    // Participation
     case "request_join":
       return <span>Jack requested to join {linkupLink}</span>;
     case "joined":
@@ -322,7 +321,6 @@ function getActivityMessage(activity: ActivityItem) {
     case "removed_user":
       return <span>Jack removed {otherUserLink} from {linkupLink}</span>;
 
-    // Invites & Co-Hosting
     case "sent_invite":
       return <span>Jack invited {otherUserLink} to join {linkupLink}</span>;
     case "received_invite":
@@ -344,7 +342,6 @@ function getActivityMessage(activity: ActivityItem) {
     case "removed_as_cohost":
       return <span>Jack was removed as co-host of {linkupLink} by {otherUserLink}</span>;
 
-    // Edits & Updates
     case "change_location":
       return <span>Jack changed the location for {linkupLink}</span>;
     case "reschedule":
@@ -356,7 +353,6 @@ function getActivityMessage(activity: ActivityItem) {
     case "update_details":
       return <span>Jack updated details for {linkupLink}</span>;
 
-    // Cancellations & Deletions
     case "cancel":
       return <span>Jack cancelled {linkupLink}</span>;
     case "delete":
@@ -448,7 +444,7 @@ export function UserLinkupActivity() {
   const [activeTab, setActiveTab] = useState("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
-  const [searchQuery, setSearchQuery] useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     dateRange: 'last-7-days' as DateRangeFilter,
     participation: {
@@ -471,7 +467,6 @@ export function UserLinkupActivity() {
 
   const filterActivities = (activities: ActivityItem[]) => {
     return activities.filter(activity => {
-      // Search filter
       if (searchQuery) {
         const searchText = searchQuery.toLowerCase();
         const matchesLinkup = activity.linkupName.toLowerCase().includes(searchText);
@@ -481,8 +476,6 @@ export function UserLinkupActivity() {
         }
       }
 
-      // Date range filter (you'll need to implement the actual date filtering logic)
-      // This is a placeholder for the date range filtering
       const activityDate = new Date(activity.timestamp);
       const now = new Date();
       
@@ -492,24 +485,18 @@ export function UserLinkupActivity() {
           return false;
         }
       }
-      // Add other date range conditions as needed
 
-      // Tab-specific filters
       const tabFilters = filters[activeTab];
       if (!tabFilters) return true;
 
       switch (activeTab) {
         case 'participation':
-          // Add your participation filtering logic
           return true;
         case 'invites':
-          // Add your invites filtering logic
           return true;
         case 'edits':
-          // Add your edits filtering logic
           return true;
         case 'cancellations':
-          // Add your cancellations filtering logic
           return true;
         default:
           return true;
