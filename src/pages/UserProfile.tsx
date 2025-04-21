@@ -888,6 +888,15 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="linkups" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkups</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UserLinkupsTable />
+                </CardContent>
+              </Card>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
