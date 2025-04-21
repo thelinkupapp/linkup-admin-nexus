@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -20,11 +19,13 @@ import {
   Mail, 
   Edit, 
   Trash2, 
-  ArrowDown, 
-  ArrowUp 
+  Calendar
 } from "lucide-react";
 import { ActivityFilters } from "@/components/dashboard/ActivityFilters";
 import { DateRangeFilter } from "@/types/activityFilters";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { format, addDays, subDays, startOfMonth, endOfMonth, subMonths } from "date-fns";
 
 interface ActivityItem {
   id: string;
@@ -63,27 +64,28 @@ interface ActivityItem {
   newDateTime?: string;
 }
 
+const now = new Date();
 const activities: ActivityItem[] = [
   {
     id: "1",
     type: "request_join",
     linkupName: "Weekend Hiking Trip",
     linkupId: "hiking-1",
-    timestamp: "2024-04-16T11:30:00Z"
+    timestamp: subDays(now, 1).toISOString()
   },
   {
     id: "2",
     type: "joined",
     linkupName: "Sunset Beach Volleyball",
     linkupId: "volleyball-1",
-    timestamp: "2024-04-18T15:30:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "3",
     type: "accepted_join",
     linkupName: "Book Club Meeting",
     linkupId: "book-1",
-    timestamp: "2024-04-14T14:00:00Z"
+    timestamp: subDays(now, 3).toISOString()
   },
   {
     id: "14",
@@ -92,7 +94,7 @@ const activities: ActivityItem[] = [
     linkupId: "meetup-1",
     otherUserFirstName: "Alex",
     otherUserId: "user-alex",
-    timestamp: "2024-04-17T19:00:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "15",
@@ -101,7 +103,7 @@ const activities: ActivityItem[] = [
     linkupId: "coding-1",
     otherUserFirstName: "Michael",
     otherUserId: "user-michael",
-    timestamp: "2024-04-16T10:15:00Z"
+    timestamp: subDays(now, 4).toISOString()
   },
   {
     id: "16",
@@ -110,7 +112,7 @@ const activities: ActivityItem[] = [
     linkupId: "yoga-3",
     otherUserFirstName: "Jessica",
     otherUserId: "user-jessica",
-    timestamp: "2024-04-15T08:45:00Z"
+    timestamp: subDays(now, 3).toISOString()
   },
   {
     id: "17",
@@ -119,7 +121,7 @@ const activities: ActivityItem[] = [
     linkupId: "dinner-1",
     otherUserFirstName: "Ryan",
     otherUserId: "user-ryan",
-    timestamp: "2024-04-14T17:30:00Z"
+    timestamp: subDays(now, 5).toISOString()
   },
   {
     id: "18",
@@ -128,21 +130,21 @@ const activities: ActivityItem[] = [
     linkupId: "network-2",
     otherUserFirstName: "Catherine",
     otherUserId: "user-catherine",
-    timestamp: "2024-04-13T11:45:00Z"
+    timestamp: subDays(now, 6).toISOString()
   },
   {
     id: "19",
     type: "left_linkup",
     linkupName: "Weekly Book Club",
     linkupId: "book-2",
-    timestamp: "2024-04-12T16:20:00Z"
+    timestamp: subDays(now, 5).toISOString()
   },
   {
     id: "20",
     type: "removed_from",
     linkupName: "Private Gaming Session",
     linkupId: "gaming-1",
-    timestamp: "2024-04-11T20:10:00Z"
+    timestamp: subDays(now, 4).toISOString()
   },
   {
     id: "21",
@@ -151,7 +153,7 @@ const activities: ActivityItem[] = [
     linkupId: "meditation-1",
     otherUserFirstName: "Daniel",
     otherUserId: "user-daniel",
-    timestamp: "2024-04-10T09:30:00Z"
+    timestamp: subDays(now, 6).toISOString()
   },
   {
     id: "4",
@@ -160,7 +162,7 @@ const activities: ActivityItem[] = [
     linkupId: "cooking-1",
     otherUserFirstName: "Sarah",
     otherUserId: "user-sarah",
-    timestamp: "2024-04-13T18:30:00Z"
+    timestamp: subDays(now, 3).toISOString()
   },
   {
     id: "5",
@@ -169,7 +171,7 @@ const activities: ActivityItem[] = [
     linkupId: "art-1",
     otherUserFirstName: "Emily",
     otherUserId: "user-emily",
-    timestamp: "2024-04-15T10:00:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "6",
@@ -178,7 +180,7 @@ const activities: ActivityItem[] = [
     linkupId: "tech-1",
     otherUserFirstName: "David",
     otherUserId: "user-david",
-    timestamp: "2024-04-12T19:00:00Z"
+    timestamp: subDays(now, 5).toISOString()
   },
   {
     id: "7",
@@ -187,14 +189,14 @@ const activities: ActivityItem[] = [
     linkupId: "photo-1",
     otherUserFirstName: "Lisa",
     otherUserId: "user-lisa",
-    timestamp: "2024-04-11T16:45:00Z"
+    timestamp: subDays(now, 6).toISOString()
   },
   {
     id: "13",
     type: "received_invite",
     linkupName: "Photography Workshop",
     linkupId: "photo-2",
-    timestamp: "2024-04-05T14:00:00Z",
+    timestamp: subDays(now, 4).toISOString(),
     otherUserFirstName: "Emma",
     otherUserId: "user-emma"
   },
@@ -203,7 +205,7 @@ const activities: ActivityItem[] = [
     type: "declined_invite",
     linkupName: "Weekend Camping Trip",
     linkupId: "camping-1",
-    timestamp: "2024-04-09T13:15:00Z"
+    timestamp: subDays(now, 5).toISOString()
   },
   {
     id: "23",
@@ -212,7 +214,7 @@ const activities: ActivityItem[] = [
     linkupId: "fundraiser-1",
     otherUserFirstName: "Rachel",
     otherUserId: "user-rachel",
-    timestamp: "2024-04-08T11:00:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "24",
@@ -221,7 +223,7 @@ const activities: ActivityItem[] = [
     linkupId: "corporate-1",
     otherUserFirstName: "Thomas",
     otherUserId: "user-thomas",
-    timestamp: "2024-04-07T15:45:00Z"
+    timestamp: subDays(now, 7).toISOString()
   },
   {
     id: "25",
@@ -230,7 +232,7 @@ const activities: ActivityItem[] = [
     linkupId: "art-3",
     otherUserFirstName: "Olivia",
     otherUserId: "user-olivia",
-    timestamp: "2024-04-06T09:20:00Z"
+    timestamp: subDays(now, 3).toISOString()
   },
   {
     id: "26",
@@ -239,43 +241,43 @@ const activities: ActivityItem[] = [
     linkupId: "music-1",
     otherUserFirstName: "Nathan",
     otherUserId: "user-nathan",
-    timestamp: "2024-04-05T17:30:00Z"
+    timestamp: subDays(now, 6).toISOString()
   },
   {
     id: "8",
     type: "change_location",
     linkupName: "Networking Event",
     linkupId: "network-1",
-    timestamp: "2024-04-09T12:15:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "9",
     type: "reschedule",
     linkupName: "Rooftop Yoga Session",
     linkupId: "yoga-1",
-    timestamp: "2024-04-10T09:00:00Z",
-    newDateTime: "2024-04-15T08:00:00Z"
+    timestamp: subDays(now, 1).toISOString(),
+    newDateTime: addDays(now, 5).toISOString()
   },
   {
     id: "10",
     type: "update_details",
     linkupName: "Yoga in the Park",
     linkupId: "yoga-2",
-    timestamp: "2024-04-08T08:30:00Z"
+    timestamp: subDays(now, 3).toISOString()
   },
   {
     id: "11",
     type: "cancel",
     linkupName: "Movie Night",
     linkupId: "movie-1",
-    timestamp: "2024-04-07T20:00:00Z"
+    timestamp: subDays(now, 2).toISOString()
   },
   {
     id: "12",
     type: "delete",
     linkupName: "Art Exhibition",
     linkupId: "art-2",
-    timestamp: "2024-04-06T15:00:00Z"
+    timestamp: subDays(now, 4).toISOString()
   }
 ];
 
@@ -448,6 +450,7 @@ export function UserLinkupActivity() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
     dateRange: 'last-7-days' as DateRangeFilter,
+    search: '',
     participation: {
       type: [],
       involvement: []
@@ -465,16 +468,31 @@ export function UserLinkupActivity() {
       actor: []
     }
   });
+  
+  const [dateRange, setDateRange] = useState<{
+    from: Date | undefined;
+    to: Date | undefined;
+  }>({
+    from: undefined,
+    to: undefined
+  });
+
+  const handleDateRangeChange = (range: { from: Date | undefined; to: Date | undefined }) => {
+    setDateRange(range);
+    if (range.from && range.to) {
+      setFilters({
+        ...filters,
+        dateRange: 'custom'
+      });
+    }
+  };
 
   const filterActivities = (activities: ActivityItem[]) => {
-    // First filter by the active tab
     let tabFiltered = activeTab === "all" 
       ? activities 
       : activities.filter(activity => activityMatchesTab(activity, activeTab));
 
-    // Then apply additional filters
     return tabFiltered.filter(activity => {
-      // Apply search filter
       if (searchQuery) {
         const searchText = searchQuery.toLowerCase();
         const matchesLinkup = activity.linkupName.toLowerCase().includes(searchText);
@@ -484,7 +502,6 @@ export function UserLinkupActivity() {
         }
       }
 
-      // Apply date range filter
       const activityDate = new Date(activity.timestamp);
       const now = new Date();
       
@@ -504,10 +521,15 @@ export function UserLinkupActivity() {
         if (activityDate < firstDayOfLastMonth || activityDate >= firstDayOfThisMonth) {
           return false;
         }
+      } else if (filters.dateRange === 'custom' && dateRange.from && dateRange.to) {
+        const from = new Date(dateRange.from);
+        const to = new Date(dateRange.to);
+        to.setHours(23, 59, 59, 999);
+        if (activityDate < from || activityDate > to) {
+          return false;
+        }
       }
-      // Custom date range would be handled separately
 
-      // Apply tab-specific filters
       const tabFilters = filters[activeTab as keyof typeof filters];
       if (!tabFilters || typeof tabFilters !== 'object') return true;
 
@@ -515,7 +537,6 @@ export function UserLinkupActivity() {
         case 'participation': {
           const participationFilters = filters.participation;
           
-          // Filter by type if any selected
           if (participationFilters.type.length > 0) {
             const typeMap: Record<string, ActivityItem["type"][]> = {
               "joined": ["joined"],
@@ -536,10 +557,7 @@ export function UserLinkupActivity() {
             if (!matchesType) return false;
           }
           
-          // Filter by involvement if any selected
           if (participationFilters.involvement.length > 0) {
-            // This would need activity data to include a role/involvement field
-            // For demonstration, we'll assume some types indicate host vs attendee
             const isHost = ["other_joined", "received_join_request", "accept_join_request", 
                            "decline_join_request", "removed_user"].includes(activity.type);
             
@@ -553,7 +571,6 @@ export function UserLinkupActivity() {
         case 'invites': {
           const inviteFilters = filters.invites;
           
-          // Filter by type
           if (inviteFilters.type.length > 0) {
             const typeMap: Record<string, ActivityItem["type"][]> = {
               "invite_join": ["sent_invite", "received_invite", "accepted_invite", "declined_invite"],
@@ -572,7 +589,6 @@ export function UserLinkupActivity() {
             if (!matchesType) return false;
           }
           
-          // Filter by status
           if (inviteFilters.status.length > 0) {
             const statusMap: Record<string, ActivityItem["type"][]> = {
               "sent": ["sent_invite", "invite_cohost"],
@@ -593,7 +609,6 @@ export function UserLinkupActivity() {
             if (!matchesStatus) return false;
           }
           
-          // Filter by role
           if (inviteFilters.role.length > 0) {
             const isCohost = ["invite_cohost", "received_cohost_invite", "accept_cohost", 
                              "decline_cohost", "removed_cohost", "removed_as_cohost"].includes(activity.type);
@@ -609,7 +624,6 @@ export function UserLinkupActivity() {
         case 'edits': {
           const editFilters = filters.edits;
           
-          // Filter by change type
           if (editFilters.changeType.length > 0) {
             const changeTypeMap: Record<string, ActivityItem["type"][]> = {
               "location": ["change_location"],
@@ -635,7 +649,6 @@ export function UserLinkupActivity() {
         case 'cancellations': {
           const cancellationFilters = filters.cancellations;
           
-          // Filter by action
           if (cancellationFilters.action.length > 0) {
             const actionMap: Record<string, ActivityItem["type"][]> = {
               "cancelled": ["cancel"],
@@ -653,10 +666,6 @@ export function UserLinkupActivity() {
             
             if (!matchesAction) return false;
           }
-          
-          // Filter by actor
-          // This would need more data in the activity to know who canceled/deleted
-          // For now, we'll assume all are by the user (Me)
           
           break;
         }
@@ -688,6 +697,14 @@ export function UserLinkupActivity() {
 
   const toggleSortDirection = () => {
     setSortDirection(prev => prev === "asc" ? "desc" : "asc");
+  };
+
+  const getDateRangeLabel = () => {
+    if (filters.dateRange !== 'custom' || !dateRange.from || !dateRange.to) {
+      return '';
+    }
+    
+    return `${format(dateRange.from, 'MMM d, yyyy')} - ${format(dateRange.to, 'MMM d, yyyy')}`;
   };
 
   const getHeaderText = () => {
@@ -778,12 +795,14 @@ export function UserLinkupActivity() {
               onFilterChange={setFilters}
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
+              dateRange={dateRange}
+              onDateRangeChange={handleDateRangeChange}
             />
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
               {filteredActivities.length > 0 ? (
-                filteredActivities.slice(startIndex, endIndex).map((activity) => (
+                currentActivities.map((activity) => (
                   <div key={activity.id} className="flex items-start gap-4">
                     <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
                       {getActivityIcon(activity.type)}

@@ -7,7 +7,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Filter, Search } from "lucide-react";
+import { Filter, Search, Calendar } from "lucide-react";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
+import { ActivityFilters as ActivityFiltersType, DateRangeFilter } from "@/types/activityFilters";
 
 interface FilterGroup {
   label: string;
@@ -16,10 +21,12 @@ interface FilterGroup {
 
 interface ActivityFiltersProps {
   activeTab: string;
-  selectedFilters: any;
-  onFilterChange: (filters: any) => void;
+  selectedFilters: ActivityFiltersType;
+  onFilterChange: (filters: ActivityFiltersType) => void;
   searchQuery: string;
   onSearchChange: (value: string) => void;
+  dateRange?: DateRange;
+  onDateRangeChange?: (range: DateRange) => void;
 }
 
 const dateRangeOptions = [
@@ -106,7 +113,9 @@ export function ActivityFilters({
   selectedFilters, 
   onFilterChange,
   searchQuery,
-  onSearchChange
+  onSearchChange,
+  dateRange,
+  onDateRangeChange
 }: ActivityFiltersProps) {
   const currentFilters = filterGroups[activeTab] || [];
 
@@ -129,6 +138,14 @@ export function ActivityFilters({
     onFilterChange(newFilters);
   };
 
+  // Handle date range selection
+  const handleDateRangeSelection = (value: DateRangeFilter) => {
+    onFilterChange({
+      ...selectedFilters,
+      dateRange: value
+    });
+  };
+
   return (
     <div className="flex items-center gap-2 mb-4">
       <div className="relative flex-1">
@@ -141,26 +158,58 @@ export function ActivityFilters({
         />
       </div>
       
-      <Select 
-        defaultValue="last-7-days"
-        onValueChange={(value) => {
-          onFilterChange({
-            ...selectedFilters,
-            dateRange: value
-          });
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select date range" />
-        </SelectTrigger>
-        <SelectContent>
-          {dateRangeOptions.map((option) => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="flex items-center gap-2 min-w-[180px]">
+            <Calendar className="h-4 w-4" />
+            {selectedFilters.dateRange === 'custom' && dateRange?.from && dateRange?.to ? (
+              <span className="truncate">
+                {format(dateRange.from, "MMM d")} - {format(dateRange.to, "MMM d")}
+              </span>
+            ) : (
+              <span>
+                {dateRangeOptions.find(option => option.value === selectedFilters.dateRange)?.label || 'Select date range'}
+              </span>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-4" align="end">
+          <div className="space-y-4">
+            <div className="grid gap-2">
+              {dateRangeOptions.map((option) => (
+                <div key={option.value} className="flex items-center gap-2">
+                  <Checkbox 
+                    id={`date-range-${option.value}`}
+                    checked={selectedFilters.dateRange === option.value}
+                    onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
+                  />
+                  <label
+                    htmlFor={`date-range-${option.value}`}
+                    className="text-sm cursor-pointer"
+                  >
+                    {option.label}
+                  </label>
+                </div>
+              ))}
+            </div>
+            
+            {selectedFilters.dateRange === 'custom' && (
+              <div className="pt-4">
+                <Separator className="mb-4" />
+                <div className="grid gap-2">
+                  <CalendarComponent
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={onDateRangeChange}
+                    numberOfMonths={2}
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </PopoverContent>
+      </Popover>
 
       <Popover>
         <PopoverTrigger asChild>
