@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -108,7 +107,7 @@ const statusOptions = [
   { label: "Removed", value: "removed" }
 ];
 
-const filteredLinkupsData = (type?: "hosted" | "attended", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
+const filteredLinkupsData = (type?: "hosted" | "attended" | "cohost", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
   let filtered = type ? linkups.filter(linkup => linkup.type === type) : linkups;
   
   if (selectedStatuses && selectedStatuses.length > 0) {
@@ -258,7 +257,6 @@ export function UserLinkupsTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
 
-  // Fixed handleCheckedChange function to properly update state
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
       if (checked) {
@@ -269,7 +267,6 @@ export function UserLinkupsTable() {
     });
   };
 
-  // Updated filteredLinkups to use the sortConfig
   const filteredLinkups = linkups
     .filter(linkup => {
       if (activeTab !== "all" && linkup.type !== activeTab) return false;
@@ -351,15 +348,17 @@ export function UserLinkupsTable() {
     );
   };
 
-  const getFilteredLinkupsCount = (type?: "hosted" | "attended") => {
+  const getFilteredLinkupsCount = (type?: "hosted" | "attended" | "cohost") => {
     return linkups.filter(linkup => type ? linkup.type === type : true).length;
   };
 
   const getLinkupCountText = (tab: string) => {
-    const count = getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended");
+    const count = getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended" | "cohost");
     switch(tab) {
       case "hosted":
         return `Host of ${count} linkups`;
+      case "cohost":
+        return `Co-Host of ${count} linkups`;
       case "attended":
         return `Attendee of ${count} linkups`;
       default:
@@ -367,7 +366,6 @@ export function UserLinkupsTable() {
     }
   };
 
-  // Handler for sorting
   const handleSort = (field: string) => {
     setSortConfig(prev => ({
       field,
@@ -441,7 +439,6 @@ export function UserLinkupsTable() {
                             key={option.value} 
                             className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
                             onClick={(e) => {
-                              // Stop propagation to prevent the popover from closing
                               e.stopPropagation();
                               handleCheckedChange(option.value, !selectedStatuses.includes(option.value));
                             }}
@@ -450,7 +447,6 @@ export function UserLinkupsTable() {
                               id={`status-${option.value}`}
                               checked={selectedStatuses.includes(option.value)} 
                               onCheckedChange={(checked) => {
-                                // Stop propagation on the checkbox click as well
                                 handleCheckedChange(option.value, checked === true);
                               }}
                               onClick={(e) => e.stopPropagation()}
