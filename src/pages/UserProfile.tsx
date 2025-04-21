@@ -59,6 +59,7 @@ import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
+import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
 
 interface UserData {
   id: string;
@@ -887,23 +888,25 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="linkups" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkups</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <UserLinkupsTable />
-                </CardContent>
-              </Card>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Activity</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <UserLinkupActivity />
+                  </CardContent>
+                </Card>
 
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle>Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <UserLinkupActivity />
-                </CardContent>
-              </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Chats</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <UserLinkupChats />
+                  </CardContent>
+                </Card>
+              </div>
             </TabsContent>
 
             <TabsContent value="privacy" className="space-y-6">
