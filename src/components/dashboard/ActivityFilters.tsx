@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -182,10 +181,11 @@ export function ActivityFilters({
                     id={`date-range-${option.value}`}
                     checked={selectedFilters.dateRange === option.value}
                     onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
+                    className="cursor-pointer hover:bg-primary/10 transition-colors"
                   />
                   <label
                     htmlFor={`date-range-${option.value}`}
-                    className="text-sm cursor-pointer"
+                    className="text-sm cursor-pointer w-full hover:text-primary transition-colors"
                   >
                     {option.label}
                   </label>
@@ -228,18 +228,26 @@ export function ActivityFilters({
                   {group.options.map((option) => (
                     <div 
                       key={option.value}
-                      className="flex items-center space-x-2"
+                      className="flex items-center space-x-2 p-1 rounded hover:bg-slate-50 cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        const isCurrentlyChecked = selectedFilters[activeTab]?.[group.label.toLowerCase()]?.includes(option.value) || false;
+                        handleFilterChange(group.label.toLowerCase(), option.value, !isCurrentlyChecked);
+                      }}
                     >
                       <Checkbox 
                         id={`${group.label}-${option.value}`}
                         checked={selectedFilters[activeTab]?.[group.label.toLowerCase()]?.includes(option.value)}
-                        onCheckedChange={(checked) => 
-                          handleFilterChange(group.label.toLowerCase(), option.value, checked === true)
-                        }
+                        onCheckedChange={(checked) => {
+                          e.stopPropagation();
+                          handleFilterChange(group.label.toLowerCase(), option.value, checked === true);
+                        }}
+                        className="cursor-pointer"
+                        onClick={(e) => e.stopPropagation()}
                       />
                       <label
                         htmlFor={`${group.label}-${option.value}`}
-                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer w-full"
                       >
                         {option.label}
                       </label>
