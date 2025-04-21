@@ -53,8 +53,8 @@ const linkups: Linkup[] = [
     startDate: "2024-04-19T20:00:00Z",
     endDate: "2024-04-19T22:00:00Z",
     status: "upcoming",
-    type: "hosted",
-    createdDate: "2024-04-01T15:45:00Z"
+    type: "cohost",
+    joinedDate: "2024-04-01T15:45:00Z"
   },
   {
     id: "3",
@@ -397,7 +397,7 @@ export function UserLinkupsTable() {
           {["all", "hosted", "cohost", "attended"].map((tab) => (
             <TabsContent key={tab} value={tab}>
               <LinkupsTable 
-                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "cohost" | "attended")} 
+                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended" | "cohost")} 
                 preview={true}
               />
             </TabsContent>
@@ -478,6 +478,7 @@ export function UserLinkupsTable() {
               <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="hosted">Host</TabsTrigger>
+                <TabsTrigger value="cohost">Co-Host</TabsTrigger>
                 <TabsTrigger value="attended">Attendee</TabsTrigger>
               </TabsList>
 
