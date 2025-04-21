@@ -5,8 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle } from "lucide-react";
+import { MessageCircle, Calendar } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DateRange } from "react-day-picker";
+import { format } from "date-fns";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 interface ChatMessage {
   id: string;
@@ -20,56 +27,63 @@ interface ChatMessage {
   };
 }
 
+type DateRangeFilter = 'last-7-days' | 'this-month' | 'last-month' | 'custom';
+
+const dateRangeOptions = [
+  { value: 'last-7-days', label: 'Last 7 days' },
+  { value: 'this-month', label: 'This month' },
+  { value: 'last-month', label: 'Last month' },
+  { value: 'custom', label: 'Custom range' }
+];
+
 // Sample data - in a real app this would come from your backend
 const chatMessages: ChatMessage[] = [
   {
     id: "1",
     linkupId: "hiking-1",
     linkupName: "Weekend Hiking Trip",
-    message: "Hey everyone! Looking forward to the hike tomorrow!",
+    message: "Hey everyone! Who's bringing the trail mix?",
     timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
     sender: {
-      name: "Sarah Johnson",
-      avatar: "https://i.pravatar.cc/150?u=sarah"
+      name: "Jack Peagam",
+      avatar: "https://i.pravatar.cc/150?u=jack"
     }
   },
   {
     id: "2",
-    linkupId: "yoga-1",
-    linkupName: "Rooftop Yoga Session",
-    message: "What time should we arrive for setup?",
+    linkupId: "tech-1",
+    linkupName: "Tech Meetup",
+    message: "I'll be presenting about React hooks!",
     timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
     sender: {
-      name: "Mike Richards",
-      avatar: "https://i.pravatar.cc/150?u=mike"
+      name: "Jack Peagam",
+      avatar: "https://i.pravatar.cc/150?u=jack"
     }
   },
   {
     id: "3",
     linkupId: "book-1",
     linkupName: "Book Club Meeting",
-    message: "I just finished the chapter, it was amazing!",
+    message: "The plot twist in chapter 7 was incredible!",
     timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
     sender: {
-      name: "Emma Wilson",
-      avatar: "https://i.pravatar.cc/150?u=emma"
-    }
-  },
-  {
-    id: "4",
-    linkupId: "tech-1",
-    linkupName: "Tech Meetup",
-    message: "Can someone share the presentation slides?",
-    timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
-    sender: {
-      name: "David Chen",
-      avatar: "https://i.pravatar.cc/150?u=david"
+      name: "Jack Peagam",
+      avatar: "https://i.pravatar.cc/150?u=jack"
     }
   }
 ];
 
 export function UserLinkupChats() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [selectedDateFilter, setSelectedDateFilter] = useState<DateRangeFilter>('last-7-days');
+
+  const handleDateRangeSelection = (value: DateRangeFilter) => {
+    setSelectedDateFilter(value);
+    if (value !== 'custom') {
+      setDateRange(undefined);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -110,10 +124,65 @@ export function UserLinkupChats() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
-            <DialogTitle className="text-2xl flex items-center gap-2">
-              <MessageCircle className="h-6 w-6" />
-              Chat History
-            </DialogTitle>
+            <div className="flex items-center justify-between">
+              <DialogTitle className="text-2xl flex items-center gap-2">
+                <MessageCircle className="h-6 w-6" />
+                Chat History
+              </DialogTitle>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4" />
+                    {selectedDateFilter === 'custom' && dateRange?.from && dateRange?.to ? (
+                      <span className="truncate">
+                        {format(dateRange.from, "MMM d")} - {format(dateRange.to, "MMM d")}
+                      </span>
+                    ) : (
+                      <span>
+                        {dateRangeOptions.find(option => option.value === selectedDateFilter)?.label || 'Select date range'}
+                      </span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-4" align="end">
+                  <div className="space-y-4">
+                    <div className="grid gap-2">
+                      {dateRangeOptions.map((option) => (
+                        <div key={option.value} className="flex items-center gap-2">
+                          <Checkbox 
+                            id={`date-range-${option.value}`}
+                            checked={selectedDateFilter === option.value}
+                            onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
+                            className="cursor-pointer hover:bg-primary/10 transition-colors"
+                          />
+                          <label
+                            htmlFor={`date-range-${option.value}`}
+                            className="text-sm cursor-pointer w-full hover:text-primary transition-colors"
+                          >
+                            {option.label}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {selectedDateFilter === 'custom' && (
+                      <div className="pt-4">
+                        <Separator className="mb-4" />
+                        <div className="grid gap-2">
+                          <CalendarComponent
+                            mode="range"
+                            selected={dateRange}
+                            onSelect={setDateRange}
+                            numberOfMonths={2}
+                            className={cn("p-3 pointer-events-auto")}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
           </DialogHeader>
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
@@ -148,3 +217,4 @@ export function UserLinkupChats() {
     </div>
   );
 }
+
