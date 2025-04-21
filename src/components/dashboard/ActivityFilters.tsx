@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -239,7 +240,6 @@ export function ActivityFilters({
                         id={`${group.label}-${option.value}`}
                         checked={selectedFilters[activeTab]?.[group.label.toLowerCase()]?.includes(option.value)}
                         onCheckedChange={(checked) => {
-                          e.stopPropagation();
                           handleFilterChange(group.label.toLowerCase(), option.value, checked === true);
                         }}
                         className="cursor-pointer"
