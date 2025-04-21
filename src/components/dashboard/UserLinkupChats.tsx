@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Calendar } from "lucide-react";
+import { MessageCircle, Calendar, Search, Filter } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DateRange } from "react-day-picker";
@@ -14,6 +13,16 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface ChatMessage {
   id: string;
@@ -35,6 +44,8 @@ const dateRangeOptions = [
   { value: 'last-month', label: 'Last month' },
   { value: 'custom', label: 'Custom range' }
 ];
+
+const itemsPerPageOptions = [10, 25, 50];
 
 // Sample data - in a real app this would come from your backend
 const chatMessages: ChatMessage[] = [
@@ -73,10 +84,17 @@ const chatMessages: ChatMessage[] = [
   }
 ];
 
+// Get unique linkup names for the filter
+const uniqueLinkups = Array.from(new Set(chatMessages.map(msg => msg.linkupName)));
+
 export function UserLinkupChats() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [selectedDateFilter, setSelectedDateFilter] = useState<DateRangeFilter>('last-7-days');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedLinkup, setSelectedLinkup] = useState<string>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const handleDateRangeSelection = (value: DateRangeFilter) => {
     setSelectedDateFilter(value);
@@ -84,6 +102,20 @@ export function UserLinkupChats() {
       setDateRange(undefined);
     }
   };
+
+  const filteredMessages = chatMessages
+    .filter(message => {
+      const matchesSearch = message.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                          message.linkupName.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesLinkup = selectedLinkup === "all" || message.linkupName === selectedLinkup;
+      return matchesSearch && matchesLinkup;
+    });
+
+  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
+  const paginatedMessages = filteredMessages.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-4">
@@ -98,20 +130,16 @@ export function UserLinkupChats() {
         {chatMessages.slice(0, 3).map((message) => (
           <div key={message.id} className="flex items-start gap-4">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={message.sender.avatar} alt={message.sender.name} />
-              <AvatarFallback>{message.sender.name.charAt(0)}</AvatarFallback>
+              <AvatarImage src={message.sender.avatar} alt="User" />
+              <AvatarFallback>U</AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <span className="font-medium">{message.sender.name}</span>
-                <span className="text-sm text-muted-foreground">in</span>
-                <Link 
-                  to={`/linkups/${message.linkupId}`}
-                  className="font-medium hover:underline"
-                >
-                  {message.linkupName}
-                </Link>
-              </div>
+              <Link 
+                to={`/linkups/${message.linkupId}`}
+                className="font-medium hover:underline"
+              >
+                {message.linkupName}
+              </Link>
               <p className="text-sm mt-1">{message.message}</p>
               <p className="text-sm text-muted-foreground mt-1">
                 {formatJoinDate(message.timestamp)}
@@ -124,51 +152,51 @@ export function UserLinkupChats() {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-2xl max-h-[80vh]">
           <DialogHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <DialogTitle className="text-2xl flex items-center gap-2">
                 <MessageCircle className="h-6 w-6" />
                 Chat History
               </DialogTitle>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="flex items-center gap-2">
-                    <Calendar className="h-4 w-4" />
-                    {selectedDateFilter === 'custom' && dateRange?.from && dateRange?.to ? (
-                      <span className="truncate">
-                        {format(dateRange.from, "MMM d")} - {format(dateRange.to, "MMM d")}
-                      </span>
-                    ) : (
-                      <span>
-                        {dateRangeOptions.find(option => option.value === selectedDateFilter)?.label || 'Select date range'}
-                      </span>
-                    )}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-4" align="end">
-                  <div className="space-y-4">
-                    <div className="grid gap-2">
-                      {dateRangeOptions.map((option) => (
-                        <div key={option.value} className="flex items-center gap-2">
-                          <Checkbox 
-                            id={`date-range-${option.value}`}
-                            checked={selectedDateFilter === option.value}
-                            onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
-                            className="cursor-pointer hover:bg-primary/10 transition-colors"
-                          />
-                          <label
-                            htmlFor={`date-range-${option.value}`}
-                            className="text-sm cursor-pointer w-full hover:text-primary transition-colors"
-                          >
-                            {option.label}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
-                    
-                    {selectedDateFilter === 'custom' && (
-                      <div className="pt-4">
-                        <Separator className="mb-4" />
-                        <div className="grid gap-2">
+              <div className="flex items-center gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button variant="outline" className="flex items-center gap-2">
+                      <Calendar className="h-4 w-4" />
+                      {selectedDateFilter === 'custom' && dateRange?.from && dateRange?.to ? (
+                        <span className="truncate">
+                          {format(dateRange.from, "MMM d")} - {format(dateRange.to, "MMM d")}
+                        </span>
+                      ) : (
+                        <span>
+                          {dateRangeOptions.find(option => option.value === selectedDateFilter)?.label || 'Select date range'}
+                        </span>
+                      )}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-4" align="end">
+                    <div className="space-y-4">
+                      <div className="grid gap-2">
+                        {dateRangeOptions.map((option) => (
+                          <div key={option.value} className="flex items-center gap-2">
+                            <Checkbox 
+                              id={`date-range-${option.value}`}
+                              checked={selectedDateFilter === option.value}
+                              onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
+                              className="cursor-pointer hover:bg-primary/10 transition-colors"
+                            />
+                            <label
+                              htmlFor={`date-range-${option.value}`}
+                              className="text-sm cursor-pointer w-full hover:text-primary transition-colors"
+                            >
+                              {option.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {selectedDateFilter === 'custom' && (
+                        <div className="pt-4">
+                          <Separator className="mb-4" />
                           <CalendarComponent
                             mode="range"
                             selected={dateRange}
@@ -177,32 +205,57 @@ export function UserLinkupChats() {
                             className={cn("p-3 pointer-events-auto")}
                           />
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </PopoverContent>
-              </Popover>
+                      )}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search messages or linkups..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+              <Select value={selectedLinkup} onValueChange={setSelectedLinkup}>
+                <SelectTrigger className="w-[200px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filter by Linkup" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Linkups</SelectItem>
+                  {uniqueLinkups.map(linkup => (
+                    <SelectItem key={linkup} value={linkup}>
+                      {linkup}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </DialogHeader>
+          
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
-              {chatMessages.map((message) => (
+              {paginatedMessages.map((message) => (
                 <div key={message.id} className="flex items-start gap-4">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={message.sender.avatar} alt={message.sender.name} />
-                    <AvatarFallback>{message.sender.name.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={message.sender.avatar} alt="User" />
+                    <AvatarFallback>U</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">{message.sender.name}</span>
-                      <span className="text-sm text-muted-foreground">in</span>
-                      <Link 
-                        to={`/linkups/${message.linkupId}`}
-                        className="font-medium hover:underline"
-                      >
-                        {message.linkupName}
-                      </Link>
-                    </div>
+                    <Link 
+                      to={`/linkups/${message.linkupId}`}
+                      className="font-medium hover:underline"
+                    >
+                      {message.linkupName}
+                    </Link>
                     <p className="text-sm mt-1">{message.message}</p>
                     <p className="text-sm text-muted-foreground mt-1">
                       {formatJoinDate(message.timestamp)}
@@ -212,9 +265,59 @@ export function UserLinkupChats() {
               ))}
             </div>
           </ScrollArea>
+
+          <div className="flex items-center justify-between border-t pt-4 mt-4">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Items per page:</span>
+              <Select
+                value={itemsPerPage.toString()}
+                onValueChange={(value) => {
+                  setItemsPerPage(Number(value));
+                  setCurrentPage(1);
+                }}
+              >
+                <SelectTrigger className="w-[70px]">
+                  <SelectValue placeholder="10" />
+                </SelectTrigger>
+                <SelectContent>
+                  {itemsPerPageOptions.map(option => (
+                    <SelectItem key={option} value={option.toString()}>
+                      {option}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(page)}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
-
