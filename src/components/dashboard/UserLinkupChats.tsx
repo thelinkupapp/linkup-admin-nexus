@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Calendar, Search, Filter } from "lucide-react";
+import { MessageCircle, Search, Filter, Calendar, Trash2, Calendar as CalendarIcon } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   Pagination,
   PaginationContent,
@@ -30,6 +31,7 @@ interface ChatMessage {
   linkupName: string;
   message: string;
   timestamp: string;
+  status: 'upcoming' | 'happened' | 'happening' | 'cancelled' | 'deleted' | 'removed';
   sender: {
     name: string;
     avatar: string;
@@ -45,6 +47,16 @@ const dateRangeOptions = [
   { value: 'custom', label: 'Custom range' }
 ];
 
+const statusOptions = [
+  { value: 'all', label: 'All Statuses' },
+  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'happened', label: 'Happened' },
+  { value: 'happening', label: 'Happening' },
+  { value: 'cancelled', label: 'Cancelled' },
+  { value: 'deleted', label: 'Deleted' },
+  { value: 'removed', label: 'Removed' }
+];
+
 const itemsPerPageOptions = [10, 25, 50];
 
 // Sample data - in a real app this would come from your backend
@@ -55,9 +67,10 @@ const chatMessages: ChatMessage[] = [
     linkupName: "Weekend Hiking Trip",
     message: "Hey everyone! Who's bringing the trail mix?",
     timestamp: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+    status: 'upcoming',
     sender: {
       name: "Jack Peagam",
-      avatar: "https://i.pravatar.cc/150?u=jack"
+      avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
     }
   },
   {
@@ -66,9 +79,10 @@ const chatMessages: ChatMessage[] = [
     linkupName: "Tech Meetup",
     message: "I'll be presenting about React hooks!",
     timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
+    status: 'happening',
     sender: {
       name: "Jack Peagam",
-      avatar: "https://i.pravatar.cc/150?u=jack"
+      avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
     }
   },
   {
@@ -77,15 +91,25 @@ const chatMessages: ChatMessage[] = [
     linkupName: "Book Club Meeting",
     message: "The plot twist in chapter 7 was incredible!",
     timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
+    status: 'happened',
     sender: {
       name: "Jack Peagam",
-      avatar: "https://i.pravatar.cc/150?u=jack"
+      avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
     }
   }
 ];
 
 // Get unique linkup names for the filter
-const uniqueLinkups = Array.from(new Set(chatMessages.map(msg => msg.linkupName)));
+const getUniqueLinkupsByStatus = (messages: ChatMessage[], status: string) => {
+  if (status === 'all') {
+    return Array.from(new Set(messages.map(msg => msg.linkupName)));
+  }
+  return Array.from(new Set(
+    messages
+      .filter(msg => msg.status === status)
+      .map(msg => msg.linkupName)
+  ));
+};
 
 export function UserLinkupChats() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -93,8 +117,21 @@ export function UserLinkupChats() {
   const [selectedDateFilter, setSelectedDateFilter] = useState<DateRangeFilter>('last-7-days');
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLinkup, setSelectedLinkup] = useState<string>("all");
+  const [selectedStatus, setSelectedStatus] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const [availableLinkups, setAvailableLinkups] = useState<string[]>(
+    getUniqueLinkupsByStatus(chatMessages, 'all')
+  );
+
+  useEffect(() => {
+    const newLinkups = getUniqueLinkupsByStatus(chatMessages, selectedStatus);
+    setAvailableLinkups(newLinkups);
+    if (!newLinkups.includes(selectedLinkup)) {
+      setSelectedLinkup('all');
+    }
+  }, [selectedStatus]);
 
   const handleDateRangeSelection = (value: DateRangeFilter) => {
     setSelectedDateFilter(value);
@@ -108,7 +145,8 @@ export function UserLinkupChats() {
       const matchesSearch = message.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           message.linkupName.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesLinkup = selectedLinkup === "all" || message.linkupName === selectedLinkup;
-      return matchesSearch && matchesLinkup;
+      const matchesStatus = selectedStatus === "all" || message.status === selectedStatus;
+      return matchesSearch && matchesLinkup && matchesStatus;
     });
 
   const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
@@ -131,7 +169,7 @@ export function UserLinkupChats() {
           <div key={message.id} className="flex items-start gap-4">
             <Avatar className="h-10 w-10">
               <AvatarImage src={message.sender.avatar} alt="User" />
-              <AvatarFallback>U</AvatarFallback>
+              <AvatarFallback>JP</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <Link 
@@ -150,17 +188,32 @@ export function UserLinkupChats() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[80vh]">
+        <DialogContent className="max-w-4xl max-h-[80vh]">
           <DialogHeader>
             <div className="flex items-center justify-between mb-4">
               <DialogTitle className="text-2xl flex items-center gap-2">
                 <MessageCircle className="h-6 w-6" />
                 Chat History
               </DialogTitle>
-              <div className="flex items-center gap-2">
+            </div>
+            
+            <div className="flex items-center gap-4 mb-4">
+              <div className="flex-1">
+                <div className="relative">
+                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search messages or linkups..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-2">
                 <Popover>
                   <PopoverTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2">
+                    <Button variant="outline" className="flex items-center gap-2 min-w-[140px]">
                       <Calendar className="h-4 w-4" />
                       {selectedDateFilter === 'custom' && dateRange?.from && dateRange?.to ? (
                         <span className="truncate">
@@ -182,12 +235,8 @@ export function UserLinkupChats() {
                               id={`date-range-${option.value}`}
                               checked={selectedDateFilter === option.value}
                               onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
-                              className="cursor-pointer hover:bg-primary/10 transition-colors"
                             />
-                            <label
-                              htmlFor={`date-range-${option.value}`}
-                              className="text-sm cursor-pointer w-full hover:text-primary transition-colors"
-                            >
+                            <label htmlFor={`date-range-${option.value}`} className="text-sm cursor-pointer">
                               {option.label}
                             </label>
                           </div>
@@ -202,42 +251,40 @@ export function UserLinkupChats() {
                             selected={dateRange}
                             onSelect={setDateRange}
                             numberOfMonths={2}
-                            className={cn("p-3 pointer-events-auto")}
                           />
                         </div>
                       )}
                     </div>
                   </PopoverContent>
                 </Popover>
+
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger className="min-w-[140px]">
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {statusOptions.map(status => (
+                      <SelectItem key={status.value} value={status.value}>
+                        {status.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedLinkup} onValueChange={setSelectedLinkup}>
+                  <SelectTrigger className="min-w-[160px]">
+                    <SelectValue placeholder="Filter by Linkup" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Linkups</SelectItem>
+                    {availableLinkups.map(linkup => (
+                      <SelectItem key={linkup} value={linkup}>
+                        {linkup}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
-            </div>
-            
-            <div className="flex items-center gap-4 mb-4">
-              <div className="flex-1">
-                <div className="relative">
-                  <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search messages or linkups..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
-                  />
-                </div>
-              </div>
-              <Select value={selectedLinkup} onValueChange={setSelectedLinkup}>
-                <SelectTrigger className="w-[200px]">
-                  <Filter className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Filter by Linkup" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Linkups</SelectItem>
-                  {uniqueLinkups.map(linkup => (
-                    <SelectItem key={linkup} value={linkup}>
-                      {linkup}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
             </div>
           </DialogHeader>
           
@@ -247,7 +294,7 @@ export function UserLinkupChats() {
                 <div key={message.id} className="flex items-start gap-4">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={message.sender.avatar} alt="User" />
-                    <AvatarFallback>U</AvatarFallback>
+                    <AvatarFallback>JP</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <Link 
