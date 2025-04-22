@@ -61,7 +61,7 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           <p className="mb-2 text-sm font-semibold text-muted-foreground">Date Range</p>
           <Calendar
             mode="range"
-            selected={dateRange}
+            selected={dateRange as DateRange}
             onSelect={setDateRange}
             numberOfMonths={2}
             className={cn("p-3 pointer-events-auto")}
@@ -72,4 +72,3 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
     </Popover>
   );
 };
-

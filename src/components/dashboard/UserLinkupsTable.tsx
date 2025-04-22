@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -33,6 +34,8 @@ interface Linkup {
   endDate: string;
   status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
   type: "hosted" | "attended" | "cohost";
+  createdDate?: string;
+  joinedDate?: string;
 }
 
 const linkups: Linkup[] = [

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, Filter, Users } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -32,6 +33,7 @@ import {
 } from "@/constants/filterOptions";
 
 import { Crown } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
 interface UserFiltersProps {
   searchValue: string;
@@ -54,8 +56,8 @@ interface UserFiltersProps {
   setAgeRange: (value: number[]) => void;
   filteredCount: number;
   totalCount: number;
-  dateRange: { from?: Date; to?: Date };
-  setDateRange: (range: { from?: Date; to?: Date }) => void;
+  dateRange: DateRange | undefined;
+  setDateRange: (range: DateRange | undefined) => void;
 }
 
 export function UserFilters({
