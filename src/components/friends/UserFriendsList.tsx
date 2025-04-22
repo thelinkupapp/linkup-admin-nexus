@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -32,75 +33,7 @@ interface UserFriendsListProps {
   sentRequests: FriendRequest[];
 }
 
-const FriendsTable = ({ 
-  data, 
-  sortDirection, 
-  onSortChange, 
-  dateColumnName 
-}: { 
-  data: (Friend | FriendRequest)[], 
-  sortDirection: 'asc' | 'desc',
-  onSortChange: () => void,
-  dateColumnName: string 
-}) => {
-  if (data.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-40">
-        <p className="text-muted-foreground">No data to display</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>User</TableHead>
-            <TableHead 
-              className="cursor-pointer hover:text-foreground transition-colors"
-              onClick={onSortChange}
-            >
-              <div className="flex items-center gap-2">
-                {dateColumnName}
-                <div className="flex flex-col">
-                  <ArrowUp className={`h-3 w-3 ${sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
-                  <ArrowDown className={`h-3 w-3 ${sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
-                </div>
-              </div>
-            </TableHead>
-          </TableHeader>
-          <TableBody>
-            {data.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={item.avatar} />
-                      <AvatarFallback>{item.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <Link 
-                        to={`/users/${item.id}`}
-                        className="font-medium hover:underline"
-                      >
-                        {item.name}
-                      </Link>
-                      <span className="text-sm text-muted-foreground">@{item.username}</span>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {formatJoinDate('friendsSince' in item ? item.friendsSince : item.requestDate)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
-
+export default function UserFriendsList({ friends, receivedRequests, sentRequests }: UserFriendsListProps) {
   const [friendsSortDirection, setFriendsSortDirection] = useState<'asc' | 'desc'>('desc');
   const [receivedSortDirection, setReceivedSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sentSortDirection, setSentSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -135,6 +68,76 @@ const FriendsTable = ({
   const sortedFriends = sortData(friends, friendsSortDirection);
   const sortedReceivedRequests = sortData(receivedRequests, receivedSortDirection);
   const sortedSentRequests = sortData(sentRequests, sentSortDirection);
+
+  const FriendsTable = ({ 
+    data, 
+    sortDirection, 
+    onSortChange, 
+    dateColumnName 
+  }: { 
+    data: (Friend | FriendRequest)[], 
+    sortDirection: 'asc' | 'desc',
+    onSortChange: () => void,
+    dateColumnName: string 
+  }) => {
+    if (data.length === 0) {
+      return (
+        <div className="flex items-center justify-center h-40">
+          <p className="text-muted-foreground">No data to display</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>User</TableHead>
+              <TableHead 
+                className="cursor-pointer hover:text-foreground transition-colors"
+                onClick={onSortChange}
+              >
+                <div className="flex items-center gap-2">
+                  {dateColumnName}
+                  <div className="flex flex-col">
+                    <ArrowUp className={`h-3 w-3 ${sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
+                    <ArrowDown className={`h-3 w-3 ${sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
+                  </div>
+                </div>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {data.map((item) => (
+              <TableRow key={item.id}>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={item.avatar} />
+                      <AvatarFallback>{item.name[0]}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <Link 
+                        to={`/users/${item.id}`}
+                        className="font-medium hover:underline"
+                      >
+                        {item.name}
+                      </Link>
+                      <span className="text-sm text-muted-foreground">@{item.username}</span>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="text-muted-foreground">
+                  {formatJoinDate('friendsSince' in item ? item.friendsSince : item.requestDate)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
