@@ -1,5 +1,13 @@
 
-import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useToast } from "@/hooks/use-toast";
@@ -12,15 +20,17 @@ interface ReactivateUserDialogProps {
   username: string;
   userAvatar: string;
   onConfirm: () => void;
+  actionButtonColor?: string;
 }
 
-export function ReactivateUserDialog({ 
-  isOpen, 
-  onClose, 
-  userName, 
-  username, 
-  userAvatar, 
-  onConfirm 
+export function ReactivateUserDialog({
+  isOpen,
+  onClose,
+  userName,
+  username,
+  userAvatar,
+  onConfirm,
+  actionButtonColor = "#9b87f5"
 }: ReactivateUserDialogProps) {
   const { toast } = useToast();
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -33,7 +43,6 @@ export function ReactivateUserDialog({
       description: `${userName} (@${username}) has been reactivated.`,
       variant: "default",
     });
-    // Close after a short delay for feedback
     setTimeout(() => {
       setIsConfirmed(false);
       onClose();
@@ -68,10 +77,15 @@ export function ReactivateUserDialog({
             </AlertDialogDescription>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button 
-                variant="default" 
-                onClick={handleConfirm} 
-                className="bg-purple-500 hover:bg-purple-600 text-white"
+              <Button
+                variant="default"
+                onClick={handleConfirm}
+                style={{
+                  background: actionButtonColor,
+                  color: "#fff",
+                  fontWeight: 600
+                }}
+                className="hover:brightness-95"
               >
                 Reactivate
               </Button>

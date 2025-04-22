@@ -3,11 +3,11 @@ import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ReactivateUserDialog } from "./ReactivateUserDialog";
+import { NotesModal } from "./NotesModal";
 import { format } from "date-fns";
 import { Search, ArrowDown, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   Pagination,
   PaginationContent,
@@ -17,7 +17,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const SUSPENDED_USERS = [
+const RAW_SUSPENDED_USERS = [
   {
     id: "0",
     avatar: "/lovable-uploads/a165dd8e-2635-4f3a-a050-ce01c92a0a6f.png",
@@ -69,21 +69,21 @@ function formatSuspendedAt(date: Date) {
   if (isYesterday) {
     return `Yesterday at ${format(date, "HH:mm")}`;
   }
-  
-  // Format for dates beyond yesterday
   return `${format(date, "MMM d yyyy")}, ${format(date, "HH:mm")}`;
 }
 
 export default function SuspendedUsersTable() {
+  const [users, setUsers] = useState(RAW_SUSPENDED_USERS);
   const [reactivateId, setReactivateId] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(25);
-  const [notesPopupContent, setNotesPopupContent] = useState<string | null>(null);
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [notesModalContent, setNotesModalContent] = useState<string>("");
 
   // Filter and sort users
-  const filteredUsers = SUSPENDED_USERS
+  const filteredUsers = users
     .filter(user => 
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -97,23 +97,30 @@ export default function SuspendedUsersTable() {
       }
     });
 
-  // Pagination
   const totalUsers = filteredUsers.length;
   const totalPages = Math.ceil(totalUsers / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = Math.min(startIndex + itemsPerPage, totalUsers);
   const currentUsers = filteredUsers.slice(startIndex, endIndex);
 
-  // User accessor
-  const getUserById = (id: string) => SUSPENDED_USERS.find(u => u.id === id);
+  const getUserById = (id: string) => users.find(u => u.id === id);
 
-  // Notes truncation
   const shouldTruncateNotes = (notes: string) => notes.length > 50;
   const truncateNotes = (notes: string) => {
     if (shouldTruncateNotes(notes)) {
       return notes.substring(0, 50) + "...";
     }
     return notes;
+  };
+
+  const handleShowNotesModal = (notes: string) => {
+    setNotesModalContent(notes);
+    setShowNotesModal(true);
+  };
+
+  const handleReactivate = (userId: string) => {
+    setUsers(prev => prev.filter(u => u.id !== userId));
+    setReactivateId(null);
   };
 
   return (
@@ -126,7 +133,6 @@ export default function SuspendedUsersTable() {
           {totalUsers} suspended {totalUsers === 1 ? "user" : "users"}
         </span>
       </div>
-
       <div className="flex justify-between items-center gap-4">
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -212,7 +218,7 @@ export default function SuspendedUsersTable() {
                           {truncateNotes(user.notes)}
                           <button 
                             className="ml-1 text-purple-600 hover:text-purple-800 font-medium text-xs"
-                            onClick={() => setNotesPopupContent(user.notes)}
+                            onClick={() => handleShowNotesModal(user.notes)}
                           >
                             Read more
                           </button>
@@ -223,14 +229,10 @@ export default function SuspendedUsersTable() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">
                       <Button
-                        className="bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full text-sm px-5 py-2 inline-flex items-center"
+                        className="bg-[#F5F3FF] hover:bg-[#ede9fe] text-[#9b87f5] border border-[#8b5cf6] font-medium rounded-full text-sm px-5 py-2 inline-flex items-center transition-shadow hover:shadow"
                         onClick={() => setReactivateId(user.id)}
                       >
-                        <span className="flex items-center">
-                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z"></path>
-                          </svg>
+                        <span className="flex items-center font-semibold">
                           Reactivate Account
                         </span>
                       </Button>
@@ -243,7 +245,7 @@ export default function SuspendedUsersTable() {
         </div>
         <div className="px-6 py-4 bg-white border-t flex items-center justify-between">
           <div className="text-sm text-gray-500">
-            Showing {startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
+            Showing {totalUsers === 0 ? 0 : startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
           </div>
           <Pagination>
             <PaginationContent>
@@ -253,12 +255,8 @@ export default function SuspendedUsersTable() {
                   className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
                 />
               </PaginationItem>
-              
-              {/* Show current page and a few pages around it */}
               {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
                 let pageNumber;
-                
-                // Logic to determine which page numbers to show
                 if (totalPages <= 5) {
                   pageNumber = i + 1;
                 } else if (currentPage <= 3) {
@@ -268,7 +266,7 @@ export default function SuspendedUsersTable() {
                 } else {
                   pageNumber = currentPage - 2 + i;
                 }
-                
+                if (pageNumber < 1 || pageNumber > totalPages) return null;
                 return (
                   <PaginationItem key={i}>
                     <PaginationLink
@@ -280,7 +278,6 @@ export default function SuspendedUsersTable() {
                   </PaginationItem>
                 );
               })}
-              
               <PaginationItem>
                 <PaginationNext 
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
@@ -292,30 +289,24 @@ export default function SuspendedUsersTable() {
         </div>
       </div>
 
-      {/* Notes Popup */}
-      <Popover open={!!notesPopupContent} onOpenChange={() => setNotesPopupContent(null)}>
-        <PopoverContent 
-          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] max-w-[90%] rounded-lg shadow-xl z-50"
-        >
-          <div className="font-semibold text-lg mb-2">Additional Notes</div>
-          <div className="text-sm text-gray-700">{notesPopupContent}</div>
-          <button 
-            className="mt-4 text-sm text-purple-600 hover:text-purple-800"
-            onClick={() => setNotesPopupContent(null)}
-          >
-            Close
-          </button>
-        </PopoverContent>
-      </Popover>
+      {/* Notes Modal */}
+      <NotesModal
+        open={showNotesModal}
+        onClose={() => setShowNotesModal(false)}
+        title="Additional Notes"
+        notes={notesModalContent}
+      />
 
-      {/* Reactivate User Dialog */}
       <ReactivateUserDialog
         isOpen={!!reactivateId}
         onClose={() => setReactivateId(null)}
         userName={getUserById(reactivateId || "")?.name ?? ""}
         username={getUserById(reactivateId || "")?.username ?? ""}
         userAvatar={getUserById(reactivateId || "")?.avatar ?? ""}
-        onConfirm={() => setReactivateId(null)}
+        onConfirm={() => {
+          if (reactivateId) handleReactivate(reactivateId);
+        }}
+        actionButtonColor="#8B5CF6"
       />
     </div>
   );
