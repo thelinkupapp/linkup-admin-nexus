@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -640,6 +639,16 @@ const UserProfile = () => {
     }
   ];
 
+  const handleMarkAsRead = (reportId: string) => {
+    const updatedReports = user.reportsReceived.map(report => 
+      report.id === reportId ? { ...report, isRead: true } : report
+    );
+    setUserWithVerification(prev => ({
+      ...prev,
+      reportsReceived: updatedReports
+    }));
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -1269,7 +1278,7 @@ const UserProfile = () => {
                           {!report.isRead && (
                             <button 
                               className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
-                              onClick={() => {/* Handle mark as read */}}
+                              onClick={() => handleMarkAsRead(report.id)}
                             >
                               Mark as Read
                             </button>
@@ -1326,6 +1335,7 @@ const UserProfile = () => {
                 reports={user.reportsReceived}
                 title="Reports Received"
                 showMarkAsRead={true}
+                onMarkAsRead={handleMarkAsRead}
               />
 
               <AllReportsDialog
