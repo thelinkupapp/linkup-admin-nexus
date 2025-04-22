@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -142,19 +143,6 @@ export default function SuspendedUsersTable() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Select value={itemsPerPage.toString()} onValueChange={(value) => {
-          setItemsPerPage(parseInt(value));
-          setCurrentPage(1);
-        }}>
-          <SelectTrigger className="w-[100px]">
-            <SelectValue placeholder="25" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="25">25</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-            <SelectItem value="100">100</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       <div className="bg-white rounded-lg border overflow-hidden">
@@ -247,8 +235,26 @@ export default function SuspendedUsersTable() {
           </table>
         </div>
         <div className="px-6 py-4 bg-white border-t flex items-center justify-between">
-          <div className="text-sm text-gray-500">
-            Showing {totalUsers === 0 ? 0 : startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
+          <div className="flex items-center gap-4">
+            <div className="text-sm text-gray-500">
+              Showing {totalUsers === 0 ? 0 : startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
+            </div>
+            <Select 
+              value={itemsPerPage.toString()} 
+              onValueChange={(value) => {
+                setItemsPerPage(parseInt(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[100px]">
+                <SelectValue placeholder="25" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <Pagination>
             <PaginationContent>

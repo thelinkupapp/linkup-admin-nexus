@@ -1,4 +1,3 @@
-
 import {
   AlertDialog,
   AlertDialogContent,
@@ -73,7 +72,7 @@ export function ReactivateUserDialog({
               </div>
             </div>
             <AlertDialogDescription>
-              Are you sure you want to reactivate this account? The user will regain full platform access.
+              Are you sure you want to reactivate this account? The user will regain full app access.
             </AlertDialogDescription>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
