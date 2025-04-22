@@ -1,4 +1,5 @@
-import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes } from "date-fns";
+
+import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes, isThisYear } from "date-fns";
 
 function isLastWeek(date: Date): boolean {
   const now = new Date();
@@ -7,42 +8,9 @@ function isLastWeek(date: Date): boolean {
   return diff > 0 && diff < 8; // If the date is 1-7 days before the start of current week
 }
 
-export function formatJoinDate(date: string | Date): string {
-  // Ensure we're working with a valid date
-  const joinDate = date instanceof Date ? date : new Date(date);
-  const now = new Date();
-  const time = format(joinDate, 'HH:mm'); // 24-hour clock format
-
-  if (isToday(joinDate)) {
-    return `Today at ${time}`;
-  }
-
-  if (isYesterday(joinDate)) {
-    return `Yesterday at ${time}`;
-  }
-
-  if (isThisWeek(joinDate)) {
-    return `${format(joinDate, 'EEEE')} at ${time}`; // Returns full day name like "Monday"
-  }
-
-  if (isLastWeek(joinDate)) {
-    return `${format(joinDate, 'EEE d')} at ${time}`; // Returns abbreviated day name + date like "Wed 15"
-  }
-
-  if (differenceInYears(now, joinDate) > 0) {
-    return `${format(joinDate, 'MMM d yyyy')} at ${time}`; // Returns full date with year like "Mar 21 2024"
-  }
-
-  return `${format(joinDate, 'MMM d')} at ${time}`; // Returns month and day like "Mar 21"
-}
-
 export function formatLinkupDateTime(startDate: string, endDate: string): string {
   const start = new Date(startDate);
   const end = new Date(endDate);
-  
-  // Format the times
-  const startTime = format(start, 'HH:mm');
-  const endTime = format(end, 'HH:mm');
   
   // Calculate duration
   const hoursDiff = differenceInHours(end, start);
@@ -62,22 +30,39 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   if (isToday(start)) {
     dateStr = 'Today';
   } else if (isYesterday(start)) {
-    dateStr = 'Tomorrow';
-  } else if (isThisWeek(start)) {
-    dateStr = format(start, 'EEEE'); // Full day name
-  } else if (differenceInYears(new Date(), start) > 0) {
-    dateStr = format(start, 'EEEE d MMMM'); // e.g. "Thursday 1 August"
+    dateStr = 'Yesterday';
+  } else if (isThisYear(start)) {
+    dateStr = format(start, 'MMM d');
   } else {
-    dateStr = format(start, 'EEEE d MMMM');
+    dateStr = format(start, 'MMM d, yyyy');
   }
   
-  // Format time range
-  let timeRange;
-  if (daysDiff > 0) {
-    timeRange = `${startTime} - ${format(end, 'd MMM')}, ${endTime}`;
-  } else {
-    timeRange = `${startTime} - ${endTime}`;
-  }
+  // Format time
+  const timeStr = format(start, 'h:mm a');
   
-  return `${dateStr}\n${timeRange} (${duration})`;
+  return `${dateStr}, ${timeStr} (${duration})`;
 }
+
+export function formatCreatedDate(date: string | Date): string {
+  const createdDate = new Date(date);
+  
+  if (isToday(createdDate)) {
+    return 'Today at ' + format(createdDate, 'HH:mm');
+  }
+  
+  if (isYesterday(createdDate)) {
+    return 'Yesterday at ' + format(createdDate, 'HH:mm');
+  }
+  
+  if (isThisYear(createdDate)) {
+    return format(createdDate, 'EEE d') + ' at ' + format(createdDate, 'HH:mm');
+  }
+  
+  return format(createdDate, 'MMM d, yyyy, h:mm a');
+}
+
+export function formatJoinDate(date: string | Date): string {
+  // This can be implemented similarly to formatCreatedDate if needed
+  return formatCreatedDate(date);
+}
+

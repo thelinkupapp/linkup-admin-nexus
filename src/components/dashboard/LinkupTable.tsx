@@ -22,6 +22,8 @@ import {
   SortDesc,
   ArrowUp,
   ArrowDown,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import {
@@ -35,7 +37,7 @@ import {
 } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
 import { toast } from "@/components/ui/sonner";
-import { formatJoinDate } from "@/utils/dateFormatting";
+import { formatLinkupDateTime, formatCreatedDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { format } from "date-fns";
 
@@ -418,9 +420,9 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                   Date &amp; Time
                   {sortConfig.field === "date" &&
                     (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-3 h-3" />
+                      <ChevronUp className="ml-1 w-3 h-3" />
                     ) : (
-                      <SortDesc className="ml-1 w-3 h-3" />
+                      <ChevronDown className="ml-1 w-3 h-3" />
                     ))}
                 </div>
               </TableHead>
@@ -433,12 +435,12 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                   Created On
                   {sortConfig.field === "created" &&
                     (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-3 h-3" />
+                      <ChevronUp className="ml-1 w-3 h-3" />
                     ) : (
-                      <SortDesc className="ml-1 w-3 h-3" />
+                      <ChevronDown className="ml-1 w-3 h-3" />
                     ))}
                   {sortConfig.field !== "created" && (
-                    <SortAsc className="ml-1 w-3 h-3 opacity-50" />
+                    <ChevronUp className="ml-1 w-3 h-3 opacity-50" />
                   )}
                 </div>
               </TableHead>
@@ -490,11 +492,11 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                       </div>
                     </TableCell>
                     <TableCell className="py-1.5 px-3 bg-transparent border-0">
-                      <div className="text-[15px] font-medium">{formatDateUserMgmtStyle(linkup.date)}</div>
+                      <div className="text-[15px] font-medium">{formatLinkupDateTime(linkup.date, linkup.endTime)}</div>
                       <div className="text-[13px] text-[#888888]">{formatDurationShort(linkup.date, linkup.endTime)}</div>
                     </TableCell>
                     <TableCell className="py-1.5 px-3 bg-transparent border-0">
-                      <div className="text-[15px]">{formatDateUserMgmtStyle(linkup.createdAt)}</div>
+                      <div className="text-[15px]">{formatCreatedDate(linkup.createdAt)}</div>
                     </TableCell>
                     <TableCell className="py-1.5 px-3 bg-transparent border-0">
                       <Badge
