@@ -1,12 +1,8 @@
 
-import { useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { UserReportsTable } from "@/components/reports/UserReportsTable";
-import { AllReportsDialog } from "@/components/reports/AllReportsDialog";
 
 const UserReports = () => {
-  const [isAllReportsOpen, setIsAllReportsOpen] = useState(false);
-  
   return (
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
@@ -19,14 +15,6 @@ const UserReports = () => {
         </div>
 
         <UserReportsTable />
-        
-        <AllReportsDialog
-          open={isAllReportsOpen}
-          onOpenChange={setIsAllReportsOpen}
-          reports={[]}
-          title="All User Reports"
-          showMarkAsRead
-        />
       </div>
     </div>
   );

@@ -1,6 +1,6 @@
 
 import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +24,7 @@ const mockReports = [
       id: "ru1",
       name: "Michael Chen",
       username: "mikechen",
-      avatar: "/lovable-uploads/86fc1136-a3e8-49f3-8cd1-b0c29bc1af83.png"
+      avatar: "/lovable-uploads/13a7d777-aa40-4ae8-b11b-4fab740b73f1.png"
     },
     description: "Inappropriate behavior in chat",
     timestamp: "2025-04-22T11:30:00",
@@ -36,7 +36,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png"
+      avatar: "/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png"
     },
     reportedUser: {
       id: "ru2",
@@ -55,24 +55,58 @@ export function UserReportsTable() {
   const [pageSize, setPageSize] = useState(25);
   const [filterStatus, setFilterStatus] = useState<"all" | "read" | "unread">("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [reports] = useState(mockReports);
+  const [reports, setReports] = useState(mockReports);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredReports, setFilteredReports] = useState(reports);
+
+  // Apply filtering, sorting, and searching effects
+  useEffect(() => {
+    // First filter by search term
+    let results = reports.filter(report => {
+      const searchLower = searchTerm.toLowerCase();
+      if (searchTerm === "") return true;
+      
+      return (
+        report.reporter.name.toLowerCase().includes(searchLower) ||
+        report.reporter.username.toLowerCase().includes(searchLower) ||
+        report.reportedUser.name.toLowerCase().includes(searchLower) ||
+        report.reportedUser.username.toLowerCase().includes(searchLower) ||
+        report.description.toLowerCase().includes(searchLower) ||
+        new Date(report.timestamp).toLocaleString().toLowerCase().includes(searchLower)
+      );
+    });
+
+    // Then filter by status
+    results = results.filter(report => {
+      if (filterStatus === "read") return report.isRead;
+      if (filterStatus === "unread") return !report.isRead;
+      return true;
+    });
+
+    // Then sort by timestamp
+    results = [...results].sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return sortDirection === "desc" ? dateB - dateA : dateA - dateB;
+    });
+
+    setFilteredReports(results);
+    // Reset to first page when filters change
+    setCurrentPage(1);
+  }, [reports, searchTerm, filterStatus, sortDirection]);
 
   const handleMarkAsRead = (reportId: string) => {
+    setReports(prevReports => 
+      prevReports.map(report => 
+        report.id === reportId ? { ...report, isRead: true } : report
+      )
+    );
+    
     toast({
       title: "Report marked as read",
       description: "The report has been marked as read successfully.",
     });
   };
-
-  const filteredReports = reports.filter(report => {
-    if (filterStatus === "read") return report.isRead;
-    if (filterStatus === "unread") return !report.isRead;
-    return true;
-  }).sort((a, b) => {
-    const dateA = new Date(a.timestamp).getTime();
-    const dateB = new Date(b.timestamp).getTime();
-    return sortDirection === "desc" ? dateB - dateA : dateA - dateB;
-  });
 
   const totalPages = Math.ceil(filteredReports.length / pageSize);
   const paginatedReports = filteredReports.slice(
@@ -88,6 +122,8 @@ export function UserReportsTable() {
             placeholder="Search reports..."
             className="h-9"
             type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <Button size="sm" variant="outline">
             <Search className="h-4 w-4" />
@@ -122,74 +158,82 @@ export function UserReportsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedReports.map((report) => (
-              <TableRow key={report.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={report.reporter.avatar} />
-                      <AvatarFallback>{report.reporter.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <Link 
-                        to={`/users/${report.reporter.id}`}
-                        className="font-medium hover:underline"
-                      >
-                        {report.reporter.name}
-                      </Link>
-                      <p className="text-sm text-muted-foreground">
-                        @{report.reporter.username}
-                      </p>
+            {paginatedReports.length > 0 ? (
+              paginatedReports.map((report) => (
+                <TableRow key={report.id}>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={report.reporter.avatar} />
+                        <AvatarFallback>{report.reporter.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <Link 
+                          to={`/users/${report.reporter.id}`}
+                          className="font-medium hover:underline"
+                        >
+                          {report.reporter.name}
+                        </Link>
+                        <p className="text-sm text-muted-foreground">
+                          @{report.reporter.username}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={report.reportedUser.avatar} />
-                      <AvatarFallback>{report.reportedUser.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <Link 
-                        to={`/users/${report.reportedUser.id}`}
-                        className="font-medium hover:underline"
-                      >
-                        {report.reportedUser.name}
-                      </Link>
-                      <p className="text-sm text-muted-foreground">
-                        @{report.reportedUser.username}
-                      </p>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarImage src={report.reportedUser.avatar} />
+                        <AvatarFallback>{report.reportedUser.name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <Link 
+                          to={`/users/${report.reportedUser.id}`}
+                          className="font-medium hover:underline"
+                        >
+                          {report.reportedUser.name}
+                        </Link>
+                        <p className="text-sm text-muted-foreground">
+                          @{report.reportedUser.username}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell>{report.description}</TableCell>
-                <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
-                <TableCell>
-                  <Badge 
-                    variant="outline" 
-                    className={report.isRead 
-                      ? "bg-green-100 text-green-800" 
-                      : "bg-yellow-100 text-yellow-800"
-                    }
-                  >
-                    {report.isRead ? "Read" : "Unread"}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  {!report.isRead && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleMarkAsRead(report.id)}
-                      className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                  </TableCell>
+                  <TableCell>{report.description}</TableCell>
+                  <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
+                  <TableCell>
+                    <Badge 
+                      variant="outline" 
+                      className={report.isRead 
+                        ? "bg-green-100 text-green-800" 
+                        : "bg-yellow-100 text-yellow-800"
+                      }
                     >
-                      <Check className="h-4 w-4 mr-1" />
-                      Mark as Read
-                    </Button>
-                  )}
+                      {report.isRead ? "Read" : "Unread"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {!report.isRead && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleMarkAsRead(report.id)}
+                        className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                      >
+                        <Check className="h-4 w-4 mr-1" />
+                        Mark as Read
+                      </Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center">
+                  No reports found.
                 </TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
@@ -197,7 +241,7 @@ export function UserReportsTable() {
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
-            Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, filteredReports.length)} of {filteredReports.length} reports
+            Showing {filteredReports.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0}-{Math.min(currentPage * pageSize, filteredReports.length)} of {filteredReports.length} reports
           </span>
           <Select
             value={pageSize.toString()}
