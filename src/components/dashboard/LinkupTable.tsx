@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, DollarSign } from "lucide-react";
+import { MoreHorizontal, DollarSign, sortAsc, sortDesc } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
@@ -203,6 +203,13 @@ export function LinkupTable() {
   const [linkupToRemove, setLinkupToRemove] = useState<{ id: string; title: string } | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [earningsSort, setEarningsSort] = useState<"none" | "desc" | "asc">("none");
+  const [earningsDropdownOpen, setEarningsDropdownOpen] = useState(false);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const sortOptions = [
+    { label: "Date", value: "date" },
+    { label: "Created On", value: "created" },
+    { label: "Earnings", value: "earnings" }
+  ];
 
   const linkupsWithEarnings = linkups.map(l => ({
     ...l,
@@ -275,6 +282,22 @@ export function LinkupTable() {
     setEarningsSort("none");
   }
 
+  function handleSortDropdown(option: string) {
+    setSortDropdownOpen(false);
+    if (option === "earnings") {
+      setEarningsSort(prev =>
+        prev === "none" ? "desc" : prev === "desc" ? "asc" : "none"
+      );
+      setSortConfig({ field: "date", direction: "desc" });
+    } else {
+      setSortConfig((prev) => ({
+        field: option,
+        direction: prev.field === option && prev.direction === "asc" ? "desc" : "asc",
+      }));
+      setEarningsSort("none");
+    }
+  }
+
   function handleRemove(linkup: { id: string; title: string }) {
     setRemoveDialogOpen(true);
     setLinkupToRemove(linkup);
@@ -302,72 +325,102 @@ export function LinkupTable() {
     <>
       <div className="flex flex-col gap-6">
         <div>
-          <span className="text-2xl font-semibold text-[#8364e8]">
-            {filteredCount !== totalCount
-              ? `Showing ${filteredCount} of ${totalCount} linkups`
-              : `${totalCount} total linkups`}
+          <span className="flex items-center gap-2 text-lg font-semibold text-muted-foreground">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <rect x="2.5" y="5.5" width="6" height="13" rx="1.5" stroke="#8364e8" strokeWidth="1.5" />
+              <rect x="15.5" y="5.5" width="6" height="13" rx="1.5" stroke="#8364e8" strokeWidth="1.5" />
+              <rect x="3" y="2" width="18" height="5" rx="1.5" fill="#8364e8" stroke="#8364e8" strokeWidth="1.5" />
+            </svg>
+            <span className="text-xl font-bold" style={{ color: "#8364e8" }}>{filteredCount}</span>
+            <span>total linkups</span>
           </span>
         </div>
-        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
-          <div className="flex-shrink-0">
-            <Button
-              variant={earningsSort !== "none" ? "default" : "outline"}
-              className="flex items-center space-x-1"
-              onClick={() => handleSort("earnings")}
-            >
-              <DollarSign className="w-5 h-5 mr-1" />
-              {earningsSort === "desc" && <span className="text-sm font-semibold">Highest earnings</span>}
-              {earningsSort === "asc" && <span className="text-sm font-semibold">Lowest earnings</span>}
-              {earningsSort === "none" && <span className="text-sm font-medium text-gray-700">Sort by earnings</span>}
-            </Button>
-          </div>
-          <div className="flex-1">
-            <LinkupFilters
-              searchValue={searchValue}
-              setSearchValue={setSearchValue}
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
-              selectedStatus={selectedStatus}
-              setSelectedStatus={setSelectedStatus}
-              selectedVisibility={selectedVisibility}
-              setSelectedVisibility={setSelectedVisibility}
-              selectedPrice={selectedPrice}
-              setSelectedPrice={setSelectedPrice}
-              selectedJoinMethod={selectedJoinMethod}
-              setSelectedJoinMethod={setSelectedJoinMethod}
-              dateRange={undefined}
-              setDateRange={() => {}}
-              filteredCount={filteredCount}
-              totalCount={totalCount}
-            />
+        <div className="w-full flex flex-col gap-3 pb-2">
+          <div className="w-full flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+            <DropdownMenu open={sortDropdownOpen} onOpenChange={setSortDropdownOpen}>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="flex items-center gap-2 min-w-[160px] text-base font-medium"
+                >
+                  <DollarSign className="w-5 h-5 mb-[2px]" />
+                  Sort by
+                  {earningsSort === "desc" && (
+                    <span className="flex items-center text-base text-muted-foreground gap-1">
+                      Earnings <sortDesc className="w-4 h-4" />
+                    </span>
+                  )}
+                  {earningsSort === "asc" && (
+                    <span className="flex items-center text-base text-muted-foreground gap-1">
+                      Earnings <sortAsc className="w-4 h-4" />
+                    </span>
+                  )}
+                  {earningsSort === "none" && (
+                    <span className="text-base text-muted-foreground">Earnings</span>
+                  )}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="bg-white z-[100] shadow-md min-w-[200px]">
+                <DropdownMenuItem
+                  onClick={() => handleSortDropdown("earnings")}
+                  className={earningsSort !== "none" ? "font-semibold bg-muted" : ""}
+                >
+                  <DollarSign className="w-4 h-4 mr-2" />
+                  Sort by earnings
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleSortDropdown("date")}
+                  className={sortConfig.field === "date" ? "font-semibold bg-muted" : ""}
+                >
+                  Date &amp; Time{" "}
+                  {sortConfig.field === "date" && (
+                    sortConfig.direction === "asc" ? <sortAsc className="ml-1 w-4 h-4" /> : <sortDesc className="ml-1 w-4 h-4" />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => handleSortDropdown("created")}
+                  className={sortConfig.field === "created" ? "font-semibold bg-muted" : ""}
+                >
+                  Created On{" "}
+                  {sortConfig.field === "created" && (
+                    sortConfig.direction === "asc" ? <sortAsc className="ml-1 w-4 h-4" /> : <sortDesc className="ml-1 w-4 h-4" />
+                  )}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="flex-1">
+              <LinkupFilters
+                layout="inline"
+                searchValue={searchValue}
+                setSearchValue={setSearchValue}
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                selectedStatus={selectedStatus}
+                setSelectedStatus={setSelectedStatus}
+                selectedVisibility={selectedVisibility}
+                setSelectedVisibility={setSelectedVisibility}
+                selectedPrice={selectedPrice}
+                setSelectedPrice={setSelectedPrice}
+                selectedJoinMethod={selectedJoinMethod}
+                setSelectedJoinMethod={setSelectedJoinMethod}
+                dateRange={undefined}
+                setDateRange={() => {}}
+                filteredCount={filteredCount}
+                totalCount={totalCount}
+              />
+            </div>
           </div>
         </div>
-        <div className="border rounded-lg bg-background overflow-x-auto">
-          <Table>
+        <div className="border rounded-2xl bg-background overflow-x-auto shadow-sm">
+          <Table className="w-full text-base">
             <TableHeader>
-              <TableRow>
-                <TableHead className="w-10" />
-                <TableHead className="min-w-[210px] text-base font-semibold">Linkup Title</TableHead>
-                <TableHead className="min-w-[120px] text-base font-semibold">Category</TableHead>
-                <TableHead className="min-w-[200px] text-base font-semibold">Host</TableHead>
-                <TableHead
-                  className="cursor-pointer min-w-[160px] text-base font-semibold select-none"
-                  onClick={() => handleSort("date")}
-                >
-                  <span>Date &amp; Time</span>
-                  <span className="ml-1 text-muted-foreground">
-                    {sortConfig.field === "date" ? (sortConfig.direction === "asc" ? <span>&#8593;</span> : <span>&#8595;</span>) : ""}
-                  </span>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer min-w-[140px] text-base font-semibold select-none"
-                  onClick={() => handleSort("created")}
-                >
-                  <span>Created On</span>
-                  <span className="ml-1 text-muted-foreground">
-                    {sortConfig.field === "created" ? (sortConfig.direction === "asc" ? <span>&#8593;</span> : <span>&#8595;</span>) : ""}
-                  </span>
-                </TableHead>
+              <TableRow className="bg-softGray/70 h-14 text-[#36395A]">
+                <TableHead className="w-10 border-none bg-transparent"></TableHead>
+                <TableHead className="min-w-[220px] text-base font-semibold">Linkup Title</TableHead>
+                <TableHead className="min-w-[150px] text-base font-semibold">Category</TableHead>
+                <TableHead className="min-w-[220px] text-base font-semibold">Host</TableHead>
+                <TableHead className="min-w-[180px] text-base font-semibold">Date &amp; Time</TableHead>
+                <TableHead className="min-w-[160px] text-base font-semibold">Created On</TableHead>
                 <TableHead className="min-w-[110px] text-base font-semibold">Status</TableHead>
                 <TableHead className="min-w-[70px] text-base font-semibold text-right">Actions</TableHead>
               </TableRow>
@@ -377,7 +430,7 @@ export function LinkupTable() {
                 const categoryObj = categories.find(c => c.id === linkup.category);
                 return (
                   <React.Fragment key={linkup.id}>
-                    <TableRow>
+                    <TableRow className="h-[70px] border-b border-[#ececf5]">
                       <TableCell className="w-10 px-2">
                         <button
                           onClick={() => toggleRowExpanded(linkup.id)}
@@ -394,7 +447,7 @@ export function LinkupTable() {
                       <TableCell>
                         <Link
                           to={`/linkups/${linkup.id}`}
-                          className="font-semibold text-lg underline hover:text-primary cursor-pointer"
+                          className="font-bold text-lg underline hover:text-primary cursor-pointer tracking-tight"
                         >
                           {linkup.title}
                         </Link>
@@ -437,7 +490,7 @@ export function LinkupTable() {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
+                          <DropdownMenuContent align="end" className="bg-white z-[100]">
                             <DropdownMenuItem asChild>
                               <Link to={`/linkups/${linkup.id}`}>View Details</Link>
                             </DropdownMenuItem>
@@ -452,9 +505,9 @@ export function LinkupTable() {
                       </TableCell>
                     </TableRow>
                     {expandedRows[linkup.id] && (
-                      <TableRow className="bg-muted/40">
+                      <TableRow className="bg-[#f7f7fc] border-b border-[#ececf5]">
                         <TableCell colSpan={8} className="p-0 pb-6">
-                          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 px-8 py-4">
+                          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 px-10 py-5">
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Location</div>
                               <div className="text-base">{linkup.location}</div>

@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search, Filter, Map } from "lucide-react";
+import { Search, Map } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,7 @@ import { DateRange } from "react-day-picker";
 import { Badge } from "@/components/ui/badge";
 
 interface LinkupFiltersProps {
+  layout?: "inline" | "stacked";
   searchValue: string;
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
@@ -50,6 +50,7 @@ interface LinkupFiltersProps {
 }
 
 export function LinkupFilters({
+  layout = "inline",
   searchValue,
   setSearchValue,
   selectedCategories,
@@ -144,158 +145,140 @@ export function LinkupFilters({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Map className="h-5 w-5 text-muted-foreground" />
-          <span className="text-lg font-semibold text-foreground">
-            {hasActiveFilters ? (
-              <>Showing <span className="font-bold text-primary">{filteredCount}</span> of <span className="font-bold text-primary">{totalCount}</span> linkups</>
-            ) : (
-              <><span className="font-bold text-primary">{totalCount}</span> total linkups</>
-            )}
-          </span>
-        </div>
+    <div
+      className={cn(
+        "flex flex-col md:flex-row md:items-center w-full gap-2 md:gap-4",
+        layout === "inline" ? "" : "space-y-4"
+      )}
+    >
+      <div className="relative w-full max-w-[270px] md:max-w-[320px]">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search linkups..."
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          className="pl-9 w-full md:w-[300px]"
+        />
       </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="relative flex-grow max-w-[300px]">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search linkups..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 w-full"
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="font-medium min-w-[130px]">
+            Category ({selectedCategories.length})
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[240px] p-0 z-[100]">
+          <Command>
+            <CommandInput placeholder="Search category..." />
+            <CommandEmpty>No category found.</CommandEmpty>
+            <ScrollArea className="h-60">
+              <CommandGroup>
+                {categories.map((category) => (
+                  <CommandItem
+                    key={category.id}
+                    onSelect={() => {
+                      setSelectedCategories(
+                        toggleArrayValue(selectedCategories, category.id)
+                      );
+                    }}
+                  >
+                    <Checkbox
+                      checked={selectedCategories.includes(category.id)}
+                      className="mr-2 h-4 w-4"
+                    />
+                    <span className="mr-2">{category.emoji}</span>
+                    {category.name}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="font-medium min-w-[130px]">
+            Date Range
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0 z-[100]" align="start">
+          <Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={dateRange?.from}
+            selected={dateRange}
+            onSelect={setDateRange}
+            numberOfMonths={2}
+            className={cn("p-3 pointer-events-auto")}
           />
-        </div>
-      </div>
-
-      <div className="flex flex-wrap gap-2">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="font-medium">
-              Category ({selectedCategories.length})
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[240px] p-0">
-            <Command>
-              <CommandInput placeholder="Search category..." />
-              <CommandEmpty>No category found.</CommandEmpty>
-              <ScrollArea className="h-60">
-                <CommandGroup>
-                  {categories.map((category) => (
-                    <CommandItem
-                      key={category.id}
-                      onSelect={() => {
-                        setSelectedCategories(
-                          toggleArrayValue(selectedCategories, category.id)
-                        );
-                      }}
-                    >
-                      <Checkbox
-                        checked={selectedCategories.includes(category.id)}
-                        className="mr-2 h-4 w-4"
-                      />
-                      <span className="mr-2">{category.emoji}</span>
-                      {category.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </ScrollArea>
-            </Command>
-          </PopoverContent>
-        </Popover>
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="font-medium">
-              Date Range
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={dateRange?.from}
-              selected={dateRange}
-              onSelect={setDateRange}
-              numberOfMonths={2}
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
-
-        <Select value={selectedStatus} onValueChange={handleStatusChange}>
-          <SelectTrigger className="w-[140px] font-medium">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              All Status
+        </PopoverContent>
+      </Popover>
+      <Select value={selectedStatus} onValueChange={handleStatusChange}>
+        <SelectTrigger className="min-w-[140px] font-medium">
+          <SelectValue placeholder="Status" />
+        </SelectTrigger>
+        <SelectContent className="z-[100]">
+          <SelectItem value="all">
+            All Status
+          </SelectItem>
+          {statusOptions.map((option) => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+            >
+              {option.label}
             </SelectItem>
-            {statusOptions.map((option) => (
-              <SelectItem 
-                key={option.value} 
-                value={option.value} 
-                className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
-              >
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedVisibility} onValueChange={handleVisibilityChange}>
-          <SelectTrigger className="w-[140px] font-medium">
-            <SelectValue placeholder="Visibility" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              All Visibility
-            </SelectItem>
-            <SelectItem value="public">
-              Public
-            </SelectItem>
-            <SelectItem value="private">
-              Private
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedPrice} onValueChange={handlePriceChange}>
-          <SelectTrigger className="w-[140px] font-medium">
-            <SelectValue placeholder="Price" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              All Prices
-            </SelectItem>
-            <SelectItem value="free">
-              Free
-            </SelectItem>
-            <SelectItem value="paid">
-              Paid
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={selectedJoinMethod} onValueChange={handleJoinMethodChange}>
-          <SelectTrigger className="w-[140px] font-medium">
-            <SelectValue placeholder="Join Method" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              All Join Methods
-            </SelectItem>
-            <SelectItem value="open">
-              Open
-            </SelectItem>
-            <SelectItem value="closed">
-              Closed
-            </SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+          ))}
+        </SelectContent>
+      </Select>
+      <Select value={selectedVisibility} onValueChange={handleVisibilityChange}>
+        <SelectTrigger className="min-w-[140px] font-medium">
+          <SelectValue placeholder="Visibility" />
+        </SelectTrigger>
+        <SelectContent className="z-[100]">
+          <SelectItem value="all">
+            All Visibility
+          </SelectItem>
+          <SelectItem value="public">
+            Public
+          </SelectItem>
+          <SelectItem value="private">
+            Private
+          </SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={selectedPrice} onValueChange={handlePriceChange}>
+        <SelectTrigger className="min-w-[140px] font-medium">
+          <SelectValue placeholder="Price" />
+        </SelectTrigger>
+        <SelectContent className="z-[100]">
+          <SelectItem value="all">
+            All Prices
+          </SelectItem>
+          <SelectItem value="free">
+            Free
+          </SelectItem>
+          <SelectItem value="paid">
+            Paid
+          </SelectItem>
+        </SelectContent>
+      </Select>
+      <Select value={selectedJoinMethod} onValueChange={handleJoinMethodChange}>
+        <SelectTrigger className="min-w-[140px] font-medium">
+          <SelectValue placeholder="Join Method" />
+        </SelectTrigger>
+        <SelectContent className="z-[100]">
+          <SelectItem value="all">
+            All Join Methods
+          </SelectItem>
+          <SelectItem value="open">
+            Open
+          </SelectItem>
+          <SelectItem value="closed">
+            Closed
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 }
