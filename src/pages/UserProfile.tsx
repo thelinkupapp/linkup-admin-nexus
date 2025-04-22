@@ -53,7 +53,8 @@ import {
   User as UserIcon, 
   ShieldOff,
   ArrowUpRight,
-  Bell
+  Bell,
+  Shield
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
@@ -1143,8 +1144,8 @@ const UserProfile = () => {
                       <EarningsBreakdownDialog
                         open={isEarningsBreakdownOpen}
                         onOpenChange={setIsEarningsBreakdownOpen}
-                        earningsBreakdown={earningsBreakdown}
-                        attendedLinkupPayments={attendedLinkupPayments}
+                        transactions={earningsBreakdown}
+                        payments={attendedLinkupPayments}
                       />
                     </div>
                   </CardContent>
@@ -1243,6 +1244,8 @@ const UserProfile = () => {
                         open={isLinkupPlusHistoryOpen}
                         onOpenChange={setIsLinkupPlusHistoryOpen}
                         transactions={linkupPlusTransactions}
+                        startDate={user.wallet.linkupPlus.startDate || ""}
+                        plan="annual"
                       />
                     </div>
                   </CardContent>
@@ -1251,7 +1254,9 @@ const UserProfile = () => {
             </TabsContent>
             
             <TabsContent value="linkups" className="space-y-6">
-              <UserLinkupsTable user={user} />
+              <div>
+                <UserLinkupsTable />
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-3 md:col-span-2">
                   <CardHeader>
@@ -1259,7 +1264,9 @@ const UserProfile = () => {
                     <CardDescription>Recent activity in linkups</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <UserLinkupActivity activity={userLinkupActivity} />
+                    <UserLinkupActivity 
+                      activity={userLinkupActivity} 
+                    />
                   </CardContent>
                 </Card>
                 <Card className="col-span-3 md:col-span-1">
@@ -1268,7 +1275,9 @@ const UserProfile = () => {
                     <CardDescription>Recent conversations</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <UserLinkupChats chats={userChatActivity} />
+                    <UserLinkupChats 
+                      chats={userChatActivity} 
+                    />
                   </CardContent>
                 </Card>
               </div>
@@ -1781,7 +1790,6 @@ const UserProfile = () => {
                         onOpenChange={setIsAllReportsReceivedOpen}
                         title="Reports Received"
                         reports={userWithVerification.reportsReceived}
-                        type="received"
                         onMarkAsRead={handleMarkAsRead}
                       />
                     </div>
@@ -1839,7 +1847,6 @@ const UserProfile = () => {
                         onOpenChange={setIsAllReportsMadeOpen}
                         title="Reports Made"
                         reports={userWithVerification.reportsMade}
-                        type="made"
                       />
                     </div>
                   </CardContent>
@@ -1904,10 +1911,10 @@ const UserProfile = () => {
                     </div>
                     
                     <DeleteUserDialog
-                      open={isDeleteDialogOpen}
-                      onOpenChange={setIsDeleteDialogOpen}
                       userId={userWithVerification.id}
                       username={userWithVerification.username}
+                      open={isDeleteDialogOpen}
+                      onOpenChange={setIsDeleteDialogOpen}
                     />
                   </CardContent>
                 </Card>
@@ -1917,8 +1924,8 @@ const UserProfile = () => {
             <TabsContent value="friends" className="space-y-6">
               <UserFriendsList
                 friends={user.friends}
-                pendingReceived={user.pendingFriendRequests.received}
-                pendingSent={user.pendingFriendRequests.sent}
+                received={user.pendingFriendRequests.received}
+                sent={user.pendingFriendRequests.sent}
               />
             </TabsContent>
           </Tabs>
@@ -1929,4 +1936,3 @@ const UserProfile = () => {
 };
 
 export default UserProfile;
-
