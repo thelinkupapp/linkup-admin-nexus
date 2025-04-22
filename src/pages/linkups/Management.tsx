@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { LinkupTable } from "@/components/dashboard/LinkupTable";
 import { Toaster } from "@/components/ui/toaster";
+import { ErrorBoundary } from "@/components/ui/error-boundary";
 
 const LinkupManagement = () => {
   useEffect(() => {
@@ -20,12 +21,14 @@ const LinkupManagement = () => {
               View and manage all linkups created on the app
             </p>
           </div>
-          <LinkupTable />
+          <ErrorBoundary fallback={<div className="p-4 border border-red-200 rounded-md bg-red-50 text-red-800">There was an error loading the Linkup table. Please refresh the page or contact support.</div>}>
+            <LinkupTable />
+          </ErrorBoundary>
         </div>
       </div>
       <Toaster />
     </div>
   );
-}
+};
 
 export default LinkupManagement;
