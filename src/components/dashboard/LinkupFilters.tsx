@@ -265,18 +265,18 @@ export function LinkupFilters({
           </Select>
 
           <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
-            <SelectTrigger className="h-8 text-xs w-20">
-              <SelectValue placeholder="Join…" />
+            <SelectTrigger className="h-8 text-xs w-[100px] font-medium">
+              <SelectValue placeholder="Join Method" />
             </SelectTrigger>
             <SelectContent className="z-[100]">
               <SelectItem value="all" className="text-xs">
                 All Join Methods
               </SelectItem>
               <SelectItem value="open" className="text-xs">
-                Open
+                Open Join
               </SelectItem>
               <SelectItem value="closed" className="text-xs">
-                Closed
+                Closed Join
               </SelectItem>
             </SelectContent>
           </Select>
