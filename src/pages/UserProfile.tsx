@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -12,6 +13,7 @@ import { VerificationAttempt } from "@/types/user";
 import { PayoutHistoryDialog } from "@/components/wallet/PayoutHistoryDialog";
 import { EarningsBreakdownDialog } from "@/components/wallet/EarningsBreakdownDialog";
 import { LinkupPlusHistoryDialog } from "@/components/wallet/LinkupPlusHistoryDialog";
+import { AllReportsDialog } from "@/components/reports/AllReportsDialog";
 import { 
   Tabs, 
   TabsList, 
