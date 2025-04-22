@@ -1,19 +1,18 @@
-
 import { useState, useMemo } from "react";
-import { format, differenceInHours, differenceInMinutes, formatDistanceToNow, isToday, isTomorrow, isThisYear, formatDuration as dfFormatDuration, format as df } from "date-fns";
+import { format, differenceInHours, differenceInMinutes, isToday, isTomorrow, isThisYear } from "date-fns";
 import { Link } from "react-router-dom";
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
@@ -39,7 +38,7 @@ const categories = [
   { id: "content-creation", name: "Content Creation", emoji: "🎥" },
   { id: "tech", name: "Tech", emoji: "💻" },
   { id: "deep-talks", name: "Deep Talks", emoji: "🧠" },
-  { id: "other", name: "Other", emoji: "🎯" }
+  { id: "other", name: "Other", emoji: "🎯" },
 ];
 
 const linkups = [
@@ -173,7 +172,6 @@ function formatDuration(start: string, end: string) {
   if (hours === 0) return `(${minutes}min)`;
   return minutes === 0 ? `(${hours}hr)` : `(${hours}hr ${minutes}min)`;
 }
-
 function getStatusBadgeStyles(status: string) {
   switch (status) {
     case "upcoming":
@@ -188,29 +186,25 @@ function getStatusBadgeStyles(status: string) {
       return "bg-blue-50 text-blue-700 border-blue-200";
   }
 }
-
 const PER_PAGE_OPTIONS = [25, 50, 100];
 
 export function LinkupTable() {
-  // Filtering & sorting
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
-  const [sortConfig, setSortConfig] = useState<{ field: string, direction: 'asc' | 'desc' }>({
-    field: 'date',
-    direction: 'desc'
+  const [sortConfig, setSortConfig] = useState<{ field: string; direction: "asc" | "desc" }>({
+    field: "date",
+    direction: "desc",
   });
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
-  // Remove linkup dialog
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
-  const [linkupToRemove, setLinkupToRemove] = useState<{ id: string, title: string } | null>(null);
+  const [linkupToRemove, setLinkupToRemove] = useState<{ id: string; title: string } | null>(null);
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
 
-  // Filtering logic
   const filteredLinkups = useMemo(() => {
     return [...linkups]
       .filter(linkup => {
@@ -251,23 +245,19 @@ export function LinkupTable() {
       });
   }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, sortConfig]);
 
-  // Pagination logic
   const totalCount = linkups.length;
   const filteredCount = filteredLinkups.length;
   const pageCount = Math.ceil(filteredCount / perPage);
-
   const currentLinkups = filteredLinkups.slice((currentPage - 1) * perPage, currentPage * perPage);
 
-  // Table sort UI
   function handleSort(field: string) {
-    setSortConfig(prev => ({
+    setSortConfig((prev) => ({
       field,
-      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+      direction: prev.field === field && prev.direction === "asc" ? "desc" : "asc",
     }));
   }
 
-  // Remove linkup
-  function handleRemove(linkup: { id: string, title: string }) {
+  function handleRemove(linkup: { id: string; title: string }) {
     setRemoveDialogOpen(true);
     setLinkupToRemove(linkup);
   }
@@ -275,18 +265,22 @@ export function LinkupTable() {
     toast.success(`"${linkupToRemove?.title}" removed`);
     setRemoveDialogOpen(false);
     setLinkupToRemove(null);
-    // Would also update state if data were stored externally.
   }
   function cancelRemoveLinkup() {
     setRemoveDialogOpen(false);
     setLinkupToRemove(null);
   }
 
-  // Render
+  function toggleRowExpanded(id: string) {
+    setExpandedRows((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  }
+
   return (
     <>
       <div className="flex flex-col gap-6">
-        {/* Total/filtered count */}
         <div className="flex items-center gap-3 mb-1">
           <span className="text-2xl font-semibold text-[#8364e8]">
             {filteredCount !== totalCount
@@ -294,7 +288,6 @@ export function LinkupTable() {
               : `${totalCount} total linkups`}
           </span>
         </div>
-        {/* Search + filters */}
         <LinkupFilters
           searchValue={searchValue}
           setSearchValue={setSearchValue}
@@ -313,138 +306,147 @@ export function LinkupTable() {
           filteredCount={filteredCount}
           totalCount={totalCount}
         />
-        {/* Table */}
-        <div className="border rounded-lg bg-background overflow-auto">
+        <div className="border rounded-lg bg-background overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="min-w-[180px] text-base font-semibold">Linkup</TableHead>
-                <TableHead className="min-w-[140px] text-base font-semibold">
-                  Category
-                </TableHead>
-                <TableHead className="min-w-[200px] text-base font-semibold">
-                  Host
-                </TableHead>
+                <TableHead className="w-10" />
+                <TableHead className="min-w-[210px] text-base font-semibold">Linkup Title</TableHead>
+                <TableHead className="min-w-[120px] text-base font-semibold">Category</TableHead>
+                <TableHead className="min-w-[200px] text-base font-semibold">Host</TableHead>
                 <TableHead
-                  className="cursor-pointer select-none min-w-[130px] text-base font-semibold"
-                  onClick={() => handleSort('created')}
-                >
-                  <span>Created On</span>
-                  <span className="ml-1 align-middle text-muted-foreground">{sortConfig.field === 'created' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</span>
-                </TableHead>
-                <TableHead
-                  className="cursor-pointer select-none min-w-[180px] text-base font-semibold"
-                  onClick={() => handleSort('date')}
+                  className="cursor-pointer min-w-[160px] text-base font-semibold select-none"
+                  onClick={() => handleSort("date")}
                 >
                   <span>Date &amp; Time</span>
-                  <span className="ml-1 align-middle text-muted-foreground">{sortConfig.field === 'date' ? (sortConfig.direction === 'asc' ? '↑' : '↓') : ''}</span>
+                  <span className="ml-1 text-muted-foreground">
+                    {sortConfig.field === "date" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                  </span>
                 </TableHead>
-                <TableHead className="min-w-[170px] text-base font-semibold">Location</TableHead>
-                <TableHead className="text-base font-semibold">Visibility</TableHead>
-                <TableHead className="text-base font-semibold">Join Method</TableHead>
-                <TableHead className="text-base font-semibold">Price</TableHead>
-                <TableHead className="text-base font-semibold">Attendees</TableHead>
-                <TableHead className="text-base font-semibold">Status</TableHead>
-                <TableHead className="text-right text-base font-semibold">Actions</TableHead>
+                <TableHead
+                  className="cursor-pointer min-w-[140px] text-base font-semibold select-none"
+                  onClick={() => handleSort("created")}
+                >
+                  <span>Created On</span>
+                  <span className="ml-1 text-muted-foreground">
+                    {sortConfig.field === "created" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                  </span>
+                </TableHead>
+                <TableHead className="min-w-[110px] text-base font-semibold">Status</TableHead>
+                <TableHead className="min-w-[70px] text-base font-semibold text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {currentLinkups.map(linkup => (
-                <TableRow key={linkup.id}>
-                  {/* LINKUP TITLE */}
-                  <TableCell>
-                    <div className="text-lg font-semibold">{linkup.title}</div>
-                  </TableCell>
-                  {/* CATEGORY */}
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{categories.find(c => c.id === linkup.category)?.emoji || ""}</span>
-                      <span className="text-base font-medium">{categories.find(c => c.id === linkup.category)?.name || linkup.category}</span>
-                    </div>
-                  </TableCell>
-                  {/* HOST */}
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <img
-                        src={linkup.host.avatar}
-                        alt={linkup.host.name}
-                        className="h-9 w-9 rounded-full object-cover"
-                      />
-                      <div className="flex flex-col">
-                        <Link to={`/users/${linkup.host.id}`} className="font-semibold text-base hover:text-primary underline">{linkup.host.name}</Link>
-                        <span className="text-sm text-muted-foreground">{linkup.host.username}</span>
-                      </div>
-                    </div>
-                  </TableCell>
-                  {/* CREATED ON */}
-                  <TableCell>
-                    <div className="font-medium">{formatDate(linkup.createdAt)}</div>
-                    <div className="text-muted-foreground">{formatTime(linkup.createdAt)}</div>
-                  </TableCell>
-                  {/* DATE & TIME */}
-                  <TableCell>
-                    <div className="font-medium">{formatDate(linkup.date)}</div>
-                    <div className="text-muted-foreground">
-                      {formatTime(linkup.date)} {formatDuration(linkup.date, linkup.endTime)}
-                    </div>
-                  </TableCell>
-                  {/* LOCATION */}
-                  <TableCell>
-                    <span className="text-base">{linkup.location}</span>
-                  </TableCell>
-                  {/* VISIBILITY */}
-                  <TableCell>
-                    <span className="text-base">{linkup.isPublic ? "Public" : "Private"}</span>
-                  </TableCell>
-                  {/* JOIN METHOD */}
-                  <TableCell>
-                    <Badge variant="outline" className="text-base px-2 py-1">{linkup.isOpen ? "Open" : "Closed"}</Badge>
-                  </TableCell>
-                  {/* PRICE */}
-                  <TableCell>
-                    <span className="text-base">
-                      {linkup.isFree ? "Free" : `$${linkup.price}`}
-                    </span>
-                  </TableCell>
-                  {/* # OF ATTENDEES */}
-                  <TableCell>
-                    <span className="font-medium text-base">{linkup.attendeeCount}</span>
-                  </TableCell>
-                  {/* STATUS */}
-                  <TableCell>
-                    <Badge
-                      variant="outline"
-                      className={`text-base px-2 py-1 ${getStatusBadgeStyles(linkup.status)}`}
-                    >
-                      {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
-                    </Badge>
-                  </TableCell>
-                  {/* ACTIONS */}
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link to={`/linkups/${linkup.id}`}>View Details</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-destructive"
-                          onClick={() => handleRemove({ id: linkup.id, title: linkup.title })}
+              {currentLinkups.map(linkup => {
+                const categoryObj = categories.find(c => c.id === linkup.category);
+                return (
+                  <React.Fragment key={linkup.id}>
+                    <TableRow>
+                      <TableCell className="w-10 px-2">
+                        <button
+                          onClick={() => toggleRowExpanded(linkup.id)}
+                          aria-label={expandedRows[linkup.id] ? "Collapse details" : "Expand details"}
+                          className="p-1 rounded hover:bg-muted transition"
                         >
-                          Remove Linkup
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
+                          {expandedRows[linkup.id] ? (
+                            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                          ) : (
+                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                          )}
+                        </button>
+                      </TableCell>
+                      <TableCell>
+                        <span className="font-semibold text-lg">{linkup.title}</span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="mr-2 text-xl">{categoryObj?.emoji}</span>
+                        <span>{categoryObj?.name}</span>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={linkup.host.avatar}
+                            alt={linkup.host.name}
+                            className="h-8 w-8 rounded-full object-cover"
+                          />
+                          <div>
+                            <Link to={`/users/${linkup.host.id}`} className="font-semibold text-base underline hover:text-primary">
+                              {linkup.host.name}
+                            </Link>
+                            <div className="text-sm text-muted-foreground">{linkup.host.username}</div>
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium">{formatDate(linkup.date)}, {formatTime(linkup.date)}</div>
+                        <div className="text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
+                      </TableCell>
+                      <TableCell>
+                        <div>{formatDate(linkup.createdAt)}</div>
+                        <div className="text-muted-foreground">{formatTime(linkup.createdAt)}</div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`text-base px-2 py-1 ${getStatusBadgeStyles(linkup.status)}`}>
+                          {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem asChild>
+                              <Link to={`/linkups/${linkup.id}`}>View Details</Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => handleRemove({ id: linkup.id, title: linkup.title })}
+                            >
+                              Remove Linkup
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                    {expandedRows[linkup.id] && (
+                      <TableRow className="bg-muted/40">
+                        <TableCell colSpan={8} className="p-0 pb-3">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-8 py-4">
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Location</div>
+                              <div className="text-base">{linkup.location}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Attendees</div>
+                              <div className="text-base font-medium">{linkup.attendeeCount}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Visibility</div>
+                              <div className="text-base">{linkup.isPublic ? "Public" : "Private"}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Join Method</div>
+                              <div className="text-base">{linkup.isOpen ? "Open" : "Closed"}</div>
+                            </div>
+                            <div>
+                              <div className="text-xs text-muted-foreground mb-1">Price</div>
+                              <div className="text-base">
+                                {linkup.isFree ? "Free" : `$${linkup.price}`}
+                              </div>
+                            </div>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </React.Fragment>
+                );
+              })}
               {currentLinkups.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={12} className="text-center py-12">
+                  <TableCell colSpan={8} className="text-center py-12">
                     <span className="text-lg text-muted-foreground">No linkups found.</span>
                   </TableCell>
                 </TableRow>
@@ -452,7 +454,6 @@ export function LinkupTable() {
             </TableBody>
           </Table>
         </div>
-        {/* Pagination Controls */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6">
           <div className="flex items-center gap-3">
             <span className="text-base text-muted-foreground">
@@ -477,7 +478,6 @@ export function LinkupTable() {
               </select>
             </PaginationItemsPerPage>
           </div>
-          {/* Page numbers */}
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -509,7 +509,6 @@ export function LinkupTable() {
           </Pagination>
         </div>
       </div>
-      {/* Remove dialog */}
       <RemoveLinkupDialog
         open={removeDialogOpen}
         linkupTitle={linkupToRemove?.title || ""}
