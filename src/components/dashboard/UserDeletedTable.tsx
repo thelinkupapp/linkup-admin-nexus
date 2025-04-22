@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Apple, ArrowDown, ArrowUp } from "lucide-react";
+import { Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Select,
@@ -189,12 +189,9 @@ const UserDeletedTable = () => {
                     <span className="font-mono font-medium text-violet-700">{user.id}</span>
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
-                      <span>
-                        {format(new Date(user.deletedDate), "MMM d yyyy")}
-                      </span>
-                    </div>
+                    <span>
+                      {format(new Date(user.deletedDate), "MMM d yyyy")}
+                    </span>
                   </TableCell>
                   <TableCell>
                     <span className="flex items-center gap-1 font-medium">
