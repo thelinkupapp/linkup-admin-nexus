@@ -588,7 +588,28 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                         <div className="grid grid-cols-4 gap-4 text-[13px]">
                           <div>
                             <div className="text-[12px] text-[#888888] mb-1">Location</div>
-                            <div className="">{linkup.location}</div>
+                            <div className="font-medium text-[15px] text-[#23252b]">
+                              {linkup.location}
+                            </div>
+                            {/* General location, parse after last comma for mock "city, province" */}
+                            {(() => {
+                              // If address has at least one comma, show last part as general location.
+                              const locationParts = linkup.location.split(",");
+                              if (locationParts.length > 1) {
+                                // Show last two comma parts, trimmed.
+                                const generalLocation = locationParts
+                                  .slice(-2)
+                                  .map(s => s.trim())
+                                  .join(", ");
+                                return (
+                                  <div className="text-[13px] text-[#888888] mt-0.5">
+                                    {generalLocation}
+                                  </div>
+                                );
+                              }
+                              // If no comma, don't show anything extra
+                              return null;
+                            })()}
                           </div>
                           <div>
                             <div className="text-[12px] text-[#888888] mb-1">Attendees</div>
