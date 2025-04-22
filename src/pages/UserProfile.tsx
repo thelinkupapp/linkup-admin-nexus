@@ -932,28 +932,83 @@ const UserProfile = () => {
                         <div className="space-y-0.5">
                           <Label className="text-base">Hide my age on my profile</Label>
                         </div>
-                        <Switch checked={user.privacySettings.hideAge} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.hideAge} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.hideAge ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Allow friends to see which linkups I'm attending</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Friends can see which upcoming linkups I'm attending
+                          </p>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.friendsCanSeeUpcomingAttendance} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.friendsCanSeeUpcomingAttendance ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                       
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="text-base">Don't allow male friend requests</Label>
                         </div>
-                        <Switch checked={!user.privacySettings.allowMaleFriendRequests} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={!user.privacySettings.allowMaleFriendRequests} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {!user.privacySettings.allowMaleFriendRequests ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                       
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="text-base">Don't allow female friend requests</Label>
                         </div>
-                        <Switch checked={!user.privacySettings.allowFemaleFriendRequests} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={!user.privacySettings.allowFemaleFriendRequests} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {!user.privacySettings.allowFemaleFriendRequests ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="text-base">Socials visible to friends only</Label>
                         </div>
-                        <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.socialsVisibleToFriendsOnly ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                     </div>
                   </div>
@@ -967,14 +1022,32 @@ const UserProfile = () => {
                         <div className="space-y-0.5">
                           <Label className="text-base">The map</Label>
                         </div>
-                        <Switch checked={user.privacySettings.showLocationOnMap} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLocationOnMap} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.showLocationOnMap ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="text-base">Nearby people</Label>
                         </div>
-                        <Switch checked={user.privacySettings.appearOnNearbyPeople} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.appearOnNearbyPeople} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.appearOnNearbyPeople ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                     </div>
                   </div>
@@ -988,14 +1061,32 @@ const UserProfile = () => {
                         <div className="space-y-0.5">
                           <Label className="text-base">All users</Label>
                         </div>
-                        <Switch checked={user.privacySettings.showLinkupsToEveryone} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLinkupsToEveryone} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.showLinkupsToEveryone ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
 
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="text-base">Friends only</Label>
                         </div>
-                        <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} />
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent>
+                            <p>Setting is {user.privacySettings.showLinkupsToFriendsOnly ? 'enabled' : 'disabled'}</p>
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                     </div>
                   </div>
