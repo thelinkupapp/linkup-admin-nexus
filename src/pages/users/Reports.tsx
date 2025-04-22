@@ -12,14 +12,15 @@ const UserReports = () => {
       <div className="flex-1 ml-64 p-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2 text-[#1A1F2C]">User Reports</h1>
-          <p className="text-[#9b87f5]">
-            View and manage reports submitted against users on the platform
+          <p className="text-muted-foreground">
+            View and manage reports submitted against users on the app
           </p>
           
           <div className="mt-4 flex items-center gap-2">
             <AlertCircle className="h-6 w-6 text-[#9b87f5]" />
-            <span className="text-lg font-semibold text-[#1A1F2C]">
-              {totalReports} total reports
+            <span className="text-lg font-semibold">
+              <span className="text-[#9b87f5]">{totalReports}</span>{" "}
+              <span className="text-[#1A1F2C]">reports</span>
             </span>
           </div>
         </div>
