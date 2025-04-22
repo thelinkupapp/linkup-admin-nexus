@@ -201,13 +201,15 @@ function getStatusBadgeStyles(status: string) {
 
 const PER_PAGE_OPTIONS = [25, 50, 100];
 
-function formatDateTime(dt: string) {
+function formatUserManagementDate(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
 }
 
-interface LinkupTableProps {
-  onCountChange?: (counts: { filtered: number; total: number }) => void;
-  filterCountries?: { id: string; label: string; value: string; emoji: string; }[];
+function formatDateTimeWithDuration(start: string, end: string) {
+  return {
+    main: formatUserManagementDate(start),
+    duration: formatDuration(start, end)
+  };
 }
 
 export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps) {
@@ -445,6 +447,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           <TableBody>
             {currentLinkups.map(linkup => {
               const categoryObj = categories.find(c => c.id === linkup.category);
+              const dateTime = formatDateTimeWithDuration(linkup.date, linkup.endTime);
+              const createdOn = formatUserManagementDate(linkup.createdAt);
               return (
                 <React.Fragment key={linkup.id}>
                   <TableRow className="hover:bg-soft-gray/30" style={{ fontSize: '15px', height: 40 }}>
@@ -486,11 +490,17 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                       </div>
                     </TableCell>
                     <TableCell className="py-1 px-2">
-                      <div className="text-xs font-medium">{formatDateTime(linkup.date)}</div>
-                      <div className="text-xs text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
+                      <div className="flex flex-col">
+                        <span className="text-[15px]">
+                          {dateTime.main}
+                        </span>
+                        <span className="text-xs text-muted-foreground" style={{ fontWeight: 500 }}>
+                          {dateTime.duration}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell className="py-1 px-2">
-                      <div className="text-xs">{formatDateTime(linkup.createdAt)}</div>
+                      <span className="text-[15px]">{createdOn}</span>
                     </TableCell>
                     <TableCell className="py-1 px-2">
                       <Badge variant="outline" className={`text-xs px-2 py-0.5 ${getStatusBadgeStyles(linkup.status)}`}>
