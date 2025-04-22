@@ -96,7 +96,7 @@ const linkups = [
     createdAt: "2025-04-15T10:30:00Z",
     date: "2025-04-30T18:30:00Z",
     endTime: "2025-04-30T21:30:00Z",
-    location: "Tribal Bali Coworking Hostel, Gg. Tribal Jl, Pererenan, Kabupaten Badung, Bali 80351, Indonesia",
+    location: "Canggu, Bali",
     attendeeCount: 20,
     status: "upcoming",
     isPublic: true,
@@ -118,7 +118,7 @@ const linkups = [
     createdAt: "2025-04-10T14:30:00Z",
     date: "2025-04-25T15:30:00Z",
     endTime: "2025-04-25T17:30:00Z",
-    location: "Brew Café, Jl. Raya Seminyak, Seminyak, Kuta, Kabupaten Badung, Bali 80361, Indonesia",
+    location: "Seminyak, Bali",
     attendeeCount: 4,
     status: "upcoming",
     isPublic: true,
@@ -139,7 +139,7 @@ const linkups = [
     createdAt: "2025-03-25T09:15:00Z",
     date: "2025-04-20T10:00:00Z",
     endTime: "2025-04-20T15:00:00Z",
-    location: "Forest Trail Park, Jalan Raya Pupuan, Pupuan, Tabanan, Bali 82162, Indonesia",
+    location: "Ubud, Bali",
     attendeeCount: 8,
     status: "upcoming",
     isPublic: true,
@@ -161,7 +161,7 @@ const linkups = [
     createdAt: "2025-02-15T19:00:00Z",
     date: "2025-03-22T19:00:00Z",
     endTime: "2025-03-22T21:00:00Z",
-    location: "Central Library, Jalan Perpustakaan No. 123, Denpasar, Bali 80235, Indonesia",
+    location: "Denpasar, Bali",
     attendeeCount: 6,
     status: "cancelled",
     isPublic: true,
@@ -182,7 +182,7 @@ const linkups = [
     createdAt: "2025-02-10T18:00:00Z",
     date: "2025-03-15T18:00:00Z",
     endTime: "2025-03-15T20:00:00Z",
-    location: "Vintage Winery, Jalan Anggur No. 45, Gianyar, Bali 80511, Indonesia",
+    location: "Gianyar, Bali",
     attendeeCount: 12,
     status: "happened",
     isPublic: false,
@@ -586,70 +586,68 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                   {expandedRows[linkup.id] && (
                     <TableRow>
                       <TableCell colSpan={8} className="p-0 bg-[#f9f9fd] border-t border-[#ebebf8]">
-                        <div className="flex flex-wrap justify-between gap-8 px-8 py-5 items-start text-[#23252b]">
-                          <div className="flex-1 min-w-[200px]">
+                        <div className="flex flex-col md:flex-row justify-between gap-5 px-8 py-5 items-end md:items-start text-[#23252b]">
+                          <div className="flex-1 min-w-[170px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Location</span>
-                            <span className="font-semibold leading-5 block">
+                            <span className="font-semibold text-lg leading-5 block">
                               {linkup.location}
                             </span>
                           </div>
-                          <div>
+                          <div className="flex flex-col items-start md:items-center min-w-[85px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Attendees</span>
-                            <span className="font-semibold text-lg">{linkup.attendeeCount}</span>
+                            <span className="font-semibold text-xl">{linkup.attendeeCount}</span>
                           </div>
-                          <div>
+                          <div className="flex flex-col items-start md:items-center min-w-[95px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Visibility</span>
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span
-                                  className={`cursor-pointer font-semibold px-2 py-1 rounded transition
-                                    ${linkup.isPublic
-                                      ? "text-green-700 bg-green-50 hover:bg-green-100"
-                                      : "text-purple-700 bg-purple-50 hover:bg-purple-100"
-                                    }`
-                                  }
+                                  className={`font-bold px-3 py-1 rounded-lg transition text-base cursor-pointer ${linkup.isPublic
+                                    ? "bg-green-50 text-green-700 hover:bg-green-100"
+                                    : "bg-purple-50 text-purple-700 hover:bg-purple-100"
+                                    }`}
                                 >
                                   {linkup.isPublic ? "Public" : "Private"}
                                 </span>
                               </TooltipTrigger>
-                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-sm font-medium px-3 py-2 rounded-md">
+                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-xs font-medium px-3 py-2 rounded-md">
                                 {linkup.isPublic
                                   ? "Linkup open to anyone"
                                   : "Linkup viewable by link only"}
                               </TooltipContent>
                             </Tooltip>
                           </div>
-                          <div>
+                          <div className="flex flex-col items-start md:items-center min-w-[95px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Join Method</span>
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <span
-                                  className={`cursor-pointer font-semibold px-2 py-1 rounded transition
-                                    ${linkup.isOpen
-                                      ? "text-blue-700 bg-blue-50 hover:bg-blue-100"
-                                      : "text-orange-700 bg-orange-50 hover:bg-orange-100"
-                                    }`
-                                  }
+                                  className={`font-bold px-3 py-1 rounded-lg transition text-base cursor-pointer ${linkup.isOpen
+                                    ? "bg-blue-50 text-blue-700 hover:bg-blue-100"
+                                    : "bg-orange-50 text-orange-700 hover:bg-orange-100"
+                                    }`}
                                 >
                                   {linkup.isOpen ? "Open" : "Closed"}
                                 </span>
                               </TooltipTrigger>
-                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-sm font-medium px-3 py-2 rounded-md">
+                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-xs font-medium px-3 py-2 rounded-md">
                                 {linkup.isOpen
                                   ? "No approval needed"
                                   : "Approval needed"}
                               </TooltipContent>
                             </Tooltip>
                           </div>
-                          <div>
+                          <div className="flex flex-col items-start md:items-center min-w-[65px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Price</span>
-                            <span className="font-semibold">
+                            <span className="font-semibold text-base">
                               {linkup.isFree ? "Free" : `$${linkup.price}`}
                             </span>
                           </div>
-                          <div>
+                          <div className="flex flex-col items-start md:items-center min-w-[72px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Earnings</span>
-                            <span className="font-semibold text-green-600">${linkup.earnings}</span>
+                            <span className="font-semibold text-green-600 text-base">
+                              ${linkup.isFree ? 0 : (linkup.price ?? 0) * linkup.attendeeCount}
+                            </span>
                           </div>
                         </div>
                       </TableCell>
