@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, MonitorSmartphone, Apple, ArrowDown, ArrowUp } from "lucide-react";
+import { Calendar, Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Select,
@@ -104,7 +104,7 @@ const UserDeletedTable = () => {
         )}
       >
         {Icon && <Icon className="w-4 h-4" />}
-        {LogoSrc && <img src={LogoSrc} alt={label} className="w-5 h-5 mr-1" />}
+        {LogoSrc && <img src={LogoSrc} alt={label} className="w-6 h-6 mr-1" />}
         {label}
       </button>
     );
@@ -138,7 +138,7 @@ const UserDeletedTable = () => {
             value="Android"
             selected={platformFilter === "Android"}
             onClick={() => { setPlatformFilter("Android"); setCurrentPage(1); }}
-            LogoSrc="/lovable-uploads/8259ac94-5f10-4199-b0e2-c7800a8ba768.png"
+            LogoSrc="/lovable-uploads/4171fb17-8e04-401c-998a-a757e06353ff.png"
           />
         </div>
       </div>
@@ -206,9 +206,9 @@ const UserDeletedTable = () => {
                       ) : (
                         <>
                           <img 
-                            src="/lovable-uploads/8259ac94-5f10-4199-b0e2-c7800a8ba768.png" 
+                            src="/lovable-uploads/4171fb17-8e04-401c-998a-a757e06353ff.png" 
                             alt="Android" 
-                            className="h-5 w-5 inline mr-1" 
+                            className="h-6 w-6 inline mr-1" 
                           />
                           Android
                         </>
