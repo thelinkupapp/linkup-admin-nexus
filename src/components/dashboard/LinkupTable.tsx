@@ -205,7 +205,7 @@ function formatDateTime(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
 }
 
-export function LinkupTable() {
+export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filtered: number; total: number }) => void }) {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("");
@@ -275,6 +275,12 @@ export function LinkupTable() {
     return filtered;
   }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, sortConfig, earningsSort]);
 
+  React.useEffect(() => {
+    if (onCountChange) {
+      onCountChange({ filtered: filteredLinkups.length, total: linkups.length });
+    }
+  }, [filteredLinkups.length, linkups.length, onCountChange]);
+
   const totalCount = linkups.length;
   const filteredCount = filteredLinkups.length;
   const pageCount = Math.ceil(filteredCount / perPage);
@@ -318,120 +324,87 @@ export function LinkupTable() {
 
   return (
     <>
-      <div className="mb-1 mt-2 mr-8 flex items-center gap-3">
-        <svg width="28" height="28" fill="none" stroke="#9b87f5" strokeWidth="2" viewBox="0 0 24 24" className="mr-1"><circle cx="9" cy="7" r="4"/><path d="M17 11v-.5A4.5 4.5 0 0 0 12.5 6h-.5"/><path d="M17 14h.01M21 17c0-2.21-3.58-4-8-4s-8 1.79-8 4m16 0v3a2 2 0 0 1-2 2h-2"/></svg>
-        <span className="text-xl font-bold">
-          <span className="text-[#9b87f5] font-bold">{totalCount}</span>
-          <span className="text-gray-700 font-medium ml-2">total linkups</span>
-        </span>
+      <LinkupFilters
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        selectedVisibility={selectedVisibility}
+        setSelectedVisibility={setSelectedVisibility}
+        selectedPrice={selectedPrice}
+        setSelectedPrice={setSelectedPrice}
+        selectedJoinMethod={selectedJoinMethod}
+        setSelectedJoinMethod={setSelectedJoinMethod}
+        dateRange={undefined}
+        setDateRange={() => {}}
+        earningsSort={earningsSort}
+        setEarningsSort={(val) => {
+          if (val === earningsSort) {
+            setEarningsSort("none");
+          } else {
+            setEarningsSort(val as "desc" | "asc");
+            setSortConfig({ field: "date", direction: "desc" });
+          }
+        }}
+      />
+      <div className="flex items-center gap-1 mb-2 text-base text-muted-foreground ml-0.5">
+        <svg width="21" height="21" fill="none" stroke="#8E9196" strokeWidth="1.7" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 11v-.5A4.5 4.5 0 0 0 12.5 6h-.5"/><path d="M17 14h.01M21 17c0-2.21-3.58-4-8-4s-8 1.79-8 4m16 0v3a2 2 0 0 1-2 2h-2"/></svg>
+        Showing&nbsp;
+        <span className="font-bold text-[#9b87f5]">{filteredCount}</span>
+        &nbsp;of&nbsp;
+        <span className="font-bold text-[#9b87f5]">{totalCount}</span>
+        &nbsp;linkups
       </div>
-
-      <div className="flex flex-col gap-0 mb-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <LinkupFilters
-            layout="inline"
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-            selectedVisibility={selectedVisibility}
-            setSelectedVisibility={setSelectedVisibility}
-            selectedPrice={selectedPrice}
-            setSelectedPrice={setSelectedPrice}
-            selectedJoinMethod={selectedJoinMethod}
-            setSelectedJoinMethod={setSelectedJoinMethod}
-            dateRange={undefined}
-            setDateRange={() => {}}
-            filteredCount={filteredCount}
-            totalCount={totalCount}
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="h-9 text-xs px-4 gap-1 font-medium flex items-center"
-                style={{ minWidth: 165 }}
-                aria-label="Sort by earnings"
-              >
-                <DollarSign className="w-4 h-4" />
-                Earnings
-                {earningsSort === "desc" && <SortDesc className="w-4 h-4 ml-1" />}
-                {earningsSort === "asc" && <SortAsc className="w-4 h-4 ml-1" />}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="z-[100] min-w-[120px]">
-              <DropdownMenuItem
-                onClick={() => handleEarningsDropdown("desc")}
-                className={earningsSort === "desc" ? "font-semibold text-primary" : ""}
-              >
-                <SortDesc className="w-4 h-4 mr-2" /> Highest
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleEarningsDropdown("asc")}
-                className={earningsSort === "asc" ? "font-semibold text-primary" : ""}
-              >
-                <SortAsc className="w-4 h-4 mr-2" /> Lowest
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <div className="text-base font-medium text-[#222] mt-2 flex items-center gap-1">
-          <svg width="21" height="21" fill="none" stroke="#8E9196" strokeWidth="1.7" viewBox="0 0 24 24" className="mr-1 -ml-1"><circle cx="9" cy="7" r="4"/><path d="M17 11v-.5A4.5 4.5 0 0 0 12.5 6h-.5"/><path d="M17 14h.01M21 17c0-2.21-3.58-4-8-4s-8 1.79-8 4m16 0v3a2 2 0 0 1-2 2h-2"/></svg>
-          Showing&nbsp;
-          <span className="font-bold text-[#9b87f5]">{filteredCount}</span>
-          &nbsp;of&nbsp;
-          <span className="font-bold text-[#9b87f5]">{totalCount}</span>
-          &nbsp;linkups
-        </div>
-      </div>
-
-      <div className="rounded-xl border shadow-xs overflow-hidden mt-3">
-        <Table className="w-full text-[15px]">
+      <div className="rounded-xl border shadow-xs overflow-hidden mt-2">
+        <Table className="w-full text-[14px]">
           <TableHeader>
             <TableRow className="bg-soft-gray/40">
-              <TableHead className="w-5 p-2"></TableHead>
+              <TableHead className="w-[34px] p-1.5"></TableHead>
               <TableHead
-                className="w-44 font-bold cursor-pointer text-base py-3 px-3 select-none"
+                className="w-[180px] font-bold cursor-pointer py-2 px-2 select-none"
                 onClick={() => handleSort("title")}
+                style={{ fontSize: 15 }}
               >
                 <div className="flex items-center gap-1 text-gray-800">
                   Linkup Title
                 </div>
               </TableHead>
-              <TableHead className="w-36 font-bold text-base py-3 px-3">Category</TableHead>
-              <TableHead className="w-56 font-bold text-base py-3 px-3">Host</TableHead>
+              <TableHead className="w-[104px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Category</TableHead>
+              <TableHead className="w-[190px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Host</TableHead>
               <TableHead
-                className="w-56 font-bold cursor-pointer text-base py-3 px-3 select-none"
+                className="w-[168px] font-bold cursor-pointer py-2 px-2 select-none"
                 onClick={() => handleSort("date")}
+                style={{ fontSize: 15 }}
               >
-                <div className="flex items-center gap-[2px] text-gray-800">
+                <div className="flex items-center gap-1 text-gray-800">
                   Date &amp; Time
                   {sortConfig.field === "date" &&
                     (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-4 h-4" />
+                      <SortAsc className="ml-1 w-3 h-3" />
                     ) : (
-                      <SortDesc className="ml-1 w-4 h-4" />
+                      <SortDesc className="ml-1 w-3 h-3" />
                     ))}
                 </div>
               </TableHead>
               <TableHead
-                className="w-44 font-bold cursor-pointer text-base py-3 px-3 select-none"
+                className="w-[154px] font-bold cursor-pointer py-2 px-2 select-none"
                 onClick={() => handleSort("created")}
+                style={{ fontSize: 15 }}
               >
-                <div className="flex items-center gap-[2px] text-gray-800">
+                <div className="flex items-center gap-1 text-gray-800">
                   Created On
                   {sortConfig.field === "created" &&
                     (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-4 h-4" />
+                      <SortAsc className="ml-1 w-3 h-3" />
                     ) : (
-                      <SortDesc className="ml-1 w-4 h-4" />
+                      <SortDesc className="ml-1 w-3 h-3" />
                     ))}
                 </div>
               </TableHead>
-              <TableHead className="w-28 font-bold text-base py-3 px-3">Status</TableHead>
-              <TableHead className="w-24 text-base text-right px-3">Actions</TableHead>
+              <TableHead className="w-[98px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Status</TableHead>
+              <TableHead className="w-[74px] text-base text-right px-2"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -439,52 +412,52 @@ export function LinkupTable() {
               const categoryObj = categories.find(c => c.id === linkup.category);
               return (
                 <React.Fragment key={linkup.id}>
-                  <TableRow className="hover:bg-soft-gray/30" style={{ fontSize: '15px', height: 44 }}>
+                  <TableRow className="hover:bg-soft-gray/30" style={{ fontSize: '15px', height: 40 }}>
                     <TableCell className="p-1">
                       <button
                         onClick={() => toggleRowExpanded(linkup.id)}
                         aria-label={expandedRows[linkup.id] ? "Collapse details" : "Expand details"}
                         className="p-1 rounded hover:bg-muted transition"
-                        style={{ fontSize: "20px", lineHeight: "20px" }}
+                        style={{ fontSize: "18px", lineHeight: "18px" }}
                       >
-                        {expandedRows[linkup.id] ? "↑" : "↓"}
+                        {expandedRows[linkup.id] ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                       </button>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3 font-semibold text-base truncate max-w-[170px]">
+                    <TableCell className="py-1 px-2 font-semibold truncate max-w-[160px]">
                       <Link
                         to={`/linkups/${linkup.id}`}
-                        className="hover:underline hover:text-primary"
+                        className="hover:underline hover:text-primary text-[15px]"
                       >
                         {linkup.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3">
+                    <TableCell className="py-1 px-2">
                       <span className="mr-1">{categoryObj?.emoji}</span>
-                      <span className="text-xs">{categoryObj?.name}</span>
+                      <span className="text-[12px]">{categoryObj?.name}</span>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3">
+                    <TableCell className="py-1 px-2">
                       <div className="flex items-center gap-2">
                         <img
                           src={linkup.host.avatar}
                           alt={linkup.host.name}
-                          className="h-6 w-6 rounded-full object-cover"
+                          className="h-5 w-5 rounded-full object-cover"
                         />
                         <div>
-                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-base hover:underline hover:text-primary">
+                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-[15px] hover:underline hover:text-primary">
                             {linkup.host.name}
                           </Link>
-                          <div className="text-xs text-muted-foreground">{linkup.host.username}</div>
+                          <div className="text-[12px] text-muted-foreground">{linkup.host.username}</div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3">
+                    <TableCell className="py-1 px-2">
                       <div className="text-xs font-medium">{formatDateTime(linkup.date)}</div>
                       <div className="text-xs text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3">
+                    <TableCell className="py-1 px-2">
                       <div className="text-xs">{formatDateTime(linkup.createdAt)}</div>
                     </TableCell>
-                    <TableCell className="py-1.5 px-3">
+                    <TableCell className="py-1 px-2">
                       <Badge variant="outline" className={`text-xs px-2 py-0.5 ${getStatusBadgeStyles(linkup.status)}`}>
                         {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
                       </Badge>
@@ -502,7 +475,10 @@ export function LinkupTable() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="text-destructive"
-                            onClick={() => handleRemove({ id: linkup.id, title: linkup.title })}
+                            onClick={() => {
+                              setRemoveDialogOpen(true);
+                              setLinkupToRemove({ id: linkup.id, title: linkup.title });
+                            }}
                           >
                             Remove Linkup
                           </DropdownMenuItem>
@@ -512,7 +488,7 @@ export function LinkupTable() {
                   </TableRow>
                   {expandedRows[linkup.id] && (
                     <TableRow className="bg-muted/20">
-                      <TableCell colSpan={8} className="py-2 px-6">
+                      <TableCell colSpan={8} className="py-2 px-4">
                         <div className="grid grid-cols-4 gap-4 text-xs">
                           <div>
                             <div className="text-xs text-muted-foreground mb-1">Location</div>
@@ -565,24 +541,23 @@ export function LinkupTable() {
           </TableBody>
         </Table>
       </div>
-
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-2">
-        <div className="flex items-center gap-3">
-          <span className="text-sm text-muted-foreground">
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3">
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted-foreground">
             Showing {(filteredCount === 0) ? 0 : (currentPage - 1) * perPage + 1}
             -
             {Math.min(currentPage * perPage, filteredCount)}
             &nbsp;of {filteredCount} linkups
           </span>
           <PaginationItemsPerPage>
-            <span className="text-sm">Per page:</span>
+            <span className="text-xs">Per page:</span>
             <select
               value={perPage}
               onChange={e => {
                 setPerPage(Number(e.target.value));
                 setCurrentPage(1);
               }}
-              className="text-sm rounded-md border border-input px-2 py-1 bg-background"
+              className="text-xs rounded-md border border-input px-2 py-1 bg-background"
             >
               {PER_PAGE_OPTIONS.map(opt => (
                 <option key={opt} value={opt}>{opt}</option>
@@ -610,7 +585,7 @@ export function LinkupTable() {
               } else {
                 pageToShow = currentPage - 2 + i;
               }
-              
+
               return (
                 <PaginationItem key={pageToShow}>
                   <PaginationLink

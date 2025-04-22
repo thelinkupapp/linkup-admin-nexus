@@ -1,5 +1,6 @@
+
 import React from "react";
-import { Search } from "lucide-react";
+import { Search, DollarSign } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -43,8 +44,10 @@ interface LinkupFiltersProps {
   setSelectedJoinMethod: (value: string) => void;
   dateRange: DateRange | undefined;
   setDateRange: (value: DateRange | undefined) => void;
-  filteredCount: number;
-  totalCount: number;
+  filteredCount?: number;
+  totalCount?: number;
+  earningsSort: "none" | "desc" | "asc";
+  setEarningsSort: (value: "desc" | "asc" | "none") => void;
 }
 
 export function LinkupFilters({
@@ -63,8 +66,8 @@ export function LinkupFilters({
   setSelectedJoinMethod,
   dateRange,
   setDateRange,
-  filteredCount,
-  totalCount,
+  earningsSort,
+  setEarningsSort,
 }: LinkupFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -102,69 +105,30 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
-  const hasActiveFilters = selectedCategories.length > 0 || 
-    selectedStatus !== "" || 
-    selectedVisibility !== "" || 
-    selectedPrice !== "" || 
-    selectedJoinMethod !== "" || 
-    (dateRange?.from !== undefined) ||
-    searchValue !== "";
-
-  const handleStatusChange = (value: string) => {
-    if (value === "all") {
-      setSelectedStatus("");
-    } else {
-      setSelectedStatus(value);
-    }
-  };
-
-  const handleVisibilityChange = (value: string) => {
-    if (value === "all") {
-      setSelectedVisibility("");
-    } else {
-      setSelectedVisibility(value);
-    }
-  };
-
-  const handlePriceChange = (value: string) => {
-    if (value === "all") {
-      setSelectedPrice("");
-    } else {
-      setSelectedPrice(value);
-    }
-  };
-
-  const handleJoinMethodChange = (value: string) => {
-    if (value === "all") {
-      setSelectedJoinMethod("");
-    } else {
-      setSelectedJoinMethod(value);
-    }
-  };
-
+  // Make compact filter layout
   return (
-    <div className="flex items-center flex-wrap gap-2">
+    <div className="flex items-center flex-wrap gap-1 mb-1">
       <div className="relative">
-        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
         <Input
           placeholder="Search..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="pl-7 h-9 w-[180px] text-sm"
+          className="pl-7 h-8 w-[150px] text-xs"
         />
       </div>
-      
+
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="h-9 text-xs px-3 font-medium">
+          <Button variant="outline" className="h-8 text-xs px-2 font-medium">
             Category ({selectedCategories.length})
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[220px] p-0 z-[100]">
+        <PopoverContent className="w-[190px] p-0 z-[100]">
           <Command>
             <CommandInput placeholder="Search category..." />
             <CommandEmpty>No category found.</CommandEmpty>
-            <ScrollArea className="h-60">
+            <ScrollArea className="h-44">
               <CommandGroup>
                 {categories.map((category) => (
                   <CommandItem
@@ -177,7 +141,7 @@ export function LinkupFilters({
                   >
                     <Checkbox
                       checked={selectedCategories.includes(category.id)}
-                      className="mr-2 h-4 w-4"
+                      className="mr-2 h-3 w-3"
                     />
                     <span className="mr-2">{category.emoji}</span>
                     {category.name}
@@ -188,10 +152,10 @@ export function LinkupFilters({
           </Command>
         </PopoverContent>
       </Popover>
-      
+
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="h-9 text-xs px-3 font-medium">
+          <Button variant="outline" className="h-8 text-xs px-2 font-medium">
             Date Range
           </Button>
         </PopoverTrigger>
@@ -207,9 +171,9 @@ export function LinkupFilters({
           />
         </PopoverContent>
       </Popover>
-      
-      <Select value={selectedStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger className="h-9 text-xs w-24">
+
+      <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
+        <SelectTrigger className="h-8 text-xs w-20">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
@@ -227,9 +191,9 @@ export function LinkupFilters({
           ))}
         </SelectContent>
       </Select>
-      
-      <Select value={selectedVisibility} onValueChange={handleVisibilityChange}>
-        <SelectTrigger className="h-9 text-xs w-24">
+
+      <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
+        <SelectTrigger className="h-8 text-xs w-20">
           <SelectValue placeholder="Visibility" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
@@ -244,9 +208,9 @@ export function LinkupFilters({
           </SelectItem>
         </SelectContent>
       </Select>
-      
-      <Select value={selectedPrice} onValueChange={handlePriceChange}>
-        <SelectTrigger className="h-9 text-xs w-24">
+
+      <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
+        <SelectTrigger className="h-8 text-xs w-20">
           <SelectValue placeholder="Price" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
@@ -261,10 +225,10 @@ export function LinkupFilters({
           </SelectItem>
         </SelectContent>
       </Select>
-      
-      <Select value={selectedJoinMethod} onValueChange={handleJoinMethodChange}>
-        <SelectTrigger className="h-9 text-xs w-24">
-          <SelectValue placeholder="Join Method" />
+
+      <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
+        <SelectTrigger className="h-8 text-xs w-20">
+          <SelectValue placeholder="Join…" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
           <SelectItem value="all" className="text-xs">
@@ -278,10 +242,58 @@ export function LinkupFilters({
           </SelectItem>
         </SelectContent>
       </Select>
-      
-      <div className="text-xs text-muted-foreground ml-2">
-        <span className="font-medium text-primary">{filteredCount}</span> of {totalCount} linkups
-      </div>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            className={`h-8 text-xs px-2 font-medium flex items-center gap-1`}
+            aria-label="Sort by earnings"
+            style={{ minWidth: 105 }}
+          >
+            <DollarSign className="w-3 h-3 mr-0.5" />
+            Earnings
+            {earningsSort === "desc" && (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 9l7 7 7-7"></path>
+              </svg>
+            )}
+            {earningsSort === "asc" && (
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M19 15l-7-7-7 7"></path>
+              </svg>
+            )}
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[120px] p-0 z-[100]">
+          <div>
+            <button
+              type="button"
+              className={`w-full text-xs px-3 py-2 text-left hover:bg-muted/50 ${
+                earningsSort === "desc" ? "font-semibold text-primary" : ""
+              }`}
+              onClick={() => setEarningsSort("desc")}
+            >
+              <span className="flex items-center">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9l7 7 7-7"/></svg>
+                &nbsp;Highest
+              </span>
+            </button>
+            <button
+              type="button"
+              className={`w-full text-xs px-3 py-2 text-left hover:bg-muted/50 ${
+                earningsSort === "asc" ? "font-semibold text-primary" : ""
+              }`}
+              onClick={() => setEarningsSort("asc")}
+            >
+              <span className="flex items-center">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M19 15l-7-7-7 7"/></svg>
+                &nbsp;Lowest
+              </span>
+            </button>
+          </div>
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
