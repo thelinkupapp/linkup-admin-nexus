@@ -56,6 +56,7 @@ import type { User } from "@/types/user";
 import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
+import { DateRangeFilter } from "./DateRangeFilter";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -538,6 +539,7 @@ const UserTable = () => {
   const [verificationStatus, setVerificationStatus] = useState("");
   const [membershipStatus, setMembershipStatus] = useState("");
   const [itemsPerPageOptions] = useState([25, 50, 100]);
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -546,6 +548,21 @@ const UserTable = () => {
       setSortField(field);
       setSortDirection('desc');
     }
+  };
+
+  const isWithinDateRange = (dateStr: string) => {
+    if (!dateRange.from && !dateRange.to) return true;
+    const date = new Date(dateStr);
+    if (dateRange.from && dateRange.to) {
+      return date >= dateRange.from && date <= dateRange.to;
+    }
+    if (dateRange.from) {
+      return date >= dateRange.from;
+    }
+    if (dateRange.to) {
+      return date <= dateRange.to;
+    }
+    return true;
   };
 
   const filteredUsers = users
@@ -578,8 +595,10 @@ const UserTable = () => {
         (membershipStatus === "plus" && user.isLinkupPlus) ||
         (membershipStatus === "free" && !user.isLinkupPlus);
       
+      const matchesDateRange = isWithinDateRange(user.joinDate);
+      
       return matchesSearch && matchesNationality && matchesGender && 
-             matchesLocation && matchesAge && matchesVerification && matchesMembership;
+             matchesLocation && matchesAge && matchesVerification && matchesMembership && matchesDateRange;
     })
     .sort((a, b) => {
       const multiplier = sortDirection === 'asc' ? 1 : -1;
@@ -676,6 +695,8 @@ const UserTable = () => {
         setAgeRange={setAgeRange}
         filteredCount={filteredUsersCount}
         totalCount={totalUsers}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
       />
 
       <div className="border rounded-lg">

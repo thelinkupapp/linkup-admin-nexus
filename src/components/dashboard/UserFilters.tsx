@@ -24,6 +24,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
+import { DateRangeFilter } from "./DateRangeFilter";
 
 import {
   countries,
@@ -53,6 +54,8 @@ interface UserFiltersProps {
   setAgeRange: (value: number[]) => void;
   filteredCount: number;
   totalCount: number;
+  dateRange: { from?: Date; to?: Date };
+  setDateRange: (range: { from?: Date; to?: Date }) => void;
 }
 
 export function UserFilters({
@@ -76,6 +79,8 @@ export function UserFilters({
   setAgeRange,
   filteredCount,
   totalCount,
+  dateRange,
+  setDateRange,
 }: UserFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -320,6 +325,8 @@ export function UserFilters({
             </SelectItem>
           </SelectContent>
         </Select>
+
+        <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
       </div>
     </div>
   );
