@@ -205,7 +205,12 @@ function formatDateTime(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
 }
 
-export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filtered: number; total: number }) => void }) {
+interface LinkupTableProps {
+  onCountChange?: (counts: { filtered: number; total: number }) => void;
+  filterCountries?: { id: string; label: string; value: string; emoji: string; }[];
+}
+
+export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps) {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("");
