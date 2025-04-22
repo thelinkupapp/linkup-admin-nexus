@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -171,18 +170,14 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
       <Card>
         <CardHeader>
           <CardTitle>Friend Requests</CardTitle>
-          <CardDescription>
-            {receivedRequests.length + sentRequests.length === 0 
-              ? "No pending friend requests"
-              : `${receivedRequests.length + sentRequests.length} pending request${
-                  receivedRequests.length + sentRequests.length === 1 ? '' : 's'
-                }`}
-          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
+                <p className="text-sm text-muted-foreground mt-1">{receivedRequests.length} request{receivedRequests.length === 1 ? '' : 's'}</p>
+              </div>
               <Button variant="outline" size="sm" onClick={() => setIsAllReceivedOpen(true)}>
                 View All
               </Button>
@@ -199,7 +194,10 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
 
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
+                <p className="text-sm text-muted-foreground mt-1">{sentRequests.length} request{sentRequests.length === 1 ? '' : 's'}</p>
+              </div>
               <Button variant="outline" size="sm" onClick={() => setIsAllSentOpen(true)}>
                 View All
               </Button>

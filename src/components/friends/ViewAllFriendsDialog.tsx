@@ -1,4 +1,3 @@
-
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,8 +13,8 @@ import {
 } from "@/components/ui/pagination";
 import { useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ArrowUp, ArrowDown } from 'lucide-react';
 
-// Common interface to handle both Friend and FriendRequest types
 interface FriendOrRequest {
   id: string;
   name: string;
@@ -63,7 +62,15 @@ export function ViewAllFriendsDialog({
             <TableHeader>
               <TableRow>
                 <TableHead>User</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>
+                  <div className="flex items-center gap-2 cursor-pointer" onClick={() => setCurrentPage(1)}>
+                    Date
+                    <div className="flex flex-col">
+                      <ArrowUp className="h-3 w-3" />
+                      <ArrowDown className="h-3 w-3" />
+                    </div>
+                  </div>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
