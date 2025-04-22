@@ -10,7 +10,7 @@ const UserSuspended = () => {
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Suspended Users</h1>
           <p className="text-gray-600 mt-1">
-            View and manage users who have been suspended from the platform
+            View and manage users who have been suspended from the app
           </p>
         </div>
 
@@ -23,7 +23,7 @@ const UserSuspended = () => {
             </div>
             <div className="ml-3">
               <p className="text-sm text-amber-800">
-                These users have been suspended for violating platform policies. Review each case carefully before taking any action.
+                These users have been suspended for violating app policies. Review each case carefully before taking any action.
               </p>
             </div>
           </div>
