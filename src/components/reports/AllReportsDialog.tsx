@@ -1,6 +1,7 @@
+
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
+import { Check, Search, ArrowDown } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -152,7 +153,7 @@ export const AllReportsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between relative">
             <div className="flex items-center gap-3">
               <DialogTitle>{title}</DialogTitle>
               {showMarkAsRead && unreadCount > 0 && (
@@ -161,7 +162,7 @@ export const AllReportsDialog = ({
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-4">
+            <div className="absolute left-1/2 transform -translate-x-1/2">
               {showMarkAsRead && (
                 <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
                   <SelectTrigger className="w-[130px]">
@@ -198,13 +199,13 @@ export const AllReportsDialog = ({
                   <TableHead>Reporter</TableHead>
                   <TableHead>Description</TableHead>
                   <TableHead 
-                    className="cursor-pointer hover:bg-muted/50"
+                    className="cursor-pointer hover:bg-muted/50 flex items-center"
                     onClick={() => setSortDirection(d => d === "asc" ? "desc" : "asc")}
                   >
-                    Date & Time {sortDirection === "desc" ? 
-                      <ArrowDown className="inline h-4 w-4" /> : 
-                      <ArrowUp className="inline h-4 w-4" />
-                    }
+                    Date & Time 
+                    <ArrowDown 
+                      className={`inline h-4 w-4 ml-1 ${sortDirection === "desc" ? "rotate-180" : ""}`} 
+                    />
                   </TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
