@@ -1,10 +1,10 @@
-
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
