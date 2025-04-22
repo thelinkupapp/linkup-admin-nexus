@@ -1,17 +1,9 @@
-
 import React from "react";
-import { Search, DollarSign, MapPin } from "lucide-react";
+import { Search, DollarSign, MapPin, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
@@ -28,10 +20,47 @@ import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { countries } from "@/constants/filterOptions";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const countryFlagMap: Record<string, string> = Object.fromEntries(
   countries.map((c) => [c.label, c.emoji])
 );
+
+const categories = [
+  { id: "drinks", name: "Drinks", emoji: "🍸" },
+  { id: "food", name: "Food", emoji: "🍔" },
+  { id: "music", name: "Music", emoji: "🎵" },
+  { id: "adventure", name: "Adventure", emoji: "🏃" },
+  { id: "outdoors", name: "Outdoors", emoji: "🌲" },
+  { id: "wellness", name: "Wellness", emoji: "🧘" },
+  { id: "art-culture", name: "Art & Culture", emoji: "🎨" },
+  { id: "movies-tv", name: "Movies & TV", emoji: "🎬" },
+  { id: "shopping", name: "Shopping", emoji: "🛍️" },
+  { id: "co-working", name: "Co-Working", emoji: "💼" },
+  { id: "learning", name: "Learning", emoji: "📚" },
+  { id: "nightlife", name: "Nightlife", emoji: "🌙" },
+  { id: "coffee-chats", name: "Coffee & Chats", emoji: "☕" },
+  { id: "travel", name: "Travel & Exploration", emoji: "✈️" },
+  { id: "fitness", name: "Fitness", emoji: "🏆" },
+  { id: "networking", name: "Networking", emoji: "💼" },
+  { id: "content-creation", name: "Content Creation", emoji: "🎥" },
+  { id: "tech", name: "Tech", emoji: "💻" },
+  { id: "deep-talks", name: "Deep Talks", emoji: "🧠" },
+  { id: "other", name: "Other", emoji: "🎯" }
+];
+
+const statusOptions = [
+  { value: "upcoming", label: "Upcoming" },
+  { value: "happening", label: "Happening" },
+  { value: "happened", label: "Happened" },
+  { value: "cancelled", label: "Cancelled" }
+];
 
 interface LinkupFiltersProps {
   layout?: "inline" | "stacked";
@@ -39,14 +68,14 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatus: string;
-  setSelectedStatus: (value: string) => void;
+  selectedStatuses: string[]; // Updated: now an array
+  setSelectedStatuses: (value: string[]) => void;
   selectedVisibility: string;
-  setSelectedVisibility: (value: string) => void;
-  selectedPrice: string;
-  setSelectedPrice: (value: string) => void;
+  setSelectedVisibility: string;
+  setSelectedPrice: string;
+  setSelectedPrice: string;
   selectedJoinMethod: string;
-  setSelectedJoinMethod: (value: string) => void;
+  setSelectedJoinMethod: string;
   selectedLocations: string[];
   setSelectedLocations: (value: string[]) => void;
   allLocations: string[];
@@ -61,8 +90,8 @@ export function LinkupFilters({
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatus,
-  setSelectedStatus,
+  selectedStatuses,
+  setSelectedStatuses,
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -83,39 +112,8 @@ export function LinkupFilters({
       : [...array, value];
   };
 
-  const categories = [
-    { id: "drinks", name: "Drinks", emoji: "🍸" },
-    { id: "food", name: "Food", emoji: "🍔" },
-    { id: "music", name: "Music", emoji: "🎵" },
-    { id: "adventure", name: "Adventure", emoji: "🏃" },
-    { id: "outdoors", name: "Outdoors", emoji: "🌲" },
-    { id: "wellness", name: "Wellness", emoji: "🧘" },
-    { id: "art-culture", name: "Art & Culture", emoji: "🎨" },
-    { id: "movies-tv", name: "Movies & TV", emoji: "🎬" },
-    { id: "shopping", name: "Shopping", emoji: "🛍️" },
-    { id: "co-working", name: "Co-Working", emoji: "💼" },
-    { id: "learning", name: "Learning", emoji: "📚" },
-    { id: "nightlife", name: "Nightlife", emoji: "🌙" },
-    { id: "coffee-chats", name: "Coffee & Chats", emoji: "☕" },
-    { id: "travel", name: "Travel & Exploration", emoji: "✈️" },
-    { id: "fitness", name: "Fitness", emoji: "🏆" },
-    { id: "networking", name: "Networking", emoji: "💼" },
-    { id: "content-creation", name: "Content Creation", emoji: "🎥" },
-    { id: "tech", name: "Tech", emoji: "💻" },
-    { id: "deep-talks", name: "Deep Talks", emoji: "🧠" },
-    { id: "other", name: "Other", emoji: "🎯" }
-  ];
-
-  const statusOptions = [
-    { value: "upcoming", label: "Upcoming" },
-    { value: "happening", label: "Happening" },
-    { value: "happened", label: "Happened" },
-    { value: "cancelled", label: "Cancelled" }
-  ];
-
   return (
-    <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
-      {/* Filter bar expanded, stretches wider */}
+    <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-full">
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
@@ -123,17 +121,17 @@ export function LinkupFilters({
             placeholder="Search..."
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-7 h-8 w-[160px] text-xs"
+            className="pl-7 h-8 w-[170px] text-xs"
           />
         </div>
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[84px]">
+            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[92px]">
               Category ({selectedCategories.length})
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[190px] p-0 z-[100]">
+          <PopoverContent className="w-[190px] p-0 z-[200] bg-white">
             <Command>
               <CommandInput placeholder="Search category..." />
               <CommandEmpty>No category found.</CommandEmpty>
@@ -162,18 +160,18 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* COUNTRIES LOCATION DROPDOWN: now matches user management */}
+        {/* COUNTRIES LOCATION DROPDOWN: copies user management - just countries */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
+            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[114px] flex gap-1">
               <MapPin className="h-3 w-3 mr-1 opacity-60" />
-              Location ({selectedLocations.length})
+              Country ({selectedLocations.length})
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[230px] p-0 z-[200]">
+          <PopoverContent className="w-[230px] p-0 z-[220] bg-white">
             <Command>
-              <CommandInput placeholder="Search location..." />
-              <CommandEmpty>No location found.</CommandEmpty>
+              <CommandInput placeholder="Search country..." />
+              <CommandEmpty>No country found.</CommandEmpty>
               <ScrollArea className="h-52">
                 <CommandGroup>
                   {countries.map((country) => (
@@ -202,7 +200,7 @@ export function LinkupFilters({
               Date Range
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 z-[100]" align="start">
+          <PopoverContent className="w-auto p-0 z-[200] bg-white" align="start">
             <Calendar
               initialFocus
               mode="range"
@@ -215,25 +213,56 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-24">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent className="z-[100]">
-            <SelectItem value="all" className="text-xs">
-              All Status
-            </SelectItem>
-            {statusOptions.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                className="text-xs"
-              >
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* STATUS MULTI-SELECT DROPDOWN */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[100px]">
+              Status ({selectedStatuses.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[180px] p-0 z-[230] bg-white">
+            <Command>
+              <CommandInput placeholder="Search status..." />
+              <CommandEmpty>No status found.</CommandEmpty>
+              <ScrollArea className="h-44">
+                <CommandGroup>
+                  <CommandItem
+                    key="all"
+                    onSelect={() =>
+                      setSelectedStatuses(
+                        selectedStatuses.length === statusOptions.length
+                          ? []
+                          : statusOptions.map((s) => s.value)
+                      )
+                    }
+                  >
+                    <Checkbox
+                      checked={selectedStatuses.length === statusOptions.length}
+                      className="mr-2 h-3 w-3"
+                    />
+                    All Status
+                  </CommandItem>
+                  {statusOptions.map((option) => (
+                    <CommandItem
+                      key={option.value}
+                      onSelect={() =>
+                        setSelectedStatuses(
+                          toggleArrayValue(selectedStatuses, option.value)
+                        )
+                      }
+                    >
+                      <Checkbox
+                        checked={selectedStatuses.includes(option.value)}
+                        className="mr-2 h-3 w-3"
+                      />
+                      {option.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
@@ -286,7 +315,6 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        {/* EARNINGS DROPDOWN - compact with two choices */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -308,7 +336,7 @@ export function LinkupFilters({
               )}
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-[120px] p-0 z-[110]">
+          <PopoverContent className="w-[120px] p-0 z-[210] bg-white">
             <div>
               <button
                 type="button"
@@ -338,7 +366,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
       </div>
-      {/* No linkups count here! Removed the duplicate right-side count */}
+      {/* No linkups count here! */}
     </div>
   );
 }
