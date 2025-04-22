@@ -1,39 +1,38 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogHeader
+import { Check } from "lucide-react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogTitle, 
+  DialogHeader 
 } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
 } from "@/components/ui/table";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
 } from "@/components/ui/select";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationLink, 
+  PaginationNext, 
+  PaginationPrevious 
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { Badge } from "@/components/ui/badge";
-import { Check, ArrowUp, ArrowDown } from "lucide-react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 
 interface BaseReport {
   id: string;
@@ -79,7 +78,6 @@ export const AllReportsDialog = ({
   const [pageSize, setPageSize] = useState(10);
   const [filterStatus, setFilterStatus] = useState<"all" | "read" | "unread">("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const { toast } = useToast();
 
   const isReportReceived = (report: Report): report is ReportReceived => {
     return 'reporterId' in report;
@@ -114,10 +112,6 @@ export const AllReportsDialog = ({
 
   const handleMarkAsRead = (reportId: string) => {
     onMarkAsRead?.(reportId);
-    toast({
-      title: "Report marked as read",
-      description: "The report has been marked as read successfully.",
-    });
   };
 
   return (
@@ -153,11 +147,7 @@ export const AllReportsDialog = ({
                 className="flex items-center gap-2"
               >
                 Sort by Date
-                {sortDirection === "desc" ? (
-                  <ArrowDown className="h-4 w-4" />
-                ) : (
-                  <ArrowUp className="h-4 w-4" />
-                )}
+                {sortDirection === "desc" ? "↓" : "↑"}
               </Button>
             </div>
           </div>
