@@ -60,6 +60,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/h
 import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
+import { UserReportsList } from "@/components/reports/UserReportsList";
 
 interface UserData {
   id: string;
@@ -1085,20 +1086,28 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="reports" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Flag className="h-5 w-5 text-red-500" />
-                    Reports
-                  </CardTitle>
-                  <CardDescription>This user has no active reports</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center h-40">
-                    <p className="text-muted-foreground">No reports have been filed against this user</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <UserReportsList 
+                reports={[
+                  {
+                    id: "1",
+                    reporterId: "user123",
+                    reporterName: "Sarah Johnson",
+                    reporterAvatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+                    description: "Inappropriate behavior in chat",
+                    timestamp: "2025-04-22T10:30:00Z",
+                    isRead: false
+                  },
+                  {
+                    id: "2",
+                    reporterId: "user456",
+                    reporterName: "Mike Williams",
+                    reporterAvatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+                    description: "Suspicious activity during linkup",
+                    timestamp: "2025-04-21T15:45:00Z",
+                    isRead: true
+                  }
+                ]} 
+              />
             </TabsContent>
 
             <TabsContent value="friends" className="space-y-6">
