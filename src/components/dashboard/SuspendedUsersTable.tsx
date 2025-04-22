@@ -4,7 +4,18 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ReactivateUserDialog } from "./ReactivateUserDialog";
 import { format } from "date-fns";
-import { ArrowDown, ArrowUp } from "lucide-react"; // Only use allowed icons
+import { Search, ArrowDown, Info } from "lucide-react"; // Only using allowed icons
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const SUSPENDED_USERS = [
   {
@@ -41,7 +52,7 @@ const SUSPENDED_USERS = [
     username: "davidwilliams",
     suspendedAt: new Date(Date.now() - 1000 * 60 * 60 * 36),
     reason: "Spam activity",
-    notes: "Flagged for repetitive posting and spamming in linkups.",
+    notes: "Flagged for repetitive posting and spamming in linkups. This is a longer note that should trigger the read more functionality. The user was posting promotional content repeatedly despite warnings.",
   }
 ];
 
@@ -51,108 +62,177 @@ function formatSuspendedAt(date: Date) {
   const yesterday = new Date();
   yesterday.setDate(now.getDate() - 1);
   const isYesterday = date.toDateString() === yesterday.toDateString();
+  
   if (isToday) {
     return `Today at ${format(date, "HH:mm")}`;
   }
   if (isYesterday) {
     return `Yesterday at ${format(date, "HH:mm")}`;
   }
-  return format(date, "MMM d yyyy, HH:mm");
+  
+  // Format for dates beyond yesterday
+  return `${format(date, "MMM d yyyy")}, ${format(date, "HH:mm")}`;
 }
-
-type SortOrder = "asc" | "desc";
 
 export default function SuspendedUsersTable() {
   const [reactivateId, setReactivateId] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(25);
+  const [notesPopupContent, setNotesPopupContent] = useState<string | null>(null);
 
-  const sortedUsers = [...SUSPENDED_USERS].sort((a, b) => {
-    if (sortOrder === "asc") {
-      return a.suspendedAt.getTime() - b.suspendedAt.getTime();
-    } else {
-      return b.suspendedAt.getTime() - a.suspendedAt.getTime();
-    }
-  });
+  // Filter and sort users
+  const filteredUsers = SUSPENDED_USERS
+    .filter(user => 
+      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      user.reason.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (sortOrder === "asc") {
+        return a.suspendedAt.getTime() - b.suspendedAt.getTime();
+      } else {
+        return b.suspendedAt.getTime() - a.suspendedAt.getTime();
+      }
+    });
 
+  // Pagination
+  const totalUsers = filteredUsers.length;
+  const totalPages = Math.ceil(totalUsers / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, totalUsers);
+  const currentUsers = filteredUsers.slice(startIndex, endIndex);
+
+  // User accessor
   const getUserById = (id: string) => SUSPENDED_USERS.find(u => u.id === id);
 
+  // Notes truncation
+  const shouldTruncateNotes = (notes: string) => notes.length > 50;
+  const truncateNotes = (notes: string) => {
+    if (shouldTruncateNotes(notes)) {
+      return notes.substring(0, 50) + "...";
+    }
+    return notes;
+  };
+
   return (
-    <div className="w-full flex flex-col items-center bg-[#f7f6fa] min-h-[calc(100vh-80px)] py-3">
-      <div className="w-full max-w-5xl mt-4">
-        <h2 className="text-3xl font-bold mb-1 text-[#1A1F2C]">Suspended Users</h2>
-        <p className="text-[#797397] mb-5">
-          View and manage users who have been suspended from the platform
-        </p>
-        <div className="bg-[#FFFBEA] border-l-4 border-[#ffe084] p-3 rounded-lg flex items-center mb-6">
-          <span className="text-[#ffd600] mr-2 text-xl">⚠️</span>
-          <span className="text-[#8a7700] text-sm">
-            These users have been suspended for violating platform policies. Review each case carefully before taking any action.
-          </span>
+    <div className="space-y-6">
+      <div className="flex items-center gap-2">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
+          <Info className="h-5 w-5 text-purple-600" />
         </div>
+        <span className="text-lg text-purple-600 font-medium">
+          {totalUsers} suspended {totalUsers === 1 ? "user" : "users"}
+        </span>
       </div>
-      <div className="w-full max-w-5xl rounded-2xl bg-white shadow-sm border border-[#ececec]">
-        <div className="px-6 py-4 border-b border-[#ececec]">
-          <span className="text-xl font-semibold text-[#1A1F2C]">Suspended Users</span>
+
+      <div className="flex justify-between items-center gap-4">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Input
+            type="text"
+            placeholder="Search suspended users..."
+            className="pl-10"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+          setItemsPerPage(parseInt(value));
+          setCurrentPage(1);
+        }}>
+          <SelectTrigger className="w-[100px]">
+            <SelectValue placeholder="25" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="25">25</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="p-4 border-b">
+          <h3 className="text-lg font-semibold text-gray-900">Suspended Users</h3>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[800px]">
+          <table className="w-full">
             <thead>
-              <tr className="bg-[#f7f6fa] h-12 text-[#8E8CA4]">
-                <th className="font-semibold pl-6 text-left">User</th>
-                <th className="font-semibold text-left cursor-pointer select-none" onClick={() => setSortOrder(sortOrder === "desc" ? "asc" : "desc")}>
-                  <span className="flex items-center gap-1">
-                    Suspended
-                    {sortOrder === "desc" ? (
-                      <ArrowDown className="w-4 h-4 text-[#9b87f5]" />
-                    ) : (
-                      <ArrowUp className="w-4 h-4 text-[#9b87f5]" />
-                    )}
-                  </span>
+              <tr className="bg-gray-50 text-left">
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th 
+                  className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer"
+                  onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
+                >
+                  <div className="flex items-center">
+                    <span>Suspended</span>
+                    <ArrowDown className={`ml-1 h-4 w-4 transition-transform ${sortOrder === "asc" ? "rotate-180" : ""}`} />
+                  </div>
                 </th>
-                <th className="font-semibold text-left min-w-[150px]">Reason</th>
-                <th className="font-semibold text-left min-w-[210px]">Additional Notes</th>
-                <th className="font-semibold text-center pr-6 min-w-[150px]">Actions</th>
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Reason</th>
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Additional Notes</th>
+                <th className="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Actions</th>
               </tr>
             </thead>
-            <tbody>
-              {sortedUsers.length === 0 ? (
+            <tbody className="divide-y divide-gray-200 bg-white">
+              {currentUsers.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="py-12 text-center text-muted-foreground">
+                  <td colSpan={5} className="px-6 py-10 text-center text-gray-500">
                     No suspended users found.
                   </td>
                 </tr>
               ) : (
-                sortedUsers.map((user) => (
-                  <tr key={user.id} className="border-b border-[#f1f0fb] last:border-0 group hover:bg-[#faf9fd] transition">
-                    <td className="pl-6 py-4">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-11 w-11 border border-[#e6e4f4]">
+                currentUsers.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <Avatar className="h-10 w-10 rounded-full">
                           <AvatarImage src={user.avatar} alt={user.name} />
                           <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
-                        <div>
-                          <div className="font-semibold text-[#1A1F2C] text-base">{user.name}</div>
-                          <div className="text-xs text-[#9895b2]">@{user.username}</div>
+                        <div className="ml-4">
+                          <div className="font-medium text-gray-900">{user.name}</div>
+                          <div className="text-sm text-gray-500">@{user.username}</div>
                         </div>
                       </div>
                     </td>
-                    <td className="py-4 text-base text-[#252438]">{formatSuspendedAt(user.suspendedAt)}</td>
-                    <td className="py-4">
-                      <span className="inline-block border border-[#ea384c] text-[#ea384c] bg-transparent rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap min-w-[40px] text-center" style={{ background: "none" }}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      {formatSuspendedAt(user.suspendedAt)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
                         {user.reason}
                       </span>
                     </td>
-                    <td className="py-4 text-[#312e46] text-sm">
-                      {user.notes}
+                    <td className="px-6 py-4 text-sm text-gray-500 max-w-[300px]">
+                      {shouldTruncateNotes(user.notes) ? (
+                        <div>
+                          {truncateNotes(user.notes)}
+                          <button 
+                            className="ml-1 text-purple-600 hover:text-purple-800 font-medium text-xs"
+                            onClick={() => setNotesPopupContent(user.notes)}
+                          >
+                            Read more
+                          </button>
+                        </div>
+                      ) : (
+                        user.notes
+                      )}
                     </td>
-                    <td className="py-4 pr-6 text-center">
+                    <td className="px-6 py-4 whitespace-nowrap text-center">
                       <Button
-                        size="sm"
-                        className="rounded-full px-5 py-1.5 text-base bg-[#9b87f5] hover:bg-[#7E69AB] text-white shadow-none font-medium"
-                        style={{ minWidth: 120 }}
+                        className="bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-full text-sm px-5 py-2 inline-flex items-center"
                         onClick={() => setReactivateId(user.id)}
                       >
-                        Reactivate Account
+                        <span className="flex items-center">
+                          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z"></path>
+                          </svg>
+                          Reactivate Account
+                        </span>
                       </Button>
                     </td>
                   </tr>
@@ -161,10 +241,66 @@ export default function SuspendedUsersTable() {
             </tbody>
           </table>
         </div>
-        <div className="py-4 px-6 text-[#8E8CA4] text-sm border-t border-[#ececec]">
-          Showing <span className="text-[#9b87f5] font-medium">{sortedUsers.length}</span> suspended {sortedUsers.length === 1 ? "user" : "users"}
+        <div className="px-6 py-4 bg-white border-t flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
+          </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              
+              {/* Show current page and a few pages around it */}
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
+                let pageNumber;
+                
+                // Logic to determine which page numbers to show
+                if (totalPages <= 5) {
+                  pageNumber = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNumber = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNumber = totalPages - 4 + i;
+                } else {
+                  pageNumber = currentPage - 2 + i;
+                }
+                
+                return (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      isActive={pageNumber === currentPage}
+                      onClick={() => setCurrentPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
       </div>
+
+      {/* Notes Popup */}
+      <Popover open={!!notesPopupContent} onOpenChange={() => setNotesPopupContent(null)}>
+        <PopoverContent className="w-80 p-4">
+          <div className="font-medium mb-2">Additional Notes</div>
+          <div className="text-sm text-gray-700">{notesPopupContent}</div>
+        </PopoverContent>
+      </Popover>
+
+      {/* Reactivate User Dialog */}
       <ReactivateUserDialog
         isOpen={!!reactivateId}
         onClose={() => setReactivateId(null)}
