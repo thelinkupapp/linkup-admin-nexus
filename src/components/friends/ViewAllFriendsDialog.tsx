@@ -10,25 +10,23 @@ import {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationPrevious
+  PaginationPrevious,
+  PaginationItemsPerPage
 } from "@/components/ui/pagination";
 import { useState } from "react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-// Common interface to handle both Friend and FriendRequest types
-interface FriendOrRequest {
+interface Friend {
   id: string;
   name: string;
   username: string;
   avatar: string;
-  friendsSince?: string;
-  requestDate?: string;
+  friendsSince: string;
 }
 
 interface ViewAllFriendsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  friends: FriendOrRequest[];
+  friends: Friend[];
   title: string;
 }
 
@@ -45,11 +43,6 @@ export function ViewAllFriendsDialog({
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentFriends = friends.slice(startIndex, endIndex);
-
-  const handleItemsPerPageChange = (value: string) => {
-    setItemsPerPage(Number(value));
-    setCurrentPage(1);
-  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -87,7 +80,7 @@ export function ViewAllFriendsDialog({
                     </div>
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {formatJoinDate(friend.friendsSince || friend.requestDate || '')}
+                    {formatJoinDate(friend.friendsSince)}
                   </TableCell>
                 </TableRow>
               ))}
@@ -95,30 +88,22 @@ export function ViewAllFriendsDialog({
           </Table>
 
           <div className="flex items-center justify-between">
-            <div className="flex-1 flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Items per page:</span>
-              <Select 
-                value={String(itemsPerPage)} 
-                onValueChange={handleItemsPerPageChange}
-              >
-                <SelectTrigger className="w-16">
-                  <SelectValue placeholder="5" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="5">5</SelectItem>
-                  <SelectItem value="10">10</SelectItem>
-                  <SelectItem value="15">15</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+            <PaginationItemsPerPage 
+              className="flex-1"
+              onChange={(value) => {
+                setItemsPerPage(value);
+                setCurrentPage(1);
+              }}
+              value={itemsPerPage}
+              options={[5, 10, 15]}
+            />
             
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious 
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    aria-disabled={currentPage === 1}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    disabled={currentPage === 1}
                   />
                 </PaginationItem>
                 
@@ -136,8 +121,7 @@ export function ViewAllFriendsDialog({
                 <PaginationItem>
                   <PaginationNext 
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    aria-disabled={currentPage === totalPages}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    disabled={currentPage === totalPages}
                   />
                 </PaginationItem>
               </PaginationContent>

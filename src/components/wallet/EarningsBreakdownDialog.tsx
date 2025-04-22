@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -32,7 +31,6 @@ interface EarningsBreakdownDialogProps {
   onOpenChange: (open: boolean) => void;
   earnings: EarningItem[];
   attendancePayments?: AttendancePayment[];
-  attendedLinkups?: AttendancePayment[]; // Adding the missing prop
 }
 
 export function EarningsBreakdownDialog({
@@ -40,19 +38,15 @@ export function EarningsBreakdownDialog({
   onOpenChange,
   earnings,
   attendancePayments = [],
-  attendedLinkups = [], // Default empty array for the missing prop
 }: EarningsBreakdownDialogProps) {
   const sortedEarnings = useMemo(() => 
     earnings.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
     [earnings]
   );
 
-  // Use either attendancePayments or attendedLinkups (for backward compatibility)
-  const paymentsToUse = attendedLinkups.length > 0 ? attendedLinkups : attendancePayments;
-  
   const sortedAttendancePayments = useMemo(() => 
-    paymentsToUse.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
-    [paymentsToUse]
+    attendancePayments.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()), 
+    [attendancePayments]
   );
 
   return (
