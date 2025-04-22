@@ -38,8 +38,8 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatus: string;
-  setSelectedStatus: (value: string) => void;
+  selectedStatuses: string[]; // <-- changed from selectedStatus
+  setSelectedStatuses: (value: string[]) => void; // <-- changed from setSelectedStatus
   selectedVisibility: string;
   setSelectedVisibility: (value: string) => void;
   selectedPrice: string;
@@ -62,8 +62,8 @@ export function LinkupFilters({
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatus,
-  setSelectedStatus,
+  selectedStatuses,          // <-- changed
+  setSelectedStatuses,       // <-- changed
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -216,25 +216,47 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-24">
-            <SelectValue placeholder="Status" />
-          </SelectTrigger>
-          <SelectContent className="z-[100]">
-            <SelectItem value="all" className="text-xs">
-              All Status
-            </SelectItem>
-            {statusOptions.map((option) => (
-              <SelectItem
-                key={option.value}
-                value={option.value}
-                className="text-xs"
-              >
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        {/* Status Multi-select Popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px]">
+              Status ({selectedStatuses.length})
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[180px] p-2 z-[101]">
+            <Command>
+              <CommandInput placeholder="Search status..." />
+              <CommandEmpty>No status found.</CommandEmpty>
+              <ScrollArea className="h-36">
+                <CommandGroup>
+                  <CommandItem
+                    key="all"
+                    onSelect={() => setSelectedStatuses([])}
+                    className="flex items-center"
+                  >
+                    <Checkbox checked={selectedStatuses.length === 0} className="mr-2 h-3 w-3" />
+                    <span className="font-semibold">All Status</span>
+                  </CommandItem>
+                  {statusOptions.map((option) => (
+                    <CommandItem
+                      key={option.value}
+                      onSelect={() =>
+                        setSelectedStatuses(toggleArrayValue(selectedStatuses, option.value))
+                      }
+                      className="flex items-center"
+                    >
+                      <Checkbox
+                        checked={selectedStatuses.includes(option.value)}
+                        className="mr-2 h-3 w-3"
+                      />
+                      <span>{option.label}</span>
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </ScrollArea>
+            </Command>
+          </PopoverContent>
+        </Popover>
 
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
