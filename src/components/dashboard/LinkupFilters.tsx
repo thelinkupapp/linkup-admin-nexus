@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search, DollarSign } from "lucide-react";
+import { Search, DollarSign, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,22 @@ import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 
+const countryFlagMap: Record<string, string> = {
+  "United Kingdom": "🇬🇧",
+  "United States": "🇺🇸",
+  Canada: "🇨🇦",
+  Australia: "🇦🇺",
+  France: "🇫🇷",
+  Germany: "🇩🇪",
+  Italy: "🇮🇹",
+  Spain: "🇪🇸",
+  "Central Library": "🏛️",
+  "Brew Café": "☕",
+  "Innovation Hub": "💡",
+  "Forest Trail Park": "🌲",
+  "Vintage Winery": "🍷",
+};
+
 interface LinkupFiltersProps {
   layout?: "inline" | "stacked";
   searchValue: string;
@@ -42,16 +57,16 @@ interface LinkupFiltersProps {
   setSelectedPrice: (value: string) => void;
   selectedJoinMethod: string;
   setSelectedJoinMethod: (value: string) => void;
+  selectedLocations: string[];
+  setSelectedLocations: (value: string[]) => void;
+  allLocations: string[];
   dateRange: DateRange | undefined;
   setDateRange: (value: DateRange | undefined) => void;
-  filteredCount?: number;
-  totalCount?: number;
   earningsSort: "none" | "desc" | "asc";
   setEarningsSort: (value: "desc" | "asc" | "none") => void;
 }
 
 export function LinkupFilters({
-  layout = "inline",
   searchValue,
   setSearchValue,
   selectedCategories,
@@ -64,6 +79,9 @@ export function LinkupFilters({
   setSelectedPrice,
   selectedJoinMethod,
   setSelectedJoinMethod,
+  selectedLocations,
+  setSelectedLocations,
+  allLocations,
   dateRange,
   setDateRange,
   earningsSort,
@@ -105,22 +123,21 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
-  // Make compact filter layout
   return (
-    <div className="flex items-center flex-wrap gap-1 mb-1">
+    <div className="flex items-center flex-wrap gap-2.5 mb-3 w-full bg-transparent">
       <div className="relative">
         <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
         <Input
           placeholder="Search..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="pl-7 h-8 w-[150px] text-xs"
+          className="pl-7 h-8 w-[160px] text-xs"
         />
       </div>
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="h-8 text-xs px-2 font-medium">
+          <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[84px]">
             Category ({selectedCategories.length})
           </Button>
         </PopoverTrigger>
@@ -155,7 +172,38 @@ export function LinkupFilters({
 
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="h-8 text-xs px-2 font-medium">
+          <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[94px] flex gap-1">
+            <MapPin className="h-3 w-3 mr-1 opacity-60" />
+            Location ({selectedLocations.length})
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[220px] p-0 z-[200]">
+          <Command>
+            <CommandInput placeholder="Search location..." />
+            <ScrollArea className="h-44">
+              <CommandGroup>
+                {allLocations.map((loc) => (
+                  <CommandItem
+                    key={loc}
+                    onSelect={() => setSelectedLocations(toggleArrayValue(selectedLocations, loc))}
+                  >
+                    <Checkbox
+                      checked={selectedLocations.includes(loc)}
+                      className="mr-2 h-3 w-3"
+                    />
+                    <span className="mr-1">{countryFlagMap[loc] ?? "🗺️"}</span>
+                    <span className="text-xs">{loc}</span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </ScrollArea>
+          </Command>
+        </PopoverContent>
+      </Popover>
+
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
             Date Range
           </Button>
         </PopoverTrigger>
@@ -173,7 +221,7 @@ export function LinkupFilters({
       </Popover>
 
       <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
-        <SelectTrigger className="h-8 text-xs w-20">
+        <SelectTrigger className="h-8 text-xs w-24">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
@@ -193,7 +241,7 @@ export function LinkupFilters({
       </Select>
 
       <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
-        <SelectTrigger className="h-8 text-xs w-20">
+        <SelectTrigger className="h-8 text-xs w-24">
           <SelectValue placeholder="Visibility" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
@@ -247,9 +295,8 @@ export function LinkupFilters({
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            className={`h-8 text-xs px-2 font-medium flex items-center gap-1`}
+            className="h-8 text-xs px-2 font-medium flex items-center gap-1 min-w-[110px]"
             aria-label="Sort by earnings"
-            style={{ minWidth: 105 }}
           >
             <DollarSign className="w-3 h-3 mr-0.5" />
             Earnings
@@ -265,7 +312,7 @@ export function LinkupFilters({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[120px] p-0 z-[100]">
+        <PopoverContent className="w-[120px] p-0 z-[110]">
           <div>
             <button
               type="button"

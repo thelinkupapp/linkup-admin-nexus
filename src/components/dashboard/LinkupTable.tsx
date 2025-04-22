@@ -212,6 +212,7 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
   const [selectedVisibility, setSelectedVisibility] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<{ field: string; direction: "asc" | "desc" }>({
     field: "date",
     direction: "desc",
@@ -227,6 +228,10 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
     ...l,
     earnings: l.isFree ? 0 : (l.price ?? 0) * l.attendeeCount
   }));
+
+  const allLocations = useMemo(() => {
+    return Array.from(new Set(linkups.map(l => l.location))).sort();
+  }, []);
 
   const filteredLinkups = useMemo(() => {
     let filtered = [...linkupsWithEarnings]
@@ -252,10 +257,13 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
           if (selectedJoinMethod === "open" && !linkup.isOpen) return false;
           if (selectedJoinMethod === "closed" && linkup.isOpen) return false;
         }
+        if (selectedLocations.length > 0 && !selectedLocations.includes(linkup.location)) {
+          return false;
+        }
         return true;
       });
     if (earningsSort !== "none") {
-      filtered = filtered.sort((a,b) =>
+      filtered = filtered.sort((a, b) =>
         earningsSort === "desc" ? b.earnings - a.earnings : a.earnings - b.earnings
       );
     } else {
@@ -273,7 +281,7 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
       });
     }
     return filtered;
-  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, sortConfig, earningsSort]);
+  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort]);
 
   React.useEffect(() => {
     if (onCountChange) {
@@ -337,6 +345,9 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
         setSelectedPrice={setSelectedPrice}
         selectedJoinMethod={selectedJoinMethod}
         setSelectedJoinMethod={setSelectedJoinMethod}
+        selectedLocations={selectedLocations}
+        setSelectedLocations={setSelectedLocations}
+        allLocations={allLocations}
         dateRange={undefined}
         setDateRange={() => {}}
         earningsSort={earningsSort}
@@ -349,14 +360,6 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
           }
         }}
       />
-      <div className="flex items-center gap-1 mb-2 text-base text-muted-foreground ml-0.5">
-        <svg width="21" height="21" fill="none" stroke="#8E9196" strokeWidth="1.7" viewBox="0 0 24 24"><circle cx="9" cy="7" r="4"/><path d="M17 11v-.5A4.5 4.5 0 0 0 12.5 6h-.5"/><path d="M17 14h.01M21 17c0-2.21-3.58-4-8-4s-8 1.79-8 4m16 0v3a2 2 0 0 1-2 2h-2"/></svg>
-        Showing&nbsp;
-        <span className="font-bold text-[#9b87f5]">{filteredCount}</span>
-        &nbsp;of&nbsp;
-        <span className="font-bold text-[#9b87f5]">{totalCount}</span>
-        &nbsp;linkups
-      </div>
       <div className="rounded-xl border shadow-xs overflow-hidden mt-2">
         <Table className="w-full text-[14px]">
           <TableHeader>
@@ -401,6 +404,9 @@ export function LinkupTable({ onCountChange }: { onCountChange?: (counts: { filt
                     ) : (
                       <SortDesc className="ml-1 w-3 h-3" />
                     ))}
+                  {sortConfig.field !== "created" && (
+                    <SortAsc className="ml-1 w-3 h-3 opacity-50" />
+                  )}
                 </div>
               </TableHead>
               <TableHead className="w-[98px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Status</TableHead>
