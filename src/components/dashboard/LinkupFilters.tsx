@@ -265,7 +265,7 @@ export function LinkupFilters({
           </Select>
 
           <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
-            <SelectTrigger className="h-8 text-xs w-[100px] font-medium">
+            <SelectTrigger className="h-8 text-xs w-[120px] font-medium">
               <SelectValue placeholder="Join Method" />
             </SelectTrigger>
             <SelectContent className="z-[100]">
