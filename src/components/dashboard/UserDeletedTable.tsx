@@ -224,6 +224,7 @@ const UserDeletedTable = () => {
 
       <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4 mt-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground w-full sm:w-auto">
+          <span>Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length}</span>
           <span>Items per page</span>
           <Select
             value={itemsPerPage.toString()}
@@ -242,9 +243,6 @@ const UserDeletedTable = () => {
               <SelectItem value="50">50</SelectItem>
             </SelectContent>
           </Select>
-          <span>
-            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredUsers.length)} of {filteredUsers.length}
-          </span>
         </div>
         <Pagination>
           <PaginationContent>
