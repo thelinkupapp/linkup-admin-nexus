@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { ArrowDown, ArrowUp, Ios, Android } from "lucide-react";
+import { ArrowDown, ArrowUp, Apple, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format, differenceInDays, parseISO } from "date-fns";
 
@@ -59,12 +59,12 @@ const deletedUsers = [
 const platformLabel = {
   ios: (
     <span className="flex items-center gap-1 font-medium text-[#7E69AB]">
-      <Ios size={16} className="text-[#8B5CF6]" /> iOS
+      <Apple size={16} className="text-[#8B5CF6]" /> iOS
     </span>
   ),
   android: (
     <span className="flex items-center gap-1 font-medium text-green-700">
-      <Android size={16} className="text-[#34C759]" /> Android
+      <Smartphone size={16} className="text-[#34C759]" /> Android
     </span>
   ),
 };
@@ -106,14 +106,14 @@ const UserDeletedTable = () => {
         )}>
           <SelectValue>
             <span className="flex items-center gap-2">
-              {platformFilter === "all" && <>Platform</>}
+              {platformFilter === "all" && <>App</>}
               {platformFilter === "ios" && platformLabel.ios}
               {platformFilter === "android" && platformLabel.android}
             </span>
           </SelectValue>
         </SelectTrigger>
         <SelectContent className="rounded-lg border border-[#DED8F3] bg-white shadow-lg z-50 mt-2">
-          <SelectItem value="all" className="font-semibold text-[#222]">All Platforms</SelectItem>
+          <SelectItem value="all" className="font-semibold text-[#222]">All Apps</SelectItem>
           <SelectItem value="ios" className="font-semibold text-[#7E69AB]">
             <span className="flex items-center gap-2">{platformLabel.ios}</span>
           </SelectItem>
@@ -159,7 +159,7 @@ const UserDeletedTable = () => {
                 </span>
               </TableHead>
               <TableHead className="w-[150px] text-[#8E9196] text-xs uppercase">
-                Platform
+                App
               </TableHead>
               <TableHead className="w-[130px] text-[#8E9196] text-xs uppercase">
                 Account Age
