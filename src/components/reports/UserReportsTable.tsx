@@ -1,4 +1,3 @@
-
 import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -10,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { toast } from "@/hooks/use-toast";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 const mockReports = [
   {
@@ -36,7 +36,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png"
+      avatar: "/lovable-uploads/4075cd3e-99b1-4fe1-8a47-184857a379fc.png"
     },
     reportedUser: {
       id: "ru2",
@@ -59,9 +59,7 @@ export function UserReportsTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredReports, setFilteredReports] = useState(reports);
 
-  // Apply filtering, sorting, and searching effects
   useEffect(() => {
-    // First filter by search term
     let results = reports.filter(report => {
       const searchLower = searchTerm.toLowerCase();
       if (searchTerm === "") return true;
@@ -76,14 +74,12 @@ export function UserReportsTable() {
       );
     });
 
-    // Then filter by status
     results = results.filter(report => {
       if (filterStatus === "read") return report.isRead;
       if (filterStatus === "unread") return !report.isRead;
       return true;
     });
 
-    // Then sort by timestamp
     results = [...results].sort((a, b) => {
       const dateA = new Date(a.timestamp).getTime();
       const dateB = new Date(b.timestamp).getTime();
@@ -91,7 +87,6 @@ export function UserReportsTable() {
     });
 
     setFilteredReports(results);
-    // Reset to first page when filters change
     setCurrentPage(1);
   }, [reports, searchTerm, filterStatus, sortDirection]);
 
@@ -200,7 +195,7 @@ export function UserReportsTable() {
                     </div>
                   </TableCell>
                   <TableCell>{report.description}</TableCell>
-                  <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
+                  <TableCell>{formatJoinDate(report.timestamp)}</TableCell>
                   <TableCell>
                     <Badge 
                       variant="outline" 
