@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Calendar, MonitorSmartphone, Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -197,7 +198,11 @@ const UserDeletedTable = () => {
                         </>
                       ) : (
                         <>
-                          <MonitorSmartphone className="h-4 w-4 inline text-gray-500" />
+                          <img 
+                            src="/lovable-uploads/4c266ca6-18a6-4899-bad4-84a1f70634bf.png" 
+                            alt="Android" 
+                            className="h-4 w-4 inline mr-1" 
+                          />
                           Android
                         </>
                       )}
