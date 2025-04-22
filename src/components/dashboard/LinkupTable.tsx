@@ -260,6 +260,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [linkupToRemove, setLinkupToRemove] = useState<{ id: string; title: string } | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [dateRange, setDateRange] = useState<{from?: Date, to?: Date}>({});
 
   const linkupsWithEarnings = linkups.map(l => ({
     ...l,
@@ -297,6 +298,28 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
         if (selectedLocations.length > 0 && !selectedLocations.includes(linkup.location)) {
           return false;
         }
+
+        // Actual date range filter logic (inclusive)
+        if (dateRange.from && dateRange.to) {
+          const linkupDate = new Date(linkup.date);
+          // Add logic to include linkups between the selected range, inclusive
+          if (
+            linkupDate < new Date(dateRange.from.setHours(0,0,0,0)) ||
+            linkupDate > new Date(dateRange.to.setHours(23,59,59,999))
+          ) {
+            return false;
+          }
+        } else if (dateRange.from && !dateRange.to) {
+          const linkupDate = new Date(linkup.date);
+          if (linkupDate < new Date(dateRange.from.setHours(0,0,0,0))) {
+            return false;
+          }
+        } else if (!dateRange.from && dateRange.to) {
+          const linkupDate = new Date(linkup.date);
+          if (linkupDate > new Date(dateRange.to.setHours(23,59,59,999))) {
+            return false;
+          }
+        }
         return true;
       });
     if (earningsSort !== "none") {
@@ -322,7 +345,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       });
     }
     return filtered;
-  }, [searchValue, selectedCategories, selectedStatuses, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort, attendeesSort]);
+  }, [searchValue, selectedCategories, selectedStatuses, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort, attendeesSort, dateRange]);
 
   React.useEffect(() => {
     if (onCountChange) {
@@ -397,8 +420,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
         selectedLocations={selectedLocations}
         setSelectedLocations={setSelectedLocations}
         allLocations={allLocations}
-        dateRange={undefined}
-        setDateRange={() => {}}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
         earningsSort={earningsSort}
         setEarningsSort={(val) => {
           if (val === earningsSort) {

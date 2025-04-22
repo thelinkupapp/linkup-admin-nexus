@@ -62,8 +62,8 @@ export function LinkupFilters({
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatuses,          // <-- changed
-  setSelectedStatuses,       // <-- changed
+  selectedStatuses,
+  setSelectedStatuses,
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -119,6 +119,7 @@ export function LinkupFilters({
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
+
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
           <Input
@@ -129,6 +130,7 @@ export function LinkupFilters({
           />
         </div>
 
+        {/* Category */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[84px]">
@@ -164,6 +166,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
+        {/* Location */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
@@ -197,26 +200,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
-              Date Range
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 z-[100]" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={dateRange?.from}
-              selected={dateRange}
-              onSelect={setDateRange}
-              numberOfMonths={2}
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
-
-        {/* Status Multi-select Popover */}
+        {/* Status */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px]">
@@ -258,6 +242,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
+        {/* Visibility */}
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
             <SelectValue placeholder="Visibility" />
@@ -275,23 +260,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-20">
-            <SelectValue placeholder="Price" />
-          </SelectTrigger>
-          <SelectContent className="z-[100]">
-            <SelectItem value="all" className="text-xs">
-              All Prices
-            </SelectItem>
-            <SelectItem value="free" className="text-xs">
-              Free
-            </SelectItem>
-            <SelectItem value="paid" className="text-xs">
-              Paid
-            </SelectItem>
-          </SelectContent>
-        </Select>
-
+        {/* Join Method */}
         <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-20">
             <SelectValue placeholder="Join…" />
@@ -309,6 +278,25 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
+        {/* Price */}
+        <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
+          <SelectTrigger className="h-8 text-xs w-20">
+            <SelectValue placeholder="Price" />
+          </SelectTrigger>
+          <SelectContent className="z-[100]">
+            <SelectItem value="all" className="text-xs">
+              All Prices
+            </SelectItem>
+            <SelectItem value="free" className="text-xs">
+              Free
+            </SelectItem>
+            <SelectItem value="paid" className="text-xs">
+              Paid
+            </SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Earnings */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -360,6 +348,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
+        {/* Attendees */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -408,6 +397,26 @@ export function LinkupFilters({
                 </span>
               </button>
             </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* Date Range */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
+              Date Range
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 z-[100]" align="start">
+            <Calendar
+              initialFocus
+              mode="range"
+              defaultMonth={dateRange?.from}
+              selected={dateRange}
+              onSelect={setDateRange}
+              numberOfMonths={2}
+              className={cn("p-3 pointer-events-auto")}
+            />
           </PopoverContent>
         </Popover>
       </div>
