@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +11,7 @@ import Login from "./pages/Login";
 import Users from "./pages/Users";
 import UserProfile from "./pages/UserProfile";
 import UserManagement from "./pages/users/Management";
-import UserStatistics from "./pages/users/Statistics";
+// Removed UserStatistics import
 import UserReports from "./pages/users/Reports";
 import UserSuspended from "./pages/users/Suspended";
 import UserDeleted from "./pages/users/Deleted";
@@ -80,7 +79,7 @@ const App = () => {
                     <Route path="/" element={<Users />} />
                     <Route path=":userId" element={<UserProfile />} />
                     <Route path="management" element={<UserManagement />} />
-                    <Route path="statistics" element={<UserStatistics />} />
+                    {/* Removed statistics route */}
                     <Route path="reports" element={<UserReports />} />
                     <Route path="suspended" element={<UserSuspended />} />
                     <Route path="deleted" element={<UserDeleted />} />

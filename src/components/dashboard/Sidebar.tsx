@@ -61,11 +61,6 @@ const navItems = [
         icon: Users
       },
       {
-        title: "Statistics",
-        href: "/users/statistics",
-        icon: BarChart3
-      },
-      {
         title: "Reports",
         href: "/users/reports",
         icon: FileText
