@@ -1,7 +1,12 @@
-
 import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -77,8 +82,8 @@ export function UserReportsTable() {
   const [reports, setReports] = useState(mockReports);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredReports, setFilteredReports] = useState(reports);
+  const [selectedReport, setSelectedReport] = useState<string | null>(null);
   
-  // Pass the total reports and filtered reports count to parent component
   const onFilterChange = (status: "all" | "read" | "unread", totalFiltered: number) => {
     setFilterStatus(status);
     const event = new CustomEvent('reportsFiltered', { 
@@ -121,7 +126,6 @@ export function UserReportsTable() {
     setFilteredReports(results);
     setCurrentPage(1);
     
-    // Trigger event when filtered results change
     const event = new CustomEvent('reportsFiltered', { 
       detail: { 
         total: reports.length,
@@ -151,7 +155,6 @@ export function UserReportsTable() {
     currentPage * pageSize
   );
   
-  // For accurate "showing X of Y" calculation
   const startNumber = filteredReports.length > 0 ? (currentPage - 1) * pageSize + 1 : 0;
   const endNumber = Math.min(currentPage * pageSize, filteredReports.length);
 
@@ -231,7 +234,12 @@ export function UserReportsTable() {
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={report.reportedUser.avatar} />
+                        <AvatarImage 
+                          src={report.reportedUser.id === "ru2" 
+                            ? "/lovable-uploads/e3ec3607-984f-49c8-85c9-5e68fb7cef15.png" 
+                            : report.reportedUser.avatar
+                          } 
+                        />
                         <AvatarFallback>{report.reportedUser.name[0]}</AvatarFallback>
                       </Avatar>
                       <div>
@@ -255,13 +263,7 @@ export function UserReportsTable() {
                       <Button
                         variant="link"
                         className="text-xs p-0 h-auto mt-1"
-                        onClick={() => {
-                          toast({
-                            title: "Report Description",
-                            description: report.description,
-                            duration: 10000,
-                          });
-                        }}
+                        onClick={() => setSelectedReport(report.id)}
                       >
                         Read more
                       </Button>
@@ -304,6 +306,17 @@ export function UserReportsTable() {
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Report Description</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground mt-4">
+            {reports.find(r => r.id === selectedReport)?.description}
+          </p>
+        </DialogContent>
+      </Dialog>
 
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
