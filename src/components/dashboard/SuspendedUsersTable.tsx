@@ -37,7 +37,7 @@ const RAW_SUSPENDED_USERS = [
   },
   {
     id: "2",
-    avatar: "/lovable-uploads/f85e5796-4ca0-42bd-99b9-a9eaca40db93.png",
+    avatar: "/lovable-uploads/a93ddc8d-f2be-43b3-8df8-249da608a56d.png",
     name: "Sebastian Garcia",
     username: "sebastian_garcia42",
     suspendedAt: new Date(Date.now() - 1000 * 60 * 60 * 120),
