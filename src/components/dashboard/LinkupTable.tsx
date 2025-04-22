@@ -41,6 +41,7 @@ import { formatCreatedDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { format, differenceInHours, differenceInDays } from "date-fns";
 import { DateRange } from "react-day-picker";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 
 function formatDateUserMgmtStyle(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
@@ -501,7 +502,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
             {currentLinkups.map(linkup => {
               const categoryObj = categories.find(c => c.id === linkup.category);
               const { mainDateTime, duration } = formatLinkupDateTime(linkup.date, linkup.endTime);
-              
+
               return (
                 <React.Fragment key={linkup.id}>
                   <TableRow className="hover:bg-[#f5f6fb] border-0" style={{ fontSize: "15px", minHeight: 52 }}>
@@ -583,57 +584,73 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                     </TableCell>
                   </TableRow>
                   {expandedRows[linkup.id] && (
-                    <TableRow className="bg-[#f7f8fa]">
-                      <TableCell colSpan={8} className="py-2 px-4 !bg-[#f7f8fa] border-0">
-                        <div className="grid grid-cols-4 gap-4 text-[13px]">
-                          <div>
-                            <div className="text-[12px] text-[#888888] mb-1">Location</div>
-                            <div className="font-medium text-[15px] text-[#23252b]">
+                    <TableRow>
+                      <TableCell colSpan={8} className="p-0 bg-[#f9f9fd] border-t border-[#ebebf8]">
+                        <div className="flex flex-wrap justify-between gap-8 px-8 py-5 items-start text-[#23252b]">
+                          <div className="flex-1 min-w-[200px]">
+                            <span className="block text-[#8e9196] text-xs mb-1">Location</span>
+                            <span className="font-semibold leading-5 block">
                               {linkup.location}
-                            </div>
-                            {(() => {
-                              const locationParts = linkup.location.split(",").map(part => part.trim());
-                              if (locationParts.length > 1) {
-                                const generalLocation = locationParts.slice(-2).join(", ");
-                                return (
-                                  <div className="text-[13px] text-[#888888] mt-0.5">
-                                    {generalLocation}
-                                  </div>
-                                );
-                              }
-                              return null;
-                            })()}
+                            </span>
                           </div>
                           <div>
-                            <div className="text-[12px] text-[#888888] mb-1">Attendees</div>
-                            <div className="font-medium">{linkup.attendeeCount}</div>
+                            <span className="block text-[#8e9196] text-xs mb-1">Attendees</span>
+                            <span className="font-semibold text-lg">{linkup.attendeeCount}</span>
                           </div>
                           <div>
-                            <div className="text-[12px] text-[#888888] mb-1">Visibility</div>
-                            <div className="">
-                              {linkup.isPublic ? "Public" : "Private"}
-                            </div>
+                            <span className="block text-[#8e9196] text-xs mb-1">Visibility</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span
+                                  className={`cursor-pointer font-semibold px-2 py-1 rounded transition
+                                    ${linkup.isPublic
+                                      ? "text-green-700 bg-green-50 hover:bg-green-100"
+                                      : "text-purple-700 bg-purple-50 hover:bg-purple-100"
+                                    }`
+                                  }
+                                >
+                                  {linkup.isPublic ? "Public" : "Private"}
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-sm font-medium px-3 py-2 rounded-md">
+                                {linkup.isPublic
+                                  ? "Linkup open to anyone"
+                                  : "Linkup viewable by link only"}
+                              </TooltipContent>
+                            </Tooltip>
                           </div>
                           <div>
-                            <div className="text-[12px] text-[#888888] mb-1">Join Method</div>
-                            <div className="">
-                              {linkup.isOpen ? "Open" : "Closed"}
-                            </div>
+                            <span className="block text-[#8e9196] text-xs mb-1">Join Method</span>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <span
+                                  className={`cursor-pointer font-semibold px-2 py-1 rounded transition
+                                    ${linkup.isOpen
+                                      ? "text-blue-700 bg-blue-50 hover:bg-blue-100"
+                                      : "text-orange-700 bg-orange-50 hover:bg-orange-100"
+                                    }`
+                                  }
+                                >
+                                  {linkup.isOpen ? "Open" : "Closed"}
+                                </span>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="bg-white text-black shadow-lg border text-sm font-medium px-3 py-2 rounded-md">
+                                {linkup.isOpen
+                                  ? "No approval needed"
+                                  : "Approval needed"}
+                              </TooltipContent>
+                            </Tooltip>
                           </div>
                           <div>
-                            <div className="text-[12px] text-[#888888] mb-1">Price</div>
-                            <div className="">
+                            <span className="block text-[#8e9196] text-xs mb-1">Price</span>
+                            <span className="font-semibold">
                               {linkup.isFree ? "Free" : `$${linkup.price}`}
-                            </div>
+                            </span>
                           </div>
-                          {(!linkup.isFree && linkup.price && linkup.attendeeCount) ? (
-                            <div>
-                              <div className="text-[12px] text-[#888888] mb-1">Earnings</div>
-                              <div className="flex items-center gap-1 font-medium text-green-700">
-                                <span>${linkup.earnings}</span>
-                              </div>
-                            </div>
-                          ) : null}
+                          <div>
+                            <span className="block text-[#8e9196] text-xs mb-1">Earnings</span>
+                            <span className="font-semibold text-green-600">${linkup.earnings}</span>
+                          </div>
                         </div>
                       </TableCell>
                     </TableRow>

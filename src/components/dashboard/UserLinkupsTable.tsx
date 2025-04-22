@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -7,12 +8,13 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, ArrowUpDown } from "lucide-react";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
-import { useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { DateRangeFilter } from "./DateRangeFilter";
+import { DateRange } from "react-day-picker";
 import {
   Pagination,
   PaginationContent,
@@ -30,9 +32,7 @@ interface Linkup {
   startDate: string;
   endDate: string;
   status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
-  type: "hosted" | "attended" | "cohost";  // Added cohost type
-  joinedDate?: string;
-  createdDate?: string;
+  type: "hosted" | "attended" | "cohost";
 }
 
 const linkups: Linkup[] = [
@@ -256,6 +256,7 @@ export function UserLinkupsTable() {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const handleCheckedChange = (value: string, checked: boolean) => {
     setSelectedStatuses(prev => {
@@ -274,6 +275,19 @@ export function UserLinkupsTable() {
       if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
       
       if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      
+      if (
+        dateRange?.from &&
+        (new Date(linkup.startDate) < new Date(dateRange.from))
+      ) {
+        return false;
+      }
+      if (
+        dateRange?.to &&
+        (new Date(linkup.startDate) > new Date(dateRange.to).setHours(23, 59, 59, 999))
+      ) {
+        return false;
+      }
       
       return true;
     })
@@ -375,10 +389,15 @@ export function UserLinkupsTable() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-end">
-        <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
-          View All
-        </Button>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+        </div>
+        <div className="flex items-center justify-end">
+          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+            View All
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-2">
