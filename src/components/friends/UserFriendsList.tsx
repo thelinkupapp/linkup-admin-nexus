@@ -26,16 +26,17 @@ interface FriendRequest {
   requestDate: string;
 }
 
-// Common type for the ViewAllFriendsDialog
-type FriendOrRequest = Friend | FriendRequest;
-
 interface UserFriendsListProps {
   friends: Friend[];
   receivedRequests: FriendRequest[];
   sentRequests: FriendRequest[];
 }
 
-export default function UserFriendsList({ friends, receivedRequests, sentRequests }: UserFriendsListProps) {
+export default function UserFriendsList({ 
+  friends, 
+  receivedRequests, 
+  sentRequests 
+}: UserFriendsListProps) {
   const [friendsSortDirection, setFriendsSortDirection] = useState<'asc' | 'desc'>('desc');
   const [receivedSortDirection, setReceivedSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sentSortDirection, setSentSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -77,7 +78,7 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
     onSortChange, 
     dateColumnName 
   }: { 
-    data: FriendOrRequest[], 
+    data: Friend[] | FriendRequest[], 
     sortDirection: 'asc' | 'desc',
     onSortChange: () => void,
     dateColumnName: string 
@@ -176,7 +177,9 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
-                <p className="text-sm text-muted-foreground mt-1">{receivedRequests.length} request{receivedRequests.length === 1 ? '' : 's'}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {receivedRequests.length} pending request{receivedRequests.length !== 1 ? 's' : ''}
+                </p>
               </div>
               <Button variant="outline" size="sm" onClick={() => setIsAllReceivedOpen(true)}>
                 View All
@@ -196,7 +199,9 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
-                <p className="text-sm text-muted-foreground mt-1">{sentRequests.length} request{sentRequests.length === 1 ? '' : 's'}</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {sentRequests.length} pending request{sentRequests.length !== 1 ? 's' : ''}
+                </p>
               </div>
               <Button variant="outline" size="sm" onClick={() => setIsAllSentOpen(true)}>
                 View All
