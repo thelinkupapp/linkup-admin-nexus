@@ -938,27 +938,8 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.hideAge} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.hideAge ? 'enabled' : 'disabled'}</p>
-                          </HoverCardContent>
-                        </HoverCard>
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-0.5">
-                          <Label className="text-base">Allow friends to see which linkups I'm attending</Label>
-                          <p className="text-sm text-muted-foreground">
-                            Friends can see which upcoming linkups I'm attending
-                          </p>
-                        </div>
-                        <HoverCard>
-                          <HoverCardTrigger asChild>
-                            <div className="cursor-not-allowed">
-                              <Switch checked={user.privacySettings.friendsCanSeeUpcomingAttendance} disabled />
-                            </div>
-                          </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.friendsCanSeeUpcomingAttendance ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.hideAge ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -973,8 +954,8 @@ const UserProfile = () => {
                               <Switch checked={!user.privacySettings.allowMaleFriendRequests} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {!user.privacySettings.allowMaleFriendRequests ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {!user.privacySettings.allowMaleFriendRequests ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -989,8 +970,8 @@ const UserProfile = () => {
                               <Switch checked={!user.privacySettings.allowFemaleFriendRequests} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {!user.privacySettings.allowFemaleFriendRequests ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {!user.privacySettings.allowFemaleFriendRequests ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -1005,8 +986,27 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.socialsVisibleToFriendsOnly ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.socialsVisibleToFriendsOnly ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Allow friends to see which linkups I'm attending</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Friends can see which upcoming linkups I'm attending
+                          </p>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.friendsCanSeeUpcomingAttendance} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.friendsCanSeeUpcomingAttendance ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -1028,8 +1028,8 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.showLocationOnMap} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.showLocationOnMap ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLocationOnMap ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -1044,8 +1044,8 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.appearOnNearbyPeople} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.appearOnNearbyPeople ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.appearOnNearbyPeople ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -1067,8 +1067,8 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.showLinkupsToEveryone} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.showLinkupsToEveryone ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLinkupsToEveryone ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
@@ -1083,8 +1083,8 @@ const UserProfile = () => {
                               <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} disabled />
                             </div>
                           </HoverCardTrigger>
-                          <HoverCardContent>
-                            <p>Setting is {user.privacySettings.showLinkupsToFriendsOnly ? 'enabled' : 'disabled'}</p>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLinkupsToFriendsOnly ? 'enabled' : 'disabled'}
                           </HoverCardContent>
                         </HoverCard>
                       </div>
