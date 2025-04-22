@@ -1,15 +1,16 @@
 
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Separator } from "@/components/ui/separator";
+import { AllFriendsDialog } from './AllFriendsDialog';
 
-interface Friend {
+export interface Friend {
   id: string;
   name: string;
   username: string;
@@ -17,7 +18,7 @@ interface Friend {
   friendsSince: string;
 }
 
-interface FriendRequest {
+export interface FriendRequest {
   id: string;
   name: string;
   username: string;
@@ -80,7 +81,12 @@ const FriendsTable = ({
                     <AvatarFallback>{item.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
-                    <span className="font-medium">{item.name}</span>
+                    <Link 
+                      to={`/users/${item.id}`} 
+                      className="font-medium hover:underline"
+                    >
+                      {item.name}
+                    </Link>
                     <span className="text-sm text-muted-foreground">@{item.username}</span>
                   </div>
                 </div>
@@ -100,6 +106,8 @@ export function UserFriendsList({ friends, receivedRequests, sentRequests }: Use
   const [friendsSortDirection, setFriendsSortDirection] = useState<'asc' | 'desc'>('desc');
   const [receivedSortDirection, setReceivedSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sentSortDirection, setSentSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [isAllFriendsOpen, setIsAllFriendsOpen] = useState(false);
+  const [isAllRequestsOpen, setIsAllRequestsOpen] = useState(false);
 
   const sortData = <T extends { friendsSince?: string; requestDate?: string }>(
     data: T[],
@@ -141,11 +149,14 @@ export function UserFriendsList({ friends, receivedRequests, sentRequests }: Use
                   : `${friends.length} friend${friends.length === 1 ? '' : 's'}`}
               </CardDescription>
             </div>
+            <Button variant="outline" size="sm" onClick={() => setIsAllFriendsOpen(true)}>
+              View All
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
           <FriendsTable 
-            data={sortedFriends} 
+            data={sortedFriends.slice(0, 5)} 
             sortDirection={friendsSortDirection}
             onSortChange={toggleFriendsSort}
             dateColumnName="Friends Since"
@@ -155,20 +166,27 @@ export function UserFriendsList({ friends, receivedRequests, sentRequests }: Use
 
       <Card>
         <CardHeader>
-          <CardTitle>Friend Requests</CardTitle>
-          <CardDescription>
-            {receivedRequests.length + sentRequests.length === 0 
-              ? "No pending friend requests"
-              : `${receivedRequests.length + sentRequests.length} pending request${
-                  receivedRequests.length + sentRequests.length === 1 ? '' : 's'
-                }`}
-          </CardDescription>
+          <div className="flex items-baseline justify-between">
+            <div>
+              <CardTitle>Friend Requests</CardTitle>
+              <CardDescription>
+                {receivedRequests.length + sentRequests.length === 0 
+                  ? "No pending friend requests"
+                  : `${receivedRequests.length + sentRequests.length} pending request${
+                      receivedRequests.length + sentRequests.length === 1 ? '' : 's'
+                    }`}
+              </CardDescription>
+            </div>
+            <Button variant="outline" size="sm" onClick={() => setIsAllRequestsOpen(true)}>
+              View All
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-4">Received Requests</h3>
             <FriendsTable 
-              data={sortedReceivedRequests} 
+              data={sortedReceivedRequests.slice(0, 3)} 
               sortDirection={receivedSortDirection}
               onSortChange={toggleReceivedSort}
               dateColumnName="Request Date"
@@ -180,7 +198,7 @@ export function UserFriendsList({ friends, receivedRequests, sentRequests }: Use
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-4">Sent Requests</h3>
             <FriendsTable 
-              data={sortedSentRequests} 
+              data={sortedSentRequests.slice(0, 3)} 
               sortDirection={sentSortDirection}
               onSortChange={toggleSentSort}
               dateColumnName="Request Date"
@@ -188,6 +206,30 @@ export function UserFriendsList({ friends, receivedRequests, sentRequests }: Use
           </div>
         </CardContent>
       </Card>
+
+      <AllFriendsDialog
+        open={isAllFriendsOpen}
+        onOpenChange={setIsAllFriendsOpen}
+        title="All Friends"
+        data={sortedFriends}
+        type="friends"
+        sortDirection={friendsSortDirection}
+        onSortChange={toggleFriendsSort}
+        dateColumnName="Friends Since"
+      />
+
+      <AllFriendsDialog
+        open={isAllRequestsOpen}
+        onOpenChange={setIsAllRequestsOpen}
+        title="All Friend Requests"
+        data={[...sortedReceivedRequests, ...sortedSentRequests]}
+        type="requests"
+        sortDirection={receivedSortDirection}
+        onSortChange={toggleReceivedSort}
+        dateColumnName="Request Date"
+        receivedRequests={sortedReceivedRequests}
+        sentRequests={sortedSentRequests}
+      />
     </div>
   );
 }
