@@ -61,7 +61,7 @@ import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
 import { UserReportsList } from "@/components/reports/UserReportsList";
-import { UserFriendsList } from "@/components/dashboard/UserFriendsList";
+import { UserFriendsList } from "@/components/friends/UserFriendsList";
 
 interface UserData {
   id: string;
