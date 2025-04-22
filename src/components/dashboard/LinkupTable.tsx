@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -12,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, dollarSign } from "lucide-react";
+import { MoreHorizontal, DollarSign } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
@@ -179,11 +178,8 @@ function getStatusBadgeStyles(status: string) {
       return "bg-blue-50 text-blue-700 border-blue-200";
   }
 }
-const PER_PAGE_OPTIONS = [25, 50, 100];
 
-// Utility for consistent date/time format (like user management)
-// Example: 'Apr 20, 2025, 10:00 am'
-import { format } from "date-fns";
+const PER_PAGE_OPTIONS = [25, 50, 100];
 
 function formatDateTime(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
@@ -207,7 +203,6 @@ export function LinkupTable() {
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [earningsSort, setEarningsSort] = useState<"none" | "desc" | "asc">("none");
 
-  // Calculate earnings for paid linkups
   const linkupsWithEarnings = linkups.map(l => ({
     ...l,
     earnings: l.isFree ? 0 : (l.price ?? 0) * l.attendeeCount
@@ -276,18 +271,20 @@ export function LinkupTable() {
       field,
       direction: prev.field === field && prev.direction === "asc" ? "desc" : "asc",
     }));
-    setEarningsSort("none"); // disable earning sort if sorting by another field
+    setEarningsSort("none");
   }
 
   function handleRemove(linkup: { id: string; title: string }) {
     setRemoveDialogOpen(true);
     setLinkupToRemove(linkup);
   }
+
   function confirmRemoveLinkup() {
     toast.success(`"${linkupToRemove?.title}" removed`);
     setRemoveDialogOpen(false);
     setLinkupToRemove(null);
   }
+
   function cancelRemoveLinkup() {
     setRemoveDialogOpen(false);
     setLinkupToRemove(null);
@@ -303,7 +300,6 @@ export function LinkupTable() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        {/* Top section - show only one total (or filtered) */}
         <div>
           <span className="text-2xl font-semibold text-[#8364e8]">
             {filteredCount !== totalCount
@@ -311,7 +307,6 @@ export function LinkupTable() {
               : `${totalCount} total linkups`}
           </span>
         </div>
-        {/* Filters */}
         <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
           <div className="flex-shrink-0">
             <Button
@@ -319,7 +314,7 @@ export function LinkupTable() {
               className="flex items-center space-x-1"
               onClick={() => handleSort("earnings")}
             >
-              <dollarSign className="w-5 h-5 mr-1" />
+              <DollarSign className="w-5 h-5 mr-1" />
               {earningsSort === "desc" && <span className="text-sm font-semibold">Highest earnings</span>}
               {earningsSort === "asc" && <span className="text-sm font-semibold">Lowest earnings</span>}
               {earningsSort === "none" && <span className="text-sm font-medium text-gray-700">Sort by earnings</span>}
@@ -346,7 +341,6 @@ export function LinkupTable() {
             />
           </div>
         </div>
-        {/* Table */}
         <div className="border rounded-lg bg-background overflow-x-auto">
           <Table>
             <TableHeader>
@@ -424,7 +418,6 @@ export function LinkupTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {/* New Date & Time formatting, consistent with user management */}
                         <div className="font-medium">{formatDateTime(linkup.date)}</div>
                         <div className="text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
                       </TableCell>
@@ -512,7 +505,7 @@ export function LinkupTable() {
                                 <div className="mt-3">
                                   <div className="text-xs text-muted-foreground mb-1">Linkup earnings</div>
                                   <div className="flex items-center gap-1 font-bold text-green-800 text-base">
-                                    <span className="flex items-center"><dollarSign className="w-4 h-4 mr-1" />${linkup.earnings}</span>
+                                    <span className="flex items-center"><DollarSign className="w-4 h-4 mr-1" />${linkup.earnings}</span>
                                   </div>
                                 </div>
                               ) : null}
