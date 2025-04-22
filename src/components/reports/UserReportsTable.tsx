@@ -273,7 +273,7 @@ export function UserReportsTable() {
 
       <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-[#1A1F2C]">
             Showing {filteredReports.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0}-{Math.min(currentPage * pageSize, filteredReports.length)} of {filteredReports.length} reports
           </span>
           <Select
