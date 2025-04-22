@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { ArrowUp, ArrowDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,8 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
-import { ViewAllFriendsDialog } from "@/components/friends/ViewAllFriendsDialog";
 
 interface Friend {
   id: string;
@@ -69,45 +68,38 @@ const FriendsTable = ({
                 </div>
               </div>
             </TableHead>
-          </TableHeader>
-          <TableBody>
-            {data.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={item.avatar} />
-                      <AvatarFallback>{item.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <Link 
-                        to={`/users/${item.id}`}
-                        className="font-medium hover:underline"
-                      >
-                        {item.name}
-                      </Link>
-                      <span className="text-sm text-muted-foreground">@{item.username}</span>
-                    </div>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {data.map((item) => (
+            <TableRow key={item.id}>
+              <TableCell>
+                <div className="flex items-center gap-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={item.avatar} />
+                    <AvatarFallback>{item.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{item.name}</span>
+                    <span className="text-sm text-muted-foreground">@{item.username}</span>
                   </div>
-                </TableCell>
-                <TableCell className="text-muted-foreground">
-                  {formatJoinDate('friendsSince' in item ? item.friendsSince : item.requestDate)}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
-  };
+                </div>
+              </TableCell>
+              <TableCell className="text-muted-foreground">
+                {formatJoinDate('friendsSince' in item ? item.friendsSince : item.requestDate)}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
+  );
+};
 
+export function UserFriendsList({ friends, receivedRequests, sentRequests }: UserFriendsListProps) {
   const [friendsSortDirection, setFriendsSortDirection] = useState<'asc' | 'desc'>('desc');
   const [receivedSortDirection, setReceivedSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sentSortDirection, setSentSortDirection] = useState<'asc' | 'desc'>('desc');
-  
-  const [isAllFriendsOpen, setIsAllFriendsOpen] = useState(false);
-  const [isAllReceivedOpen, setIsAllReceivedOpen] = useState(false);
-  const [isAllSentOpen, setIsAllSentOpen] = useState(false);
 
   const sortData = <T extends { friendsSince?: string; requestDate?: string }>(
     data: T[],
@@ -139,22 +131,21 @@ const FriendsTable = ({
   return (
     <div className="space-y-6">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <div>
-            <CardTitle>Friends</CardTitle>
-            <CardDescription>
-              {friends.length === 0 
-                ? "This user has no friends"
-                : `${friends.length} friend${friends.length === 1 ? '' : 's'}`}
-            </CardDescription>
+        <CardHeader>
+          <div className="flex items-baseline justify-between">
+            <div>
+              <CardTitle>Friends</CardTitle>
+              <CardDescription>
+                {friends.length === 0 
+                  ? "This user has no friends"
+                  : `${friends.length} friend${friends.length === 1 ? '' : 's'}`}
+              </CardDescription>
+            </div>
           </div>
-          <Button variant="outline" size="sm" onClick={() => setIsAllFriendsOpen(true)}>
-            View All
-          </Button>
         </CardHeader>
         <CardContent>
           <FriendsTable 
-            data={sortedFriends.slice(0, 5)} 
+            data={sortedFriends} 
             sortDirection={friendsSortDirection}
             onSortChange={toggleFriendsSort}
             dateColumnName="Friends Since"
@@ -175,14 +166,9 @@ const FriendsTable = ({
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
-              <Button variant="outline" size="sm" onClick={() => setIsAllReceivedOpen(true)}>
-                View All
-              </Button>
-            </div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-4">Received Requests</h3>
             <FriendsTable 
-              data={sortedReceivedRequests.slice(0, 5)} 
+              data={sortedReceivedRequests} 
               sortDirection={receivedSortDirection}
               onSortChange={toggleReceivedSort}
               dateColumnName="Request Date"
@@ -192,14 +178,9 @@ const FriendsTable = ({
           <Separator />
 
           <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
-              <Button variant="outline" size="sm" onClick={() => setIsAllSentOpen(true)}>
-                View All
-              </Button>
-            </div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-4">Sent Requests</h3>
             <FriendsTable 
-              data={sortedSentRequests.slice(0, 5)} 
+              data={sortedSentRequests} 
               sortDirection={sentSortDirection}
               onSortChange={toggleSentSort}
               dateColumnName="Request Date"
@@ -207,27 +188,6 @@ const FriendsTable = ({
           </div>
         </CardContent>
       </Card>
-
-      <ViewAllFriendsDialog
-        open={isAllFriendsOpen}
-        onOpenChange={setIsAllFriendsOpen}
-        friends={sortedFriends}
-        title="All Friends"
-      />
-
-      <ViewAllFriendsDialog
-        open={isAllReceivedOpen}
-        onOpenChange={setIsAllReceivedOpen}
-        friends={sortedReceivedRequests}
-        title="All Received Friend Requests"
-      />
-
-      <ViewAllFriendsDialog
-        open={isAllSentOpen}
-        onOpenChange={setIsAllSentOpen}
-        friends={sortedSentRequests}
-        title="All Sent Friend Requests"
-      />
     </div>
   );
 }
