@@ -36,7 +36,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/4075cd3e-99b1-4fe1-8a47-184857a379fc.png"
+      avatar: "/lovable-uploads/photo-1581092795360-fd1ca04f0952"
     },
     reportedUser: {
       id: "ru2",
@@ -47,6 +47,24 @@ const mockReports = [
     description: "Suspicious activity during linkup",
     timestamp: "2025-04-21T16:45:00",
     isRead: true
+  },
+  {
+    id: "3",
+    reporter: {
+      id: "r3",
+      name: "Alex Thompson",
+      username: "alext",
+      avatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png"
+    },
+    reportedUser: {
+      id: "ru3",
+      name: "Lisa Wang",
+      username: "lisaw",
+      avatar: "/lovable-uploads/e22f3ff4-2b21-42d3-9d5f-cc3b7cfba248.png"
+    },
+    description: "User exhibited concerning behavior during our scheduled meetup. They repeatedly made inappropriate comments about other participants and refused to follow community guidelines despite multiple warnings. When confronted about their behavior, they became defensive and started making false accusations against other members.",
+    timestamp: "2025-04-20T09:15:00",
+    isRead: false
   }
 ];
 
@@ -194,7 +212,26 @@ export function UserReportsTable() {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell>{report.description}</TableCell>
+                  <TableCell className="max-w-md">
+                    <div className="truncate">
+                      {report.description}
+                    </div>
+                    {report.description.length > 100 && (
+                      <Button
+                        variant="link"
+                        className="text-xs p-0 h-auto mt-1"
+                        onClick={() => {
+                          toast({
+                            title: "Report Description",
+                            description: report.description,
+                            duration: 10000,
+                          });
+                        }}
+                      >
+                        Read more
+                      </Button>
+                    )}
+                  </TableCell>
                   <TableCell>{formatJoinDate(report.timestamp)}</TableCell>
                   <TableCell>
                     <Badge 
