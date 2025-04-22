@@ -10,15 +10,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-
-interface DateRange {
-  from?: Date;
-  to?: Date;
-}
+import { DateRange } from "react-day-picker";
 
 interface DateRangeFilterProps {
-  dateRange: DateRange;
-  setDateRange: (range: DateRange) => void;
+  dateRange: { from?: Date; to?: Date };
+  setDateRange: (range: { from?: Date; to?: Date }) => void;
 }
 
 export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
@@ -65,8 +61,8 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({
           <p className="mb-2 text-sm font-semibold text-muted-foreground">Date Range</p>
           <Calendar
             mode="range"
-            selected={dateRange}
-            onSelect={setDateRange}
+            selected={dateRange as DateRange}
+            onSelect={setDateRange as (range: DateRange | undefined) => void}
             numberOfMonths={2}
             className={cn("p-3 pointer-events-auto")}
             initialFocus
