@@ -19,19 +19,22 @@ const UserReports = () => {
               View and manage reports submitted against users on the platform
             </p>
           </div>
-          <Button onClick={() => setIsAllReportsOpen(true)}>
+          <Button 
+            onClick={() => setIsAllReportsOpen(true)}
+            className="bg-purple-500 hover:bg-purple-600"
+          >
             View All Reports
           </Button>
         </div>
 
         <UserReportsTable />
         
-        {/* This would need to be populated with real data in a production app */}
         <AllReportsDialog
           open={isAllReportsOpen}
           onOpenChange={setIsAllReportsOpen}
           reports={[]}
           title="All User Reports"
+          showMarkAsRead
         />
       </div>
     </div>
