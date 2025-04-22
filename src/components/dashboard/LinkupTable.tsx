@@ -84,9 +84,9 @@ const categories = [
 const linkups = [
   {
     id: "1",
-    title: "Tech Networking",
-    emoji: "💻",
-    category: "tech",
+    title: "Networking With Industry Experts in Bali",
+    emoji: "💼",
+    category: "networking",
     host: {
       id: "user1",
       name: "David Chen",
