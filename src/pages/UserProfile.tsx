@@ -152,6 +152,16 @@ interface UserData {
     description: string;
     timestamp: string;
   }[];
+  pushNotifications: {
+    enableAll: boolean;
+    newLinkupMessages: boolean;
+    newFriendMessages: boolean;
+    friendRequests: boolean;
+    linkupActivity: boolean;
+    walletActivity: boolean;
+    promotions: boolean;
+    announcements: boolean;
+  };
 }
 
 const linkupPlusTransactions = [
@@ -284,6 +294,16 @@ const user: UserData = {
     appearOnNearbyPeople: true,
     showLinkupsToEveryone: true,
     showLinkupsToFriendsOnly: false
+  },
+  pushNotifications: {
+    enableAll: true,
+    newLinkupMessages: true,
+    newFriendMessages: true,
+    friendRequests: true,
+    linkupActivity: true,
+    walletActivity: true,
+    promotions: true,
+    announcements: true
   },
   reports: [],
   friends: [
@@ -635,6 +655,7 @@ const UserProfile = () => {
               <TabsTrigger value="privacy">Privacy Settings</TabsTrigger>
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="friends">Friends</TabsTrigger>
+              <TabsTrigger value="push-notifications">Push Notifications</TabsTrigger>
             </TabsList>
             
             <TabsContent value="basic-info" className="space-y-6">
@@ -1321,6 +1342,155 @@ const UserProfile = () => {
                 receivedRequests={user.pendingFriendRequests.received}
                 sentRequests={user.pendingFriendRequests.sent}
               />
+            </TabsContent>
+
+            <TabsContent value="push-notifications" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Push Notifications</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Enable all push notifications</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.enableAll} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.enableAll ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <Separator />
+
+                    <p className="text-sm font-medium text-muted-foreground">Notification preferences</p>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">New linkup messages</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.newLinkupMessages} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.newLinkupMessages ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">New friend messages</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.newFriendMessages} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.newFriendMessages ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Friend requests</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.friendRequests} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.friendRequests ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Linkup activity</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.linkupActivity} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.linkupActivity ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Wallet activity</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.walletActivity} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.walletActivity ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Promotions</Label>
+                        <p className="text-sm text-muted-foreground">
+                          Exclusive offers and news
+                        </p>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.promotions} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.promotions ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Announcements</Label>
+                        <p className="text-sm text-muted-foreground">
+                          What's new on Linkup
+                        </p>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.announcements} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.announcements ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </main>
