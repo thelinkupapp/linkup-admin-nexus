@@ -1,7 +1,6 @@
-
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Check } from "lucide-react";
+import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -33,6 +32,7 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { toast } from "@/hooks/use-toast";
 
@@ -80,9 +80,9 @@ export const AllReportsDialog = ({
   const [pageSize, setPageSize] = useState(10);
   const [filterStatus, setFilterStatus] = useState<"all" | "read" | "unread">("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [searchQuery, setSearchQuery] = useState("");
   const [localReports, setLocalReports] = useState<Report[]>(reports);
 
-  // Update local reports when external reports change
   useEffect(() => {
     setLocalReports(reports);
   }, [reports]);
@@ -94,8 +94,22 @@ export const AllReportsDialog = ({
   const filteredReports = useMemo(() => {
     let filtered = [...localReports];
 
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(report => {
+        if (isReportReceived(report)) {
+          return (
+            report.reporterName.toLowerCase().includes(query) ||
+            report.reporterUsername?.toLowerCase().includes(query) ||
+            report.description.toLowerCase().includes(query)
+          );
+        }
+        return false;
+      });
+    }
+
     if (showMarkAsRead) {
-      filtered = localReports.filter(report => {
+      filtered = filtered.filter(report => {
         if (!isReportReceived(report)) return false;
         if (filterStatus === "read") return report.isRead;
         if (filterStatus === "unread") return !report.isRead;
@@ -108,7 +122,7 @@ export const AllReportsDialog = ({
       const dateB = new Date(b.timestamp).getTime();
       return sortDirection === "desc" ? dateB - dateA : dateA - dateB;
     });
-  }, [localReports, filterStatus, sortDirection, showMarkAsRead]);
+  }, [localReports, filterStatus, sortDirection, searchQuery, showMarkAsRead]);
 
   const paginatedReports = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -119,7 +133,6 @@ export const AllReportsDialog = ({
   const unreadCount = localReports.filter(r => isReportReceived(r) && !r.isRead).length;
 
   const handleMarkAsRead = (reportId: string) => {
-    // Update local state to immediately reflect the change
     setLocalReports(prev => prev.map(report => {
       if (report.id === reportId && isReportReceived(report)) {
         return { ...report, isRead: true };
@@ -127,10 +140,8 @@ export const AllReportsDialog = ({
       return report;
     }));
     
-    // Call external handler
     onMarkAsRead?.(reportId);
     
-    // Show success toast
     toast({
       title: "Report marked as read",
       description: "The report has been marked as read successfully.",
@@ -163,18 +174,21 @@ export const AllReportsDialog = ({
                   </SelectContent>
                 </Select>
               )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSortDirection(d => d === "asc" ? "desc" : "asc")}
-                className="flex items-center gap-2"
-              >
-                Sort by Date
-                {sortDirection === "desc" ? "↓" : "↑"}
-              </Button>
             </div>
           </div>
         </DialogHeader>
+
+        <div className="flex items-center gap-2 mb-4">
+          <Input
+            placeholder="Search by name, username, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="max-w-sm"
+          />
+          <Button size="icon" variant="outline">
+            <Search className="h-4 w-4" />
+          </Button>
+        </div>
 
         <Table>
           <TableHeader>
@@ -183,7 +197,15 @@ export const AllReportsDialog = ({
                 <>
                   <TableHead>Reporter</TableHead>
                   <TableHead>Description</TableHead>
-                  <TableHead>Date & Time</TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-muted/50"
+                    onClick={() => setSortDirection(d => d === "asc" ? "desc" : "asc")}
+                  >
+                    Date & Time {sortDirection === "desc" ? 
+                      <ArrowDown className="inline h-4 w-4" /> : 
+                      <ArrowUp className="inline h-4 w-4" />
+                    }
+                  </TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Actions</TableHead>
                 </>
@@ -294,12 +316,13 @@ export const AllReportsDialog = ({
             }}
           >
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Select page size" />
+              <SelectValue placeholder="Items per page" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="5">5 per page</SelectItem>
               <SelectItem value="10">10 per page</SelectItem>
-              <SelectItem value="15">15 per page</SelectItem>
+              <SelectItem value="25">25 per page</SelectItem>
+              <SelectItem value="50">50 per page</SelectItem>
+              <SelectItem value="100">100 per page</SelectItem>
             </SelectContent>
           </Select>
 
