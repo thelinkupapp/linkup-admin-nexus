@@ -30,7 +30,7 @@ export function ReactivateUserDialog({
   username,
   userAvatar,
   onConfirm,
-  actionButtonColor = "#9b87f5"
+  actionButtonColor = "#8b5cf6" // Brighter purple
 }: ReactivateUserDialogProps) {
   const { toast } = useToast();
   const [isConfirmed, setIsConfirmed] = useState(false);
@@ -83,9 +83,10 @@ export function ReactivateUserDialog({
                 style={{
                   background: actionButtonColor,
                   color: "#fff",
-                  fontWeight: 600
+                  fontWeight: 600,
+                  boxShadow: "0 1px 2px 0 rgba(139, 92, 246, 0.08)",
                 }}
-                className="hover:brightness-95"
+                className="hover:brightness-105"
               >
                 Reactivate
               </Button>

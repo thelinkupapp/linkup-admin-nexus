@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,7 @@ const RAW_SUSPENDED_USERS = [
     avatar: "/lovable-uploads/a165dd8e-2635-4f3a-a050-ce01c92a0a6f.png",
     name: "Elie Abou Samra",
     username: "elieabousamra",
-    suspendedAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // yesterday
+    suspendedAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
     reason: "Violation of community guidelines",
     notes: "Sent warning before suspension.",
   },
@@ -47,7 +46,7 @@ const RAW_SUSPENDED_USERS = [
   },
   {
     id: "3",
-    avatar: "/lovable-uploads/08c01a0c-b394-4d67-8875-445c855a8995.png",
+    avatar: "/lovable-uploads/9d27b02b-295a-46a0-84a8-9bd77a2748f1.png",
     name: "David Williams",
     username: "davidwilliams",
     suspendedAt: new Date(Date.now() - 1000 * 60 * 60 * 36),
@@ -82,7 +81,6 @@ export default function SuspendedUsersTable() {
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [notesModalContent, setNotesModalContent] = useState<string>("");
 
-  // Filter and sort users
   const filteredUsers = users
     .filter(user => 
       user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -199,7 +197,12 @@ export default function SuspendedUsersTable() {
                           <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                         </Avatar>
                         <div className="ml-4">
-                          <div className="font-medium text-gray-900">{user.name}</div>
+                          <a
+                            href={`/users/${user.username}`}
+                            className="font-medium text-gray-900 hover:underline cursor-pointer"
+                          >
+                            {user.name}
+                          </a>
                           <div className="text-sm text-gray-500">@{user.username}</div>
                         </div>
                       </div>
@@ -217,7 +220,7 @@ export default function SuspendedUsersTable() {
                         <div>
                           {truncateNotes(user.notes)}
                           <button 
-                            className="ml-1 text-purple-600 hover:text-purple-800 font-medium text-xs"
+                            className="ml-1 text-purple-600 hover:text-purple-800 font-medium text-xs underline"
                             onClick={() => handleShowNotesModal(user.notes)}
                           >
                             Read more
@@ -306,7 +309,7 @@ export default function SuspendedUsersTable() {
         onConfirm={() => {
           if (reactivateId) handleReactivate(reactivateId);
         }}
-        actionButtonColor="#8B5CF6"
+        actionButtonColor="#8b5cf6"
       />
     </div>
   );
