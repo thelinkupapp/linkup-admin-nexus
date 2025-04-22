@@ -63,7 +63,8 @@ interface AllReportsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   reports: Report[];
-  title: string;
+  title?: string;
+  type?: string; // Adding the missing 'type' prop
   showMarkAsRead?: boolean;
   onMarkAsRead?: (reportId: string) => void;
 }
@@ -72,7 +73,8 @@ export const AllReportsDialog = ({
   open,
   onOpenChange,
   reports,
-  title,
+  title = "Reports",
+  type = "all", // Default value for the type prop
   showMarkAsRead = false,
   onMarkAsRead
 }: AllReportsDialogProps) => {
@@ -137,13 +139,18 @@ export const AllReportsDialog = ({
     });
   };
 
+  // Set the title based on the type prop if not explicitly provided
+  const displayTitle = title === "Reports" && type !== "all" 
+    ? `${type.charAt(0).toUpperCase() + type.slice(1)} Reports` 
+    : title;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <DialogTitle>{title}</DialogTitle>
+              <DialogTitle>{displayTitle}</DialogTitle>
               {showMarkAsRead && unreadCount > 0 && (
                 <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
                   {unreadCount} unread
@@ -179,7 +186,7 @@ export const AllReportsDialog = ({
         <Table>
           <TableHeader>
             <TableRow>
-              {showMarkAsRead ? (
+              {type === "received" || (showMarkAsRead && paginatedReports.some(isReportReceived)) ? (
                 <>
                   <TableHead>Reporter</TableHead>
                   <TableHead>Description</TableHead>
@@ -199,7 +206,7 @@ export const AllReportsDialog = ({
           <TableBody>
             {paginatedReports.map((report) => (
               <TableRow key={report.id}>
-                {showMarkAsRead ? (
+                {type === "received" || (isReportReceived(report) && showMarkAsRead) ? (
                   <>
                     {isReportReceived(report) && (
                       <>
