@@ -162,7 +162,7 @@ export const AllReportsDialog = ({
                 </Badge>
               )}
             </div>
-            <div className="absolute left-1/2 transform -translate-x-1/2">
+            <div className="absolute right-0">
               {showMarkAsRead && (
                 <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
                   <SelectTrigger className="w-[130px]">
