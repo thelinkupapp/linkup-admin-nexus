@@ -61,6 +61,7 @@ import { UserLinkupsTable } from "@/components/dashboard/UserLinkupsTable";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
 import { UserReportsList } from "@/components/reports/UserReportsList";
+import { UserFriendsList } from "@/components/dashboard/UserFriendsList";
 
 interface UserData {
   id: string;
@@ -1111,28 +1112,11 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="friends" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Friends</CardTitle>
-                  <CardDescription>This user has 0 friends</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center h-40">
-                    <p className="text-muted-foreground">No friends to display</p>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card>
-                <CardHeader>
-                  <CardTitle>Pending Friend Requests</CardTitle>
-                  <CardDescription>No pending friend requests</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-center h-40">
-                    <p className="text-muted-foreground">No pending friend requests to display</p>
-                  </div>
-                </CardContent>
-              </Card>
+              <UserFriendsList 
+                friends={[]}
+                receivedRequests={[]}
+                sentRequests={[]}
+              />
             </TabsContent>
 
             <TabsContent value="photos" className="space-y-6">
