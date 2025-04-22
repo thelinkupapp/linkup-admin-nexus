@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import { format, differenceInHours, differenceInMinutes, isToday, isTomorrow, isThisYear } from "date-fns";
 import { Link } from "react-router-dom";
 import {
   Table,
@@ -12,11 +11,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ChevronDown, ChevronUp, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
 import { toast } from "@/components/ui/sonner";
+import { formatJoinDate } from "@/utils/dateFormatting";
 
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
@@ -152,26 +152,17 @@ const linkups = [
   }
 ];
 
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr);
-  return format(date, "dd/MM/yyyy");
-}
-function formatTime(dateStr: string) {
-  const date = new Date(dateStr);
-  return format(date, "HH:mm");
-}
-function formatDateTime(dateStr: string) {
-  const date = new Date(dateStr);
-  return `${formatDate(dateStr)} ${formatTime(dateStr)}`;
-}
 function formatDuration(start: string, end: string) {
   const startDate = new Date(start);
   const endDate = new Date(end);
-  const hours = differenceInHours(endDate, startDate);
-  const minutes = differenceInMinutes(endDate, startDate) % 60;
+  const diffMs = endDate.getTime() - startDate.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(diffMinutes / 60);
+  const minutes = diffMinutes % 60;
   if (hours === 0) return `(${minutes}min)`;
   return minutes === 0 ? `(${hours}hr)` : `(${hours}hr ${minutes}min)`;
 }
+
 function getStatusBadgeStyles(status: string) {
   switch (status) {
     case "upcoming":
@@ -281,7 +272,7 @@ export function LinkupTable() {
   return (
     <>
       <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-3 mb-1">
+        <div>
           <span className="text-2xl font-semibold text-[#8364e8]">
             {filteredCount !== totalCount
               ? `Showing ${filteredCount} of ${totalCount} linkups`
@@ -320,7 +311,7 @@ export function LinkupTable() {
                 >
                   <span>Date &amp; Time</span>
                   <span className="ml-1 text-muted-foreground">
-                    {sortConfig.field === "date" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                    {sortConfig.field === "date" ? (sortConfig.direction === "asc" ? <span>&#8593;</span> : <span>&#8595;</span>) : ""}
                   </span>
                 </TableHead>
                 <TableHead
@@ -329,7 +320,7 @@ export function LinkupTable() {
                 >
                   <span>Created On</span>
                   <span className="ml-1 text-muted-foreground">
-                    {sortConfig.field === "created" ? (sortConfig.direction === "asc" ? "↑" : "↓") : ""}
+                    {sortConfig.field === "created" ? (sortConfig.direction === "asc" ? <span>&#8593;</span> : <span>&#8595;</span>) : ""}
                   </span>
                 </TableHead>
                 <TableHead className="min-w-[110px] text-base font-semibold">Status</TableHead>
@@ -349,14 +340,19 @@ export function LinkupTable() {
                           className="p-1 rounded hover:bg-muted transition"
                         >
                           {expandedRows[linkup.id] ? (
-                            <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                            <span className="text-muted-foreground">&#8593;</span>
                           ) : (
-                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                            <span className="text-muted-foreground">&#8595;</span>
                           )}
                         </button>
                       </TableCell>
                       <TableCell>
-                        <span className="font-semibold text-lg">{linkup.title}</span>
+                        <Link
+                          to={`/linkups/${linkup.id}`}
+                          className="font-semibold text-lg underline hover:text-primary cursor-pointer"
+                        >
+                          {linkup.title}
+                        </Link>
                       </TableCell>
                       <TableCell>
                         <span className="mr-2 text-xl">{categoryObj?.emoji}</span>
@@ -378,12 +374,11 @@ export function LinkupTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium">{formatDate(linkup.date)}, {formatTime(linkup.date)}</div>
+                        <div className="font-medium">{formatJoinDate(linkup.date)}</div>
                         <div className="text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
                       </TableCell>
                       <TableCell>
-                        <div>{formatDate(linkup.createdAt)}</div>
-                        <div className="text-muted-foreground">{formatTime(linkup.createdAt)}</div>
+                        <div>{formatJoinDate(linkup.createdAt)}</div>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={`text-base px-2 py-1 ${getStatusBadgeStyles(linkup.status)}`}>
