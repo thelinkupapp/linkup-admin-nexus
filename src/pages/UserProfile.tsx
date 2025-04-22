@@ -649,15 +649,6 @@ const UserProfile = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Verification Status</CardTitle>
-                  <CardDescription>
-                    {!user.verificationDetails.hasSubmitted && "User has not submitted any verification photos yet."}
-                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'pending' && 
-                      "This user has applied for verification."}
-                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'approved' && 
-                      "This user is verified."}
-                    {user.verificationDetails.hasSubmitted && verificationAttempts[0].status === 'denied' && 
-                      "This user's verification was denied. They have been notified to resubmit."}
-                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {!user.verificationDetails.hasSubmitted ? (
@@ -922,7 +913,6 @@ const UserProfile = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Privacy Settings</CardTitle>
-                  <CardDescription>Manage how user information is displayed and shared</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-8">
                   <div>
