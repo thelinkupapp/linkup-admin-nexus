@@ -27,6 +27,9 @@ interface FriendRequest {
   requestDate: string;
 }
 
+// Common type for the ViewAllFriendsDialog
+type FriendOrRequest = Friend | FriendRequest;
+
 interface UserFriendsListProps {
   friends: Friend[];
   receivedRequests: FriendRequest[];
@@ -75,7 +78,7 @@ export default function UserFriendsList({ friends, receivedRequests, sentRequest
     onSortChange, 
     dateColumnName 
   }: { 
-    data: (Friend | FriendRequest)[], 
+    data: FriendOrRequest[], 
     sortDirection: 'asc' | 'desc',
     onSortChange: () => void,
     dateColumnName: string 
