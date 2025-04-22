@@ -1,6 +1,5 @@
-
 import { useState } from "react";
-import { Calendar, AndroidIcon, Apple, ArrowDown, ArrowUp } from "lucide-react";
+import { Calendar, Android, Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Select,
@@ -13,12 +12,11 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
-// Dummy deleted users data (no actual personal info)
 type DeletedUser = {
-  id: string; // e.g. user_19283
-  deletedDate: string; // ISO string
+  id: string;
+  deletedDate: string;
   platform: "iOS" | "Android";
-  accountCreatedDate: string; // ISO string (to calculate account age)
+  accountCreatedDate: string;
 };
 
 const deletedUsers: DeletedUser[] = [
@@ -54,7 +52,6 @@ const deletedUsers: DeletedUser[] = [
   }
 ];
 
-// Helper for account age in days
 function daysBetween(dateA: string, dateB: string) {
   const a = new Date(dateA);
   const b = new Date(dateB);
@@ -69,12 +66,10 @@ const UserDeletedTable = () => {
   const [platformFilter, setPlatformFilter] = useState<"all" | "iOS" | "Android">("all");
   const [sortMode, setSortMode] = useState<"newest" | "oldest">("newest");
 
-  // Filtering by platform
   const filteredUsers = deletedUsers.filter(u => 
     platformFilter === "all" ? true : u.platform === platformFilter
   );
 
-  // Sorting by deletion date (newest/oldest)
   const sortedUsers = [...filteredUsers].sort((a, b) => {
     if (sortMode === "newest") {
       return new Date(b.deletedDate).getTime() - new Date(a.deletedDate).getTime();
@@ -82,17 +77,14 @@ const UserDeletedTable = () => {
     return new Date(a.deletedDate).getTime() - new Date(b.deletedDate).getTime();
   });
 
-  // Pagination
   const totalPages = Math.max(1, Math.ceil(sortedUsers.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedUsers = sortedUsers.slice(startIndex, startIndex + itemsPerPage);
 
-  // UI handlers
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  // For filter UI
   function FilterChip({ label, value, selected, onClick, Icon }: { label: string, value: string, selected: boolean, onClick: () => void, Icon?: any }) {
     return (
       <button
@@ -138,7 +130,7 @@ const UserDeletedTable = () => {
             value="Android"
             selected={platformFilter === "Android"}
             onClick={() => { setPlatformFilter("Android"); setCurrentPage(1); }}
-            Icon={AndroidIcon}
+            Icon={Android}
           />
         </div>
       </div>
@@ -205,7 +197,7 @@ const UserDeletedTable = () => {
                         </>
                       ) : (
                         <>
-                          <AndroidIcon className="h-4 w-4 inline text-gray-500" />
+                          <Android className="h-4 w-4 inline text-gray-500" />
                           Android
                         </>
                       )}
