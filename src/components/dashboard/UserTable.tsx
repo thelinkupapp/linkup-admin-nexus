@@ -57,6 +57,7 @@ import { SuspendUserDialog } from "./SuspendUserDialog";
 import { DeleteUserDialog } from "./DeleteUserDialog";
 import { nationalities } from "@/constants/filterOptions";
 import { DateRangeFilter } from "./DateRangeFilter";
+import { DateRange } from "react-day-picker";
 
 const getNationalityLabel = (countryCode: string): string => {
   const nationalityMap: { [key: string]: string } = {
@@ -539,7 +540,7 @@ const UserTable = () => {
   const [verificationStatus, setVerificationStatus] = useState("");
   const [membershipStatus, setMembershipStatus] = useState("");
   const [itemsPerPageOptions] = useState([25, 50, 100]);
-  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({});
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -551,15 +552,15 @@ const UserTable = () => {
   };
 
   const isWithinDateRange = (dateStr: string) => {
-    if (!dateRange.from && !dateRange.to) return true;
+    if (!dateRange?.from && !dateRange?.to) return true;
     const date = new Date(dateStr);
-    if (dateRange.from && dateRange.to) {
+    if (dateRange?.from && dateRange?.to) {
       return date >= dateRange.from && date <= dateRange.to;
     }
-    if (dateRange.from) {
+    if (dateRange?.from) {
       return date >= dateRange.from;
     }
-    if (dateRange.to) {
+    if (dateRange?.to) {
       return date <= dateRange.to;
     }
     return true;

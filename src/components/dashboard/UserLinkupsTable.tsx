@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -281,13 +280,13 @@ export function UserLinkupsTable() {
       
       if (
         dateRange?.from &&
-        (new Date(linkup.startDate) < new Date(dateRange.from))
+        (new Date(linkup.startDate) < dateRange.from)
       ) {
         return false;
       }
       if (
         dateRange?.to &&
-        (new Date(linkup.startDate) > new Date(dateRange.to).setHours(23, 59, 59, 999))
+        (new Date(linkup.startDate) > new Date(dateRange.to))
       ) {
         return false;
       }
