@@ -38,8 +38,8 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatuses: string[]; // <-- changed from selectedStatus
-  setSelectedStatuses: (value: string[]) => void; // <-- changed from setSelectedStatus
+  selectedStatuses: string[];
+  setSelectedStatuses: (value: string[]) => void;
   selectedVisibility: string;
   setSelectedVisibility: (value: string) => void;
   selectedPrice: string;
@@ -62,8 +62,8 @@ export function LinkupFilters({
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatuses,          // <-- changed
-  setSelectedStatuses,       // <-- changed
+  selectedStatuses,
+  setSelectedStatuses,
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -118,20 +118,24 @@ export function LinkupFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
-      <div className="flex flex-wrap items-center gap-2.5 flex-grow">
+      <div className="flex flex-wrap items-center gap-2 flex-grow">
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
           <Input
-            placeholder="Search..."
+            placeholder="Search linkups…"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-7 h-8 w-[160px] text-xs"
+            className="pl-8 h-[36px] text-[15px] rounded-full bg-[#f8f8fa] placeholder:text-[#9097A9]"
+            style={{ fontWeight: 500 }}
           />
         </div>
-
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[84px]">
+            <Button
+              variant="outline"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none hover:bg-[#f1f1f6]"
+              style={{ letterSpacing: -0.2 }}
+            >
               Category ({selectedCategories.length})
             </Button>
           </PopoverTrigger>
@@ -166,8 +170,11 @@ export function LinkupFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
-              <MapPin className="h-3 w-3 mr-1 opacity-60" />
+            <Button
+              variant="outline"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none hover:bg-[#f1f1f6]"
+              style={{ letterSpacing: -0.2 }}
+            >
               Location ({selectedLocations.length})
             </Button>
           </PopoverTrigger>
@@ -199,7 +206,11 @@ export function LinkupFilters({
 
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
+            <Button
+              variant="outline"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none hover:bg-[#f1f1f6]"
+              style={{ letterSpacing: -0.2 }}
+            >
               Date Range
             </Button>
           </PopoverTrigger>
@@ -216,10 +227,13 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Status Multi-select Popover */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px]">
+            <Button
+              variant="outline"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none hover:bg-[#f1f1f6]"
+              style={{ letterSpacing: -0.2 }}
+            >
               Status ({selectedStatuses.length})
             </Button>
           </PopoverTrigger>
@@ -259,7 +273,7 @@ export function LinkupFilters({
         </Popover>
 
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-24">
+          <SelectTrigger className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] shadow-none w-auto">
             <SelectValue placeholder="Visibility" />
           </SelectTrigger>
           <SelectContent className="z-[100]">
@@ -276,7 +290,7 @@ export function LinkupFilters({
         </Select>
 
         <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-20">
+          <SelectTrigger className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] shadow-none w-auto">
             <SelectValue placeholder="Price" />
           </SelectTrigger>
           <SelectContent className="z-[100]">
@@ -293,7 +307,7 @@ export function LinkupFilters({
         </Select>
 
         <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
-          <SelectTrigger className="h-8 text-xs w-20">
+          <SelectTrigger className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] shadow-none w-auto">
             <SelectValue placeholder="Join…" />
           </SelectTrigger>
           <SelectContent className="z-[100]">
@@ -313,21 +327,12 @@ export function LinkupFilters({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="h-8 text-xs px-2 font-medium flex items-center gap-1 min-w-[110px]"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none flex items-center gap-1"
               aria-label="Sort by earnings"
+              style={{ letterSpacing: -0.2 }}
             >
-              <DollarSign className="w-3 h-3 mr-0.5" />
+              <DollarSign className="w-4 h-4 mr-1 opacity-80" />
               Earnings
-              {earningsSort === "desc" && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 9l7 7 7-7"></path>
-                </svg>
-              )}
-              {earningsSort === "asc" && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 15l-7-7-7 7"></path>
-                </svg>
-              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[120px] p-0 z-[110]">
@@ -364,21 +369,12 @@ export function LinkupFilters({
           <PopoverTrigger asChild>
             <Button
               variant="outline"
-              className="h-8 text-xs px-2 font-medium flex items-center gap-1 min-w-[110px]"
+              className="h-[32px] min-h-[32px] text-[15px] px-4 font-medium rounded-full border border-[#e6e8ee] bg-[#f8f8fa] text-[#212336] shadow-none flex items-center gap-1"
               aria-label="Sort by attendees"
+              style={{ letterSpacing: -0.2 }}
             >
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17v-2a4 4 0 0 1 4-4h2"/><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-3-3.87"/><path d="M17 3.13a4 4 0 0 1 0 7.75" /></svg>
               Attendees
-              {attendeesSort === "desc" && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 9l7 7 7-7"></path>
-                </svg>
-              )}
-              {attendeesSort === "asc" && (
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M19 15l-7-7-7 7"></path>
-                </svg>
-              )}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-[120px] p-0 z-[110]">

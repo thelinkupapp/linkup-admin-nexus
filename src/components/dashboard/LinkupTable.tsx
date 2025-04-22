@@ -202,13 +202,68 @@ function getStatusBadgeStyles(status: string) {
 const PER_PAGE_OPTIONS = [25, 50, 100];
 
 function formatUserManagementDate(dt: string) {
-  return format(new Date(dt), "MMM d, yyyy, h:mm a");
+  // Matches "Yesterday at 13:31", "Fri 18 at 11:30", "Apr 6 at 11:13"
+  // Reuse formatJoinDate from dateFormatting, fallback to "MMM d at HH:mm"
+  try {
+    // Slightly edited to strictly match User Management's formats
+    const date = new Date(dt);
+    const now = new Date();
+    const isToday =
+      date.getDate() === now.getDate() &&
+      date.getMonth() === now.getMonth() &&
+      date.getFullYear() === now.getFullYear();
+    if (isToday) {
+      return `Today at ${date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false })}`;
+    }
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (
+      date.getDate() === yesterday.getDate() &&
+      date.getMonth() === yesterday.getMonth() &&
+      date.getFullYear() === yesterday.getFullYear()
+    ) {
+      return `Yesterday at ${date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit", hour12: false })}`;
+    }
+    // If this week: "Fri 18 at 11:30"
+    if (now.getFullYear() === date.getFullYear()) {
+      // If within this week
+      const nowDay = now.getDay() || 7;
+      const diff =
+        (now.setHours(0, 0, 0, 0) - date.setHours(0, 0, 0, 0)) /
+        (1000 * 60 * 60 * 24);
+      if (diff < 7) {
+        // Use "EEE d at HH:mm" e.g. "Fri 18 at 11:30"
+        return `${date.toLocaleDateString(undefined, {
+          weekday: "short",
+        })} ${date.getDate()} at ${date
+          .toLocaleTimeString(undefined, {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })
+          .replace(/^0/, "")}`;
+      }
+    }
+    // Default: "MMM d at HH:mm"
+    return `${date.toLocaleDateString(undefined, {
+      month: "short",
+      day: "numeric",
+    })} at ${date
+      .toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      })
+      .replace(/^0/, "")}`;
+  } catch {
+    return dt;
+  }
 }
 
 function formatDateTimeWithDuration(start: string, end: string) {
   return {
     main: formatUserManagementDate(start),
-    duration: formatDuration(start, end)
+    duration: formatDuration(start, end),
   };
 }
 
@@ -391,57 +446,30 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           }
         }}
       />
-      <div className="rounded-xl border shadow-xs overflow-hidden mt-2">
-        <Table className="w-full text-[14px]">
-          <TableHeader>
-            <TableRow className="bg-soft-gray/40">
-              <TableHead className="w-[34px] p-1.5"></TableHead>
-              <TableHead
-                className="w-[180px] font-bold cursor-pointer py-2 px-2 select-none"
-                onClick={() => handleSort("title")}
-                style={{ fontSize: 15 }}
-              >
-                <div className="flex items-center gap-1 text-gray-800">
-                  Linkup Title
-                </div>
+      <div className="rounded-xl border shadow-xs overflow-hidden mt-2 bg-white">
+        <Table className="w-full text-[15px] font-normal">
+          <TableHeader className="bg-[#f8f8fa]">
+            <TableRow className="bg-[#f8f8fa] border-b-[1.5px] border-[#e6e8ec]">
+              <TableHead className="w-[34px] p-1.5 bg-transparent" />
+              <TableHead className="w-[180px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Linkup Title
               </TableHead>
-              <TableHead className="w-[104px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Category</TableHead>
-              <TableHead className="w-[190px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Host</TableHead>
-              <TableHead
-                className="w-[168px] font-bold cursor-pointer py-2 px-2 select-none"
-                onClick={() => handleSort("date")}
-                style={{ fontSize: 15 }}
-              >
-                <div className="flex items-center gap-1 text-gray-800">
-                  Date &amp; Time
-                  {sortConfig.field === "date" &&
-                    (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-3 h-3" />
-                    ) : (
-                      <SortDesc className="ml-1 w-3 h-3" />
-                    ))}
-                </div>
+              <TableHead className="w-[104px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Category
               </TableHead>
-              <TableHead
-                className="w-[154px] font-bold cursor-pointer py-2 px-2 select-none"
-                onClick={() => handleSort("created")}
-                style={{ fontSize: 15 }}
-              >
-                <div className="flex items-center gap-1 text-gray-800">
-                  Created On
-                  {sortConfig.field === "created" &&
-                    (sortConfig.direction === "asc" ? (
-                      <SortAsc className="ml-1 w-3 h-3" />
-                    ) : (
-                      <SortDesc className="ml-1 w-3 h-3" />
-                    ))}
-                  {sortConfig.field !== "created" && (
-                    <SortAsc className="ml-1 w-3 h-3 opacity-50" />
-                  )}
-                </div>
+              <TableHead className="w-[190px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Host
               </TableHead>
-              <TableHead className="w-[98px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Status</TableHead>
-              <TableHead className="w-[74px] text-base text-right px-2"></TableHead>
+              <TableHead className="w-[168px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Date &amp; Time
+              </TableHead>
+              <TableHead className="w-[154px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Created On
+              </TableHead>
+              <TableHead className="w-[98px] py-2 px-2 font-semibold text-[#1A1F2C] text-[14.5px] tracking-tight">
+                Status
+              </TableHead>
+              <TableHead className="w-[74px] text-base text-right px-2 bg-transparent" />
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -451,135 +479,63 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
               const createdOn = formatUserManagementDate(linkup.createdAt);
               return (
                 <React.Fragment key={linkup.id}>
-                  <TableRow className="hover:bg-soft-gray/30" style={{ fontSize: '15px', height: 40 }}>
-                    <TableCell className="p-1">
-                      <button
-                        onClick={() => toggleRowExpanded(linkup.id)}
-                        aria-label={expandedRows[linkup.id] ? "Collapse details" : "Expand details"}
-                        className="p-1 rounded hover:bg-muted transition"
-                        style={{ fontSize: "18px", lineHeight: "18px" }}
-                      >
-                        {expandedRows[linkup.id] ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
-                      </button>
-                    </TableCell>
-                    <TableCell className="py-1 px-2 font-semibold truncate max-w-[160px]">
+                  <TableRow
+                    className="hover:bg-[#f2f2f7] transition bg-white border-b border-[#e6e8ee] h-[52px]"
+                    style={{ fontSize: '15px' }}
+                  >
+                    <TableCell className="p-1" />
+                    <TableCell className="py-1 px-2 font-semibold max-w-[160px]">
                       <Link
                         to={`/linkups/${linkup.id}`}
-                        className="hover:underline hover:text-primary text-[15px]"
+                        className="hover:underline hover:text-primary text-[15px] font-semibold"
                       >
                         {linkup.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
+                    <TableCell className="py-1 px-2 whitespace-nowrap text-[15px]">
                       <span className="mr-1">{categoryObj?.emoji}</span>
-                      <span className="text-[12px]">{categoryObj?.name}</span>
+                      <span className="text-neutral-700">{categoryObj?.name}</span>
                     </TableCell>
                     <TableCell className="py-1 px-2">
                       <div className="flex items-center gap-2">
                         <img
                           src={linkup.host.avatar}
                           alt={linkup.host.name}
-                          className="h-5 w-5 rounded-full object-cover"
+                          className="h-7 w-7 rounded-full object-cover border-[1.5px] border-[#e6e8ee]"
                         />
                         <div>
-                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-[15px] hover:underline hover:text-primary">
+                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-[15px] hover:underline hover:text-[#9b87f5]">
                             {linkup.host.name}
                           </Link>
-                          <div className="text-[12px] text-muted-foreground">{linkup.host.username}</div>
+                          <div className="text-[13px] text-[#878C91] leading-tight">{linkup.host.username}</div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <div className="flex flex-col">
-                        <span className="text-[15px]">
-                          {dateTime.main}
-                        </span>
-                        <span className="text-xs text-muted-foreground" style={{ fontWeight: 500 }}>
+                    <TableCell className="py-1 px-2 whitespace-nowrap">
+                      <div className="flex flex-col leading-tight">
+                        <span className="text-[15px] font-semibold text-[#212336]">{dateTime.main}</span>
+                        <span className="text-xs text-[#8E9196] font-medium">
                           {dateTime.duration}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <span className="text-[15px]">{createdOn}</span>
+                    <TableCell className="py-1 px-2 whitespace-nowrap">
+                      <span className="text-[15px] font-semibold text-[#212336]">{createdOn}</span>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <Badge variant="outline" className={`text-xs px-2 py-0.5 ${getStatusBadgeStyles(linkup.status)}`}>
+                    <TableCell className="py-1 px-2 whitespace-nowrap">
+                      <Badge variant="outline" className={`text-xs px-2 py-0.5 rounded-2xl border border-[#E0E1E2] bg-[#f2f3f7] font-semibold ${getStatusBadgeStyles(linkup.status)}`}>
                         {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right p-2">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-7 w-7">
-                            <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="6" r="2" fill="#555"/><circle cx="12" cy="12" r="2" fill="#555"/><circle cx="12" cy="18" r="2" fill="#555"/></svg>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="bg-white z-[100]">
-                          <DropdownMenuItem asChild>
-                            <Link to={`/linkups/${linkup.id}`}>View Details</Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-destructive"
-                            onClick={() => {
-                              setRemoveDialogOpen(true);
-                              setLinkupToRemove({ id: linkup.id, title: linkup.title });
-                            }}
-                          >
-                            Remove Linkup
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+                    <TableCell className="text-right p-2" />
                   </TableRow>
-                  {expandedRows[linkup.id] && (
-                    <TableRow className="bg-muted/20">
-                      <TableCell colSpan={8} className="py-2 px-4">
-                        <div className="grid grid-cols-4 gap-4 text-xs">
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Location</div>
-                            <div className="text-sm">{linkup.location}</div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Attendees</div>
-                            <div className="text-sm font-medium">{linkup.attendeeCount}</div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Visibility</div>
-                            <div className="text-sm">
-                              {linkup.isPublic ? "Public" : "Private"}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Join Method</div>
-                            <div className="text-sm">
-                              {linkup.isOpen ? "Open" : "Closed"}
-                            </div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground mb-1">Price</div>
-                            <div className="text-sm">
-                              {linkup.isFree ? "Free" : `$${linkup.price}`}
-                            </div>
-                          </div>
-                          {(!linkup.isFree && linkup.price && linkup.attendeeCount) ? (
-                            <div>
-                              <div className="text-xs text-muted-foreground mb-1">Earnings</div>
-                              <div className="flex items-center gap-1 font-medium text-green-700 text-sm">
-                                <span className="flex items-center"><DollarSign className="w-3 h-3 mr-0.5" />${linkup.earnings}</span>
-                              </div>
-                            </div>
-                          ) : null}
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  )}
                 </React.Fragment>
               );
             })}
             {currentLinkups.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-6">
-                  <span className="text-sm text-muted-foreground">No linkups found.</span>
+                <TableCell colSpan={8} className="text-center py-6 text-[15px] text-[#8E9196]">
+                  No linkups found.
                 </TableCell>
               </TableRow>
             )}
