@@ -18,6 +18,7 @@ import RemoveLinkupDialog from "./RemoveLinkupDialog";
 import { toast } from "@/components/ui/sonner";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import { format } from "date-fns";
 
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
