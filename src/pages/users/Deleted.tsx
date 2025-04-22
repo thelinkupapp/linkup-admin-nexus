@@ -8,7 +8,7 @@ const UserDeleted = () => {
       <Sidebar />
       <div className="flex-1 ml-64 p-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Deleted Users</h1>
+          <h1 className="text-3xl font-bold mb-2">View all deleted accounts</h1>
           <p className="text-muted-foreground">
             View and manage all deleted user accounts. No personal information is displayed.
           </p>
@@ -20,3 +20,4 @@ const UserDeleted = () => {
 };
 
 export default UserDeleted;
+
