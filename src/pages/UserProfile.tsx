@@ -1302,7 +1302,7 @@ const UserProfile = () => {
                   <CardHeader className="flex flex-row items-center justify-between">
                     <div>
                       <CardTitle>Reports Made</CardTitle>
-                      <CardDescription>Reports you've submitted about other users</CardDescription>
+                      <CardDescription>Reports this user has made about other users</CardDescription>
                     </div>
                     <Button variant="outline" size="sm" onClick={() => setIsAllReportsMadeOpen(true)}>
                       View All
