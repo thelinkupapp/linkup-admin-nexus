@@ -10,10 +10,9 @@ const UserDeleted = () => {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Deleted Users</h1>
           <p className="text-muted-foreground">
-            View and manage all deleted user accounts
+            View and manage all deleted user accounts. No personal information is displayed.
           </p>
         </div>
-
         <UserDeletedTable />
       </div>
     </div>
