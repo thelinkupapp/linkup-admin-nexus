@@ -1,4 +1,5 @@
-import { Check, Filter, Search, ArrowUp, ArrowDown } from "lucide-react";
+
+import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -23,7 +24,7 @@ const mockReports = [
       id: "ru1",
       name: "Michael Chen",
       username: "mikechen",
-      avatar: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png"
+      avatar: "/lovable-uploads/86fc1136-a3e8-49f3-8cd1-b0c29bc1af83.png"
     },
     description: "Inappropriate behavior in chat",
     timestamp: "2025-04-22T11:30:00",
@@ -103,10 +104,6 @@ export function UserReportsTable() {
               <SelectItem value="unread">Unread</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="sm">
-            <Filter className="mr-2 h-4 w-4" />
-            Filter
-          </Button>
         </div>
       </div>
 
@@ -198,46 +195,83 @@ export function UserReportsTable() {
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <Select
-          value={pageSize.toString()}
-          onValueChange={(value) => {
-            setPageSize(Number(value));
-            setCurrentPage(1);
-          }}
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Items per page" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="25">25 per page</SelectItem>
-            <SelectItem value="50">50 per page</SelectItem>
-            <SelectItem value="100">100 per page</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            Showing {((currentPage - 1) * pageSize) + 1}-{Math.min(currentPage * pageSize, filteredReports.length)} of {filteredReports.length} reports
+          </span>
+          <Select
+            value={pageSize.toString()}
+            onValueChange={(value) => {
+              setPageSize(Number(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-        {totalPages > 1 && (
+        {totalPages > 0 && (
           <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious 
                   onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                 />
               </PaginationItem>
-              {[...Array(totalPages)].map((_, i) => (
-                <PaginationItem key={i + 1}>
-                  <PaginationLink
-                    onClick={() => setCurrentPage(i + 1)}
-                    isActive={currentPage === i + 1}
-                  >
-                    {i + 1}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
+              
+              {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                let pageNum = i + 1;
+                if (totalPages > 5) {
+                  if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                }
+                
+                return (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(pageNum)}
+                      isActive={currentPage === pageNum}
+                      className="cursor-pointer"
+                    >
+                      {pageNum}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              {totalPages > 5 && currentPage < totalPages - 2 && (
+                <>
+                  <PaginationItem>
+                    <span className="flex h-9 w-9 items-center justify-center">...</span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(totalPages)}
+                      className="cursor-pointer"
+                    >
+                      {totalPages}
+                    </PaginationLink>
+                  </PaginationItem>
+                </>
+              )}
+
               <PaginationItem>
                 <PaginationNext 
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                 />
               </PaginationItem>
             </PaginationContent>
