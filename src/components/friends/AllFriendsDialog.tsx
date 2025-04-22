@@ -43,8 +43,12 @@ export function AllFriendsDialog({
         {type === 'requests' && receivedRequests && sentRequests ? (
           <Tabs defaultValue="received">
             <TabsList>
-              <TabsTrigger value="received">Received Requests</TabsTrigger>
-              <TabsTrigger value="sent">Sent Requests</TabsTrigger>
+              <TabsTrigger value="received">
+                Received Requests ({receivedRequests.length})
+              </TabsTrigger>
+              <TabsTrigger value="sent">
+                Sent Requests ({sentRequests.length})
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="received" className="mt-4">
