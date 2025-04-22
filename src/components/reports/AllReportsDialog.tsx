@@ -133,6 +133,56 @@ export const AllReportsDialog = ({
   const totalPages = Math.ceil(filteredReports.length / pageSize);
   const unreadCount = localReports.filter(r => isReportReceived(r) && !r.isRead).length;
 
+  // Generate page numbers for pagination
+  const generatePaginationItems = () => {
+    let pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      // Show all pages if there are few
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always include first page
+      pages.push(1);
+      
+      // Calculate start and end of middle pages
+      let startPage = Math.max(2, currentPage - 1);
+      let endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+      // Adjust if we're near the start
+      if (currentPage <= 3) {
+        endPage = 4;
+      }
+      
+      // Adjust if we're near the end
+      if (currentPage >= totalPages - 2) {
+        startPage = totalPages - 3;
+      }
+      
+      // Add ellipsis if needed at the beginning
+      if (startPage > 2) {
+        pages.push('ellipsis-start');
+      }
+      
+      // Add middle pages
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      
+      // Add ellipsis if needed at the end
+      if (endPage < totalPages - 1) {
+        pages.push('ellipsis-end');
+      }
+      
+      // Always include last page
+      pages.push(totalPages);
+    }
+    
+    return pages;
+  };
+
   const handleMarkAsRead = (reportId: string) => {
     setLocalReports(prev => prev.map(report => {
       if (report.id === reportId && isReportReceived(report)) {
@@ -309,47 +359,64 @@ export const AllReportsDialog = ({
         </Table>
 
         <div className="mt-4 flex items-center justify-between">
-          <Select
-            value={pageSize.toString()}
-            onValueChange={(value) => {
-              setPageSize(Number(value));
-              setCurrentPage(1);
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Items per page" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">10 per page</SelectItem>
-              <SelectItem value="25">25 per page</SelectItem>
-              <SelectItem value="50">50 per page</SelectItem>
-              <SelectItem value="100">100 per page</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Items per page:</span>
+            <Select
+              value={pageSize.toString()}
+              onValueChange={(value) => {
+                setPageSize(Number(value));
+                setCurrentPage(1);
+              }}
+            >
+              <SelectTrigger className="w-[80px]">
+                <SelectValue placeholder="Items per page" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="5">5</SelectItem>
+                <SelectItem value="10">10</SelectItem>
+                <SelectItem value="25">25</SelectItem>
+                <SelectItem value="50">50</SelectItem>
+                <SelectItem value="100">100</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-          {totalPages > 1 && (
+          {totalPages > 0 && (
             <Pagination>
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious 
                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
-                {[...Array(totalPages)].map((_, i) => (
-                  <PaginationItem key={i + 1}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(i + 1)}
-                      isActive={currentPage === i + 1}
-                    >
-                      {i + 1}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
+                
+                {generatePaginationItems().map((page, index) => {
+                  if (page === 'ellipsis-start' || page === 'ellipsis-end') {
+                    return (
+                      <PaginationItem key={`ellipsis-${index}`}>
+                        <span className="flex h-9 w-9 items-center justify-center">...</span>
+                      </PaginationItem>
+                    );
+                  }
+                  
+                  return (
+                    <PaginationItem key={index}>
+                      <PaginationLink
+                        onClick={() => setCurrentPage(Number(page))}
+                        isActive={currentPage === Number(page)}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                })}
+                
                 <PaginationItem>
                   <PaginationNext 
                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
                   />
                 </PaginationItem>
               </PaginationContent>
