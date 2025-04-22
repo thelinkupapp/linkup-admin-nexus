@@ -1165,9 +1165,9 @@ const UserProfile = () => {
 
             <TabsContent value="friends" className="space-y-6">
               <UserFriendsList 
-                friends={[]}
-                receivedRequests={[]}
-                sentRequests={[]}
+                friends={user.friends}
+                receivedRequests={user.pendingFriendRequests.received}
+                sentRequests={user.pendingFriendRequests.sent}
               />
             </TabsContent>
 
