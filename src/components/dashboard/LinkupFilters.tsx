@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, DollarSign, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -27,6 +28,8 @@ import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { countries } from "@/constants/filterOptions";
+import { X } from "lucide-react";
+import { format } from "date-fns";
 
 const countryFlagMap: Record<string, string> = Object.fromEntries(
   countries.map((c) => [c.label, c.emoji])
@@ -38,7 +41,7 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatuses: string[]; 
+  selectedStatuses: string[];
   setSelectedStatuses: (value: string[]) => void;
   selectedVisibility: string;
   setSelectedVisibility: (value: string) => void;
@@ -103,7 +106,7 @@ export function LinkupFilters({
     { id: "travel", name: "Travel & Exploration", emoji: "✈️" },
     { id: "fitness", name: "Fitness", emoji: "🏆" },
     { id: "networking", name: "Networking", emoji: "💼" },
-    { id: "content-creation", name: "Content Creation", emoji: "����" },
+    { id: "content-creation", name: "Content Creation", emoji: "🎥" },
     { id: "tech", name: "Tech", emoji: "💻" },
     { id: "deep-talks", name: "Deep Talks", emoji: "🧠" },
     { id: "other", name: "Other", emoji: "🎯" }
@@ -116,11 +119,21 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
+  // ---- Helper for date range pill
+  function getDateRangeLabel(range?: DateRange) {
+    if (range?.from && range?.to) {
+      return `${format(range.from, "MMM d")}–${format(range.to, "MMM d")}`;
+    }
+    if (range?.from) return format(range.from, "MMM d");
+    return "Date Range";
+  }
+
+  // ---- Main return
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
-      
-        {/* Category */}
+
+        {/* --- 1. Category --- */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[84px]">
@@ -156,7 +169,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Location */}
+        {/* --- 2. Location --- */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
@@ -190,7 +203,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Status */}
+        {/* --- 3. Status --- */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px]">
@@ -232,7 +245,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Visibility */}
+        {/* --- 4. Visibility --- */}
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
             <SelectValue placeholder="Visibility" />
@@ -250,7 +263,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        {/* Join Method */}
+        {/* --- 5. Join Method --- */}
         <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-20">
             <SelectValue placeholder="Join…" />
@@ -268,7 +281,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        {/* Price */}
+        {/* --- 6. Price --- */}
         <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-20">
             <SelectValue placeholder="Price" />
@@ -286,7 +299,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        {/* Earnings */}
+        {/* --- 7. Earnings --- */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -295,7 +308,7 @@ export function LinkupFilters({
               aria-label="Sort by earnings"
             >
               <DollarSign className="w-3 h-3 mr-0.5" />
-              Earnings
+              <span>Earnings</span>
               {earningsSort === "desc" && (
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 9l7 7 7-7"></path>
@@ -338,7 +351,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Attendees */}
+        {/* --- 8. Attendees --- */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -390,7 +403,54 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Search */}
+        {/* --- 9. Date Range --- */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "h-8 text-xs px-2 font-medium min-w-[106px] flex items-center gap-2",
+                dateRange?.from ? "border-primary text-primary" : ""
+              )}
+            >
+              <span>
+                {getDateRangeLabel(dateRange)}
+              </span>
+              {dateRange?.from && (
+                <>
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" fill="none"/><path d="M5 5L15 15M15 5L5 15" stroke="#C0C0C0" strokeWidth="2" strokeLinecap="round"/></svg>
+                </>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 z-[100]" align="start">
+            <div className="flex flex-col">
+              <div className="px-3 pt-3 pb-1 font-medium text-xs text-muted-foreground">Date Range</div>
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={dateRange?.from}
+                selected={dateRange}
+                onSelect={setDateRange}
+                numberOfMonths={2}
+                className={cn("p-3 pointer-events-auto")}
+              />
+              {dateRange?.from && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="mt-2 self-end text-xs px-2 py-1 h-7"
+                  onClick={() => setDateRange(undefined)}
+                >
+                  <X className="w-3 h-3 mr-1" />
+                  Clear Date Range
+                </Button>
+              )}
+            </div>
+          </PopoverContent>
+        </Popover>
+
+        {/* --- Search (always last) --- */}
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
           <Input
@@ -400,26 +460,6 @@ export function LinkupFilters({
             className="pl-7 h-8 w-[160px] text-xs"
           />
         </div>
-
-        {/* Date Range */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
-              Date Range
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 z-[100]" align="start">
-            <Calendar
-              initialFocus
-              mode="range"
-              defaultMonth={dateRange?.from}
-              selected={dateRange}
-              onSelect={setDateRange}
-              numberOfMonths={2}
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
       </div>
     </div>
   );
