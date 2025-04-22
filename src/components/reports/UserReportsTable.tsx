@@ -48,7 +48,7 @@ const mockReports = [
       id: "ru2",
       name: "Emma Davis",
       username: "emmad",
-      avatar: "/lovable-uploads/96315a2c-30e4-429b-a4de-b2f55e46e7bd.png"
+      avatar: "/lovable-uploads/8dfbd120-69fb-4f99-a9a0-3c8a80164fc1.png"
     },
     description: "Suspicious activity during linkup",
     timestamp: "2025-04-21T16:45:00",
@@ -307,8 +307,11 @@ export function UserReportsTable() {
         </Table>
       </div>
 
-      <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
-        <DialogContent>
+      <Dialog 
+        open={!!selectedReport} 
+        onOpenChange={() => setSelectedReport(null)}
+      >
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Report Description</DialogTitle>
           </DialogHeader>
