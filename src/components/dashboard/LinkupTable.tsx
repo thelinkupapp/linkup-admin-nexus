@@ -39,6 +39,21 @@ import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { format } from "date-fns";
 
+function formatDateUserMgmtStyle(dt: string) {
+  return format(new Date(dt), "MMM d, yyyy, h:mm a");
+}
+
+function formatDurationShort(start: string, end: string) {
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const diffMs = endDate.getTime() - startDate.getTime();
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(diffMinutes / 60);
+  const minutes = diffMinutes % 60;
+  if (hours === 0) return `(${minutes}min)`;
+  return minutes === 0 ? `(${hours}hr)` : `(${hours}hr)`;
+}
+
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
   { id: "food", name: "Food", emoji: "🍔" },
@@ -172,17 +187,6 @@ const linkups = [
     price: 30
   }
 ];
-
-function formatDuration(start: string, end: string) {
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const diffMs = endDate.getTime() - startDate.getTime();
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const hours = Math.floor(diffMinutes / 60);
-  const minutes = diffMinutes % 60;
-  if (hours === 0) return `(${minutes}min)`;
-  return minutes === 0 ? `(${hours}hr)` : `(${hours}hr ${minutes}min)`;
-}
 
 function getStatusBadgeStyles(status: string) {
   switch (status) {
@@ -389,28 +393,28 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           }
         }}
       />
-      <div className="rounded-xl border shadow-xs overflow-hidden mt-2">
-        <Table className="w-full text-[14px]">
+      <div className="rounded-[18px] border border-[#edf0f4] shadow-xs overflow-hidden mt-3 bg-white">
+        <Table className="w-full text-[15px]">
           <TableHeader>
-            <TableRow className="bg-soft-gray/40">
-              <TableHead className="w-[34px] p-1.5"></TableHead>
+            <TableRow className="bg-transparent border-0">
+              <TableHead className="w-[34px] p-1.5 bg-transparent border-0" />
               <TableHead
-                className="w-[180px] font-bold cursor-pointer py-2 px-2 select-none"
+                className="w-[180px] px-3 py-2 text-[#8E9196] font-medium text-[15px] tracking-wide bg-transparent border-0"
                 onClick={() => handleSort("title")}
-                style={{ fontSize: 15 }}
+                style={{ cursor: "pointer" }}
               >
-                <div className="flex items-center gap-1 text-gray-800">
+                <div className="flex items-center gap-1">
                   Linkup Title
                 </div>
               </TableHead>
-              <TableHead className="w-[104px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Category</TableHead>
-              <TableHead className="w-[190px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Host</TableHead>
+              <TableHead className="w-[104px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0">Category</TableHead>
+              <TableHead className="w-[190px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0">Host</TableHead>
               <TableHead
-                className="w-[168px] font-bold cursor-pointer py-2 px-2 select-none"
+                className="w-[168px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0 select-none"
                 onClick={() => handleSort("date")}
-                style={{ fontSize: 15 }}
+                style={{ cursor: "pointer" }}
               >
-                <div className="flex items-center gap-1 text-gray-800">
+                <div className="flex items-center gap-1">
                   Date &amp; Time
                   {sortConfig.field === "date" &&
                     (sortConfig.direction === "asc" ? (
@@ -421,11 +425,11 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                 </div>
               </TableHead>
               <TableHead
-                className="w-[154px] font-bold cursor-pointer py-2 px-2 select-none"
+                className="w-[154px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0 select-none"
                 onClick={() => handleSort("created")}
-                style={{ fontSize: 15 }}
+                style={{ cursor: "pointer" }}
               >
-                <div className="flex items-center gap-1 text-gray-800">
+                <div className="flex items-center gap-1">
                   Created On
                   {sortConfig.field === "created" &&
                     (sortConfig.direction === "asc" ? (
@@ -438,8 +442,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                   )}
                 </div>
               </TableHead>
-              <TableHead className="w-[98px] font-bold py-2 px-2" style={{ fontSize: 15 }}>Status</TableHead>
-              <TableHead className="w-[74px] text-base text-right px-2"></TableHead>
+              <TableHead className="w-[98px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0">Status</TableHead>
+              <TableHead className="w-[74px] px-3 py-2 text-[#8E9196] font-medium text-[15px] text-right bg-transparent border-0"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -447,8 +451,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
               const categoryObj = categories.find(c => c.id === linkup.category);
               return (
                 <React.Fragment key={linkup.id}>
-                  <TableRow className="hover:bg-soft-gray/30" style={{ fontSize: '15px', height: 40 }}>
-                    <TableCell className="p-1">
+                  <TableRow className="hover:bg-[#f5f6fb] border-0" style={{ fontSize: "15px", minHeight: 52 }}>
+                    <TableCell className="p-1 bg-transparent border-0">
                       <button
                         onClick={() => toggleRowExpanded(linkup.id)}
                         aria-label={expandedRows[linkup.id] ? "Collapse details" : "Expand details"}
@@ -458,46 +462,50 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                         {expandedRows[linkup.id] ? <ArrowUp size={16} /> : <ArrowDown size={16} />}
                       </button>
                     </TableCell>
-                    <TableCell className="py-1 px-2 font-semibold truncate max-w-[160px]">
+                    <TableCell className="font-bold text-[#23252b] py-1.5 px-3 truncate max-w-[160px] text-[17px] bg-transparent border-0">
                       <Link
                         to={`/linkups/${linkup.id}`}
-                        className="hover:underline hover:text-primary text-[15px]"
+                        className="hover:underline hover:text-primary"
                       >
                         {linkup.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <span className="mr-1">{categoryObj?.emoji}</span>
-                      <span className="text-[12px]">{categoryObj?.name}</span>
+                    <TableCell className="py-1.5 px-3 bg-transparent border-0">
+                      <span className="mr-1 text-[18px] align-middle">{categoryObj?.emoji}</span>
+                      <span className="text-[15px]">{categoryObj?.name}</span>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <div className="flex items-center gap-2">
+                    <TableCell className="py-1.5 px-3 bg-transparent border-0">
+                      <div className="flex items-center gap-3">
                         <img
                           src={linkup.host.avatar}
                           alt={linkup.host.name}
-                          className="h-5 w-5 rounded-full object-cover"
+                          className="h-7 w-7 rounded-full object-cover border"
                         />
-                        <div>
-                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-[15px] hover:underline hover:text-primary">
+                        <div className="flex flex-col min-w-0">
+                          <Link to={`/users/${linkup.host.id}`} className="font-semibold text-[15px] hover:underline truncate">
                             {linkup.host.name}
                           </Link>
-                          <div className="text-[12px] text-muted-foreground">{linkup.host.username}</div>
+                          <div className="text-[13px] text-[#888888] truncate">{linkup.host.username}</div>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <div className="text-xs font-medium">{formatDateTime(linkup.date)}</div>
-                      <div className="text-xs text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
+                    <TableCell className="py-1.5 px-3 bg-transparent border-0">
+                      <div className="text-[15px] font-medium">{formatDateUserMgmtStyle(linkup.date)}</div>
+                      <div className="text-[13px] text-[#888888]">{formatDurationShort(linkup.date, linkup.endTime)}</div>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <div className="text-xs">{formatDateTime(linkup.createdAt)}</div>
+                    <TableCell className="py-1.5 px-3 bg-transparent border-0">
+                      <div className="text-[15px]">{formatDateUserMgmtStyle(linkup.createdAt)}</div>
                     </TableCell>
-                    <TableCell className="py-1 px-2">
-                      <Badge variant="outline" className={`text-xs px-2 py-0.5 ${getStatusBadgeStyles(linkup.status)}`}>
+                    <TableCell className="py-1.5 px-3 bg-transparent border-0">
+                      <Badge
+                        variant="outline"
+                        className={`text-xs px-3 py-0.5 rounded-full ${getStatusBadgeStyles(linkup.status)}`}
+                        style={{ fontWeight: 500, fontSize: 13, background: "rgba(60,130,246,0.05)" }}
+                      >
                         {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-right p-2">
+                    <TableCell className="text-right p-2 bg-transparent border-0">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="icon" className="h-7 w-7">
@@ -522,39 +530,39 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                     </TableCell>
                   </TableRow>
                   {expandedRows[linkup.id] && (
-                    <TableRow className="bg-muted/20">
-                      <TableCell colSpan={8} className="py-2 px-4">
-                        <div className="grid grid-cols-4 gap-4 text-xs">
+                    <TableRow className="bg-[#f7f8fa]">
+                      <TableCell colSpan={8} className="py-2 px-4 !bg-[#f7f8fa] border-0">
+                        <div className="grid grid-cols-4 gap-4 text-[13px]">
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Location</div>
-                            <div className="text-sm">{linkup.location}</div>
+                            <div className="text-[12px] text-[#888888] mb-1">Location</div>
+                            <div className="">{linkup.location}</div>
                           </div>
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Attendees</div>
-                            <div className="text-sm font-medium">{linkup.attendeeCount}</div>
+                            <div className="text-[12px] text-[#888888] mb-1">Attendees</div>
+                            <div className="font-medium">{linkup.attendeeCount}</div>
                           </div>
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Visibility</div>
-                            <div className="text-sm">
+                            <div className="text-[12px] text-[#888888] mb-1">Visibility</div>
+                            <div className="">
                               {linkup.isPublic ? "Public" : "Private"}
                             </div>
                           </div>
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Join Method</div>
-                            <div className="text-sm">
+                            <div className="text-[12px] text-[#888888] mb-1">Join Method</div>
+                            <div className="">
                               {linkup.isOpen ? "Open" : "Closed"}
                             </div>
                           </div>
                           <div>
-                            <div className="text-xs text-muted-foreground mb-1">Price</div>
-                            <div className="text-sm">
+                            <div className="text-[12px] text-[#888888] mb-1">Price</div>
+                            <div className="">
                               {linkup.isFree ? "Free" : `$${linkup.price}`}
                             </div>
                           </div>
                           {(!linkup.isFree && linkup.price && linkup.attendeeCount) ? (
                             <div>
-                              <div className="text-xs text-muted-foreground mb-1">Earnings</div>
-                              <div className="flex items-center gap-1 font-medium text-green-700 text-sm">
+                              <div className="text-[12px] text-[#888888] mb-1">Earnings</div>
+                              <div className="flex items-center gap-1 font-medium text-green-700">
                                 <span className="flex items-center"><DollarSign className="w-3 h-3 mr-0.5" />${linkup.earnings}</span>
                               </div>
                             </div>
@@ -568,8 +576,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
             })}
             {currentLinkups.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="text-center py-6">
-                  <span className="text-sm text-muted-foreground">No linkups found.</span>
+                <TableCell colSpan={8} className="text-center py-6 text-[#888888] bg-transparent border-0">
+                  <span className="text-sm">No linkups found.</span>
                 </TableCell>
               </TableRow>
             )}
@@ -578,14 +586,14 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       </div>
       <div className="flex flex-col sm:flex-row justify-between items-center gap-2 mt-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-muted-foreground">
+          <span className="text-xs text-[#888888]">
             Showing {(filteredCount === 0) ? 0 : (currentPage - 1) * perPage + 1}
             -
             {Math.min(currentPage * perPage, filteredCount)}
             &nbsp;of {filteredCount} linkups
           </span>
           <PaginationItemsPerPage>
-            <span className="text-xs">Per page:</span>
+            <span className="text-xs text-[#888888]">Per page:</span>
             <select
               value={perPage}
               onChange={e => {
