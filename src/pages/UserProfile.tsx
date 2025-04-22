@@ -433,6 +433,27 @@ const UserProfile = () => {
     hostingLinkups: user.hostingLinkups
   };
 
+  const profilePhotos = [
+    {
+      id: "1",
+      url: user.avatar,
+      uploadDate: "2024-01-15T10:30:00Z",
+      isProfilePicture: true
+    },
+    {
+      id: "2",
+      url: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+      uploadDate: "2024-04-18T10:00:00Z",
+      isProfilePicture: false
+    },
+    {
+      id: "3",
+      url: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+      uploadDate: "2024-04-18T10:00:00Z",
+      isProfilePicture: false
+    }
+  ];
+
   const [userWithVerification, setUserWithVerification] = useState<UserData>({
     ...user,
     isVerified: isVerified
@@ -677,7 +698,7 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="profile-info" className="space-y-6">
-              <ProfileImageCarousel photos={userPhotos} />
+              <ProfileImageCarousel photos={profilePhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card className="col-span-1 md:col-span-2">
                   <CardHeader>
