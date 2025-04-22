@@ -132,6 +132,25 @@ interface UserData {
   };
   hostingLinkups: number;
   lastKnownLocation: string;
+  reportsReceived: {
+    id: string;
+    reporterId: string;
+    reporterName: string;
+    reporterUsername: string;
+    reporterAvatar: string;
+    description: string;
+    timestamp: string;
+    isRead: boolean;
+  }[];
+  reportsMade: {
+    id: string;
+    reportedUserId: string;
+    reportedUserName: string;
+    reportedUserUsername: string;
+    reportedUserAvatar: string;
+    description: string;
+    timestamp: string;
+  }[];
 }
 
 const linkupPlusTransactions = [
@@ -324,7 +343,68 @@ const user: UserData = {
     ]
   },
   hostingLinkups: 2,
-  lastKnownLocation: "🇮🇩 Canggu, Indonesia"
+  lastKnownLocation: "🇮🇩 Canggu, Indonesia",
+  reportsReceived: [
+    {
+      id: "1",
+      reporterId: "user123",
+      reporterName: "Sarah Johnson",
+      reporterUsername: "sarahjohnson",
+      reporterAvatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+      description: "Inappropriate behavior in chat",
+      timestamp: "2025-04-22T10:30:00Z",
+      isRead: false
+    },
+    {
+      id: "2",
+      reporterId: "user456",
+      reporterName: "Mike Williams",
+      reporterUsername: "mikewilliams",
+      reporterAvatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+      description: "Suspicious activity during linkup",
+      timestamp: "2025-04-21T15:45:00Z",
+      isRead: true
+    },
+    {
+      id: "3",
+      reporterId: "user789",
+      reporterName: "Emily Brown",
+      reporterUsername: "emilybrown",
+      reporterAvatar: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+      description: "Harassment in direct messages",
+      timestamp: "2025-04-20T09:15:00Z",
+      isRead: false
+    }
+  ],
+  reportsMade: [
+    {
+      id: "4",
+      reportedUserId: "user321",
+      reportedUserName: "John Smith",
+      reportedUserUsername: "johnsmith",
+      reportedUserAvatar: "/lovable-uploads/efe02853-0a89-411c-9ab1-35117eef0ff9.png",
+      description: "Spam messages in linkup chat",
+      timestamp: "2025-04-19T16:20:00Z"
+    },
+    {
+      id: "5",
+      reportedUserId: "user654",
+      reportedUserName: "Alice Cooper",
+      reportedUserUsername: "alicecooper",
+      reportedUserAvatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+      description: "Inappropriate profile picture",
+      timestamp: "2025-04-18T14:10:00Z"
+    },
+    {
+      id: "6",
+      reportedUserId: "user987",
+      reportedUserName: "Bob Wilson",
+      reportedUserUsername: "bobwilson",
+      reportedUserAvatar: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+      description: "Fake identity",
+      timestamp: "2025-04-17T11:30:00Z"
+    }
+  ]
 };
 
 const UserProfile = () => {
@@ -482,6 +562,8 @@ const UserProfile = () => {
   const [isPayoutHistoryOpen, setIsPayoutHistoryOpen] = useState(false);
   const [isEarningsBreakdownOpen, setIsEarningsBreakdownOpen] = useState(false);
   const [isLinkupPlusHistoryOpen, setIsLinkupPlusHistoryOpen] = useState(false);
+  const [isAllReportsReceivedOpen, setIsAllReportsReceivedOpen] = useState(false);
+  const [isAllReportsMadeOpen, setIsAllReportsMadeOpen] = useState(false);
 
   const earningsBreakdown = [
     {
@@ -1139,27 +1221,116 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="reports" className="space-y-6">
-              <UserReportsList 
-                reports={[
-                  {
-                    id: "1",
-                    reporterId: "user123",
-                    reporterName: "Sarah Johnson",
-                    reporterAvatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
-                    description: "Inappropriate behavior in chat",
-                    timestamp: "2025-04-22T10:30:00Z",
-                    isRead: false
-                  },
-                  {
-                    id: "2",
-                    reporterId: "user456",
-                    reporterName: "Mike Williams",
-                    reporterAvatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
-                    description: "Suspicious activity during linkup",
-                    timestamp: "2025-04-21T15:45:00Z",
-                    isRead: true
-                  }
-                ]} 
+              <div className="grid grid-cols-1 gap-6">
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle>Reports Received</CardTitle>
+                      <CardDescription>Reports submitted by other users</CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => setIsAllReportsReceivedOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {user.reportsReceived.slice(0, 3).map((report) => (
+                        <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reporterAvatar} />
+                              <AvatarFallback>{report.reporterName[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <Link 
+                                  to={`/users/${report.reporterId}`} 
+                                  className="font-medium hover:underline"
+                                >
+                                  {report.reporterName}
+                                </Link>
+                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                                  report.isRead 
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                                }`}>
+                                  {report.isRead ? "Read" : "Unread"}
+                                </span>
+                              </div>
+                              <p className="text-sm text-muted-foreground">@{report.reporterUsername}</p>
+                              <p className="mt-1">{report.description}</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {new Date(report.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                          {!report.isRead && (
+                            <button 
+                              className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
+                              onClick={() => {/* Handle mark as read */}}
+                            >
+                              Mark as Read
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle>Reports Made</CardTitle>
+                      <CardDescription>Reports you've submitted about other users</CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => setIsAllReportsMadeOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {user.reportsMade.slice(0, 3).map((report) => (
+                        <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reportedUserAvatar} />
+                              <AvatarFallback>{report.reportedUserName[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <Link 
+                                to={`/users/${report.reportedUserId}`} 
+                                className="font-medium hover:underline"
+                              >
+                                {report.reportedUserName}
+                              </Link>
+                              <p className="text-sm text-muted-foreground">@{report.reportedUserUsername}</p>
+                              <p className="mt-1">{report.description}</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {new Date(report.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <AllReportsDialog
+                open={isAllReportsReceivedOpen}
+                onOpenChange={setIsAllReportsReceivedOpen}
+                reports={user.reportsReceived}
+                title="Reports Received"
+                showMarkAsRead={true}
+              />
+
+              <AllReportsDialog
+                open={isAllReportsMadeOpen}
+                onOpenChange={setIsAllReportsMadeOpen}
+                reports={user.reportsMade}
+                title="Reports Made"
               />
             </TabsContent>
 
