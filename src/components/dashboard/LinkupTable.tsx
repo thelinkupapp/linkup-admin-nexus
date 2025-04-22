@@ -592,7 +592,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                             <div>
                               <div className="text-[12px] text-[#888888] mb-1">Earnings</div>
                               <div className="flex items-center gap-1 font-medium text-green-700">
-                                <span className="flex items-center"><DollarSign className="w-3 h-3 mr-0.5" />${linkup.earnings}</span>
+                                <span>${linkup.earnings}</span>
                               </div>
                             </div>
                           ) : null}
