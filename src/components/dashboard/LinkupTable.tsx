@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addWeeks, addMonths, differenceInHours, differenceInMinutes } from "date-fns";
@@ -14,14 +15,16 @@ import {
   Clock,
   Filter,
   Tag,
-  CheckCircle2,
+  CheckCircle,
   XCircle,
   ArrowUpCircle,
   DoorOpen,
   DoorClosed,
   Eye,
   EyeOff,
-  Timer
+  Timer,
+  Map,
+  ArrowUpDown
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -57,6 +60,33 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { LinkupFilters } from "./LinkupFilters";
+import { DateRange } from "react-day-picker";
+
+interface Host {
+  id: string;
+  name: string;
+  username: string;
+  avatar: string;
+}
+
+interface Linkup {
+  id: string;
+  title: string;
+  emoji: string;
+  category: string;
+  host: Host;
+  createdAt: string;
+  date: string;
+  endTime: string;
+  location: string;
+  attendeeCount: number;
+  status: "upcoming" | "happening" | "happened" | "cancelled";
+  isPublic: boolean;
+  isOpen: boolean;
+  isFree: boolean;
+  price?: number;
+}
 
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
@@ -81,146 +111,130 @@ const categories = [
   { id: "other", name: "Other", emoji: "🎯" }
 ];
 
-const linkups = [
+// Sample data for linkups
+const linkups: Linkup[] = [
   {
     id: "1",
+    title: "Tech Networking",
+    emoji: "💻",
+    category: "tech",
+    host: {
+      id: "user1",
+      name: "David Chen",
+      username: "@davidchen",
+      avatar: "https://i.pravatar.cc/150?u=david"
+    },
+    createdAt: "2025-04-15T10:30:00Z",
+    date: "2025-04-30T18:30:00Z",
+    endTime: "2025-04-30T21:30:00Z",
+    location: "Innovation Hub",
+    attendeeCount: 20,
+    status: "upcoming",
+    isPublic: true,
+    isOpen: true,
+    isFree: false,
+    price: 25
+  },
+  {
+    id: "2",
     title: "Coffee Meetup",
     emoji: "☕",
     category: "coffee-chats",
     host: {
+      id: "user2",
       name: "Sarah Johnson",
+      username: "@sarahj",
       avatar: "https://i.pravatar.cc/150?u=sarah"
     },
-    date: "2025-04-25T14:30:00Z",
-    endTime: "2025-04-25T16:30:00Z",
+    createdAt: "2025-04-10T14:30:00Z",
+    date: "2025-04-25T15:30:00Z",
+    endTime: "2025-04-25T17:30:00Z",
     location: "Brew Café",
     attendeeCount: 4,
     status: "upcoming",
     isPublic: true,
     isOpen: true,
-    isFree: true,
-    price: 0
+    isFree: true
   },
   {
-    id: "2",
+    id: "3",
     title: "Hiking Adventure",
     emoji: "🏞️",
     category: "outdoors",
     host: {
+      id: "user3",
       name: "Mike Richards",
+      username: "@mikerichard",
       avatar: "https://i.pravatar.cc/150?u=mike"
     },
-    date: "2025-04-20T09:00:00Z",
-    endTime: "2025-04-20T14:00:00Z",
+    createdAt: "2025-03-25T09:15:00Z",
+    date: "2025-04-20T10:00:00Z",
+    endTime: "2025-04-20T15:00:00Z",
     location: "Forest Trail Park",
     attendeeCount: 8,
     status: "upcoming",
     isPublic: true,
     isOpen: false,
     isFree: false,
-    price: 25
-  },
-  {
-    id: "3",
-    title: "Wine Tasting",
-    emoji: "🍷",
-    category: "drinks",
-    host: {
-      name: "Emma Wilson",
-      avatar: "https://i.pravatar.cc/150?u=emma"
-    },
-    date: "2025-03-15T18:00:00Z",
-    location: "Vintage Winery",
-    attendeeCount: 12,
-    status: "happened",
-    isPublic: false,
-    isOpen: false,
-    isFree: false
+    price: 15
   },
   {
     id: "4",
-    title: "Tech Networking",
-    emoji: "💻",
-    category: "tech",
-    host: {
-      name: "David Chen",
-      avatar: "https://i.pravatar.cc/150?u=david"
-    },
-    date: "2025-04-30T17:30:00Z",
-    location: "Innovation Hub",
-    attendeeCount: 20,
-    status: "upcoming",
-    isPublic: true,
-    isOpen: true,
-    isFree: false
-  },
-  {
-    id: "5",
     title: "Book Club",
     emoji: "📚",
     category: "learning",
     host: {
+      id: "user4",
       name: "Lisa Patel",
+      username: "@lisap",
       avatar: "https://i.pravatar.cc/150?u=lisa"
     },
+    createdAt: "2025-02-15T19:00:00Z",
     date: "2025-03-22T19:00:00Z",
+    endTime: "2025-03-22T21:00:00Z",
     location: "Central Library",
     attendeeCount: 6,
     status: "cancelled",
     isPublic: true,
     isOpen: false,
     isFree: true
+  },
+  {
+    id: "5",
+    title: "Wine Tasting",
+    emoji: "🍷",
+    category: "drinks",
+    host: {
+      id: "user5",
+      name: "Emma Wilson",
+      username: "@emmaw",
+      avatar: "https://i.pravatar.cc/150?u=emma"
+    },
+    createdAt: "2025-02-10T18:00:00Z",
+    date: "2025-03-15T18:00:00Z",
+    endTime: "2025-03-15T20:00:00Z",
+    location: "Vintage Winery",
+    attendeeCount: 12,
+    status: "happened",
+    isPublic: false,
+    isOpen: false,
+    isFree: false,
+    price: 30
   }
-];
-
-const countries = [
-  "United States",
-  "Canada",
-  "United Kingdom",
-  "Australia",
-  "Germany",
-  "France",
-  "Japan",
-  "All Locations"
 ];
 
 export function LinkupTable() {
   const [searchValue, setSearchValue] = useState("");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState("All Locations");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedVisibility, setSelectedVisibility] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
-  const [dateRange, setDateRange] = useState<{
-    from: Date | undefined;
-    to: Date | undefined;
-  }>({
-    from: undefined,
-    to: undefined,
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [sortConfig, setSortConfig] = useState<{ field: string, direction: 'asc' | 'desc' }>({
+    field: 'date',
+    direction: 'desc'
   });
-
-  const getDateRangeForPeriod = (period: string) => {
-    const today = new Date();
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    switch (period) {
-      case "today":
-        return { from: today, to: today };
-      case "tomorrow":
-        return { from: tomorrow, to: tomorrow };
-      case "thisWeek":
-        return { from: startOfWeek(today), to: endOfWeek(today) };
-      case "nextWeek":
-        return { from: startOfWeek(addWeeks(today, 1)), to: endOfWeek(addWeeks(today, 1)) };
-      case "nextMonth":
-        return { from: startOfMonth(addMonths(today, 1)), to: endOfMonth(addMonths(today, 1)) };
-      default:
-        return { from: undefined, to: undefined };
-    }
-  };
 
   const formatDuration = (startDate: string, endDate: string) => {
     const start = new Date(startDate);
@@ -229,229 +243,142 @@ export function LinkupTable() {
     const minutes = differenceInMinutes(end, start) % 60;
     
     if (hours === 0) {
-      return `${minutes}min`;
+      return `(${minutes}min)`;
     }
-    return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}min`;
+    return minutes === 0 ? `(${hours}hr)` : `(${hours}hr ${minutes}min)`;
   };
 
   const filteredLinkups = [...linkups]
     .filter(linkup => {
-      if (searchValue && !linkup.title.toLowerCase().includes(searchValue.toLowerCase())) return false;
-      if (selectedCategory && linkup.category !== selectedCategory) return false;
-      if (selectedLocation !== "All Locations" && linkup.location !== selectedLocation) return false;
-      if (selectedStatus && linkup.status !== selectedStatus.toLowerCase()) return false;
+      if (searchValue && !linkup.title.toLowerCase().includes(searchValue.toLowerCase())) {
+        return false;
+      }
+
+      if (selectedCategories.length > 0 && !selectedCategories.includes(linkup.category)) {
+        return false;
+      }
+
+      if (selectedStatus && linkup.status !== selectedStatus) {
+        return false;
+      }
+
       if (selectedVisibility) {
-        if (selectedVisibility === "Public" && !linkup.isPublic) return false;
-        if (selectedVisibility === "Private" && linkup.isPublic) return false;
+        if (selectedVisibility === "public" && !linkup.isPublic) return false;
+        if (selectedVisibility === "private" && linkup.isPublic) return false;
       }
+
       if (selectedPrice) {
-        if (selectedPrice === "Free" && !linkup.isFree) return false;
-        if (selectedPrice === "Paid" && linkup.isFree) return false;
+        if (selectedPrice === "free" && !linkup.isFree) return false;
+        if (selectedPrice === "paid" && linkup.isFree) return false;
       }
+
       if (selectedJoinMethod) {
-        if (selectedJoinMethod === "Open" && !linkup.isOpen) return false;
-        if (selectedJoinMethod === "Closed" && linkup.isOpen) return false;
+        if (selectedJoinMethod === "open" && !linkup.isOpen) return false;
+        if (selectedJoinMethod === "closed" && linkup.isOpen) return false;
       }
-      if (dateRange.from && dateRange.to) {
+
+      if (dateRange?.from && dateRange?.to) {
         const linkupDate = new Date(linkup.date);
-        if (linkupDate < dateRange.from || linkupDate > dateRange.to) return false;
+        if (linkupDate < dateRange.from || linkupDate > dateRange.to) {
+          return false;
+        }
       }
+
       return true;
     })
     .sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-      return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.date).getTime();
+        const dateB = new Date(b.date).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'created') {
+        const createdA = new Date(a.createdAt).getTime();
+        const createdB = new Date(b.createdAt).getTime();
+        return sortConfig.direction === 'asc' ? createdA - createdB : createdB - createdA;
+      } else if (sortConfig.field === 'name') {
+        return sortConfig.direction === 'asc' 
+          ? a.title.localeCompare(b.title) 
+          : b.title.localeCompare(a.title);
+      }
+      return 0;
     });
+
+  const handleSort = (field: string) => {
+    setSortConfig(prev => ({
+      field,
+      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  const getStatusBadgeStyles = (status: Linkup["status"]) => {
+    switch (status) {
+      case "upcoming":
+        return "bg-blue-50 text-blue-700 border-blue-200";
+      case "happening":
+        return "bg-purple-50 text-purple-700 border-purple-200";
+      case "happened":
+        return "bg-green-50 text-green-700 border-green-200";
+      case "cancelled":
+        return "bg-red-50 text-red-700 border-red-200";
+      default:
+        return "bg-blue-50 text-blue-700 border-blue-200";
+    }
+  };
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search linkups..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-9 w-full sm:w-80"
-          />
-        </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category) => (
-                <SelectItem key={category.id} value={category.id}>
-                  <div className="flex items-center gap-2">
-                    <span>{category.emoji}</span>
-                    <span>{category.name}</span>
-                  </div>
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Upcoming">
-                <div className="flex items-center gap-2">
-                  <ArrowUpCircle className="h-4 w-4" />
-                  <span>Upcoming</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Happened">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4" />
-                  <span>Happened</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Cancelled">
-                <div className="flex items-center gap-2">
-                  <XCircle className="h-4 w-4" />
-                  <span>Cancelled</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Removed">
-                <div className="flex items-center gap-2">
-                  <XCircle className="h-4 w-4" />
-                  <span>Removed</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="w-[180px]">
-                <Calendar className="mr-2 h-4 w-4" />
-                {dateRange.from ? (
-                  dateRange.to ? (
-                    <>
-                      {format(dateRange.from, "LLL dd, y")} -{" "}
-                      {format(dateRange.to, "LLL dd, y")}
-                    </>
-                  ) : (
-                    format(dateRange.from, "LLL dd, y")
-                  )
-                ) : (
-                  "Select Date Range"
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[320px] p-0" align="start">
-              <div className="p-2 space-y-2">
-                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("today"))}>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Today
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("tomorrow"))}>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Tomorrow
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("thisWeek"))}>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  This Week
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextWeek"))}>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Next Week
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setDateRange(getDateRangeForPeriod("nextMonth"))}>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Next Month
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <div className="p-2">
-                  <CalendarComponent
-                    initialFocus
-                    mode="range"
-                    defaultMonth={dateRange.from}
-                    selected={dateRange}
-                    onSelect={(range: { from: Date; to: Date | undefined }) => {
-                      setDateRange({ from: range.from, to: range.to || range.from });
-                    }}
-                    numberOfMonths={2}
-                  />
-                </div>
-              </div>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Select value={selectedVisibility} onValueChange={setSelectedVisibility}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Visibility" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Public">
-                <div className="flex items-center gap-2">
-                  <Eye className="h-4 w-4" />
-                  <span>Public</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Private">
-                <div className="flex items-center gap-2">
-                  <EyeOff className="h-4 w-4" />
-                  <span>Private</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedPrice} onValueChange={setSelectedPrice}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Prices" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Free">
-                <div className="flex items-center gap-2">
-                  <CircleDollarSign className="h-4 w-4" />
-                  <span>Free</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Paid">
-                <div className="flex items-center gap-2">
-                  <CircleDollarSign className="h-4 w-4" />
-                  <span>Paid</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={selectedJoinMethod} onValueChange={setSelectedJoinMethod}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="All Join Methods" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Open">
-                <div className="flex items-center gap-2">
-                  <DoorOpen className="h-4 w-4" />
-                  <span>Open</span>
-                </div>
-              </SelectItem>
-              <SelectItem value="Closed">
-                <div className="flex items-center gap-2">
-                  <DoorClosed className="h-4 w-4" />
-                  <span>Closed</span>
-                </div>
-              </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+      <LinkupFilters 
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        selectedCategories={selectedCategories}
+        setSelectedCategories={setSelectedCategories}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        selectedVisibility={selectedVisibility}
+        setSelectedVisibility={setSelectedVisibility}
+        selectedPrice={selectedPrice}
+        setSelectedPrice={setSelectedPrice}
+        selectedJoinMethod={selectedJoinMethod}
+        setSelectedJoinMethod={setSelectedJoinMethod}
+        dateRange={dateRange}
+        setDateRange={setDateRange}
+        filteredCount={filteredLinkups.length}
+        totalCount={linkups.length}
+      />
 
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Linkup</TableHead>
+              <TableHead 
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleSort('name')}
+              >
+                <div className="flex items-center gap-1">
+                  Linkup
+                  <ArrowUpDown className="h-4 w-4" />
+                </div>
+              </TableHead>
               <TableHead>Category</TableHead>
               <TableHead>Host</TableHead>
-              <TableHead>Date & Time</TableHead>
+              <TableHead 
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleSort('created')}
+              >
+                <div className="flex items-center gap-1">
+                  Created On
+                  <ArrowUpDown className="h-4 w-4" />
+                </div>
+              </TableHead>
+              <TableHead 
+                className="cursor-pointer hover:bg-muted/50"
+                onClick={() => handleSort('date')}
+              >
+                <div className="flex items-center gap-1">
+                  Date & Time
+                  <ArrowUpDown className="h-4 w-4" />
+                </div>
+              </TableHead>
               <TableHead>Location</TableHead>
               <TableHead>Visibility</TableHead>
               <TableHead>Join Method</TableHead>
@@ -480,23 +407,38 @@ export function LinkupTable() {
                   </div>
                 </TableCell>
                 <TableCell>
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
+                      <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <Link to={`/users/${linkup.host.id}`} className="text-sm font-medium hover:underline">
+                        {linkup.host.name}
+                      </Link>
+                      <span className="text-xs text-muted-foreground">{linkup.host.username}</span>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="text-sm">
+                    {new Date(linkup.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {new Date(linkup.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </div>
+                </TableCell>
+                <TableCell>
                   <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-sm">
-                        {new Date(linkup.date).toLocaleDateString()}
-                      </span>
+                    <div className="text-sm">
+                      {new Date(linkup.date).toLocaleDateString()}
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 text-xs">
                       <Clock className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-sm">
-                        {new Date(linkup.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {new Date(linkup.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Timer className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-sm">
-                        Duration: {formatDuration(linkup.date, linkup.endTime)}
+                      <span>
+                        {new Date(linkup.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        {" "}
+                        {formatDuration(linkup.date, linkup.endTime)}
                       </span>
                     </div>
                   </div>
@@ -534,9 +476,7 @@ export function LinkupTable() {
                   <Badge
                     variant="outline"
                     className={cn(
-                      linkup.status === "upcoming" && "bg-status-upcoming/10 text-status-upcoming border-status-upcoming/20",
-                      linkup.status === "happened" && "bg-status-active/10 text-status-active border-status-active/20",
-                      linkup.status === "cancelled" && "bg-status-cancelled/10 text-status-cancelled border-status-cancelled/20"
+                      getStatusBadgeStyles(linkup.status)
                     )}
                   >
                     {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
