@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, DollarSign, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -38,8 +39,8 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatuses: string[];
-  setSelectedStatuses: (value: string[]) => void;
+  selectedStatus: string;
+  setSelectedStatus: (value: string) => void;
   selectedVisibility: string;
   setSelectedVisibility: (value: string) => void;
   selectedPrice: string;
@@ -60,8 +61,8 @@ export function LinkupFilters({
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatuses,
-  setSelectedStatuses,
+  selectedStatus,
+  setSelectedStatus,
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -112,17 +113,9 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
-  const getStatusButtonLabel = () => {
-    if (selectedStatuses.length === 0) return "All Status";
-    if (selectedStatuses.length === 1) {
-      const found = statusOptions.find(opt => opt.value === selectedStatuses[0]);
-      return found ? found.label : selectedStatuses[0];
-    }
-    return `${selectedStatuses.length} selected`;
-  };
-
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
+      {/* Filter bar expanded, stretches wider */}
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
@@ -169,6 +162,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
+        {/* COUNTRIES LOCATION DROPDOWN: now matches user management */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
@@ -221,49 +215,25 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[106px]">
-              {getStatusButtonLabel()}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[190px] p-1 z-[100]">
-            <Command>
-              <CommandInput placeholder="Search status..." />
-              <CommandEmpty>No status found.</CommandEmpty>
-              <ScrollArea className="h-32">
-                <CommandGroup>
-                  <CommandItem
-                    key="all"
-                    onSelect={() => setSelectedStatuses([])}
-                  >
-                    <Checkbox
-                      checked={selectedStatuses.length === 0}
-                      className="mr-2 h-3 w-3"
-                    />
-                    All Status
-                  </CommandItem>
-                  {statusOptions.map((option) => (
-                    <CommandItem
-                      key={option.value}
-                      onSelect={() =>
-                        setSelectedStatuses(
-                          toggleArrayValue(selectedStatuses, option.value)
-                        )
-                      }
-                    >
-                      <Checkbox
-                        checked={selectedStatuses.includes(option.value)}
-                        className="mr-2 h-3 w-3"
-                      />
-                      {option.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </ScrollArea>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <Select value={selectedStatus} onValueChange={(value) => setSelectedStatus(value === "all" ? "" : value)}>
+          <SelectTrigger className="h-8 text-xs w-24">
+            <SelectValue placeholder="Status" />
+          </SelectTrigger>
+          <SelectContent className="z-[100]">
+            <SelectItem value="all" className="text-xs">
+              All Status
+            </SelectItem>
+            {statusOptions.map((option) => (
+              <SelectItem
+                key={option.value}
+                value={option.value}
+                className="text-xs"
+              >
+                {option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
 
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
@@ -316,6 +286,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
+        {/* EARNINGS DROPDOWN - compact with two choices */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -367,6 +338,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
       </div>
+      {/* No linkups count here! Removed the duplicate right-side count */}
     </div>
   );
 }
