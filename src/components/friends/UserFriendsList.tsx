@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
@@ -26,17 +27,16 @@ interface FriendRequest {
   requestDate: string;
 }
 
+// Common type for the ViewAllFriendsDialog
+type FriendOrRequest = Friend | FriendRequest;
+
 interface UserFriendsListProps {
   friends: Friend[];
   receivedRequests: FriendRequest[];
   sentRequests: FriendRequest[];
 }
 
-export default function UserFriendsList({ 
-  friends, 
-  receivedRequests, 
-  sentRequests 
-}: UserFriendsListProps) {
+export default function UserFriendsList({ friends, receivedRequests, sentRequests }: UserFriendsListProps) {
   const [friendsSortDirection, setFriendsSortDirection] = useState<'asc' | 'desc'>('desc');
   const [receivedSortDirection, setReceivedSortDirection] = useState<'asc' | 'desc'>('desc');
   const [sentSortDirection, setSentSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -78,7 +78,7 @@ export default function UserFriendsList({
     onSortChange, 
     dateColumnName 
   }: { 
-    data: Friend[] | FriendRequest[], 
+    data: FriendOrRequest[], 
     sortDirection: 'asc' | 'desc',
     onSortChange: () => void,
     dateColumnName: string 
@@ -171,16 +171,18 @@ export default function UserFriendsList({
       <Card>
         <CardHeader>
           <CardTitle>Friend Requests</CardTitle>
+          <CardDescription>
+            {receivedRequests.length + sentRequests.length === 0 
+              ? "No pending friend requests"
+              : `${receivedRequests.length + sentRequests.length} pending request${
+                  receivedRequests.length + sentRequests.length === 1 ? '' : 's'
+                }`}
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {receivedRequests.length} pending request{receivedRequests.length !== 1 ? 's' : ''}
-                </p>
-              </div>
+              <h3 className="text-sm font-medium text-muted-foreground">Received Requests</h3>
               <Button variant="outline" size="sm" onClick={() => setIsAllReceivedOpen(true)}>
                 View All
               </Button>
@@ -197,12 +199,7 @@ export default function UserFriendsList({
 
           <div>
             <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {sentRequests.length} pending request{sentRequests.length !== 1 ? 's' : ''}
-                </p>
-              </div>
+              <h3 className="text-sm font-medium text-muted-foreground">Sent Requests</h3>
               <Button variant="outline" size="sm" onClick={() => setIsAllSentOpen(true)}>
                 View All
               </Button>
