@@ -266,10 +266,62 @@ const user: UserData = {
     showLinkupsToFriendsOnly: false
   },
   reports: [],
-  friends: [],
+  friends: [
+    {
+      id: "friend1",
+      name: "Emma Thompson",
+      username: "emmathompson",
+      avatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+      friendsSince: "2024-03-15T10:30:00Z"
+    },
+    {
+      id: "friend2",
+      name: "Alex Rodriguez",
+      username: "alexr",
+      avatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+      friendsSince: "2024-02-20T15:45:00Z"
+    },
+    {
+      id: "friend3",
+      name: "Sarah Chen",
+      username: "sarahc",
+      avatar: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+      friendsSince: "2024-01-10T09:15:00Z"
+    }
+  ],
   pendingFriendRequests: {
-    received: [],
-    sent: []
+    received: [
+      {
+        id: "req1",
+        name: "Michael Brown",
+        username: "mikebrown",
+        avatar: "/lovable-uploads/efe02853-0a89-411c-9ab1-35117eef0ff9.png",
+        requestDate: "2024-04-18T14:30:00Z"
+      },
+      {
+        id: "req2",
+        name: "Lisa Wang",
+        username: "lisawang",
+        avatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png",
+        requestDate: "2024-04-15T11:20:00Z"
+      }
+    ],
+    sent: [
+      {
+        id: "sent1",
+        name: "David Kim",
+        username: "davidk",
+        avatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png",
+        requestDate: "2024-04-19T16:45:00Z"
+      },
+      {
+        id: "sent2",
+        name: "Rachel Green",
+        username: "rachelg",
+        avatar: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+        requestDate: "2024-04-17T13:10:00Z"
+      }
+    ]
   },
   hostingLinkups: 2,
   lastKnownLocation: "🇮🇩 Canggu, Indonesia"
