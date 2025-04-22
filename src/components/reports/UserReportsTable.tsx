@@ -1,4 +1,3 @@
-
 import { Check, Filter, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -24,7 +23,7 @@ const mockReports = [
       id: "ru1",
       name: "Michael Chen",
       username: "mikechen",
-      avatar: "/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png"
+      avatar: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png"
     },
     description: "Inappropriate behavior in chat",
     timestamp: "2025-04-22T11:30:00",
@@ -36,7 +35,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/3a92fc9e-fe93-44e4-8c0e-0b14a7085082.png"
+      avatar: "/lovable-uploads/e40b12e8-d278-4b67-8505-d39052f56458.png"
     },
     reportedUser: {
       id: "ru2",
@@ -248,4 +247,3 @@ export function UserReportsTable() {
     </div>
   );
 }
-
