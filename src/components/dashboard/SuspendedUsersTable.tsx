@@ -4,7 +4,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ReactivateUserDialog } from "./ReactivateUserDialog";
 import { format } from "date-fns";
-import { Search, ArrowDown, Info } from "lucide-react"; // Only using allowed icons
+import { Search, ArrowDown, Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -294,9 +294,17 @@ export default function SuspendedUsersTable() {
 
       {/* Notes Popup */}
       <Popover open={!!notesPopupContent} onOpenChange={() => setNotesPopupContent(null)}>
-        <PopoverContent className="w-80 p-4">
-          <div className="font-medium mb-2">Additional Notes</div>
+        <PopoverContent 
+          className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] max-w-[90%] rounded-lg shadow-xl z-50"
+        >
+          <div className="font-semibold text-lg mb-2">Additional Notes</div>
           <div className="text-sm text-gray-700">{notesPopupContent}</div>
+          <button 
+            className="mt-4 text-sm text-purple-600 hover:text-purple-800"
+            onClick={() => setNotesPopupContent(null)}
+          >
+            Close
+          </button>
         </PopoverContent>
       </Popover>
 

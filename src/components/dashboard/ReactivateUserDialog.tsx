@@ -14,7 +14,14 @@ interface ReactivateUserDialogProps {
   onConfirm: () => void;
 }
 
-export function ReactivateUserDialog({ isOpen, onClose, userName, username, userAvatar, onConfirm }: ReactivateUserDialogProps) {
+export function ReactivateUserDialog({ 
+  isOpen, 
+  onClose, 
+  userName, 
+  username, 
+  userAvatar, 
+  onConfirm 
+}: ReactivateUserDialogProps) {
   const { toast } = useToast();
   const [isConfirmed, setIsConfirmed] = useState(false);
 
@@ -40,20 +47,20 @@ export function ReactivateUserDialog({ isOpen, onClose, userName, username, user
 
   return (
     <AlertDialog open={isOpen} onOpenChange={handleCancel}>
-      <AlertDialogContent>
+      <AlertDialogContent className="max-w-md w-full">
         {!isConfirmed ? (
           <>
             <AlertDialogHeader>
               <AlertDialogTitle>Reactivate User?</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="flex items-center gap-4 my-4">
-              <Avatar className="h-12 w-12">
+              <Avatar className="h-16 w-16">
                 <AvatarImage src={userAvatar} alt={userName} />
                 <AvatarFallback>{userName.charAt(0)}</AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-semibold">{userName}</p>
-                <p className="text-muted-foreground text-sm">@{username}</p>
+                <p className="font-semibold text-lg">{userName}</p>
+                <p className="text-muted-foreground">@{username}</p>
               </div>
             </div>
             <AlertDialogDescription>
@@ -61,7 +68,11 @@ export function ReactivateUserDialog({ isOpen, onClose, userName, username, user
             </AlertDialogDescription>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <Button variant="default" onClick={handleConfirm}>
+              <Button 
+                variant="default" 
+                onClick={handleConfirm} 
+                className="bg-purple-500 hover:bg-purple-600 text-white"
+              >
                 Reactivate
               </Button>
             </AlertDialogFooter>
@@ -69,7 +80,6 @@ export function ReactivateUserDialog({ isOpen, onClose, userName, username, user
         ) : (
           <div className="py-8 text-center">
             <div className="mx-auto w-fit rounded-full bg-green-100 p-4 mb-4">
-              {/* <UserCheck className="h-8 w-8 text-green-600" /> */}
               <span className="text-green-600 text-3xl">✔</span>
             </div>
             <AlertDialogTitle className="mb-2">User Reactivated</AlertDialogTitle>
