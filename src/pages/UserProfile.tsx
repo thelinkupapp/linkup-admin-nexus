@@ -63,6 +63,7 @@ import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
 import { UserReportsList } from "@/components/reports/UserReportsList";
 import { UserFriendsList } from "@/components/friends/UserFriendsList";
+import { Apple, Smartphone } from "lucide-react";
 
 interface UserData {
   id: string;
@@ -162,6 +163,8 @@ interface UserData {
     promotions: boolean;
     announcements: boolean;
   };
+  deviceType: "ios" | "android";
+  marketingOptIn: boolean;
 }
 
 const linkupPlusTransactions = [
@@ -305,6 +308,8 @@ const user: UserData = {
     promotions: true,
     announcements: true
   },
+  deviceType: "ios",
+  marketingOptIn: true,
   reports: [],
   friends: [
     {
@@ -684,6 +689,15 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
                         <p>{user.email}</p>
+                        <span className={`inline-block mt-1 px-2 py-0.5 rounded text-xs font-semibold ${
+                          user.marketingOptIn
+                            ? "bg-green-100 text-green-800"
+                            : "bg-gray-100 text-gray-600"
+                        }`}>
+                          {user.marketingOptIn
+                            ? "Opted in for marketing communications"
+                            : "Not opted in for marketing communications"}
+                        </span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
@@ -711,6 +725,29 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Last Known Location</p>
                         <p>{user.lastKnownLocation}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Date / Time Joined</p>
+                        <p>
+                          {new Date(user.joinDate).toLocaleString("en-GB", {
+                            year: "numeric", month: "short", day: "numeric",
+                            hour: "2-digit", minute: "2-digit"
+                          })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Device</p>
+                        <span className="flex items-center gap-1">
+                          {user.deviceType === "ios" ? (
+                            <>
+                              <Apple className="h-4 w-4 text-zinc-500" /> iOS
+                            </>
+                          ) : (
+                            <>
+                              <Smartphone className="h-4 w-4 text-zinc-500" /> Android
+                            </>
+                          )}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
