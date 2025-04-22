@@ -24,7 +24,8 @@ import {
   CardHeader, 
   CardTitle, 
   CardDescription, 
-  CardContent 
+  CardContent,
+  CardFooter 
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -51,7 +52,8 @@ import {
   AlertTriangle, 
   User as UserIcon, 
   ShieldOff,
-  ArrowUpRight
+  ArrowUpRight,
+  Bell
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
@@ -781,3 +783,567 @@ const UserProfile = () => {
                             </Badge>
                           ))}
                         </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="verification" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Verification
+                    </CardTitle>
+                    <CardDescription>
+                      Manage the user's verification status
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Status</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.verificationDetails.attempts[0]?.status || 'Pending'}
+                          </p>
+                        </div>
+                        <Button onClick={() => handleVerificationAction('approve')}>
+                          Approve
+                        </Button>
+                        <Button onClick={() => handleVerificationAction('deny')}>
+                          Deny
+                        </Button>
+                        <Button onClick={() => handleVerificationAction('remove')}>
+                          Remove
+                        </Button>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Submitted At</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.verificationDetails.attempts[0]?.submittedAt || 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Status Change Time</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.verificationDetails.attempts[0]?.statusChangeTime || 'N/A'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Notification Sent</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.verificationDetails.attempts[0]?.notificationSent ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="linkups" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Linkups
+                    </CardTitle>
+                    <CardDescription>
+                      View the user's linkup history
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Hosted Linkups</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.hostingLinkups}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Joined Linkups</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.linkupStats.joined}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="wallet" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Wallet & Billing
+                    </CardTitle>
+                    <CardDescription>
+                      Manage the user's wallet and billing information
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Lifetime Earnings</p>
+                          <p className="text-sm text-muted-foreground">
+                            ${user.wallet.lifetimeEarnings}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Available Balance</p>
+                          <p className="text-sm text-muted-foreground">
+                            ${user.wallet.availableBalance}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">In Transit</p>
+                          <p className="text-sm text-muted-foreground">
+                            ${user.wallet.inTransit}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Last Withdrawal</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.wallet.lastWithdrawal}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Payout History</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.wallet.payoutHistory.length} transactions
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Linkup Plus</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.wallet.linkupPlus.startDate ? user.wallet.linkupPlus.startDate : 'Not active'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="friends" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Friends
+                    </CardTitle>
+                    <CardDescription>
+                      View the user's friends and friend requests
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Friends</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.friends.length}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Pending Friend Requests</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.pendingFriendRequests.received.length} received, {user.pendingFriendRequests.sent.length} sent
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="privacy" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Privacy Settings
+                    </CardTitle>
+                    <CardDescription>
+                      Manage the user's privacy settings
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Hide Age</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.hideAge ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Allow Female Friend Requests</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.allowFemaleFriendRequests ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Allow Male Friend Requests</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.allowMaleFriendRequests ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Socials Visible to Friends Only</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.socialsVisibleToFriendsOnly ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Friends Can See Upcoming Attendance</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.friendsCanSeeUpcomingAttendance ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Show Location on Map</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.showLocationOnMap ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Appear on Nearby People</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.appearOnNearbyPeople ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Show Linkups to Everyone</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.showLinkupsToEveryone ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Show Linkups to Friends Only</p>
+                          <p className="text-sm text-muted-foreground">
+                            {user.privacySettings.showLinkupsToFriendsOnly ? 'Yes' : 'No'}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="reports" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Reports
+                    </CardTitle>
+                    <CardDescription>
+                      View the user's reports
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Reports Received</p>
+                          <p className="text-sm text-muted-foreground">
+                            {userWithVerification.reportsReceived.length}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-medium">Reports Made</p>
+                          <p className="text-sm text-muted-foreground">
+                            {userWithVerification.reportsMade.length}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="push-notifications" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Bell className="h-5 w-5 text-linkup-purple" />
+                      Push Notification Settings
+                    </CardTitle>
+                    <CardDescription>
+                      Configure which notifications the user receives on their mobile device
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="linkupInvites" className="font-medium">
+                            Linkup Invites
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive notifications when invited to linkups
+                          </p>
+                        </div>
+                        <Switch id="linkupInvites" defaultChecked />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="friendRequests" className="font-medium">
+                            Friend Requests
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive notifications for new friend requests
+                          </p>
+                        </div>
+                        <Switch id="friendRequests" defaultChecked />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="messages" className="font-medium">
+                            Direct Messages
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive notifications for new direct messages
+                          </p>
+                        </div>
+                        <Switch id="messages" defaultChecked />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="groupMessages" className="font-medium">
+                            Group Messages
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive notifications for new messages in group chats
+                          </p>
+                        </div>
+                        <Switch id="groupMessages" defaultChecked />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="reminders" className="font-medium">
+                            Event Reminders
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive reminders before upcoming linkups
+                          </p>
+                        </div>
+                        <Switch id="reminders" defaultChecked />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="marketing" className="font-medium">
+                            Marketing & Updates
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Receive notifications about app updates and promotions
+                          </p>
+                        </div>
+                        <Switch id="marketing" />
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="ml-auto">Save Changes</Button>
+                  </CardFooter>
+                </Card>
+                
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Bell className="h-5 w-5 text-linkup-purple" />
+                      Quiet Hours
+                    </CardTitle>
+                    <CardDescription>
+                      Set times when notifications will be silenced
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <Label htmlFor="enableQuietHours" className="font-medium">
+                            Enable Quiet Hours
+                          </Label>
+                          <p className="text-sm text-muted-foreground">
+                            Silence notifications during specified hours
+                          </p>
+                        </div>
+                        <Switch id="enableQuietHours" />
+                      </div>
+                      
+                      <Separator />
+                      
+                      <div>
+                        <Label className="font-medium">
+                          Quiet Hours Start
+                        </Label>
+                        <div className="mt-2">
+                          <select className="w-full rounded-md border border-input bg-background px-3 py-2">
+                            <option>10:00 PM</option>
+                            <option>11:00 PM</option>
+                            <option>12:00 AM</option>
+                            <option>1:00 AM</option>
+                          </select>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <Label className="font-medium">
+                          Quiet Hours End
+                        </Label>
+                        <div className="mt-2">
+                          <select className="w-full rounded-md border border-input bg-background px-3 py-2">
+                            <option>6:00 AM</option>
+                            <option>7:00 AM</option>
+                            <option>8:00 AM</option>
+                            <option>9:00 AM</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter>
+                    <Button className="ml-auto">Save Changes</Button>
+                  </CardFooter>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
