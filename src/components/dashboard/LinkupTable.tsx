@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -213,7 +214,7 @@ interface LinkupTableProps {
 export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps) {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [selectedVisibility, setSelectedVisibility] = useState("");
   const [selectedPrice, setSelectedPrice] = useState("");
   const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
@@ -247,7 +248,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
         if (selectedCategories.length > 0 && !selectedCategories.includes(linkup.category)) {
           return false;
         }
-        if (selectedStatus && linkup.status !== selectedStatus) {
+        if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) {
           return false;
         }
         if (selectedVisibility) {
@@ -286,7 +287,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       });
     }
     return filtered;
-  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort]);
+  }, [searchValue, selectedCategories, selectedStatuses, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort]);
 
   React.useEffect(() => {
     if (onCountChange) {
@@ -342,8 +343,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
         setSearchValue={setSearchValue}
         selectedCategories={selectedCategories}
         setSelectedCategories={setSelectedCategories}
-        selectedStatus={selectedStatus}
-        setSelectedStatus={setSelectedStatus}
+        selectedStatuses={selectedStatuses}
+        setSelectedStatuses={setSelectedStatuses}
         selectedVisibility={selectedVisibility}
         setSelectedVisibility={setSelectedVisibility}
         selectedPrice={selectedPrice}
