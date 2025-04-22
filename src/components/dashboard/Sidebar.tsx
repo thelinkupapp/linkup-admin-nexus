@@ -61,6 +61,11 @@ const navItems = [
         icon: Users
       },
       {
+        title: "Verifications",
+        href: "/verifications",
+        icon: ShieldCheck
+      },
+      {
         title: "Reports",
         href: "/users/reports",
         icon: FileText
@@ -74,11 +79,6 @@ const navItems = [
         title: "Deleted",
         href: "/users/deleted",
         icon: Trash2
-      },
-      {
-        title: "Verifications",
-        href: "/verifications",
-        icon: ShieldCheck
       }
     ]
   },
