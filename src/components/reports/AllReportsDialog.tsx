@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+
+import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Check } from "lucide-react";
 import { 
@@ -33,6 +34,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { toast } from "@/hooks/use-toast";
 
 interface BaseReport {
   id: string;
@@ -78,16 +80,22 @@ export const AllReportsDialog = ({
   const [pageSize, setPageSize] = useState(10);
   const [filterStatus, setFilterStatus] = useState<"all" | "read" | "unread">("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [localReports, setLocalReports] = useState<Report[]>(reports);
+
+  // Update local reports when external reports change
+  useEffect(() => {
+    setLocalReports(reports);
+  }, [reports]);
 
   const isReportReceived = (report: Report): report is ReportReceived => {
     return 'reporterId' in report;
   };
 
   const filteredReports = useMemo(() => {
-    let filtered = [...reports];
+    let filtered = [...localReports];
 
     if (showMarkAsRead) {
-      filtered = reports.filter(report => {
+      filtered = localReports.filter(report => {
         if (!isReportReceived(report)) return false;
         if (filterStatus === "read") return report.isRead;
         if (filterStatus === "unread") return !report.isRead;
@@ -100,7 +108,7 @@ export const AllReportsDialog = ({
       const dateB = new Date(b.timestamp).getTime();
       return sortDirection === "desc" ? dateB - dateA : dateA - dateB;
     });
-  }, [reports, filterStatus, sortDirection, showMarkAsRead]);
+  }, [localReports, filterStatus, sortDirection, showMarkAsRead]);
 
   const paginatedReports = useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -108,10 +116,25 @@ export const AllReportsDialog = ({
   }, [filteredReports, currentPage, pageSize]);
 
   const totalPages = Math.ceil(filteredReports.length / pageSize);
-  const unreadCount = reports.filter(r => isReportReceived(r) && !r.isRead).length;
+  const unreadCount = localReports.filter(r => isReportReceived(r) && !r.isRead).length;
 
   const handleMarkAsRead = (reportId: string) => {
+    // Update local state to immediately reflect the change
+    setLocalReports(prev => prev.map(report => {
+      if (report.id === reportId && isReportReceived(report)) {
+        return { ...report, isRead: true };
+      }
+      return report;
+    }));
+    
+    // Call external handler
     onMarkAsRead?.(reportId);
+    
+    // Show success toast
+    toast({
+      title: "Report marked as read",
+      description: "The report has been marked as read successfully.",
+    });
   };
 
   return (

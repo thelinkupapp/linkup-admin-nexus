@@ -640,13 +640,19 @@ const UserProfile = () => {
   ];
 
   const handleMarkAsRead = (reportId: string) => {
-    const updatedReports = user.reportsReceived.map(report => 
+    const updatedReports = userWithVerification.reportsReceived.map(report => 
       report.id === reportId ? { ...report, isRead: true } : report
     );
+    
     setUserWithVerification(prev => ({
       ...prev,
       reportsReceived: updatedReports
     }));
+    
+    toast({
+      title: "Report marked as read",
+      description: "The report has been marked as read successfully.",
+    });
   };
 
   return (
@@ -1245,7 +1251,7 @@ const UserProfile = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {user.reportsReceived.slice(0, 3).map((report) => (
+                      {userWithVerification.reportsReceived.slice(0, 3).map((report) => (
                         <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
                           <div className="flex items-start gap-3">
                             <Avatar className="h-8 w-8">
@@ -1276,12 +1282,15 @@ const UserProfile = () => {
                             </div>
                           </div>
                           {!report.isRead && (
-                            <button 
-                              className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              className="text-green-600 hover:text-green-700 hover:bg-green-50"
                               onClick={() => handleMarkAsRead(report.id)}
                             >
+                              <Check className="h-4 w-4 mr-1" />
                               Mark as Read
-                            </button>
+                            </Button>
                           )}
                         </div>
                       ))}
@@ -1301,7 +1310,7 @@ const UserProfile = () => {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {user.reportsMade.slice(0, 3).map((report) => (
+                      {userWithVerification.reportsMade.slice(0, 3).map((report) => (
                         <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
                           <div className="flex items-start gap-3">
                             <Avatar className="h-8 w-8">
@@ -1332,7 +1341,7 @@ const UserProfile = () => {
               <AllReportsDialog
                 open={isAllReportsReceivedOpen}
                 onOpenChange={setIsAllReportsReceivedOpen}
-                reports={user.reportsReceived}
+                reports={userWithVerification.reportsReceived}
                 title="Reports Received"
                 showMarkAsRead={true}
                 onMarkAsRead={handleMarkAsRead}
@@ -1341,7 +1350,7 @@ const UserProfile = () => {
               <AllReportsDialog
                 open={isAllReportsMadeOpen}
                 onOpenChange={setIsAllReportsMadeOpen}
-                reports={user.reportsMade}
+                reports={userWithVerification.reportsMade}
                 title="Reports Made"
               />
             </TabsContent>
