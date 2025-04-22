@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, DollarSign, sortAsc, sortDesc } from "lucide-react";
+import { MoreHorizontal, DollarSign, SortAsc, SortDesc } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
@@ -347,12 +347,12 @@ export function LinkupTable() {
                   Sort by
                   {earningsSort === "desc" && (
                     <span className="flex items-center text-base text-muted-foreground gap-1">
-                      Earnings <sortDesc className="w-4 h-4" />
+                      Earnings <SortDesc className="w-4 h-4" />
                     </span>
                   )}
                   {earningsSort === "asc" && (
                     <span className="flex items-center text-base text-muted-foreground gap-1">
-                      Earnings <sortAsc className="w-4 h-4" />
+                      Earnings <SortAsc className="w-4 h-4" />
                     </span>
                   )}
                   {earningsSort === "none" && (
@@ -374,7 +374,7 @@ export function LinkupTable() {
                 >
                   Date &amp; Time{" "}
                   {sortConfig.field === "date" && (
-                    sortConfig.direction === "asc" ? <sortAsc className="ml-1 w-4 h-4" /> : <sortDesc className="ml-1 w-4 h-4" />
+                    sortConfig.direction === "asc" ? <SortAsc className="ml-1 w-4 h-4" /> : <SortDesc className="ml-1 w-4 h-4" />
                   )}
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -383,7 +383,7 @@ export function LinkupTable() {
                 >
                   Created On{" "}
                   {sortConfig.field === "created" && (
-                    sortConfig.direction === "asc" ? <sortAsc className="ml-1 w-4 h-4" /> : <sortDesc className="ml-1 w-4 h-4" />
+                    sortConfig.direction === "asc" ? <SortAsc className="ml-1 w-4 h-4" /> : <SortDesc className="ml-1 w-4 h-4" />
                   )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
