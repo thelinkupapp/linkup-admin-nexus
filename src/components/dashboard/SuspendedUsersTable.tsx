@@ -142,6 +142,19 @@ export default function SuspendedUsersTable() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
+        <Select value={itemsPerPage.toString()} onValueChange={(value) => {
+          setItemsPerPage(parseInt(value));
+          setCurrentPage(1);
+        }}>
+          <SelectTrigger className="w-[100px]">
+            <SelectValue placeholder="25" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="25">25</SelectItem>
+            <SelectItem value="50">50</SelectItem>
+            <SelectItem value="100">100</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
       <div className="bg-white rounded-lg border overflow-hidden">
@@ -233,73 +246,53 @@ export default function SuspendedUsersTable() {
             </tbody>
           </table>
         </div>
-        {filteredUsers.length > 0 && (
-          <div className="px-6 py-4 bg-white border-t flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-500">
-                Showing {totalUsers === 0 ? 0 : startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
-              </p>
-              <Select 
-                value={itemsPerPage.toString()} 
-                onValueChange={(value) => {
-                  setItemsPerPage(parseInt(value));
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[100px] ml-2">
-                  <SelectValue placeholder="25" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="25">25</SelectItem>
-                  <SelectItem value="50">50</SelectItem>
-                  <SelectItem value="100">100</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
-                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-                {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
-                  let pageNumber;
-                  if (totalPages <= 5) {
-                    pageNumber = i + 1;
-                  } else if (currentPage <= 3) {
-                    pageNumber = i + 1;
-                  } else if (currentPage >= totalPages - 2) {
-                    pageNumber = totalPages - 4 + i;
-                  } else {
-                    pageNumber = currentPage - 2 + i;
-                  }
-                  if (pageNumber < 1 || pageNumber > totalPages) return null;
-                  return (
-                    <PaginationItem key={i}>
-                      <PaginationLink
-                        isActive={pageNumber === currentPage}
-                        onClick={() => setCurrentPage(pageNumber)}
-                      >
-                        {pageNumber}
-                      </PaginationLink>
-                    </PaginationItem>
-                  );
-                })}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
-                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+        <div className="px-6 py-4 bg-white border-t flex items-center justify-between">
+          <div className="text-sm text-gray-500">
+            Showing {totalUsers === 0 ? 0 : startIndex + 1}-{endIndex} of {totalUsers} {totalUsers === 1 ? "user" : "users"}
           </div>
-        )}
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} 
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+              {Array.from({ length: Math.min(totalPages, 5) }).map((_, i) => {
+                let pageNumber;
+                if (totalPages <= 5) {
+                  pageNumber = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNumber = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNumber = totalPages - 4 + i;
+                } else {
+                  pageNumber = currentPage - 2 + i;
+                }
+                if (pageNumber < 1 || pageNumber > totalPages) return null;
+                return (
+                  <PaginationItem key={i}>
+                    <PaginationLink
+                      isActive={pageNumber === currentPage}
+                      onClick={() => setCurrentPage(pageNumber)}
+                    >
+                      {pageNumber}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} 
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       </div>
 
+      {/* Notes Modal */}
       <NotesModal
         open={showNotesModal}
         onClose={() => setShowNotesModal(false)}

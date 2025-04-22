@@ -51,9 +51,7 @@ import {
   AlertTriangle, 
   User as UserIcon, 
   ShieldOff,
-  ArrowUpRight,
-  Calendar,
-  Smartphone
+  ArrowUpRight
 } from "lucide-react";
 import { SocialMediaIcons } from '@/components/profile/SocialMediaIcons';
 import { toast } from "@/hooks/use-toast";
@@ -164,8 +162,6 @@ interface UserData {
     promotions: boolean;
     announcements: boolean;
   };
-  deviceType: string;
-  optedInMarketing: boolean;
 }
 
 const linkupPlusTransactions = [
@@ -429,9 +425,7 @@ const user: UserData = {
       description: "Fake identity",
       timestamp: "2025-04-17T11:30:00Z"
     }
-  ],
-  deviceType: "iOS",
-  optedInMarketing: true,
+  ]
 };
 
 const UserProfile = () => {
@@ -690,21 +684,6 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Email Address</p>
                         <p>{user.email}</p>
-                        <span className={`mt-1 inline-flex items-center gap-1 text-xs font-semibold ${
-                          user.optedInMarketing ? "text-green-600" : "text-gray-400"
-                        }`}>
-                          {user.optedInMarketing ? (
-                            <>
-                              <Check className="h-3 w-3 inline" />
-                              Opted in for Linkup marketing
-                            </>
-                          ) : (
-                            <>
-                              <X className="h-3 w-3 inline" />
-                              Not opted in for marketing
-                            </>
-                          )}
-                        </span>
                       </div>
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Phone Number</p>
@@ -732,23 +711,6 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-1">Last Known Location</p>
                         <p>{user.lastKnownLocation}</p>
-                      </div>
-                      <div className="col-span-1 sm:col-span-2">
-                        <div className="flex items-center mt-4 gap-6 flex-wrap text-sm">
-                          <span className="inline-flex items-center gap-1">
-                            <Calendar className="h-4 w-4 text-muted-foreground" />
-                            <span>
-                              Joined: {new Date(user.joinDate).toLocaleDateString()}{" "}
-                              <span className="text-xs text-muted-foreground">{new Date(user.joinDate).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}</span>
-                            </span>
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <Smartphone className="h-4 w-4 text-muted-foreground" />
-                            <span>
-                              Device: <span className="font-medium">{user.deviceType}</span>
-                            </span>
-                          </span>
-                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -785,7 +747,7 @@ const UserProfile = () => {
                         <p className="text-sm font-medium text-muted-foreground mb-2">Interests</p>
                         <div className="flex flex-wrap gap-2">
                           {user.interests.map((interest, index) => (
-                            <Badge key={index} variant="outline">
+                            <Badge key={index} variant="outline" className="bg-muted/50">
                               {interest}
                             </Badge>
                           ))}
@@ -793,10 +755,10 @@ const UserProfile = () => {
                       </div>
                       
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages Spoken</p>
                         <div className="flex flex-wrap gap-2">
                           {user.languages.map((language, index) => (
-                            <Badge key={index} variant="outline">
+                            <Badge key={index} variant="outline" className="bg-muted/50">
                               {language}
                             </Badge>
                           ))}
@@ -805,101 +767,245 @@ const UserProfile = () => {
                     </div>
                   </CardContent>
                 </Card>
-              </div>
-            </TabsContent>
 
-            <TabsContent value="verification" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Verification
-                    </CardTitle>
+                    <CardTitle>Social Media</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Verification Attempts</p>
-                        <div className="flex flex-wrap gap-2">
-                          {verificationAttempts.map((attempt, index) => (
-                            <Badge key={index} variant="outline">
-                              {attempt.status}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
+                    <SocialMediaIcons socials={user.socials} />
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
 
+            <TabsContent value="verification" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Verification Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {!user.verificationDetails.hasSubmitted ? (
+                    <div className="text-center py-8">
+                      <UserIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                      <p className="text-muted-foreground">No verification photo submitted</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-6">
+                      {verificationAttempts.map((attempt, index) => (
+                        <div key={attempt.submittedAt} className="space-y-4">
+                          {index > 0 && <Separator className="my-6" />}
+                          <p className="text-sm font-medium text-muted-foreground">
+                            {index === 0 ? "Latest Submission" : `Previous Attempt (${formatJoinDate(attempt.submittedAt)})`}
+                          </p>
+                          
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <div className="w-[180px] cursor-pointer group">
+                                <AspectRatio ratio={9/16}>
+                                  <img
+                                    src={attempt.selfie}
+                                    alt={`Verification selfie from ${new Date(attempt.submittedAt).toLocaleString()}`}
+                                    className="w-full h-full object-cover rounded-lg"
+                                  />
+                                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
+                                    <span className="text-white text-sm">Click to enlarge</span>
+                                  </div>
+                                </AspectRatio>
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent className="max-w-4xl">
+                              <img
+                                src={attempt.selfie}
+                                alt={`Verification selfie from ${new Date(attempt.submittedAt).toLocaleString()}`}
+                                className="w-full h-auto max-h-[80vh] object-contain"
+                              />
+                            </DialogContent>
+                          </Dialog>
+
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Submitted</p>
+                            <p>{formatJoinDate(attempt.submittedAt)}</p>
+                          </div>
+
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground mb-3">Status</p>
+                            <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                              attempt.status === 'approved' 
+                                ? "bg-green-100 text-green-800"
+                                : attempt.status === 'denied'
+                                ? "bg-red-100 text-red-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}>
+                              {attempt.status.charAt(0).toUpperCase() + attempt.status.slice(1)}
+                            </span>
+                            {(attempt.status === 'approved' || attempt.status === 'denied') && (
+                              <div className="mt-1 text-xs text-muted-foreground">
+                                {attempt.statusChangeTime ? formatJoinDate(attempt.statusChangeTime) : formatJoinDate(attempt.submittedAt)}
+                              </div>
+                            )}
+                            {attempt.status === 'denied' && attempt.notificationSent && (
+                              <p className="mt-2 text-sm text-muted-foreground">
+                                User has been notified to resubmit their verification photo
+                              </p>
+                            )}
+                          </div>
+
+                          {index === 0 && attempt.status === 'pending' && (
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={() => handleVerificationAction('deny')}
+                                variant="outline"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <X className="mr-1 h-4 w-4" />
+                                Deny
+                              </Button>
+                              <Button 
+                                onClick={() => handleVerificationAction('approve')}
+                                variant="outline"
+                                size="sm"
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              >
+                                <Check className="mr-1 h-4 w-4" />
+                                Approve
+                              </Button>
+                            </div>
+                          )}
+                          {index === 0 && attempt.status === 'denied' && (
+                            <div className="flex gap-2">
+                              <Button 
+                                onClick={() => handleVerificationAction('approve')}
+                                variant="outline"
+                                size="sm"
+                                className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              >
+                                <Check className="mr-1 h-4 w-4" />
+                                Approve Now
+                              </Button>
+                            </div>
+                          )}
+                          {index === 0 && attempt.status === 'approved' && (
+                            <Button 
+                              onClick={() => handleVerificationAction('remove')}
+                              variant="outline"
+                              size="sm"
+                              className="text-amber-600 hover:text-amber-700 hover:bg-amber-50"
+                            >
+                              <ShieldOff className="mr-1 h-4 w-4" />
+                              Remove Verification
+                            </Button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
             <TabsContent value="wallet" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Wallet & Billing
-                    </CardTitle>
+                    <CardTitle>Wallet Overview</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Lifetime Earnings</p>
-                        <p className="text-sm">{user.wallet.lifetimeEarnings}</p>
+                        <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                        <p className="text-2xl font-bold">£{user.wallet.lifetimeEarnings.toFixed(2)}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Available Balance</p>
-                        <p className="text-sm">{user.wallet.availableBalance}</p>
+                        <p className="text-sm font-medium text-muted-foreground">Ready for Payout</p>
+                        <p className="text-xl font-bold text-green-600">£{user.wallet.availableBalance.toFixed(2)}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">In Transit</p>
-                        <p className="text-sm">{user.wallet.inTransit}</p>
+                        <p className="text-sm font-medium text-muted-foreground">In Transit to Bank</p>
+                        <p className="text-lg font-semibold">£{user.wallet.inTransit.toFixed(2)}</p>
                       </div>
-                      
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Last Withdrawal</p>
-                        <p className="text-sm">{user.wallet.lastWithdrawal}</p>
+                        <p className="text-sm font-medium text-muted-foreground">Last Withdrawal</p>
+                        <p>{new Date(user.wallet.lastWithdrawal).toLocaleDateString()}</p>
                       </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Payout History</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.wallet.payoutHistory.map((payout, index) => (
-                            <Badge key={index} variant="outline">
-                              {payout.amount}
-                            </Badge>
-                          ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="col-span-1 md:col-span-2">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Payout History</CardTitle>
+                    <Button variant="outline" size="sm" onClick={() => setIsPayoutHistoryOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {user.wallet.payoutHistory.slice(0, 3).map((payout, index) => (
+                        <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <p className="font-medium">£{payout.amount.toFixed(2)}</p>
+                            <p className="text-sm text-muted-foreground">Ryft Pay</p>
+                          </div>
+                          <p>{new Date(payout.date).toLocaleDateString()}</p>
                         </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Linkup Plus</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.wallet.linkupPlus.startDate ? (
-                            <Badge key="start-date" variant="outline">
-                              {user.wallet.linkupPlus.startDate}
-                            </Badge>
-                          ) : (
-                            <Badge key="no-start-date" variant="outline">
-                              No start date
-                            </Badge>
-                          )}
-                          {user.wallet.linkupPlus.cancelDate ? (
-                            <Badge key="cancel-date" variant="outline">
-                              {user.wallet.linkupPlus.cancelDate}
-                            </Badge>
-                          ) : (
-                            <Badge key="no-cancel-date" variant="outline">
-                              No cancel date
-                            </Badge>
-                          )}
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="col-span-1 md:col-span-3">
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <CardTitle>Payments Breakdown</CardTitle>
+                    <Button variant="outline" size="sm" onClick={() => setIsEarningsBreakdownOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {earningsBreakdown.slice(0, 3).map((item, index) => (
+                        <div key={index} className="flex items-center justify-between py-2 border-b last:border-0">
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <Link 
+                                to={`/linkups/${item.linkupId}`} 
+                                className="font-medium hover:underline"
+                              >
+                                {item.description}
+                              </Link>
+                            </div>
+                            <p className="text-sm text-muted-foreground">
+                              {formatJoinDate(item.timestamp)}
+                            </p>
+                          </div>
+                          <p className="font-medium text-green-600">+£{item.amount.toFixed(2)}</p>
                         </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="col-span-1 md:col-span-3">
+                  <CardHeader>
+                    <CardTitle>Linkup Plus Subscription</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="bg-linkup-purple/10 text-linkup-purple border-linkup-purple/20">
+                            <Crown className="h-3 w-3 mr-1" /> Active
+                          </Badge>
+                          <p className="text-sm text-muted-foreground">
+                            Since {new Date(user.wallet.linkupPlus.startDate || new Date()).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <p>User is currently subscribed to Linkup Plus and receives all premium features.</p>
                       </div>
+                      <Button variant="outline" onClick={() => setIsLinkupPlusHistoryOpen(true)}>
+                        View Payment History
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
@@ -907,226 +1013,518 @@ const UserProfile = () => {
             </TabsContent>
 
             <TabsContent value="linkups" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkups</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <UserLinkupsTable />
+                </CardContent>
+              </Card>
+              
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Linkups
-                    </CardTitle>
+                    <CardTitle>Activity</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Hosted Linkups</p>
-                        <p className="text-sm">{user.linkupStats.hosted}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Joined Linkups</p>
-                        <p className="text-sm">{user.linkupStats.joined}</p>
-                      </div>
-                    </div>
+                    <UserLinkupActivity />
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Chats</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <UserLinkupChats />
                   </CardContent>
                 </Card>
               </div>
             </TabsContent>
 
             <TabsContent value="privacy" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Privacy Settings
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Hide Age</p>
-                        <p className="text-sm">{user.privacySettings.hideAge ? 'Yes' : 'No'}</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Privacy Settings</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Advanced</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Hide my age on my profile</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.hideAge} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.hideAge ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                       
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Allow Female Friend Requests</p>
-                        <p className="text-sm">{user.privacySettings.allowFemaleFriendRequests ? 'Yes' : 'No'}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Don't allow male friend requests</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={!user.privacySettings.allowMaleFriendRequests} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {!user.privacySettings.allowMaleFriendRequests ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                       
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Allow Male Friend Requests</p>
-                        <p className="text-sm">{user.privacySettings.allowMaleFriendRequests ? 'Yes' : 'No'}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Don't allow female friend requests</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={!user.privacySettings.allowFemaleFriendRequests} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {!user.privacySettings.allowFemaleFriendRequests ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Socials Visible to Friends Only</p>
-                        <p className="text-sm">{user.privacySettings.socialsVisibleToFriendsOnly ? 'Yes' : 'No'}</p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Socials visible to friends only</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.socialsVisibleToFriendsOnly ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Friends Can See Upcoming Attendance</p>
-                        <p className="text-sm">{user.privacySettings.friendsCanSeeUpcomingAttendance ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Location on Map</p>
-                        <p className="text-sm">{user.privacySettings.showLocationOnMap ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Appear on Nearby People</p>
-                        <p className="text-sm">{user.privacySettings.appearOnNearbyPeople ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Linkups to Everyone</p>
-                        <p className="text-sm">{user.privacySettings.showLinkupsToEveryone ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Linkups to Friends Only</p>
-                        <p className="text-sm">{user.privacySettings.showLinkupsToFriendsOnly ? 'Yes' : 'No'}</p>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Allow friends to see which linkups I'm attending</Label>
+                          <p className="text-sm text-muted-foreground">
+                            Friends can see which upcoming linkups I'm attending
+                          </p>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.friendsCanSeeUpcomingAttendance} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.friendsCanSeeUpcomingAttendance ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Show my location on...</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">The map</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLocationOnMap} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLocationOnMap ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Nearby people</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.appearOnNearbyPeople} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.appearOnNearbyPeople ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Show linkups on my profile to...</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">All users</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLinkupsToEveryone} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLinkupsToEveryone ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Friends only</Label>
+                        </div>
+                        <HoverCard>
+                          <HoverCardTrigger asChild>
+                            <div className="cursor-not-allowed">
+                              <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} disabled />
+                            </div>
+                          </HoverCardTrigger>
+                          <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                            Setting is {user.privacySettings.showLinkupsToFriendsOnly ? 'enabled' : 'disabled'}
+                          </HoverCardContent>
+                        </HoverCard>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="reports" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6">
                 <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Reports
-                    </CardTitle>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle>Reports Received</CardTitle>
+                      <CardDescription>Reports submitted by other users</CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => setIsAllReportsReceivedOpen(true)}>
+                      View All
+                    </Button>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Reports Received</p>
-                        <div className="flex flex-wrap gap-2">
-                          {userWithVerification.reportsReceived.map(report => (
-                            <Badge key={report.id} variant="outline">
-                              {report.description}
-                            </Badge>
-                          ))}
+                    <div className="space-y-4">
+                      {userWithVerification.reportsReceived.slice(0, 3).map((report) => (
+                        <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reporterAvatar} />
+                              <AvatarFallback>{report.reporterName[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <Link 
+                                  to={`/users/${report.reporterId}`} 
+                                  className="font-medium hover:underline"
+                                >
+                                  {report.reporterName}
+                                </Link>
+                                <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                                  report.isRead 
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-yellow-100 text-yellow-800"
+                                }`}>
+                                  {report.isRead ? "Read" : "Unread"}
+                                </span>
+                              </div>
+                              <p className="text-sm text-muted-foreground">@{report.reporterUsername}</p>
+                              <p className="mt-1">{report.description}</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {new Date(report.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
+                          {!report.isRead && (
+                            <Button 
+                              variant="outline"
+                              size="sm"
+                              className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              onClick={() => handleMarkAsRead(report.id)}
+                            >
+                              <Check className="h-4 w-4 mr-1" />
+                              Mark as Read
+                            </Button>
+                          )}
                         </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Reports Made</p>
-                        <div className="flex flex-wrap gap-2">
-                          {userWithVerification.reportsMade.map(report => (
-                            <Badge key={report.id} variant="outline">
-                              {report.description}
-                            </Badge>
-                          ))}
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader className="flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle>Reports Made</CardTitle>
+                      <CardDescription>Reports this user has made about other users</CardDescription>
+                    </div>
+                    <Button variant="outline" size="sm" onClick={() => setIsAllReportsMadeOpen(true)}>
+                      View All
+                    </Button>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {userWithVerification.reportsMade.slice(0, 3).map((report) => (
+                        <div key={report.id} className="flex items-start justify-between py-2 border-b last:border-0">
+                          <div className="flex items-start gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reportedUserAvatar} />
+                              <AvatarFallback>{report.reportedUserName[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <Link 
+                                to={`/users/${report.reportedUserId}`} 
+                                className="font-medium hover:underline"
+                              >
+                                {report.reportedUserName}
+                              </Link>
+                              <p className="text-sm text-muted-foreground">@{report.reportedUserUsername}</p>
+                              <p className="mt-1">{report.description}</p>
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {new Date(report.timestamp).toLocaleString()}
+                              </p>
+                            </div>
+                          </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
                   </CardContent>
                 </Card>
               </div>
+
+              <AllReportsDialog
+                open={isAllReportsReceivedOpen}
+                onOpenChange={setIsAllReportsReceivedOpen}
+                reports={userWithVerification.reportsReceived}
+                title="Reports Received"
+                showMarkAsRead={true}
+                onMarkAsRead={handleMarkAsRead}
+              />
+
+              <AllReportsDialog
+                open={isAllReportsMadeOpen}
+                onOpenChange={setIsAllReportsMadeOpen}
+                reports={userWithVerification.reportsMade}
+                title="Reports Made"
+              />
             </TabsContent>
 
             <TabsContent value="friends" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Friends
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Friends</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.friends.map(friend => (
-                            <Badge key={friend.id} variant="outline">
-                              {friend.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Pending Friend Requests</p>
-                        <div className="flex flex-wrap gap-2">
-                          {user.pendingFriendRequests.received.map(request => (
-                            <Badge key={request.id} variant="outline">
-                              {request.name}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+              <UserFriendsList 
+                friends={user.friends}
+                receivedRequests={user.pendingFriendRequests.received}
+                sentRequests={user.pendingFriendRequests.sent}
+              />
             </TabsContent>
 
             <TabsContent value="push-notifications" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <UserIcon className="h-5 w-5 text-linkup-purple" />
-                      Push Notifications
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Enable All</p>
-                        <p className="text-sm">{user.pushNotifications.enableAll ? 'Yes' : 'No'}</p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Push Notifications</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-8">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Enable all push notifications</Label>
                       </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">New Linkup Messages</p>
-                        <p className="text-sm">{user.pushNotifications.newLinkupMessages ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">New Friend Messages</p>
-                        <p className="text-sm">{user.pushNotifications.newFriendMessages ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Friend Requests</p>
-                        <p className="text-sm">{user.pushNotifications.friendRequests ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Linkup Activity</p>
-                        <p className="text-sm">{user.pushNotifications.linkupActivity ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Wallet Activity</p>
-                        <p className="text-sm">{user.pushNotifications.walletActivity ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Promotions</p>
-                        <p className="text-sm">{user.pushNotifications.promotions ? 'Yes' : 'No'}</p>
-                      </div>
-                      
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Announcements</p>
-                        <p className="text-sm">{user.pushNotifications.announcements ? 'Yes' : 'No'}</p>
-                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.enableAll} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.enableAll ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
                     </div>
-                  </CardContent>
-                </Card>
-              </div>
+
+                    <Separator />
+
+                    <p className="text-sm font-medium text-muted-foreground">Notification preferences</p>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">New linkup messages</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.newLinkupMessages} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.newLinkupMessages ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">New friend messages</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.newFriendMessages} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.newFriendMessages ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Friend requests</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.friendRequests} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.friendRequests ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Linkup activity</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.linkupActivity} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.linkupActivity ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Wallet activity</Label>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.walletActivity} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.walletActivity ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Promotions</Label>
+                        <p className="text-sm text-muted-foreground">
+                          Exclusive offers and news
+                        </p>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.promotions} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.promotions ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <Label className="text-base">Announcements</Label>
+                        <p className="text-sm text-muted-foreground">
+                          What's new on Linkup
+                        </p>
+                      </div>
+                      <HoverCard>
+                        <HoverCardTrigger asChild>
+                          <div className="cursor-not-allowed">
+                            <Switch checked={user.pushNotifications.announcements} disabled />
+                          </div>
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-fit px-4 py-2 flex items-center" side="left">
+                          Setting is {user.pushNotifications.announcements ? 'enabled' : 'disabled'}
+                        </HoverCardContent>
+                      </HoverCard>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
           </Tabs>
         </main>
       </div>
+
+      <PayoutHistoryDialog 
+        open={isPayoutHistoryOpen} 
+        onOpenChange={setIsPayoutHistoryOpen}
+        payoutHistory={user.wallet.payoutHistory}
+      />
+      
+      <EarningsBreakdownDialog 
+        open={isEarningsBreakdownOpen} 
+        onOpenChange={setIsEarningsBreakdownOpen}
+        earnings={earningsBreakdown}
+        attendancePayments={attendedLinkupPayments}
+      />
+      
+      <LinkupPlusHistoryDialog 
+        open={isLinkupPlusHistoryOpen} 
+        onOpenChange={setIsLinkupPlusHistoryOpen}
+        startDate={user.wallet.linkupPlus.startDate ?? "2023-12-15"}
+        plan="annual"
+        transactions={linkupPlusTransactions}
+      />
+      
+      <DeleteUserDialog 
+        isOpen={isDeleteDialogOpen} 
+        onClose={() => setIsDeleteDialogOpen(false)} 
+        userId={user.id} 
+        username={user.username}
+        userAvatar={user.avatar}
+        userName={`${user.firstName} ${user.lastName}`}
+      />
     </div>
   );
 };
