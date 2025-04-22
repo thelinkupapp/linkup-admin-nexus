@@ -97,6 +97,8 @@ const linkups = [
     date: "2025-04-30T18:30:00Z",
     endTime: "2025-04-30T21:30:00Z",
     location: "Canggu, Bali",
+    country: "Indonesia",
+    countryCode: "ID",
     attendeeCount: 20,
     status: "upcoming",
     isPublic: true,
@@ -119,6 +121,8 @@ const linkups = [
     date: "2025-04-25T15:30:00Z",
     endTime: "2025-04-25T17:30:00Z",
     location: "Seminyak, Bali",
+    country: "Indonesia",
+    countryCode: "ID",
     attendeeCount: 4,
     status: "upcoming",
     isPublic: true,
@@ -140,6 +144,8 @@ const linkups = [
     date: "2025-04-20T10:00:00Z",
     endTime: "2025-04-20T15:00:00Z",
     location: "Ubud, Bali",
+    country: "Indonesia",
+    countryCode: "ID",
     attendeeCount: 8,
     status: "upcoming",
     isPublic: true,
@@ -162,6 +168,8 @@ const linkups = [
     date: "2025-03-22T19:00:00Z",
     endTime: "2025-03-22T21:00:00Z",
     location: "Denpasar, Bali",
+    country: "Indonesia",
+    countryCode: "ID",
     attendeeCount: 6,
     status: "cancelled",
     isPublic: true,
@@ -183,6 +191,8 @@ const linkups = [
     date: "2025-03-15T18:00:00Z",
     endTime: "2025-03-15T20:00:00Z",
     location: "Gianyar, Bali",
+    country: "Indonesia",
+    countryCode: "ID",
     attendeeCount: 12,
     status: "happened",
     isPublic: false,
@@ -241,6 +251,14 @@ function formatLinkupDateTime(startDate: string, endDate: string): { mainDateTim
     mainDateTime: formattedDateTime, 
     duration: duration 
   };
+}
+
+function getCountryEmoji(country: string) {
+  const emojiMap: { [key: string]: string } = {
+    'Indonesia': '🇮🇩',
+    // Add more countries as needed
+  };
+  return emojiMap[country] || '';
 }
 
 export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps) {
@@ -589,9 +607,18 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                         <div className="flex flex-col md:flex-row justify-between gap-5 px-8 py-5 items-end md:items-start text-[#23252b]">
                           <div className="flex-1 min-w-[170px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Location</span>
-                            <span className="font-semibold text-lg leading-5 block">
-                              {linkup.location}
-                            </span>
+                            <div>
+                              <span className="font-semibold text-lg leading-5 block">
+                                {linkup.location}
+                              </span>
+                              <span className="text-[#8e9196] text-sm block">
+                                {linkup.country} {linkup.countryCode && (
+                                  <span className={`fi fi-${linkup.countryCode.toLowerCase()}`}>
+                                    {getCountryEmoji(linkup.country)}
+                                  </span>
+                                )}
+                              </span>
+                            </div>
                           </div>
                           <div className="flex flex-col items-start md:items-center min-w-[85px]">
                             <span className="block text-[#8e9196] text-xs mb-1">Attendees</span>
