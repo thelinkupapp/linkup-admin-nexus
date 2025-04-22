@@ -25,20 +25,29 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface Report {
+interface BaseReport {
   id: string;
+  description: string;
+  timestamp: string;
+}
+
+interface ReportReceived extends BaseReport {
   reporterId: string;
   reporterName: string;
   reporterUsername?: string;
   reporterAvatar: string;
+  isRead?: boolean;
+}
+
+interface ReportMade extends BaseReport {
   reportedUserId?: string;
   reportedUserName?: string;
   reportedUserUsername?: string;
   reportedUserAvatar?: string;
-  description: string;
-  timestamp: string;
-  isRead?: boolean;
 }
+
+// Union type to support both report types
+type Report = ReportReceived | ReportMade;
 
 interface AllReportsDialogProps {
   open: boolean;
@@ -65,6 +74,11 @@ export const AllReportsDialog = ({
   }, [reports, currentPage]);
 
   const totalPages = Math.ceil(reports.length / pageSize);
+
+  // Helper to check if report is a "received" type
+  const isReportReceived = (report: Report): report is ReportReceived => {
+    return 'reporterId' in report && 'reporterName' in report && 'reporterAvatar' in report;
+  };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -98,70 +112,78 @@ export const AllReportsDialog = ({
               <TableRow key={report.id}>
                 {showMarkAsRead ? (
                   <>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={report.reporterAvatar} />
-                          <AvatarFallback>{report.reporterName[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <Link 
-                            to={`/users/${report.reporterId}`}
-                            className="font-medium hover:underline"
-                          >
-                            {report.reporterName}
-                          </Link>
-                          <p className="text-sm text-muted-foreground">
-                            @{report.reporterUsername}
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{report.description}</TableCell>
-                    <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
-                        report.isRead 
-                          ? "bg-green-100 text-green-800"
-                          : "bg-yellow-100 text-yellow-800"
-                      }`}>
-                        {report.isRead ? "Read" : "Unread"}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      {!report.isRead && (
-                        <button 
-                          className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
-                          onClick={() => {/* Handle mark as read */}}
-                        >
-                          Mark as Read
-                        </button>
-                      )}
-                    </TableCell>
+                    {isReportReceived(report) && (
+                      <>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reporterAvatar} />
+                              <AvatarFallback>{report.reporterName[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <Link 
+                                to={`/users/${report.reporterId}`}
+                                className="font-medium hover:underline"
+                              >
+                                {report.reporterName}
+                              </Link>
+                              <p className="text-sm text-muted-foreground">
+                                @{report.reporterUsername}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{report.description}</TableCell>
+                        <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
+                        <TableCell>
+                          <span className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold ${
+                            report.isRead 
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}>
+                            {report.isRead ? "Read" : "Unread"}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          {!report.isRead && (
+                            <button 
+                              className="text-sm text-green-600 hover:text-green-700 flex items-center gap-1"
+                              onClick={() => {/* Handle mark as read */}}
+                            >
+                              Mark as Read
+                            </button>
+                          )}
+                        </TableCell>
+                      </>
+                    )}
                   </>
                 ) : (
                   <>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={report.reportedUserAvatar} />
-                          <AvatarFallback>{report.reportedUserName?.[0]}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <Link 
-                            to={`/users/${report.reportedUserId}`}
-                            className="font-medium hover:underline"
-                          >
-                            {report.reportedUserName}
-                          </Link>
-                          <p className="text-sm text-muted-foreground">
-                            @{report.reportedUserUsername}
-                          </p>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>{report.description}</TableCell>
-                    <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
+                    {!isReportReceived(report) && (
+                      <>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={report.reportedUserAvatar} />
+                              <AvatarFallback>{report.reportedUserName?.[0]}</AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <Link 
+                                to={`/users/${report.reportedUserId}`}
+                                className="font-medium hover:underline"
+                              >
+                                {report.reportedUserName}
+                              </Link>
+                              <p className="text-sm text-muted-foreground">
+                                @{report.reportedUserUsername}
+                              </p>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>{report.description}</TableCell>
+                        <TableCell>{new Date(report.timestamp).toLocaleString()}</TableCell>
+                      </>
+                    )}
                   </>
                 )}
               </TableRow>
