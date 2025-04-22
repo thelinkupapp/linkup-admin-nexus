@@ -39,6 +39,18 @@ import { formatJoinDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { format } from "date-fns";
 
+function formatTableDate(dt: string): string {
+  const date = new Date(dt);
+  return date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+}
+
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
   { id: "food", name: "Food", emoji: "🍔" },
@@ -369,25 +381,9 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
         dateRange={undefined}
         setDateRange={() => {}}
         earningsSort={earningsSort}
-        setEarningsSort={(val) => {
-          if (val === earningsSort) {
-            setEarningsSort("none");
-          } else {
-            setEarningsSort(val as "desc" | "asc");
-            setSortConfig({ field: "date", direction: "desc" });
-            setAttendeesSort("none");
-          }
-        }}
+        setEarningsSort={setEarningsSort}
         attendeesSort={attendeesSort}
-        setAttendeesSort={(val) => {
-          if (val === attendeesSort) {
-            setAttendeesSort("none");
-          } else {
-            setAttendeesSort(val as "desc" | "asc");
-            setSortConfig({ field: "date", direction: "desc" });
-            setEarningsSort("none");
-          }
-        }}
+        setAttendeesSort={setAttendeesSort}
       />
       <div className="rounded-xl border shadow-xs overflow-hidden mt-2">
         <Table className="w-full text-[14px]">
@@ -486,11 +482,17 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                       </div>
                     </TableCell>
                     <TableCell className="py-1 px-2">
-                      <div className="text-xs font-medium">{formatDateTime(linkup.date)}</div>
-                      <div className="text-xs text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
+                      <div className="flex flex-col">
+                        <span className="font-medium text-md text-gray-900">{formatTableDate(linkup.date)}</span>
+                        <span className="text-xs text-gray-500" style={{ marginTop: 0 }}>
+                          {formatDuration(linkup.date, linkup.endTime)}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell className="py-1 px-2">
-                      <div className="text-xs">{formatDateTime(linkup.createdAt)}</div>
+                      <span className="font-medium text-md text-gray-900">
+                        {formatTableDate(linkup.createdAt)}
+                      </span>
                     </TableCell>
                     <TableCell className="py-1 px-2">
                       <Badge variant="outline" className={`text-xs px-2 py-0.5 ${getStatusBadgeStyles(linkup.status)}`}>

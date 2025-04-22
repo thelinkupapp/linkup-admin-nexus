@@ -33,37 +33,43 @@ const countryFlagMap: Record<string, string> = Object.fromEntries(
 );
 
 interface LinkupFiltersProps {
-  layout?: "inline" | "stacked";
   searchValue: string;
-  setSearchValue: (value: string) => void;
+  setSearchValue: (val: string) => void;
   selectedCategories: string[];
-  setSelectedCategories: (value: string[]) => void;
-  selectedStatuses: string[]; // <-- changed from selectedStatus
-  setSelectedStatuses: (value: string[]) => void; // <-- changed from setSelectedStatus
+  setSelectedCategories: (val: string[]) => void;
+  selectedStatuses: string[];
+  setSelectedStatuses: (val: string[]) => void;
   selectedVisibility: string;
-  setSelectedVisibility: (value: string) => void;
+  setSelectedVisibility: (val: string) => void;
   selectedPrice: string;
-  setSelectedPrice: (value: string) => void;
+  setSelectedPrice: (val: string) => void;
   selectedJoinMethod: string;
-  setSelectedJoinMethod: (value: string) => void;
+  setSelectedJoinMethod: (val: string) => void;
   selectedLocations: string[];
-  setSelectedLocations: (value: string[]) => void;
+  setSelectedLocations: (val: string[]) => void;
   allLocations: string[];
-  dateRange: DateRange | undefined;
-  setDateRange: (value: DateRange | undefined) => void;
-  earningsSort: "none" | "desc" | "asc";
-  setEarningsSort: (value: "desc" | "asc" | "none") => void;
-  attendeesSort: "none" | "desc" | "asc";
-  setAttendeesSort: (value: "desc" | "asc" | "none") => void;
+  dateRange?: any;
+  setDateRange?: (range: any) => void;
+  earningsSort: "none" | "asc" | "desc";
+  setEarningsSort: (val: "none" | "asc" | "desc") => void;
+  attendeesSort: "none" | "asc" | "desc";
+  setAttendeesSort: (val: "none" | "asc" | "desc") => void;
 }
+
+const STATUS_OPTIONS = [
+  { value: "upcoming", label: "Upcoming" },
+  { value: "happening", label: "Happening" },
+  { value: "happened", label: "Happened" },
+  { value: "cancelled", label: "Cancelled" },
+];
 
 export function LinkupFilters({
   searchValue,
   setSearchValue,
   selectedCategories,
   setSelectedCategories,
-  selectedStatuses,          // <-- changed
-  setSelectedStatuses,       // <-- changed
+  selectedStatuses,
+  setSelectedStatuses,
   selectedVisibility,
   setSelectedVisibility,
   selectedPrice,
@@ -109,12 +115,13 @@ export function LinkupFilters({
     { id: "other", name: "Other", emoji: "🎯" }
   ];
 
-  const statusOptions = [
-    { value: "upcoming", label: "Upcoming" },
-    { value: "happening", label: "Happening" },
-    { value: "happened", label: "Happened" },
-    { value: "cancelled", label: "Cancelled" }
-  ];
+  const handleStatusChange = (value: string) => {
+    if (selectedStatuses.includes(value)) {
+      setSelectedStatuses(selectedStatuses.filter((s) => s !== value));
+    } else {
+      setSelectedStatuses([...selectedStatuses, value]);
+    }
+  };
 
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
@@ -216,47 +223,29 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* Status Multi-select Popover */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px]">
-              Status ({selectedStatuses.length})
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-[180px] p-2 z-[101]">
-            <Command>
-              <CommandInput placeholder="Search status..." />
-              <CommandEmpty>No status found.</CommandEmpty>
-              <ScrollArea className="h-36">
-                <CommandGroup>
-                  <CommandItem
-                    key="all"
-                    onSelect={() => setSelectedStatuses([])}
-                    className="flex items-center"
-                  >
-                    <Checkbox checked={selectedStatuses.length === 0} className="mr-2 h-3 w-3" />
-                    <span className="font-semibold">All Status</span>
-                  </CommandItem>
-                  {statusOptions.map((option) => (
-                    <CommandItem
-                      key={option.value}
-                      onSelect={() =>
-                        setSelectedStatuses(toggleArrayValue(selectedStatuses, option.value))
-                      }
-                      className="flex items-center"
-                    >
-                      <Checkbox
-                        checked={selectedStatuses.includes(option.value)}
-                        className="mr-2 h-3 w-3"
-                      />
-                      <span>{option.label}</span>
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </ScrollArea>
-            </Command>
-          </PopoverContent>
-        </Popover>
+        <div className="mb-3">
+          <label className="block text-xs font-semibold mb-1">Status</label>
+          <div className="flex flex-wrap gap-2">
+            {STATUS_OPTIONS.map(opt => (
+              <label
+                key={opt.value}
+                className={`flex items-center gap-1 rounded px-2 py-1 cursor-pointer text-xs border transition 
+                  ${selectedStatuses.includes(opt.value)
+                    ? "bg-[#ece6fd] border-[#a89af5] text-[#8564f5]"
+                    : "bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100"}`}
+              >
+                <input
+                  type="checkbox"
+                  value={opt.value}
+                  checked={selectedStatuses.includes(opt.value)}
+                  onChange={() => handleStatusChange(opt.value)}
+                  className="form-checkbox accent-[#9b87f5]"
+                />
+                {opt.label}
+              </label>
+            ))}
+          </div>
+        </div>
 
         <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
           <SelectTrigger className="h-8 text-xs w-24">
