@@ -899,9 +899,8 @@ const UserProfile = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
+                  <CardHeader>
                     <CardTitle>Activity</CardTitle>
-                    <Button variant="outline" size="sm">View All</Button>
                   </CardHeader>
                   <CardContent>
                     <UserLinkupActivity />
@@ -909,9 +908,8 @@ const UserProfile = () => {
                 </Card>
 
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between">
+                  <CardHeader>
                     <CardTitle>Chats</CardTitle>
-                    <Button variant="outline" size="sm">View All</Button>
                   </CardHeader>
                   <CardContent>
                     <UserLinkupChats />
