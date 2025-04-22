@@ -81,24 +81,3 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   
   return `${dateStr}\n${timeRange} (${duration})`;
 }
-
-/**
- * Compact, user-friendly date for admin tables (for "Created On" etc)
- * E.g. "Today at 09:23", "Yesterday at 11:41", "Apr 18 at 10:41"
- */
-export function formatAdminCreatedDate(date: string | Date): string {
-  const given = date instanceof Date ? date : new Date(date);
-  if (isToday(given)) {
-    return `Today at ${format(given, 'HH:mm')}`;
-  }
-  if (isYesterday(given)) {
-    return `Yesterday at ${format(given, 'HH:mm')}`;
-  }
-  if (isThisWeek(given)) {
-    return `${format(given, 'EEEE')} at ${format(given, 'HH:mm')}`;
-  }
-  if (differenceInYears(new Date(), given) === 0) {
-    return `${format(given, 'MMM d')} at ${format(given, 'HH:mm')}`;
-  }
-  return `${format(given, 'MMM d yyyy')} at ${format(given, 'HH:mm')}`;
-}
