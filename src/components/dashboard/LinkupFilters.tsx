@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, DollarSign, MapPin, ArrowUpDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -71,11 +72,11 @@ interface LinkupFiltersProps {
   selectedStatuses: string[]; // Updated: now an array
   setSelectedStatuses: (value: string[]) => void;
   selectedVisibility: string;
-  setSelectedVisibility: string;
-  setSelectedPrice: string;
-  setSelectedPrice: string;
+  setSelectedVisibility: (value: string) => void;
+  selectedPrice: string;
+  setSelectedPrice: (value: string) => void;
   selectedJoinMethod: string;
-  setSelectedJoinMethod: string;
+  setSelectedJoinMethod: (value: string) => void;
   selectedLocations: string[];
   setSelectedLocations: (value: string[]) => void;
   allLocations: string[];
@@ -264,7 +265,7 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        <Select value={selectedVisibility} onValueChange={(value) => setSelectedVisibility(value === "all" ? "" : value)}>
+        <Select value={selectedVisibility} onValueChange={setSelectedVisibility}>
           <SelectTrigger className="h-8 text-xs w-24">
             <SelectValue placeholder="Visibility" />
           </SelectTrigger>
@@ -281,7 +282,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        <Select value={selectedPrice} onValueChange={(value) => setSelectedPrice(value === "all" ? "" : value)}>
+        <Select value={selectedPrice} onValueChange={setSelectedPrice}>
           <SelectTrigger className="h-8 text-xs w-20">
             <SelectValue placeholder="Price" />
           </SelectTrigger>
@@ -298,7 +299,7 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        <Select value={selectedJoinMethod} onValueChange={(value) => setSelectedJoinMethod(value === "all" ? "" : value)}>
+        <Select value={selectedJoinMethod} onValueChange={setSelectedJoinMethod}>
           <SelectTrigger className="h-8 text-xs w-20">
             <SelectValue placeholder="Join…" />
           </SelectTrigger>

@@ -2,13 +2,30 @@
 import { useEffect, useState } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { LinkupTable } from "@/components/dashboard/LinkupTable";
+import { LinkupFilters } from "@/components/dashboard/LinkupFilters";
 import { Toaster } from "@/components/ui/toaster";
 import { ErrorBoundary } from "@/components/ui/error-boundary";
 import { countries } from "@/constants/filterOptions";
+import { DateRange } from "react-day-picker";
 
 const LinkupManagement = () => {
   const [filteredCount, setFilteredCount] = useState<number | null>(null);
   const [totalCount, setTotalCount] = useState<number | null>(null);
+  
+  // Filter states
+  const [searchValue, setSearchValue] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedVisibility, setSelectedVisibility] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState("");
+  const [selectedJoinMethod, setSelectedJoinMethod] = useState("");
+  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [earningsSort, setEarningsSort] = useState<"none" | "desc" | "asc">("none");
+  
+  // Sorting state for table
+  const [sortField, setSortField] = useState<string>("");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
 
   // Only display top count (no duplicate)
   const handleCountChange = (counts: { filtered: number; total: number }) => {
@@ -54,9 +71,40 @@ const LinkupManagement = () => {
               </span>
             </div>
           </div>
+          
+          {/* Filters */}
+          <LinkupFilters 
+            searchValue={searchValue}
+            setSearchValue={setSearchValue}
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedStatuses={selectedStatuses}
+            setSelectedStatuses={setSelectedStatuses}
+            selectedVisibility={selectedVisibility}
+            setSelectedVisibility={setSelectedVisibility}
+            selectedPrice={selectedPrice}
+            setSelectedPrice={setSelectedPrice}
+            selectedJoinMethod={selectedJoinMethod}
+            setSelectedJoinMethod={setSelectedJoinMethod}
+            selectedLocations={selectedLocations}
+            setSelectedLocations={setSelectedLocations}
+            allLocations={[]}
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+            earningsSort={earningsSort}
+            setEarningsSort={setEarningsSort}
+          />
+          
           <ErrorBoundary fallback={<div className="p-4 border border-red-200 rounded-md bg-red-50 text-red-800">There was an error loading the Linkup table. Please refresh the page or contact support.</div>}>
-            {/* LinkupTable expects a filters prop. Pass countries as valid country filters for location */}
-            <LinkupTable onCountChange={handleCountChange} filterCountries={countries} />
+            {/* LinkupTable with all necessary props */}
+            <LinkupTable 
+              onCountChange={handleCountChange} 
+              filterCountries={countries} 
+              selectedStatuses={selectedStatuses}
+              setSortField={setSortField}
+              sortField={sortField}
+              sortDirection={sortDirection}
+            />
           </ErrorBoundary>
         </div>
       </div>
