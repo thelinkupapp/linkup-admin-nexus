@@ -924,39 +924,79 @@ const UserProfile = () => {
                   <CardTitle>Privacy Settings</CardTitle>
                   <CardDescription>Manage how user information is displayed and shared</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Hide Age</p>
-                        <p className="text-sm text-muted-foreground">Don't show age on profile</p>
-                      </div>
-                      <Switch checked={user.privacySettings.hideAge} />
-                    </div>
-                    <Separator />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Allow Friend Requests</p>
-                        <p className="text-sm text-muted-foreground">Control who can send friend requests</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="female-requests" className="text-sm">Female</Label>
-                          <Switch id="female-requests" checked={user.privacySettings.allowFemaleFriendRequests} />
+                <CardContent className="space-y-8">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Advanced</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Hide my age on my profile</Label>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="male-requests" className="text-sm">Male</Label>
-                          <Switch id="male-requests" checked={user.privacySettings.allowMaleFriendRequests} />
+                        <Switch checked={user.privacySettings.hideAge} />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Don't allow male friend requests</Label>
                         </div>
+                        <Switch checked={!user.privacySettings.allowMaleFriendRequests} />
+                      </div>
+                      
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Don't allow female friend requests</Label>
+                        </div>
+                        <Switch checked={!user.privacySettings.allowFemaleFriendRequests} />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Socials visible to friends only</Label>
+                        </div>
+                        <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} />
                       </div>
                     </div>
-                    <Separator />
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium">Social Media Privacy</p>
-                        <p className="text-sm text-muted-foreground">Only friends can see social media accounts</p>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Show my location on...</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">The map</Label>
+                        </div>
+                        <Switch checked={user.privacySettings.showLocationOnMap} />
                       </div>
-                      <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} />
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Nearby people</Label>
+                        </div>
+                        <Switch checked={user.privacySettings.appearOnNearbyPeople} />
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground mb-4">Show linkups on my profile to...</p>
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">All users</Label>
+                        </div>
+                        <Switch checked={user.privacySettings.showLinkupsToEveryone} />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <Label className="text-base">Friends only</Label>
+                        </div>
+                        <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
