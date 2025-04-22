@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Android, Apple, ArrowDown, ArrowUp } from "lucide-react";
+import { Calendar, MonitorSmartphone, Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Select,
@@ -130,7 +130,7 @@ const UserDeletedTable = () => {
             value="Android"
             selected={platformFilter === "Android"}
             onClick={() => { setPlatformFilter("Android"); setCurrentPage(1); }}
-            Icon={Android}
+            Icon={MonitorSmartphone}
           />
         </div>
       </div>
@@ -197,7 +197,7 @@ const UserDeletedTable = () => {
                         </>
                       ) : (
                         <>
-                          <Android className="h-4 w-4 inline text-gray-500" />
+                          <MonitorSmartphone className="h-4 w-4 inline text-gray-500" />
                           Android
                         </>
                       )}
