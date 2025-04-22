@@ -38,8 +38,8 @@ interface LinkupFiltersProps {
   setSearchValue: (value: string) => void;
   selectedCategories: string[];
   setSelectedCategories: (value: string[]) => void;
-  selectedStatuses: string[]; // <-- changed from selectedStatus
-  setSelectedStatuses: (value: string[]) => void; // <-- changed from setSelectedStatus
+  selectedStatuses: string[]; 
+  setSelectedStatuses: (value: string[]) => void;
   selectedVisibility: string;
   setSelectedVisibility: (value: string) => void;
   selectedPrice: string;
@@ -103,7 +103,7 @@ export function LinkupFilters({
     { id: "travel", name: "Travel & Exploration", emoji: "✈️" },
     { id: "fitness", name: "Fitness", emoji: "🏆" },
     { id: "networking", name: "Networking", emoji: "💼" },
-    { id: "content-creation", name: "Content Creation", emoji: "🎥" },
+    { id: "content-creation", name: "Content Creation", emoji: "����" },
     { id: "tech", name: "Tech", emoji: "💻" },
     { id: "deep-talks", name: "Deep Talks", emoji: "🧠" },
     { id: "other", name: "Other", emoji: "🎯" }
@@ -119,17 +119,7 @@ export function LinkupFilters({
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
-
-        <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-          <Input
-            placeholder="Search..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            className="pl-7 h-8 w-[160px] text-xs"
-          />
-        </div>
-
+      
         {/* Category */}
         <Popover>
           <PopoverTrigger asChild>
@@ -399,6 +389,17 @@ export function LinkupFilters({
             </div>
           </PopoverContent>
         </Popover>
+
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+          <Input
+            placeholder="Search..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="pl-7 h-8 w-[160px] text-xs"
+          />
+        </div>
 
         {/* Date Range */}
         <Popover>

@@ -40,6 +40,7 @@ import { toast } from "@/components/ui/sonner";
 import { formatCreatedDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import { format, differenceInHours, differenceInDays } from "date-fns";
+import { DateRange } from "react-day-picker";
 
 function formatDateUserMgmtStyle(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
@@ -260,7 +261,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [linkupToRemove, setLinkupToRemove] = useState<{ id: string; title: string } | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
-  const [dateRange, setDateRange] = useState<{from?: Date, to?: Date}>({});
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
   const linkupsWithEarnings = linkups.map(l => ({
     ...l,
@@ -299,27 +300,27 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           return false;
         }
 
-        // Actual date range filter logic (inclusive)
-        if (dateRange.from && dateRange.to) {
+        // Updated date range filter logic to handle undefined and correctly use the DateRange type
+        if (dateRange?.from) {
           const linkupDate = new Date(linkup.date);
-          // Add logic to include linkups between the selected range, inclusive
-          if (
-            linkupDate < new Date(dateRange.from.setHours(0,0,0,0)) ||
-            linkupDate > new Date(dateRange.to.setHours(23,59,59,999))
-          ) {
+          const fromDate = new Date(dateRange.from);
+          fromDate.setHours(0, 0, 0, 0);
+          
+          if (linkupDate < fromDate) {
             return false;
           }
-        } else if (dateRange.from && !dateRange.to) {
-          const linkupDate = new Date(linkup.date);
-          if (linkupDate < new Date(dateRange.from.setHours(0,0,0,0))) {
-            return false;
-          }
-        } else if (!dateRange.from && dateRange.to) {
-          const linkupDate = new Date(linkup.date);
-          if (linkupDate > new Date(dateRange.to.setHours(23,59,59,999))) {
-            return false;
+          
+          // If there's also a "to" date
+          if (dateRange.to) {
+            const toDate = new Date(dateRange.to);
+            toDate.setHours(23, 59, 59, 999);
+            
+            if (linkupDate > toDate) {
+              return false;
+            }
           }
         }
+        
         return true;
       });
     if (earningsSort !== "none") {
