@@ -93,11 +93,6 @@ const navItems = [
         icon: Map
       },
       {
-        title: "Statistics",
-        href: "/linkups/statistics",
-        icon: BarChart3
-      },
-      {
         title: "Reports",
         href: "/linkups/reports",
         icon: FileText
