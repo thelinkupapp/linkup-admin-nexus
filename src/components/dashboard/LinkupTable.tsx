@@ -37,9 +37,9 @@ import {
 } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
 import { toast } from "@/components/ui/sonner";
-import { formatLinkupDateTime, formatCreatedDate } from "@/utils/dateFormatting";
+import { formatCreatedDate } from "@/utils/dateFormatting";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import { format } from "date-fns";
+import { format, differenceInHours, differenceInDays } from "date-fns";
 
 function formatDateUserMgmtStyle(dt: string) {
   return format(new Date(dt), "MMM d, yyyy, h:mm a");
@@ -214,6 +214,31 @@ function formatDateTime(dt: string) {
 interface LinkupTableProps {
   onCountChange?: (counts: { filtered: number; total: number }) => void;
   filterCountries?: { id: string; label: string; value: string; emoji: string; }[];
+}
+
+function formatLinkupDateTime(startDate: string, endDate: string): { mainDateTime: string; duration: string } {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  
+  // Calculate duration
+  const hoursDiff = differenceInHours(end, start);
+  const daysDiff = differenceInDays(end, start);
+  
+  // Format duration string
+  let duration;
+  if (daysDiff > 0) {
+    duration = `${daysDiff}d`;
+  } else {
+    duration = `${hoursDiff}hr`;
+  }
+  
+  // Format the date and time
+  const formattedDateTime = format(start, 'MMM d, h:mm a');
+  
+  return { 
+    mainDateTime: formattedDateTime, 
+    duration: duration 
+  };
 }
 
 export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps) {
@@ -451,6 +476,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           <TableBody>
             {currentLinkups.map(linkup => {
               const categoryObj = categories.find(c => c.id === linkup.category);
+              const { mainDateTime, duration } = formatLinkupDateTime(linkup.date, linkup.endTime);
+              
               return (
                 <React.Fragment key={linkup.id}>
                   <TableRow className="hover:bg-[#f5f6fb] border-0" style={{ fontSize: "15px", minHeight: 52 }}>
@@ -492,8 +519,8 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                       </div>
                     </TableCell>
                     <TableCell className="py-1.5 px-3 bg-transparent border-0">
-                      <div className="text-[15px] font-medium">{formatLinkupDateTime(linkup.date, linkup.endTime)}</div>
-                      <div className="text-[13px] text-[#888888]">{formatDurationShort(linkup.date, linkup.endTime)}</div>
+                      <div className="text-[15px]">{mainDateTime}</div>
+                      <div className="text-[13px] text-[#888888]">{duration}</div>
                     </TableCell>
                     <TableCell className="py-1.5 px-3 bg-transparent border-0">
                       <div className="text-[15px]">{formatCreatedDate(linkup.createdAt)}</div>
