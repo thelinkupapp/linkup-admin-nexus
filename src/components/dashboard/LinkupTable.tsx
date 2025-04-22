@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -11,12 +12,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, dollarSign } from "lucide-react";
 import { LinkupFilters } from "./LinkupFilters";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious, PaginationItemsPerPage } from "@/components/ui/pagination";
 import RemoveLinkupDialog from "./RemoveLinkupDialog";
 import { toast } from "@/components/ui/sonner";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 
 const categories = [
   { id: "drinks", name: "Drinks", emoji: "🍸" },
@@ -179,6 +181,14 @@ function getStatusBadgeStyles(status: string) {
 }
 const PER_PAGE_OPTIONS = [25, 50, 100];
 
+// Utility for consistent date/time format (like user management)
+// Example: 'Apr 20, 2025, 10:00 am'
+import { format } from "date-fns";
+
+function formatDateTime(dt: string) {
+  return format(new Date(dt), "MMM d, yyyy, h:mm a");
+}
+
 export function LinkupTable() {
   const [searchValue, setSearchValue] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
@@ -195,9 +205,16 @@ export function LinkupTable() {
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
   const [linkupToRemove, setLinkupToRemove] = useState<{ id: string; title: string } | null>(null);
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [earningsSort, setEarningsSort] = useState<"none" | "desc" | "asc">("none");
+
+  // Calculate earnings for paid linkups
+  const linkupsWithEarnings = linkups.map(l => ({
+    ...l,
+    earnings: l.isFree ? 0 : (l.price ?? 0) * l.attendeeCount
+  }));
 
   const filteredLinkups = useMemo(() => {
-    return [...linkups]
+    let filtered = [...linkupsWithEarnings]
       .filter(linkup => {
         if (searchValue && !linkup.title.toLowerCase().includes(searchValue.toLowerCase())) {
           return false;
@@ -221,8 +238,13 @@ export function LinkupTable() {
           if (selectedJoinMethod === "closed" && linkup.isOpen) return false;
         }
         return true;
-      })
-      .sort((a, b) => {
+      });
+    if (earningsSort !== "none") {
+      filtered = filtered.sort((a,b) =>
+        earningsSort === "desc" ? b.earnings - a.earnings : a.earnings - b.earnings
+      );
+    } else {
+      filtered = filtered.sort((a, b) => {
         if (sortConfig.field === 'date') {
           const dateA = new Date(a.date).getTime();
           const dateB = new Date(b.date).getTime();
@@ -234,7 +256,9 @@ export function LinkupTable() {
         }
         return 0;
       });
-  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, sortConfig]);
+    }
+    return filtered;
+  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, sortConfig, earningsSort]);
 
   const totalCount = linkups.length;
   const filteredCount = filteredLinkups.length;
@@ -242,10 +266,17 @@ export function LinkupTable() {
   const currentLinkups = filteredLinkups.slice((currentPage - 1) * perPage, currentPage * perPage);
 
   function handleSort(field: string) {
+    if (field === "earnings") {
+      setEarningsSort(prev =>
+        prev === "none" ? "desc" : prev === "desc" ? "asc" : "none"
+      );
+      return;
+    }
     setSortConfig((prev) => ({
       field,
       direction: prev.field === field && prev.direction === "asc" ? "desc" : "asc",
     }));
+    setEarningsSort("none"); // disable earning sort if sorting by another field
   }
 
   function handleRemove(linkup: { id: string; title: string }) {
@@ -272,6 +303,7 @@ export function LinkupTable() {
   return (
     <>
       <div className="flex flex-col gap-6">
+        {/* Top section - show only one total (or filtered) */}
         <div>
           <span className="text-2xl font-semibold text-[#8364e8]">
             {filteredCount !== totalCount
@@ -279,24 +311,42 @@ export function LinkupTable() {
               : `${totalCount} total linkups`}
           </span>
         </div>
-        <LinkupFilters
-          searchValue={searchValue}
-          setSearchValue={setSearchValue}
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          selectedVisibility={selectedVisibility}
-          setSelectedVisibility={setSelectedVisibility}
-          selectedPrice={selectedPrice}
-          setSelectedPrice={setSelectedPrice}
-          selectedJoinMethod={selectedJoinMethod}
-          setSelectedJoinMethod={setSelectedJoinMethod}
-          dateRange={undefined}
-          setDateRange={() => {}}
-          filteredCount={filteredCount}
-          totalCount={totalCount}
-        />
+        {/* Filters */}
+        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-2">
+          <div className="flex-shrink-0">
+            <Button
+              variant={earningsSort !== "none" ? "default" : "outline"}
+              className="flex items-center space-x-1"
+              onClick={() => handleSort("earnings")}
+            >
+              <dollarSign className="w-5 h-5 mr-1" />
+              {earningsSort === "desc" && <span className="text-sm font-semibold">Highest earnings</span>}
+              {earningsSort === "asc" && <span className="text-sm font-semibold">Lowest earnings</span>}
+              {earningsSort === "none" && <span className="text-sm font-medium text-gray-700">Sort by earnings</span>}
+            </Button>
+          </div>
+          <div className="flex-1">
+            <LinkupFilters
+              searchValue={searchValue}
+              setSearchValue={setSearchValue}
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+              selectedVisibility={selectedVisibility}
+              setSelectedVisibility={setSelectedVisibility}
+              selectedPrice={selectedPrice}
+              setSelectedPrice={setSelectedPrice}
+              selectedJoinMethod={selectedJoinMethod}
+              setSelectedJoinMethod={setSelectedJoinMethod}
+              dateRange={undefined}
+              setDateRange={() => {}}
+              filteredCount={filteredCount}
+              totalCount={totalCount}
+            />
+          </div>
+        </div>
+        {/* Table */}
         <div className="border rounded-lg bg-background overflow-x-auto">
           <Table>
             <TableHeader>
@@ -374,11 +424,12 @@ export function LinkupTable() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="font-medium">{formatJoinDate(linkup.date)}</div>
+                        {/* New Date & Time formatting, consistent with user management */}
+                        <div className="font-medium">{formatDateTime(linkup.date)}</div>
                         <div className="text-muted-foreground">{formatDuration(linkup.date, linkup.endTime)}</div>
                       </TableCell>
                       <TableCell>
-                        <div>{formatJoinDate(linkup.createdAt)}</div>
+                        <div>{formatDateTime(linkup.createdAt)}</div>
                       </TableCell>
                       <TableCell>
                         <Badge variant="outline" className={`text-base px-2 py-1 ${getStatusBadgeStyles(linkup.status)}`}>
@@ -408,8 +459,8 @@ export function LinkupTable() {
                     </TableRow>
                     {expandedRows[linkup.id] && (
                       <TableRow className="bg-muted/40">
-                        <TableCell colSpan={8} className="p-0 pb-3">
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-8 py-4">
+                        <TableCell colSpan={8} className="p-0 pb-6">
+                          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 px-8 py-4">
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Location</div>
                               <div className="text-base">{linkup.location}</div>
@@ -420,17 +471,51 @@ export function LinkupTable() {
                             </div>
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Visibility</div>
-                              <div className="text-base">{linkup.isPublic ? "Public" : "Private"}</div>
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <span className="text-base font-medium underline cursor-help">
+                                    {linkup.isPublic ? "Public" : "Private"}
+                                  </span>
+                                </HoverCardTrigger>
+                                <HoverCardContent>
+                                  <span>
+                                    {linkup.isPublic
+                                      ? "Linkup open to anyone"
+                                      : "Linkup viewable by link only"}
+                                  </span>
+                                </HoverCardContent>
+                              </HoverCard>
                             </div>
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Join Method</div>
-                              <div className="text-base">{linkup.isOpen ? "Open" : "Closed"}</div>
+                              <HoverCard>
+                                <HoverCardTrigger asChild>
+                                  <span className="text-base font-medium underline cursor-help">
+                                    {linkup.isOpen ? "Open" : "Closed"}
+                                  </span>
+                                </HoverCardTrigger>
+                                <HoverCardContent>
+                                  <span>
+                                    {linkup.isOpen
+                                      ? "No approval needed"
+                                      : "Approval needed"}
+                                  </span>
+                                </HoverCardContent>
+                              </HoverCard>
                             </div>
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">Price</div>
                               <div className="text-base">
                                 {linkup.isFree ? "Free" : `$${linkup.price}`}
                               </div>
+                              {(!linkup.isFree && linkup.price && linkup.attendeeCount) ? (
+                                <div className="mt-3">
+                                  <div className="text-xs text-muted-foreground mb-1">Linkup earnings</div>
+                                  <div className="flex items-center gap-1 font-bold text-green-800 text-base">
+                                    <span className="flex items-center"><dollarSign className="w-4 h-4 mr-1" />${linkup.earnings}</span>
+                                  </div>
+                                </div>
+                              ) : null}
                             </div>
                           </div>
                         </TableCell>
