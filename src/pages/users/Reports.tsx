@@ -1,10 +1,28 @@
 
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { UserReportsTable } from "@/components/reports/UserReportsTable";
 import { AlertCircle } from "lucide-react";
 
 const UserReports = () => {
-  const totalReports = 3; // Hardcoded for now, you might want to calculate this dynamically later
+  const [totalReports, setTotalReports] = useState(3); // Total reports count
+  const [filteredCount, setFilteredCount] = useState(3); // Filtered reports count
+  const [currentFilter, setCurrentFilter] = useState<"all" | "read" | "unread">("all");
+  
+  useEffect(() => {
+    // Listen for custom events from UserReportsTable component
+    const handleReportsFiltered = (e: CustomEvent) => {
+      setTotalReports(e.detail.total);
+      setFilteredCount(e.detail.filtered);
+      setCurrentFilter(e.detail.filterType);
+    };
+    
+    window.addEventListener('reportsFiltered', handleReportsFiltered as EventListener);
+    
+    return () => {
+      window.removeEventListener('reportsFiltered', handleReportsFiltered as EventListener);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-muted/10">
@@ -18,10 +36,17 @@ const UserReports = () => {
           
           <div className="mt-4 flex items-center gap-2">
             <AlertCircle className="h-6 w-6 text-[#9b87f5]" />
-            <span className="text-lg font-semibold">
-              <span className="text-[#9b87f5]">{totalReports}</span>{" "}
-              <span className="text-[#1A1F2C]">reports</span>
-            </span>
+            {currentFilter === "all" ? (
+              <span className="text-lg font-semibold">
+                <span className="text-[#9b87f5]">{totalReports}</span>{" "}
+                <span className="text-[#1A1F2C]">reports</span>
+              </span>
+            ) : (
+              <span className="text-lg font-semibold">
+                <span className="text-[#9b87f5]">Showing {filteredCount}</span>{" "}
+                <span className="text-[#1A1F2C]">of {totalReports} reports</span>
+              </span>
+            )}
           </div>
         </div>
 

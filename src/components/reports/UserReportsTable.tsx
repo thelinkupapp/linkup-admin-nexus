@@ -37,7 +37,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/photo-1582562124811-c09040d0a901"
+      avatar: "/lovable-uploads/71376d09-ccf7-4580-91f7-0c7e70d3d9e6.png"
     },
     reportedUser: {
       id: "ru2",
@@ -77,6 +77,19 @@ export function UserReportsTable() {
   const [reports, setReports] = useState(mockReports);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredReports, setFilteredReports] = useState(reports);
+  
+  // Pass the total reports and filtered reports count to parent component
+  const onFilterChange = (status: "all" | "read" | "unread", totalFiltered: number) => {
+    setFilterStatus(status);
+    const event = new CustomEvent('reportsFiltered', { 
+      detail: { 
+        total: reports.length,
+        filtered: totalFiltered,
+        filterType: status
+      } 
+    });
+    window.dispatchEvent(event);
+  };
 
   useEffect(() => {
     let results = reports.filter(report => {
@@ -107,6 +120,16 @@ export function UserReportsTable() {
 
     setFilteredReports(results);
     setCurrentPage(1);
+    
+    // Trigger event when filtered results change
+    const event = new CustomEvent('reportsFiltered', { 
+      detail: { 
+        total: reports.length,
+        filtered: results.length,
+        filterType: filterStatus
+      } 
+    });
+    window.dispatchEvent(event);
   }, [reports, searchTerm, filterStatus, sortDirection]);
 
   const handleMarkAsRead = (reportId: string) => {
@@ -127,6 +150,10 @@ export function UserReportsTable() {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+  
+  // For accurate "showing X of Y" calculation
+  const startNumber = filteredReports.length > 0 ? (currentPage - 1) * pageSize + 1 : 0;
+  const endNumber = Math.min(currentPage * pageSize, filteredReports.length);
 
   return (
     <div className="space-y-4">
@@ -144,7 +171,14 @@ export function UserReportsTable() {
           </Button>
         </div>
         <div className="flex items-center gap-4">
-          <Select value={filterStatus} onValueChange={(value: any) => setFilterStatus(value)}>
+          <Select 
+            value={filterStatus} 
+            onValueChange={(value: any) => onFilterChange(value, reports.filter(report => {
+              if (value === "read") return report.isRead;
+              if (value === "unread") return !report.isRead;
+              return true;
+            }).length)}
+          >
             <SelectTrigger className="w-[130px]">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
@@ -276,7 +310,7 @@ export function UserReportsTable() {
           <span className="text-sm text-[#1A1F2C]">
             Showing{" "}
             <span className="text-[#9b87f5]">
-              {filteredReports.length > 0 ? ((currentPage - 1) * pageSize) + 1 : 0}
+              {startNumber === endNumber ? startNumber : `${startNumber}-${endNumber}`}
             </span>
             {" "}of{" "}
             <span className="text-[#9b87f5]">{filteredReports.length}</span>{" "}
