@@ -1,12 +1,18 @@
 
 import { useState } from 'react';
-import { Check, ArrowDown, ArrowUp } from 'lucide-react';
+import { Check, ArrowDown, ArrowUp, Filter } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJoinDate } from "@/utils/dateFormatting";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 interface Report {
   id: string;
@@ -25,6 +31,7 @@ interface UserReportsListProps {
 export function UserReportsList({ reports: initialReports }: UserReportsListProps) {
   const [reports, setReports] = useState(initialReports);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [filter, setFilter] = useState<'all' | 'read' | 'unread'>('all');
   
   const unreadCount = reports.filter(report => !report.isRead).length;
   
@@ -50,6 +57,12 @@ export function UserReportsList({ reports: initialReports }: UserReportsListProp
     });
   };
 
+  const filteredReports = reports.filter(report => {
+    if (filter === 'read') return report.isRead;
+    if (filter === 'unread') return !report.isRead;
+    return true;
+  });
+
   return (
     <Card>
       <CardHeader>
@@ -69,6 +82,25 @@ export function UserReportsList({ reports: initialReports }: UserReportsListProp
                 : `${reports.length} report${reports.length === 1 ? '' : 's'} total`}
             </CardDescription>
           </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="ml-auto">
+                <Filter className="mr-2 h-4 w-4" />
+                {filter === 'all' ? 'All Reports' : filter === 'read' ? 'Read' : 'Unread'}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-[160px]">
+              <DropdownMenuItem onClick={() => setFilter('all')}>
+                All Reports
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilter('read')}>
+                Read
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setFilter('unread')}>
+                Unread
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent>
@@ -89,11 +121,10 @@ export function UserReportsList({ reports: initialReports }: UserReportsListProp
                   >
                     <div className="flex items-center gap-2">
                       Date & Time
-                      {sortDirection === 'asc' ? (
-                        <ArrowUp className="h-4 w-4" />
-                      ) : (
-                        <ArrowDown className="h-4 w-4" />
-                      )}
+                      <div className="flex flex-col">
+                        <ArrowUp className={`h-3 w-3 ${sortDirection === 'asc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
+                        <ArrowDown className={`h-3 w-3 ${sortDirection === 'desc' ? 'text-foreground' : 'text-muted-foreground/30'}`} />
+                      </div>
                     </div>
                   </TableHead>
                   <TableHead>Status</TableHead>
@@ -101,7 +132,7 @@ export function UserReportsList({ reports: initialReports }: UserReportsListProp
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {reports.map((report) => (
+                {filteredReports.map((report) => (
                   <TableRow key={report.id}>
                     <TableCell>
                       <div className="flex items-center gap-2">
