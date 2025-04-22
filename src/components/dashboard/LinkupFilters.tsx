@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Search, DollarSign, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -54,6 +53,8 @@ interface LinkupFiltersProps {
   setDateRange: (value: DateRange | undefined) => void;
   earningsSort: "none" | "desc" | "asc";
   setEarningsSort: (value: "desc" | "asc" | "none") => void;
+  attendeesSort: "none" | "desc" | "asc";
+  setAttendeesSort: (value: "desc" | "asc" | "none") => void;
 }
 
 export function LinkupFilters({
@@ -76,6 +77,8 @@ export function LinkupFilters({
   setDateRange,
   earningsSort,
   setEarningsSort,
+  attendeesSort,
+  setAttendeesSort,
 }: LinkupFiltersProps) {
   const toggleArrayValue = (array: string[], value: string) => {
     return array.includes(value)
@@ -115,7 +118,6 @@ export function LinkupFilters({
 
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
-      {/* Filter bar expanded, stretches wider */}
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
         <div className="relative">
           <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3 w-3 text-muted-foreground" />
@@ -162,7 +164,6 @@ export function LinkupFilters({
           </PopoverContent>
         </Popover>
 
-        {/* COUNTRIES LOCATION DROPDOWN: now matches user management */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" className="h-8 text-xs px-2 font-medium min-w-[110px] flex gap-1">
@@ -286,7 +287,6 @@ export function LinkupFilters({
           </SelectContent>
         </Select>
 
-        {/* EARNINGS DROPDOWN - compact with two choices */}
         <Popover>
           <PopoverTrigger asChild>
             <Button
@@ -337,8 +337,58 @@ export function LinkupFilters({
             </div>
           </PopoverContent>
         </Popover>
+
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="h-8 text-xs px-2 font-medium flex items-center gap-1 min-w-[110px]"
+              aria-label="Sort by attendees"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 17v-2a4 4 0 0 1 4-4h2"/><circle cx="9" cy="7" r="4"/><path d="M16 21v-2a4 4 0 0 0-3-3.87"/><path d="M17 3.13a4 4 0 0 1 0 7.75" /></svg>
+              Attendees
+              {attendeesSort === "desc" && (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 9l7 7 7-7"></path>
+                </svg>
+              )}
+              {attendeesSort === "asc" && (
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#666" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M19 15l-7-7-7 7"></path>
+                </svg>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[120px] p-0 z-[110]">
+            <div>
+              <button
+                type="button"
+                className={`w-full text-xs px-3 py-2 text-left hover:bg-muted/50 ${
+                  attendeesSort === "desc" ? "font-semibold text-primary" : ""
+                }`}
+                onClick={() => setAttendeesSort("desc")}
+              >
+                <span className="flex items-center">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M5 9l7 7 7-7"/></svg>
+                  &nbsp;Highest
+                </span>
+              </button>
+              <button
+                type="button"
+                className={`w-full text-xs px-3 py-2 text-left hover:bg-muted/50 ${
+                  attendeesSort === "asc" ? "font-semibold text-primary" : ""
+                }`}
+                onClick={() => setAttendeesSort("asc")}
+              >
+                <span className="flex items-center">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M19 15l-7-7-7 7"/></svg>
+                  &nbsp;Lowest
+                </span>
+              </button>
+            </div>
+          </PopoverContent>
+        </Popover>
       </div>
-      {/* No linkups count here! Removed the duplicate right-side count */}
     </div>
   );
 }

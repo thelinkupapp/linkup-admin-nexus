@@ -223,6 +223,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
     direction: "desc",
   });
   const [earningsSort, setEarningsSort] = useState<"none" | "desc" | "asc">("none");
+  const [attendeesSort, setAttendeesSort] = useState<"none" | "desc" | "asc">("none");
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage, setPerPage] = useState(PER_PAGE_OPTIONS[0]);
   const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
@@ -271,6 +272,10 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       filtered = filtered.sort((a, b) =>
         earningsSort === "desc" ? b.earnings - a.earnings : a.earnings - b.earnings
       );
+    } else if (attendeesSort !== "none") {
+      filtered = filtered.sort((a, b) =>
+        attendeesSort === "desc" ? b.attendeeCount - a.attendeeCount : a.attendeeCount - b.attendeeCount
+      );
     } else {
       filtered = filtered.sort((a, b) => {
         if (sortConfig.field === 'date') {
@@ -286,7 +291,7 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       });
     }
     return filtered;
-  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort]);
+  }, [searchValue, selectedCategories, selectedStatus, selectedVisibility, selectedPrice, selectedJoinMethod, selectedLocations, sortConfig, earningsSort, attendeesSort]);
 
   React.useEffect(() => {
     if (onCountChange) {
@@ -305,11 +310,19 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
       direction: prev.field === field && prev.direction === "asc" ? "desc" : "asc",
     }));
     setEarningsSort("none");
+    setAttendeesSort("none");
   }
 
   function handleEarningsDropdown(value: "desc" | "asc") {
     setEarningsSort(value);
     setSortConfig({ field: "date", direction: "desc" });
+    setAttendeesSort("none");
+  }
+
+  function handleAttendeesDropdown(value: "desc" | "asc") {
+    setAttendeesSort(value);
+    setSortConfig({ field: "date", direction: "desc" });
+    setEarningsSort("none");
   }
 
   function handleRemove(linkup: { id: string; title: string }) {
@@ -362,6 +375,17 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
           } else {
             setEarningsSort(val as "desc" | "asc");
             setSortConfig({ field: "date", direction: "desc" });
+            setAttendeesSort("none");
+          }
+        }}
+        attendeesSort={attendeesSort}
+        setAttendeesSort={(val) => {
+          if (val === attendeesSort) {
+            setAttendeesSort("none");
+          } else {
+            setAttendeesSort(val as "desc" | "asc");
+            setSortConfig({ field: "date", direction: "desc" });
+            setEarningsSort("none");
           }
         }}
       />
