@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Search, DollarSign, MapPin } from "lucide-react";
+import { Search, DollarSign, MapPin, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -28,7 +27,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 import { countries } from "@/constants/filterOptions";
-import { X } from "lucide-react";
 import { format } from "date-fns";
 
 const countryFlagMap: Record<string, string> = Object.fromEntries(
@@ -119,7 +117,6 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
-  // ---- Helper for date range pill
   function getDateRangeLabel(range?: DateRange) {
     if (range?.from && range?.to) {
       return `${format(range.from, "MMM d")}–${format(range.to, "MMM d")}`;
@@ -128,7 +125,6 @@ export function LinkupFilters({
     return "Date Range";
   }
 
-  // ---- Main return
   return (
     <div className="flex flex-wrap items-center gap-2.5 mb-3 w-full bg-transparent justify-between max-w-5xl">
       <div className="flex flex-wrap items-center gap-2.5 flex-grow">
@@ -417,9 +413,16 @@ export function LinkupFilters({
                 {getDateRangeLabel(dateRange)}
               </span>
               {dateRange?.from && (
-                <>
-                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect width="20" height="20" fill="none"/><path d="M5 5L15 15M15 5L5 15" stroke="#C0C0C0" strokeWidth="2" strokeLinecap="round"/></svg>
-                </>
+                <button
+                  type="button"
+                  className="ml-1 hover:bg-gray-100 rounded-full p-0.5"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDateRange(undefined);
+                  }}
+                >
+                  <X className="h-3 w-3 text-gray-500 hover:text-gray-700" />
+                </button>
               )}
             </Button>
           </PopoverTrigger>
