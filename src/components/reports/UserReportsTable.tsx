@@ -1,3 +1,4 @@
+
 import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -36,7 +37,7 @@ const mockReports = [
       id: "r2",
       name: "David Williams",
       username: "davidw",
-      avatar: "/lovable-uploads/photo-1581092795360-fd1ca04f0952"
+      avatar: "/lovable-uploads/photo-1582562124811-c09040d0a901"
     },
     reportedUser: {
       id: "ru2",
