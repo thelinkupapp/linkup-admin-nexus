@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -59,7 +58,6 @@ const statusOptions = [
 
 const itemsPerPageOptions = [10, 25, 50];
 
-// Sample data - in a real app this would come from your backend
 const chatMessages: ChatMessage[] = [
   {
     id: "1",
@@ -99,7 +97,6 @@ const chatMessages: ChatMessage[] = [
   }
 ];
 
-// Get unique linkup names for the filter
 const getUniqueLinkupsByStatus = (messages: ChatMessage[], status: string) => {
   if (status === 'all') {
     return Array.from(new Set(messages.map(msg => msg.linkupName)));
@@ -158,7 +155,6 @@ export function UserLinkupChats() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Chats</h2>
         <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
           View All
         </Button>
