@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { LinkupTable } from "@/components/dashboard/LinkupTable";
 import { Toaster } from "@/components/ui/toaster";
@@ -14,10 +14,10 @@ const LinkupManagement = () => {
     <div className="flex min-h-screen bg-muted/10">
       <Sidebar />
       <div className="flex-1 ml-64">
-        <div className="p-10 w-full max-w-7xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-extrabold mb-1 tracking-tight">Linkup Management</h1>
-            <p className="text-muted-foreground text-lg">
+        <div className="p-6 w-full max-w-[1400px] mx-auto">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold mb-1 tracking-tight">Linkup Management</h1>
+            <p className="text-muted-foreground text-sm">
               View and manage all linkups created on the app
             </p>
           </div>

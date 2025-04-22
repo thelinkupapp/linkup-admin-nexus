@@ -1,5 +1,5 @@
 import React from "react";
-import { Search, Map } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
@@ -24,10 +24,8 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
 import { DateRange } from "react-day-picker";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface LinkupFiltersProps {
   layout?: "inline" | "stacked";
@@ -145,28 +143,24 @@ export function LinkupFilters({
   };
 
   return (
-    <div
-      className={cn(
-        "flex flex-col md:flex-row md:items-center w-full gap-2 md:gap-4",
-        layout === "inline" ? "" : "space-y-4"
-      )}
-    >
-      <div className="relative w-full max-w-[270px] md:max-w-[320px]">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+    <div className="flex items-center flex-wrap gap-2">
+      <div className="relative">
+        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
         <Input
-          placeholder="Search linkups..."
+          placeholder="Search..."
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
-          className="pl-9 w-full md:w-[300px]"
+          className="pl-7 h-9 w-[180px] text-sm"
         />
       </div>
+      
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="font-medium min-w-[130px]">
+          <Button variant="outline" className="h-9 text-xs px-3 font-medium">
             Category ({selectedCategories.length})
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[240px] p-0 z-[100]">
+        <PopoverContent className="w-[220px] p-0 z-[100]">
           <Command>
             <CommandInput placeholder="Search category..." />
             <CommandEmpty>No category found.</CommandEmpty>
@@ -194,9 +188,10 @@ export function LinkupFilters({
           </Command>
         </PopoverContent>
       </Popover>
+      
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="outline" className="font-medium min-w-[130px]">
+          <Button variant="outline" className="h-9 text-xs px-3 font-medium">
             Date Range
           </Button>
         </PopoverTrigger>
@@ -212,73 +207,81 @@ export function LinkupFilters({
           />
         </PopoverContent>
       </Popover>
+      
       <Select value={selectedStatus} onValueChange={handleStatusChange}>
-        <SelectTrigger className="min-w-[140px] font-medium">
+        <SelectTrigger className="h-9 text-xs w-24">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
-          <SelectItem value="all">
+          <SelectItem value="all" className="text-xs">
             All Status
           </SelectItem>
           {statusOptions.map((option) => (
             <SelectItem
               key={option.value}
               value={option.value}
-              className="hover:bg-accent hover:text-accent-foreground cursor-pointer transition-colors"
+              className="text-xs"
             >
               {option.label}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+      
       <Select value={selectedVisibility} onValueChange={handleVisibilityChange}>
-        <SelectTrigger className="min-w-[140px] font-medium">
+        <SelectTrigger className="h-9 text-xs w-24">
           <SelectValue placeholder="Visibility" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
-          <SelectItem value="all">
+          <SelectItem value="all" className="text-xs">
             All Visibility
           </SelectItem>
-          <SelectItem value="public">
+          <SelectItem value="public" className="text-xs">
             Public
           </SelectItem>
-          <SelectItem value="private">
+          <SelectItem value="private" className="text-xs">
             Private
           </SelectItem>
         </SelectContent>
       </Select>
+      
       <Select value={selectedPrice} onValueChange={handlePriceChange}>
-        <SelectTrigger className="min-w-[140px] font-medium">
+        <SelectTrigger className="h-9 text-xs w-24">
           <SelectValue placeholder="Price" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
-          <SelectItem value="all">
+          <SelectItem value="all" className="text-xs">
             All Prices
           </SelectItem>
-          <SelectItem value="free">
+          <SelectItem value="free" className="text-xs">
             Free
           </SelectItem>
-          <SelectItem value="paid">
+          <SelectItem value="paid" className="text-xs">
             Paid
           </SelectItem>
         </SelectContent>
       </Select>
+      
       <Select value={selectedJoinMethod} onValueChange={handleJoinMethodChange}>
-        <SelectTrigger className="min-w-[140px] font-medium">
+        <SelectTrigger className="h-9 text-xs w-24">
           <SelectValue placeholder="Join Method" />
         </SelectTrigger>
         <SelectContent className="z-[100]">
-          <SelectItem value="all">
+          <SelectItem value="all" className="text-xs">
             All Join Methods
           </SelectItem>
-          <SelectItem value="open">
+          <SelectItem value="open" className="text-xs">
             Open
           </SelectItem>
-          <SelectItem value="closed">
+          <SelectItem value="closed" className="text-xs">
             Closed
           </SelectItem>
         </SelectContent>
       </Select>
+      
+      <div className="text-xs text-muted-foreground ml-2">
+        <span className="font-medium text-primary">{filteredCount}</span> of {totalCount} linkups
+      </div>
     </div>
   );
 }
