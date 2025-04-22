@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -779,3 +780,102 @@ const UserProfile = () => {
                           {user.languages.map((language, index) => (
                             <Badge key={index} variant="outline" className="bg-muted/50">
                               {language}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Languages className="h-5 w-5 text-linkup-purple" />
+                      Social Media
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      {user.socials.instagram && (
+                        <div className="flex items-center gap-3">
+                          <Instagram className="h-5 w-5 text-pink-500" />
+                          <a href={`https://instagram.com${user.socials.instagram.startsWith('@') ? user.socials.instagram.substring(1) : user.socials.instagram}`} 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="text-sm hover:underline flex items-center gap-1">
+                            {user.socials.instagram}
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                        </div>
+                      )}
+                      
+                      {user.socials.twitter && (
+                        <div className="flex items-center gap-3">
+                          <Twitter className="h-5 w-5 text-blue-400" />
+                          <a href={`https://twitter.com${user.socials.twitter.startsWith('@') ? user.socials.twitter.substring(1) : user.socials.twitter}`} 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="text-sm hover:underline flex items-center gap-1">
+                            {user.socials.twitter}
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                        </div>
+                      )}
+                      
+                      {user.socials.linkedin && (
+                        <div className="flex items-center gap-3">
+                          <Linkedin className="h-5 w-5 text-blue-600" />
+                          <a href={`https://linkedin.com/in${user.socials.linkedin.startsWith('/') ? user.socials.linkedin : '/' + user.socials.linkedin}`} 
+                             target="_blank" 
+                             rel="noopener noreferrer"
+                             className="text-sm hover:underline flex items-center gap-1">
+                            {user.socials.linkedin}
+                            <ArrowUpRight className="h-3 w-3" />
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+      <PayoutHistoryDialog 
+        open={isPayoutHistoryOpen} 
+        onOpenChange={setIsPayoutHistoryOpen} 
+        payoutHistory={user.wallet.payoutHistory}
+      />
+      <EarningsBreakdownDialog 
+        open={isEarningsBreakdownOpen} 
+        onOpenChange={setIsEarningsBreakdownOpen} 
+        earnings={earningsBreakdown}
+        attendedLinkups={attendedLinkupPayments}
+      />
+      <LinkupPlusHistoryDialog 
+        open={isLinkupPlusHistoryOpen} 
+        onOpenChange={setIsLinkupPlusHistoryOpen} 
+        startDate={user.wallet.linkupPlus.startDate}
+        plan="annual"
+        transactions={linkupPlusTransactions}
+      />
+      <AllReportsDialog 
+        open={isAllReportsReceivedOpen} 
+        onOpenChange={setIsAllReportsReceivedOpen} 
+        reports={userWithVerification.reportsReceived}
+        type="received"
+        onMarkAsRead={handleMarkAsRead}
+      />
+      <AllReportsDialog 
+        open={isAllReportsMadeOpen} 
+        onOpenChange={setIsAllReportsMadeOpen} 
+        reports={userWithVerification.reportsMade}
+        type="made"
+      />
+    </div>
+  );
+};
+
+export default UserProfile;
