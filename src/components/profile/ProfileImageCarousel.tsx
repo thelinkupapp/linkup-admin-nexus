@@ -25,6 +25,10 @@ interface ProfileImageCarouselProps {
 }
 
 export const ProfileImageCarousel = ({ photos }: ProfileImageCarouselProps) => {
+  if (!photos || photos.length === 0) {
+    return null;
+  }
+  
   return (
     <div className="w-full mb-6">
       <Carousel className="w-full max-w-xl mx-auto">
