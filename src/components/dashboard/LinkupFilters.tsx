@@ -215,7 +215,6 @@ export function LinkupFilters({
             </PopoverTrigger>
             <PopoverContent className="w-[180px] p-2 z-[101]">
               <Command>
-                <CommandInput placeholder="Search status..." />
                 <CommandEmpty>No status found.</CommandEmpty>
                 <ScrollArea className="h-36">
                   <CommandGroup>
