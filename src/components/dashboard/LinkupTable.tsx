@@ -513,7 +513,9 @@ export function LinkupTable({ onCountChange, filterCountries }: LinkupTableProps
                 </div>
               </TableHead>
               <TableHead className="w-[98px] px-3 py-2 text-[#8E9196] font-medium text-[15px] bg-transparent border-0">Status</TableHead>
-              <TableHead className="w-[74px] px-3 py-2 text-[#8E9196] font-medium text-[15px] text-right bg-transparent border-0"></TableHead>
+              <TableHead className="w-[74px] px-3 py-2 text-[#8E9196] font-medium text-[15px] text-right bg-transparent border-0">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
