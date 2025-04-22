@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Calendar, MonitorSmartphone, Apple, ArrowDown, ArrowUp } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -86,18 +85,26 @@ const UserDeletedTable = () => {
     setCurrentPage(page);
   };
 
-  function FilterChip({ label, value, selected, onClick, Icon }: { label: string, value: string, selected: boolean, onClick: () => void, Icon?: any }) {
+  function FilterChip({ label, value, selected, onClick, Icon, LogoSrc }: { 
+    label: string, 
+    value: string, 
+    selected: boolean, 
+    onClick: () => void, 
+    Icon?: any, 
+    LogoSrc?: string 
+  }) {
     return (
       <button
         onClick={onClick}
         className={cn(
-          "flex items-center gap-1 px-3 py-1 rounded-md border transition text-sm font-medium",
+          "flex items-center gap-2 px-3 py-1 rounded-md border transition text-sm font-medium",
           selected
             ? "bg-violet-100 border-violet-400 text-violet-900"
             : "bg-white border-gray-300 text-gray-500 hover:bg-violet-50"
         )}
       >
         {Icon && <Icon className="w-4 h-4" />}
+        {LogoSrc && <img src={LogoSrc} alt={label} className="w-5 h-5 mr-1" />}
         {label}
       </button>
     );
@@ -131,7 +138,7 @@ const UserDeletedTable = () => {
             value="Android"
             selected={platformFilter === "Android"}
             onClick={() => { setPlatformFilter("Android"); setCurrentPage(1); }}
-            Icon={MonitorSmartphone}
+            LogoSrc="/lovable-uploads/8259ac94-5f10-4199-b0e2-c7800a8ba768.png"
           />
         </div>
       </div>
@@ -199,9 +206,9 @@ const UserDeletedTable = () => {
                       ) : (
                         <>
                           <img 
-                            src="/lovable-uploads/4c266ca6-18a6-4899-bad4-84a1f70634bf.png" 
+                            src="/lovable-uploads/8259ac94-5f10-4199-b0e2-c7800a8ba768.png" 
                             alt="Android" 
-                            className="h-4 w-4 inline mr-1" 
+                            className="h-5 w-5 inline mr-1" 
                           />
                           Android
                         </>
