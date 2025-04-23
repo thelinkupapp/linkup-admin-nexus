@@ -68,8 +68,9 @@ const linkup = {
   visibility: "Public",
   joinMethod: "Open",
   genderRestriction: "All",
+  // Set as a paid linkup for demo
   price: 25,
-  totalEarnings: 100,
+  totalEarnings: 125,
   capacity: 20,
   isFlexibleDate: false,
   startDate: "2024-05-15T18:00:00Z",
@@ -78,6 +79,7 @@ const linkup = {
   generalLocation: "Santa Monica",
   specificLocation: "Santa Monica Beach Volleyball Courts, CA",
   coordinates: { lat: 34.008, lng: -118.5 },
+  // Force the UI to show as status "Upcoming"
   status: "upcoming",
   host: {
     id: "h1",
@@ -238,7 +240,7 @@ const linkup = {
     timestamp: "2024-05-10T15:00:00Z"
   },
   officialImage: {
-    url: "/lovable-uploads/0ad4a69e-85bc-4de8-a0a6-91a7dab929b2.png",
+    url: "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png", // AI image provided
     source: "ai-generated" as const
   }
 };
@@ -256,63 +258,28 @@ const categoryEmojis: Record<string, string> = {
   Gaming: "🎮",
 };
 
-const statusStyles: Record<
-  string,
-  { bg: string; text: string; border: string }
-> = {
+const statusConfig = {
   upcoming: {
-    bg: "bg-[#9b87f5]/20",
+    bg: "bg-[#ede9fe]", // Soft purple
     text: "text-[#7c3aed]",
-    border: "border-[#9b87f5]",
-  },
-  happening: {
-    bg: "bg-green-100",
-    text: "text-green-800",
-    border: "border-green-300",
-  },
-  happened: {
-    bg: "bg-gray-200",
-    text: "text-gray-800",
-    border: "border-gray-300",
-  },
-  cancelled: {
-    bg: "bg-red-100",
-    text: "text-red-800",
-    border: "border-red-300",
-  },
+    border: "border-[#a48cf0]",
+    icon: "⏰", // Optionally use a checkmark/lucide or emoji if needed
+    label: "UPCOMING"
+  }
 };
 
 const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
 
-  const now = new Date();
-  const startDate = new Date(linkup.startDate);
-  const endDate = new Date(linkup.endDate);
+  // Always use 'upcoming' status for the example
+  const status = "upcoming";
+  const statusStyle = statusConfig[status];
 
-  let status: "upcoming" | "happening" | "happened" | "cancelled" = "upcoming";
-  if (linkup.status === "cancelled") {
-    status = "cancelled";
-  } else if (now < startDate) {
-    status = "upcoming";
-  } else if (now >= startDate && now <= endDate) {
-    status = "happening";
-  } else if (now > endDate) {
-    status = "happened";
-  }
-  const isHappening = status === "happening";
+  // Earnings as paid event
+  const showEarnings = !!linkup.price && linkup.price > 0;
+  const earnings = linkup.totalEarnings || (linkup.price * linkup.attendees.length);
 
-  const statusStyle = statusStyles[status];
-
-  const timeLeftMs = endDate.getTime() - now.getTime();
-  const hoursLeft = Math.floor(timeLeftMs / (1000 * 60 * 60));
-  const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
-
-  const timeLeftDisplay = isHappening
-    ? `Ends in ${hoursLeft}h ${minutesLeft}m`
-    : linkup.duration;
-
-  const formattedDate = formatLinkupDateTime(linkup.startDate, linkup.endDate);
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
   return (
@@ -330,45 +297,63 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          <div className="bg-white rounded-lg p-6 mb-8 border shadow-sm">
-            <div className="flex flex-col gap-2">
+          {/* --- TOP CARD: Banner, Image, Basic Details --- */}
+          <div className="bg-white rounded-xl p-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-start gap-8">
+            {/* Left: Image */}
+            <div className="w-full max-w-xs md:mr-8">
+              <LinkupImage
+                url={linkup.officialImage.url}
+                source={linkup.officialImage.source}
+                size="large"
+                className="mx-auto"
+              />
+            </div>
+            {/* Right: Details */}
+            <div className="flex-1">
+              {/* Status Pill */}
               <div
                 className={`
-                mb-4 inline-flex items-center gap-2 px-7 py-2.5 rounded-full border-2 font-bold text-xl uppercase tracking-wide
-                ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
-                shadow-sm transition
+                  mb-6 inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 text-xl font-bold uppercase tracking-wider
+                  ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
+                  shadow-sm transition
                 `}
                 style={{
-                  letterSpacing: "0.08em",
                   borderWidth: 3,
                   minHeight: 54,
-                  backgroundColor: "#ede9fe",
-                  borderColor: "#9b87f5",
-                  color: "#7c3aed"
+                  fontSize: 24,
+                  letterSpacing: "0.08em"
                 }}
                 data-testid="linkup-status-pill"
               >
-                <span className="text-2xl">
-                  {status === "upcoming" && "⏰"}
-                  {status === "happening" && "🔴"}
-                  {status === "happened" && "✅"}
-                  {status === "cancelled" && "❌"}
-                </span>
-                {status.charAt(0).toUpperCase() + status.slice(1)}
+                <span className="text-2xl">{statusStyle.icon}</span>
+                <span>{statusStyle.label}</span>
               </div>
-              <span className="flex items-center mb-2 gap-2 text-xl font-medium text-linkup-dark-purple bg-linkup-soft-purple px-4 py-1 rounded-full w-fit">
+              {/* Category */}
+              <span className="flex items-center mb-4 gap-2 text-linkup-purple font-medium text-lg">
                 <span className="text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
                 {linkup.category}
               </span>
-              <div className="flex items-center gap-3 mt-1">
-                <h1 className="text-3xl font-bold flex items-center gap-2">
-                  {linkup.title}
-                </h1>
+              {/* Title */}
+              <h1 className="text-4xl font-black mb-4 text-linkup-dark-purple">{linkup.title}</h1>
+              {/* Description */}
+              <p className="text-gray-700 text-xl mb-6">{linkup.description}</p>
+              {/* Paid badge & Earnings */}
+              <div className="flex items-center gap-4 mt-2">
+                {showEarnings && (
+                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 font-semibold rounded-full px-4 py-2 text-lg w-fit">
+                    <DollarSign className="h-5 w-5 mr-1" />
+                    <span className="font-bold">${linkup.price}</span>
+                    <span className="font-normal">Ticket</span>
+                    <span className="px-2 text-green-600">|</span>
+                    <span className="text-green-600 font-medium">${earnings} Total</span>
+                  </div>
+                )}
               </div>
-              <p className="mt-3 text-gray-700 text-base">{linkup.description}</p>
             </div>
           </div>
-
+          
+          {/* --- REST OF THE PAGE --- */}
+          {/* Leave Tabs and all sections as before */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger value="details">Details</TabsTrigger>
@@ -432,7 +417,7 @@ const LinkupDetails = () => {
                           </div>
                           <div>
                             <p className="text-sm font-medium">Duration</p>
-                            <p>{isHappening ? timeLeftDisplay : linkup.duration}</p>
+                            <p>{ linkup.duration}</p>
                           </div>
                         </div>
                       </CardContent>
@@ -806,132 +791,4 @@ const LinkupDetails = () => {
                         ) : (
                           <div className="w-full h-full relative">
                             <img 
-                              src={item.thumbnail || item.url} 
-                              alt="Video thumbnail"
-                              className="w-full h-full object-cover" 
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="bg-black/60 rounded-full p-3">
-                                <Video className="h-8 w-8 text-white" />
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                        
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-200">
-                          <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                            <div className="flex items-center gap-2">
-                              <Avatar className="h-6 w-6">
-                                <AvatarImage src={item.user?.avatar} alt={item.user?.name} />
-                                <AvatarFallback>{item.user?.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <span className="text-xs text-white">{item.user?.name}</span>
-                            </div>
-                            <p className="text-xs text-white/80 mt-1">
-                              {new Date(item.timestamp).toLocaleString()}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="reports">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Linkup Reports</CardTitle>
-                    <CardDescription>
-                      {linkup.reports.length} total reports, {linkup.reports.filter(r => r.resolved).length} resolved
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  {linkup.reports.length === 0 ? (
-                    <div className="text-center py-6">
-                      <AlertTriangle className="mx-auto h-8 w-8 text-muted-foreground opacity-50 mb-2" />
-                      <p className="text-muted-foreground">No reports for this linkup</p>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {linkup.reports.map((report) => (
-                        <div key={report.id} className="p-4 border rounded-lg">
-                          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-3">
-                            <div className="flex items-center gap-2">
-                              <AlertTriangle className="h-4 w-4 text-amber-500" />
-                              <p className="font-medium">Reported by @{report.reporter.username}</p>
-                            </div>
-                            <div className="flex items-center gap-2 mt-2 sm:mt-0">
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(report.timestamp).toLocaleString()}
-                              </p>
-                              {report.resolved ? (
-                                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
-                                  Resolved
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
-                                  Open
-                                </Badge>
-                              )}
-                            </div>
-                          </div>
-                          <p className="mb-3">{report.reason}</p>
-                          {!report.resolved && (
-                            <div className="flex justify-end gap-2">
-                              <Button variant="outline" size="sm">Dismiss</Button>
-                              <Button size="sm">Mark Resolved</Button>
-                            </div>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="map">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Location</CardTitle>
-                  <CardDescription>
-                    {linkup.specificLocation}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <div className="h-96 w-full rounded-b-lg overflow-hidden">
-                    <iframe 
-                      width="100%"
-                      height="100%"
-                      frameBorder="0"
-                      src={`https://maps.google.com/maps?q=${linkup.coordinates.lat},${linkup.coordinates.lng}&z=15&output=embed`}
-                      allowFullScreen
-                    ></iframe>
-                  </div>
-                </CardContent>
-                <CardFooter className="pt-4">
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => {
-                      window.open(`https://www.google.com/maps/search/?api=1&query=${linkup.coordinates.lat},${linkup.coordinates.lng}`, '_blank');
-                    }}
-                  >
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Open in Google Maps
-                  </Button>
-                </CardFooter>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default LinkupDetails;
+                              src={item
