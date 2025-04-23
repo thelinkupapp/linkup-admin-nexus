@@ -12,10 +12,9 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Search, ArrowUp, ArrowDown, AlertCircle } from "lucide-react";
-import { format, formatDistanceToNow } from "date-fns";
+import { Check, Search, AlertCircle, ArrowUp, ArrowDown } from "lucide-react";
+import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LinkupImage } from "@/components/linkups/LinkupImage";
 import {
   Select,
   SelectContent,
@@ -54,10 +53,10 @@ interface Report {
     id: string;
     title: string;
     image: string;
-    imageSource: "uploaded" | "ai-generated" | "stock";
     host: {
       id: string;
       name: string;
+      firstName: string;
       username: string;
       avatar: string;
     };
@@ -79,11 +78,11 @@ const SAMPLE_REPORTS: Report[] = [
     linkup: {
       id: "l1",
       title: "Coffee Chat Meetup",
-      image: "https://i.pravatar.cc/150?img=60",
-      imageSource: "uploaded",
+      image: "/lovable-uploads/e208023e-8fa0-4565-9605-f87d64c4e47e.png",
       host: {
         id: "h1",
         name: "Michael Chen",
+        firstName: "Michael",
         username: "mikec",
         avatar: "https://i.pravatar.cc/150?img=2"
       }
@@ -103,11 +102,11 @@ const SAMPLE_REPORTS: Report[] = [
     linkup: {
       id: "l2",
       title: "Beach Volleyball",
-      image: "https://i.pravatar.cc/150?img=61",
-      imageSource: "stock",
+      image: "/lovable-uploads/8f65bd0d-e464-49b1-84c8-14fb868ca62d.png",
       host: {
         id: "h2",
         name: "Emma Davis",
+        firstName: "Emma",
         username: "emmad",
         avatar: "https://i.pravatar.cc/150?img=4"
       }
@@ -127,11 +126,11 @@ const SAMPLE_REPORTS: Report[] = [
     linkup: {
       id: "l3",
       title: "Book Club Discussion",
-      image: "https://i.pravatar.cc/150?img=62",
-      imageSource: "ai-generated",
+      image: "/lovable-uploads/df3018c9-b4f4-4774-9991-6e2cc286e145.png",
       host: {
         id: "h3",
         name: "Alex Thompson",
+        firstName: "Alex",
         username: "alext",
         avatar: "https://i.pravatar.cc/150?img=6"
       }
@@ -225,6 +224,9 @@ export function LinkupReportsTable() {
   };
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+  const showingText = selectedStatus === "all" 
+    ? `${unreadCount} reports` 
+    : `Showing ${filteredReports.length} of ${totalReports} reports`;
   
   return (
     <div className="space-y-4">
@@ -238,7 +240,7 @@ export function LinkupReportsTable() {
             <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-violet-100 text-violet-700">
               <AlertCircle className="h-4 w-4" />
             </span>
-            <span className="text-xl font-medium">{unreadCount} reports</span>
+            <span className="text-xl font-medium">{showingText}</span>
           </span>
         </div>
       </div>
@@ -310,18 +312,25 @@ export function LinkupReportsTable() {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
-                    <LinkupImage 
-                      url={report.linkup.image} 
-                      source={report.linkup.imageSource} 
-                      size="small"
-                      className="rounded-md h-10 w-10" 
-                    />
+                    <div className="h-10 w-10 overflow-hidden rounded-lg">
+                      <img 
+                        src={report.linkup.image} 
+                        alt={report.linkup.title}
+                        className="h-full w-full object-cover aspect-[9/16]" 
+                      />
+                    </div>
                     <div className="flex flex-col">
                       <Link to={`/linkups/${report.linkup.id}`} className="font-medium hover:underline">
                         {report.linkup.title}
                       </Link>
                       <span className="text-sm text-muted-foreground">
-                        Hosted by <Link to={`/users/${report.linkup.host.id}`} className="hover:underline">@{report.linkup.host.username}</Link>
+                        Hosted by{" "}
+                        <Link 
+                          to={`/users/${report.linkup.host.id}`} 
+                          className="font-medium hover:underline"
+                        >
+                          {report.linkup.host.firstName}
+                        </Link>
                       </span>
                     </div>
                   </div>
@@ -413,51 +422,20 @@ export function LinkupReportsTable() {
                 />
               </PaginationItem>
               
-              {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
-                let pageNum = i + 1;
-                
-                // Adjust page numbers for when current page is near the end
-                if (currentPage > 3 && totalPages > 5) {
-                  if (i === 0) {
-                    pageNum = 1;
-                  } else if (i === 1 && currentPage > 3) {
-                    return (
-                      <PaginationItem key="ellipsis-start">
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  } else {
-                    pageNum = Math.min(currentPage + i - 2, totalPages);
-                    if (pageNum === totalPages && i !== 4) {
-                      return null;
-                    }
-                  }
-                }
-                
-                // Add ellipsis at the end if needed
-                if (i === 4 && totalPages > 5 && currentPage < totalPages - 2) {
-                  return (
-                    <PaginationItem key="ellipsis-end">
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  );
-                }
-                
-                // Don't show pages beyond total
-                if (pageNum > totalPages) return null;
-                
+              {Array.from({ length: totalPages }).map((_, i) => {
+                const pageNumber = i + 1;
                 return (
-                  <PaginationItem key={pageNum}>
+                  <PaginationItem key={pageNumber}>
                     <PaginationLink
-                      isActive={pageNum === currentPage}
-                      onClick={() => setCurrentPage(pageNum)}
+                      onClick={() => setCurrentPage(pageNumber)}
+                      isActive={pageNumber === currentPage}
                     >
-                      {pageNum}
+                      {pageNumber}
                     </PaginationLink>
                   </PaginationItem>
                 );
               })}
-              
+
               <PaginationItem>
                 <PaginationNext
                   onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
