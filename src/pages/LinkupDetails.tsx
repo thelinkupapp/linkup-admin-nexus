@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -69,7 +68,6 @@ const linkup = {
   visibility: "Public",
   joinMethod: "Open",
   genderRestriction: "All",
-  // Set as a paid linkup for demo
   price: 25,
   totalEarnings: 125,
   capacity: 20,
@@ -80,7 +78,6 @@ const linkup = {
   generalLocation: "Santa Monica",
   specificLocation: "Santa Monica Beach Volleyball Courts, CA",
   coordinates: { lat: 34.008, lng: -118.5 },
-  // Force the UI to show as status "Upcoming"
   status: "upcoming",
   host: {
     id: "h1",
@@ -241,7 +238,7 @@ const linkup = {
     timestamp: "2024-05-10T15:00:00Z"
   },
   officialImage: {
-    url: "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png", // AI image provided
+    url: "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png",
     source: "ai-generated" as const
   }
 };
@@ -261,10 +258,10 @@ const categoryEmojis: Record<string, string> = {
 
 const statusConfig = {
   upcoming: {
-    bg: "bg-[#ede9fe]", // Soft purple
+    bg: "bg-[#ede9fe]",
     text: "text-[#7c3aed]",
-    border: "border-[#a48cf0]",
-    icon: "⏰", // Optionally use a checkmark/lucide or emoji if needed
+    border: "border-[#cfc3ed]",
+    icon: "⏰",
     label: "UPCOMING"
   }
 };
@@ -273,11 +270,9 @@ const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
 
-  // Always use 'upcoming' status for the example
   const status = "upcoming";
   const statusStyle = statusConfig[status];
 
-  // Earnings as paid event
   const showEarnings = !!linkup.price && linkup.price > 0;
   const earnings = linkup.totalEarnings || (linkup.price * linkup.attendees.length);
 
@@ -298,63 +293,48 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          {/* --- TOP CARD: Banner, Image, Basic Details --- */}
-          <div className="bg-white rounded-xl p-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-start gap-8">
-            {/* Left: Image */}
-            <div className="w-full max-w-xs md:mr-8">
-              <LinkupImage
-                url={linkup.officialImage.url}
-                source={linkup.officialImage.source}
-                size="large"
-                className="mx-auto"
+          <div className="bg-white rounded-2xl px-8 py-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-10 md:gap-12 items-center"
+               style={{borderColor: "#f0ecfc" }}
+          >
+            <div className="w-full max-w-[240px] md:max-w-[280px] transition-transform hover:scale-105 duration-200 rounded-xl cursor-pointer relative group shadow-sm">
+              <img
+                src="/lovable-uploads/80f436ec-ef20-4595-8bd2-7dec7337312b.png"
+                alt="Linkup"
+                className="rounded-xl w-full h-[320px] md:h-[360px] object-cover"
+                style={{background: "#d9d6f6"}}
               />
+              <span className="absolute top-4 left-4 flex items-center gap-1 bg-black/60 text-white rounded-full px-3 py-1 text-xs font-semibold select-none z-10 drop-shadow group-hover:scale-105 transition-transform">
+                <WandSparkles className="h-4 w-4" />
+                AI-Generated
+              </span>
             </div>
-            {/* Right: Details */}
-            <div className="flex-1">
-              {/* Status Pill */}
+            <div className="flex-1 flex flex-col items-start gap-3 md:gap-5 max-w-2xl pt-2">
               <div
                 className={`
-                  mb-6 inline-flex items-center gap-2 px-8 py-4 rounded-full border-2 text-xl font-bold uppercase tracking-wider
+                  mb-2 md:mb-3 inline-flex items-center gap-2 px-8 py-3 rounded-full border-2 text-lg font-bold uppercase tracking-wide
                   ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
-                  shadow-sm transition
+                  shadow-sm transition-all
                 `}
                 style={{
-                  borderWidth: 3,
-                  minHeight: 54,
-                  fontSize: 24,
-                  letterSpacing: "0.08em"
+                  borderWidth: 2,
+                  minHeight: 48,
+                  fontSize: 22,
+                  letterSpacing: "0.07em"
                 }}
                 data-testid="linkup-status-pill"
               >
-                <span className="text-2xl">{statusStyle.icon}</span>
+                <span className="text-xl">{statusStyle.icon}</span>
                 <span>{statusStyle.label}</span>
               </div>
-              {/* Category */}
-              <span className="flex items-center mb-4 gap-2 text-linkup-purple font-medium text-lg">
-                <span className="text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
+              <span className="flex items-center gap-2 text-linkup-purple font-medium text-base md:text-lg pb-1">
+                <span className="text-xl md:text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
                 {linkup.category}
               </span>
-              {/* Title */}
-              <h1 className="text-4xl font-black mb-4 text-linkup-dark-purple">{linkup.title}</h1>
-              {/* Description */}
-              <p className="text-gray-700 text-xl mb-6">{linkup.description}</p>
-              {/* Paid badge & Earnings */}
-              <div className="flex items-center gap-4 mt-2">
-                {showEarnings && (
-                  <div className="flex items-center gap-2 bg-green-50 border border-green-200 text-green-800 font-semibold rounded-full px-4 py-2 text-lg w-fit">
-                    <DollarSign className="h-5 w-5 mr-1" />
-                    <span className="font-bold">${linkup.price}</span>
-                    <span className="font-normal">Ticket</span>
-                    <span className="px-2 text-green-600">|</span>
-                    <span className="text-green-600 font-medium">${earnings} Total</span>
-                  </div>
-                )}
-              </div>
+              <h1 className="text-3xl md:text-4xl font-black text-linkup-dark-purple">{linkup.title}</h1>
+              <p className="text-gray-700 text-lg md:text-xl">{linkup.description}</p>
             </div>
           </div>
-          
-          {/* --- REST OF THE PAGE --- */}
-          {/* Leave Tabs and all sections as before */}
+
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger value="details">Details</TabsTrigger>
@@ -874,7 +854,6 @@ const LinkupDetails = () => {
                 </CardHeader>
                 <CardContent className="h-[400px] overflow-hidden rounded-md">
                   <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    {/* Placeholder for Map Component */}
                     <p className="text-muted-foreground">Map goes here (using coordinates {linkup.coordinates.lat}, {linkup.coordinates.lng})</p>
                   </div>
                 </CardContent>
