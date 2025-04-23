@@ -417,307 +417,178 @@ const LinkupDetails = () => {
             </TabsList>
 
             <TabsContent value="details" className="space-y-6">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-2xl">
-                          <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
-                            <CalendarClock className="h-6 w-6 text-linkup-purple" />
-                          </div>
-                          Date & Time
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="flex items-center gap-4">
-                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
-                            <Calendar className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Date</p>
-                            <p className="text-base font-semibold">{new Date(linkup.startDate).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-4">
-                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
-                            <Clock className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Time</p>
-                            <p className="text-base font-semibold">
-                              {new Date(linkup.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
-                              {new Date(linkup.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-4">
-                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
-                            <Timer className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Duration</p>
-                            <p className="text-base font-semibold">{linkup.duration}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-2xl">
+                      <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                        <CalendarClock className="h-6 w-6 text-linkup-purple" />
+                      </div>
+                      Date & Time
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
+                        <Calendar className="h-5 w-5 text-linkup-purple" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Date</p>
+                        <p className="text-base font-semibold">{new Date(linkup.startDate).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                      </div>
+                    </div>
                     
-                    <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
-                      <CardHeader>
-                        <CardTitle className="flex items-center gap-3 text-2xl">
-                          <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
-                            <MapPin className="h-6 w-6 text-linkup-purple" />
-                          </div>
-                          Location
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="flex items-center gap-4">
-                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
-                            <Globe className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">General Area</p>
-                            <p className="text-base font-semibold">{linkup.generalLocation}</p>
-                          </div>
-                        </div>
-                        
-                        <div className="flex items-center gap-4">
-                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
-                            <MapPin className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">Specific Location</p>
-                            <p className="text-base font-semibold">{linkup.specificLocation}</p>
-                          </div>
-                        </div>
-                        
-                        <Button 
-                          variant="outline" 
-                          size="lg" 
-                          className="w-full mt-2 bg-linkup-soft-purple hover:bg-linkup-soft-purple/70 border-linkup-purple text-linkup-purple hover:text-linkup-purple font-medium gap-2"
-                          onClick={() => setActiveTab("map")}
-                        >
-                          <Map className="h-4 w-4" />
-                          View on Map
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </div>
+                    <div className="flex items-center gap-4">
+                      <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
+                        <Clock className="h-5 w-5 text-linkup-purple" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Time</p>
+                        <p className="text-base font-semibold">
+                          {new Date(linkup.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
+                          {new Date(linkup.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
+                        <Timer className="h-5 w-5 text-linkup-purple" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Duration</p>
+                        <p className="text-base font-semibold">{linkup.duration}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-2xl">
+                      <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                        <MapPin className="h-6 w-6 text-linkup-purple" />
+                      </div>
+                      Location
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="flex items-center gap-4">
+                      <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
+                        <Globe className="h-5 w-5 text-linkup-purple" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">General Area</p>
+                        <p className="text-base font-semibold">{linkup.generalLocation}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
+                        <MapPin className="h-5 w-5 text-linkup-purple" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-1">Specific Location</p>
+                        <p className="text-base font-semibold">{linkup.specificLocation}</p>
+                      </div>
+                    </div>
+                    
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="w-full mt-2 bg-linkup-soft-purple hover:bg-linkup-soft-purple/70 border-linkup-purple text-linkup-purple hover:text-linkup-purple font-medium gap-2"
+                      onClick={() => setActiveTab("map")}
+                    >
+                      <Map className="h-4 w-4" />
+                      View on Map
+                    </Button>
+                  </CardContent>
+                </Card>
 
-                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3 text-2xl">
-                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
-                          <Users className="h-6 w-6 text-linkup-purple" />
-                        </div>
-                        Host & Co-Hosts
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <Avatar className="h-12 w-12 ring-2 ring-linkup-purple ring-offset-2">
-                              <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
-                              <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <div className="flex items-center gap-2">
-                                <p className="font-semibold text-lg">{linkup.host.name}</p>
-                                <Badge className="bg-linkup-purple text-white border-0">Host</Badge>
+                <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-3 text-2xl">
+                      <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                        <Tag className="h-6 w-6 text-linkup-purple" />
+                      </div>
+                      Linkup Details
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Visibility</p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
+                                {linkup.visibility === "Public" ? (
+                                  <>
+                                    <Eye className="h-5 w-5 text-linkup-purple" />
+                                    <span className="font-medium">Public</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <EyeOff className="h-5 w-5 text-linkup-purple" />
+                                    <span className="font-medium">Private</span>
+                                  </>
+                                )}
                               </div>
-                              <p className="text-sm text-muted-foreground">@{linkup.host.username}</p>
-                            </div>
-                          </div>
-                          <Button 
-                            variant="outline" 
-                            size="sm" 
-                            className="gap-2 hover:bg-linkup-soft-purple/50"
-                          >
-                            <User className="h-4 w-4" />
-                            View Profile
-                          </Button>
-                        </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{visibilityTooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                       
-                      {linkup.coHosts.map((coHost) => (
-                        <div key={coHost.id} className="bg-linkup-soft-purple/5 p-4 rounded-xl">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
-                              <Avatar className="h-12 w-12">
-                                <AvatarImage src={coHost.avatar} alt={coHost.name} />
-                                <AvatarFallback>{coHost.name.charAt(0)}</AvatarFallback>
-                              </Avatar>
-                              <div>
-                                <div className="flex items-center gap-2">
-                                  <p className="font-semibold text-lg">{coHost.name}</p>
-                                  <Badge variant="outline" className="border-linkup-purple text-linkup-purple">
-                                    Co-Host
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground">@{coHost.username}</p>
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Join Method</p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
+                                <Users className="h-5 w-5 text-linkup-purple" />
+                                <span className="font-medium">{linkup.joinMethod}</span>
                               </div>
-                            </div>
-                            <Button 
-                              variant="outline" 
-                              size="sm" 
-                              className="gap-2 hover:bg-linkup-soft-purple/50"
-                            >
-                              <User className="h-4 w-4" />
-                              View Profile
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </CardContent>
-                  </Card>
-                </div>
-
-                <div className="space-y-6">
-                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3 text-2xl">
-                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
-                          <Tag className="h-6 w-6 text-linkup-purple" />
-                        </div>
-                        Linkup Details
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-2 gap-6">
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground mb-2">Visibility</p>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
-                                  {linkup.visibility === "Public" ? (
-                                    <>
-                                      <Eye className="h-5 w-5 text-linkup-purple" />
-                                      <span className="font-medium">Public</span>
-                                    </>
-                                  ) : (
-                                    <>
-                                      <EyeOff className="h-5 w-5 text-linkup-purple" />
-                                      <span className="font-medium">Private</span>
-                                    </>
-                                  )}
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{visibilityTooltip}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                        
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground mb-2">Join Method</p>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
-                                  <Users className="h-5 w-5 text-linkup-purple" />
-                                  <span className="font-medium">{linkup.joinMethod}</span>
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>{joinMethodTooltip}</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                        
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground mb-2">Join Price</p>
-                          <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
-                            <DollarSign className="h-5 w-5 text-linkup-purple" />
-                            <span className="font-semibold">{linkup.price}</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground mb-2">Total Earnings</p>
-                          <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
-                            <DollarSign className="h-5 w-5 text-linkup-purple" />
-                            <span className="font-semibold">{earnings}</span>
-                          </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{joinMethodTooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Join Price</p>
+                        <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                          <DollarSign className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-semibold">{linkup.price}</span>
                         </div>
                       </div>
                       
                       <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-2">Who can join</p>
-                        <div className="flex items-center gap-2 p-3 bg-linkup-soft-purple/20 rounded-lg">
-                          <span className="text-xl">
-                            {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
-                          </span>
-                          <span className="font-medium">
-                            {genderJoinOptions[linkup.genderRestriction]?.label || "Anyone"}
-                          </span>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Total Earnings</p>
+                        <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                          <DollarSign className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-semibold">{earnings}</span>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-3 text-2xl">
-                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
-                          <Users className="h-6 w-6 text-linkup-purple" />
-                        </div>
-                        Attendee Stats
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-lg">
-                            <Users className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <span className="font-medium">Total Attendees</span>
-                        </div>
-                        <span className="text-2xl font-bold text-linkup-purple">{linkup.attendees.length}</span>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Who can join</p>
+                      <div className="flex items-center gap-2 p-3 bg-linkup-soft-purple/20 rounded-lg">
+                        <span className="text-xl">
+                          {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
+                        </span>
+                        <span className="font-medium">
+                          {genderJoinOptions[linkup.genderRestriction]?.label || "Anyone"}
+                        </span>
                       </div>
-                      
-                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-lg">
-                            <Tag className="h-5 w-5 text-linkup-purple" />
-                          </div>
-                          <span className="font-medium">Capacity</span>
-                        </div>
-                        <span className="text-2xl font-bold text-linkup-purple">{linkup.capacity}</span>
-                      </div>
-                      
-                      <div className="mt-4">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-muted-foreground">Capacity Usage</span>
-                          <span className="text-sm font-medium text-linkup-purple">{capacityPercentage}% full</span>
-                        </div>
-                        <div className="h-3 bg-linkup-soft-purple/20 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-linkup-purple transition-all duration-500 rounded-full"
-                            style={{ width: `${capacityPercentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                      
-                      <Button 
-                        variant="outline" 
-                        size="lg"
-                        className="w-full bg-linkup-soft-purple hover:bg-linkup-soft-purple/70 border-linkup-purple text-linkup-purple hover:text-linkup-purple font-medium gap-2"
-                        onClick={() => setActiveTab("attendees")}
-                      >
-                        <Users className="h-4 w-4" />
-                        View Attendee List
-                      </Button>
-                    </CardContent>
-                  </Card>
-                </div>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
             </TabsContent>
             
