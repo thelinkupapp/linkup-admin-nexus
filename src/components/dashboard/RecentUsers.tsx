@@ -1,10 +1,9 @@
-
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { formatCreatedDate } from "@/utils/dateFormatting";
-import { ChevronRight, Users } from "lucide-react";
+import { Users, ChevronRight } from "lucide-react";
 
 interface RecentUser {
   id: string;
@@ -51,7 +50,7 @@ export function RecentUsers() {
             <Users className="h-5 w-5 text-muted-foreground" />
             <CardTitle className="text-xl font-semibold">Users</CardTitle>
           </div>
-          <CardDescription>Latest users who joined the platform</CardDescription>
+          <CardDescription>Latest users who have joined the app</CardDescription>
         </div>
         <Link to="/users/management">
           <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">
