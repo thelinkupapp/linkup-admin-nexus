@@ -6,10 +6,17 @@ import { Link } from "react-router-dom";
 import { AddStaffDialog } from "@/components/staff/AddStaffDialog";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
-// Mock data - replace with actual data
+// Updated staff members array with Jack Peagam
 const staffMembers = [
   {
-    id: "1",
+    id: "1", 
+    name: "Jack Peagam",
+    username: "@jackpeagam",
+    avatar: "/lovable-uploads/d2bddf64-f07e-405b-b149-443782e1e95e.png",
+    role: "CEO",
+  },
+  {
+    id: "2", 
     name: "John Doe",
     username: "@johndoe",
     avatar: "/placeholder.svg",
