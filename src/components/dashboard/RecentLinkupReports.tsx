@@ -4,40 +4,68 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ChevronRight, FileText } from "lucide-react";
 import { formatCreatedDate } from "@/utils/dateFormatting";
-import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface LinkupReport {
   id: string;
+  linkupId: string;
   linkupTitle: string;
+  linkupImage: string;
+  reporter: {
+    id: string;
+    name: string;
+    avatar: string;
+    username: string;
+  };
   reason: string;
-  reportCount: number;
-  lastReportedAt: string;
+  submittedAt: string;
   status: "pending" | "reviewed";
 }
 
 const recentReports: LinkupReport[] = [
   {
     id: "1",
-    linkupTitle: "Evening Yoga Session",
+    linkupId: "1",
+    linkupTitle: "Coffee Chat Meetup",
+    linkupImage: "/lovable-uploads/5da9d3ec-be1e-48f8-9977-e23dd8c0b873.png",
+    reporter: {
+      id: "1",
+      name: "John Smith",
+      username: "john.smith",
+      avatar: "https://i.pravatar.cc/150?img=4"
+    },
     reason: "Inappropriate content",
-    reportCount: 3,
-    lastReportedAt: "2024-05-15",
+    submittedAt: new Date().toISOString(),
     status: "pending"
   },
   {
     id: "2",
-    linkupTitle: "Board Game Night",
+    linkupId: "2",
+    linkupTitle: "Beach Volleyball",
+    linkupImage: "/lovable-uploads/9253be66-4106-4932-84bc-d571d790eb81.png",
+    reporter: {
+      id: "2",
+      name: "Emily Brown",
+      username: "emily.brown",
+      avatar: "https://i.pravatar.cc/150?img=6"
+    },
     reason: "Misleading information",
-    reportCount: 2,
-    lastReportedAt: "2024-05-14",
+    submittedAt: new Date(Date.now() - 86400000).toISOString(),
     status: "pending"
   },
   {
     id: "3",
-    linkupTitle: "Local Music Festival",
+    linkupId: "3",
+    linkupTitle: "Book Club Discussion",
+    linkupImage: "/lovable-uploads/0e26bd30-b75d-4798-a267-d2275e6c8f22.png",
+    reporter: {
+      id: "3",
+      name: "Sarah Davis",
+      username: "sarah.davis",
+      avatar: "https://i.pravatar.cc/150?img=8"
+    },
     reason: "Suspicious activity",
-    reportCount: 4,
-    lastReportedAt: "2024-05-13",
+    submittedAt: new Date(Date.now() - 172800000).toISOString(),
     status: "pending"
   }
 ];
@@ -66,21 +94,34 @@ export function RecentLinkupReports() {
               key={report.id}
               className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors"
             >
-              <div>
-                <p className="font-medium text-sm leading-none mb-1">{report.linkupTitle}</p>
-                <p className="text-sm text-muted-foreground">{report.reason}</p>
-              </div>
-              <div className="flex flex-col items-end gap-2">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary" className="bg-secondary/50">
-                    {report.reportCount} reports
-                  </Badge>
-                  <Badge variant="outline">Pending</Badge>
+              <div className="flex items-center gap-4">
+                <img
+                  src={report.linkupImage}
+                  alt={report.linkupTitle}
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Link
+                      to={`/users/${report.reporter.username}`}
+                      className="font-medium text-sm leading-none text-black hover:underline"
+                    >
+                      {report.reporter.name}
+                    </Link>
+                    <span className="text-sm text-muted-foreground">reported</span>
+                    <Link
+                      to={`/linkups/${report.linkupId}`}
+                      className="font-medium text-sm leading-none text-black hover:underline"
+                    >
+                      {report.linkupTitle}
+                    </Link>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{report.reason}</p>
                 </div>
-                <span className="text-sm text-muted-foreground">
-                  {formatCreatedDate(report.lastReportedAt)}
-                </span>
               </div>
+              <p className="text-sm text-muted-foreground">
+                {formatCreatedDate(report.submittedAt)}
+              </p>
             </div>
           ))}
         </div>
