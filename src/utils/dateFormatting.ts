@@ -52,10 +52,6 @@ export function formatCreatedDate(date: string | Date): string {
     return 'Today at ' + format(createdDate, 'HH:mm');
   }
   
-  if (isYesterday(createdDate)) {
-    return 'Yesterday at ' + format(createdDate, 'HH:mm');
-  }
-  
   if (isThisYear(createdDate)) {
     return format(createdDate, 'EEE d') + ' at ' + format(createdDate, 'HH:mm');
   }
