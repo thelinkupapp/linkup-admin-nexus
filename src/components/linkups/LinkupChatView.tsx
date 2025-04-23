@@ -1,8 +1,9 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
-import { Pin, Volume2, Play } from "lucide-react";
+import { Pin, Volume2, Play, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { useState, useMemo } from "react";
 
 export interface ChatMessage {
   id: string;
@@ -41,6 +42,19 @@ interface LinkupChatViewProps {
 }
 
 export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredMessages = useMemo(() => {
+    if (!searchQuery.trim()) return messages;
+    
+    const query = searchQuery.toLowerCase();
+    return messages.filter(message => 
+      message.message.toLowerCase().includes(query) ||
+      message.user.name.toLowerCase().includes(query) ||
+      message.user.username.toLowerCase().includes(query)
+    );
+  }, [messages, searchQuery]);
+
   const renderMessage = (message: ChatMessage) => {
     return (
       <div key={message.id} className="flex items-start gap-3 py-3 border-b last:border-b-0">
@@ -145,9 +159,26 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
         </div>
       )}
 
+      <div className="relative mb-4">
+        <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+        <Input
+          type="text"
+          placeholder="Search messages, users or usernames..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-9"
+        />
+      </div>
+
       <ScrollArea className="h-[calc(100vh-300px)] pr-4 border rounded-lg bg-white">
         <div className="p-4 space-y-2">
-          {messages.map(renderMessage)}
+          {filteredMessages.length > 0 ? (
+            filteredMessages.map(renderMessage)
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              No messages found matching your search.
+            </div>
+          )}
         </div>
       </ScrollArea>
     </div>
