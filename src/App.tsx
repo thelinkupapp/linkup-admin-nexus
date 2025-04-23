@@ -22,7 +22,7 @@ import LinkupDetails from "./pages/LinkupDetails";
 import LinkupManagement from "./pages/linkups/Management";
 import LinkupStats from "./pages/linkups/Stats";
 import LinkupReports from "./pages/reports/LinkupReports";
-import LinkupRemoved from "./pages/linkups/Removed";
+// Removed LinkupRemoved import
 
 // Other routes
 import NotFound from "./pages/NotFound";
@@ -96,7 +96,7 @@ const App = () => {
                     <Route path="management" element={<LinkupManagement />} />
                     <Route path="statistics" element={<LinkupStats />} />
                     <Route path="reports" element={<LinkupReports />} />
-                    <Route path="removed" element={<LinkupRemoved />} />
+                    {/* Removed the "removed" route */}
                   </Routes>
                 </ProtectedRoute>
               } />

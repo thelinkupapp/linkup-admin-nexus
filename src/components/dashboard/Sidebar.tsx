@@ -96,11 +96,6 @@ const navItems = [
         title: "Reports",
         href: "/linkups/reports",
         icon: FileText
-      },
-      {
-        title: "Removed",
-        href: "/linkups/removed",
-        icon: Trash2
       }
     ]
   },
