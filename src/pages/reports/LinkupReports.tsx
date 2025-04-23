@@ -8,7 +8,7 @@ const LinkupReports = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 pl-64">
-        <Header />
+        <Header title="Linkup Reports" subtitle="Review and manage reported linkups" />
         <main className="p-6">
           <LinkupReportsTable />
         </main>
