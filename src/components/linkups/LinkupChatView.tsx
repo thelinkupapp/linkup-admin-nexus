@@ -62,28 +62,17 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
             </p>
           </div>
           
-          {message.type === "text" && <p className="mt-1">{message.message}</p>}
-          
-          {message.type === "image" && message.media && (
-            <div className="mt-2">
-              <p className="mb-2">{message.message}</p>
-              <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                <img 
-                  src={message.media.url} 
-                  alt="Shared media"
-                  className="w-full h-auto" 
-                />
-              </div>
-            </div>
+          {message.type === "text" && (
+            <p className="mt-1">{message.message}</p>
           )}
           
-          {message.type === "gif" && message.media && (
+          {(message.type === "image" || message.type === "gif") && message.media && (
             <div className="mt-2">
               <p className="mb-2">{message.message}</p>
               <div className="rounded-md overflow-hidden border w-full max-w-xs">
                 <img 
                   src={message.media.url} 
-                  alt="GIF"
+                  alt={message.type === "image" ? "Shared media" : "GIF"}
                   className="w-full h-auto" 
                 />
               </div>
@@ -155,7 +144,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
         </div>
       )}
 
-      <ScrollArea className="h-[600px] pr-4 border rounded-lg bg-white">
+      <ScrollArea className="h-[calc(100vh-300px)] pr-4 border rounded-lg bg-white">
         <div className="space-y-1">
           {messages.map(renderMessage)}
         </div>
