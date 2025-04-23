@@ -61,6 +61,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { EnlargeableImage } from "@/components/linkups/EnlargeableImage";
 import RemoveLinkupDialog from "@/components/dashboard/RemoveLinkupDialog";
 import { useToast } from "@/components/ui/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const linkup = {
   id: "1",
@@ -300,6 +306,14 @@ const LinkupDetails = () => {
     });
   };
 
+  const visibilityTooltip = linkup.visibility === "Public" 
+    ? "Linkup open to anyone" 
+    : "Only invited users can see this linkup";
+
+  const joinMethodTooltip = linkup.joinMethod === "Open" 
+    ? "Anyone can join this linkup" 
+    : "Host approval required to join";
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -515,26 +529,44 @@ const LinkupDetails = () => {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Visibility</p>
-                          <p className="flex items-center gap-2 mt-1">
-                            {linkup.visibility === "Public" ? (
-                              <>
-                                <Eye className="h-4 w-4 text-linkup-purple" />
-                                Public
-                              </>
-                            ) : (
-                              <>
-                                <EyeOff className="h-4 w-4 text-linkup-purple" />
-                                Private
-                              </>
-                            )}
-                          </p>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <p className="flex items-center gap-2 mt-1 cursor-help">
+                                  {linkup.visibility === "Public" ? (
+                                    <>
+                                      <Eye className="h-4 w-4 text-linkup-purple" />
+                                      Public
+                                    </>
+                                  ) : (
+                                    <>
+                                      <EyeOff className="h-4 w-4 text-linkup-purple" />
+                                      Private
+                                    </>
+                                  )}
+                                </p>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{visibilityTooltip}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                         
                         <div>
                           <p className="text-sm font-medium text-muted-foreground">Join Method</p>
-                          <p className="flex items-center gap-2 mt-1">
-                            {linkup.joinMethod}
-                          </p>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <p className="flex items-center gap-2 mt-1 cursor-help">
+                                  {linkup.joinMethod}
+                                </p>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>{joinMethodTooltip}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                         
                         <div>
@@ -763,101 +795,4 @@ const LinkupDetails = () => {
                             alt="Linkup media" 
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                           />
-                        ) : (
-                          <div className="w-full h-full relative">
-                            <img 
-                              src={item.thumbnail || ""} 
-                              alt="Video thumbnail" 
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                              <Video className="h-12 w-12 text-white" />
-                            </div>
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-                          <div className="flex items-center gap-2">
-                            <Avatar className="h-6 w-6">
-                              <AvatarImage src={item.user.avatar} alt={item.user.name} />
-                              <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-xs text-white">{item.user.name}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="reports">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Reports</CardTitle>
-                  <CardDescription>{linkup.reports.length} reports for this linkup</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {linkup.reports.length > 0 ? (
-                    <div className="space-y-4">
-                      {linkup.reports.map((report) => (
-                        <div key={report.id} className="border rounded-lg p-4">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h4 className="font-medium">Report from {report.reporter.name}</h4>
-                              <p className="text-sm text-muted-foreground">
-                                {new Date(report.timestamp).toLocaleString()}
-                              </p>
-                            </div>
-                            <Badge
-                              variant="outline"
-                              className={
-                                report.resolved
-                                  ? "bg-green-100 text-green-800 border-green-200"
-                                  : "bg-amber-100 text-amber-800 border-amber-200"
-                              }
-                            >
-                              {report.resolved ? "Resolved" : "Pending"}
-                            </Badge>
-                          </div>
-                          <div className="mt-3 p-3 bg-muted rounded-md">
-                            <p>{report.reason}</p>
-                          </div>
-                          <div className="mt-4 flex items-center justify-end gap-2">
-                            <Button variant="outline" size="sm">Dismiss</Button>
-                            <Button variant="destructive" size="sm">Take Action</Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-center py-8">
-                      <AlertTriangle className="h-12 w-12 text-muted-foreground opacity-30 mx-auto mb-3" />
-                      <p className="text-muted-foreground">No reports for this linkup</p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="map">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Location</CardTitle>
-                  <CardDescription>{linkup.specificLocation}</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[400px] overflow-hidden rounded-md">
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <p className="text-muted-foreground">Map goes here (using coordinates {linkup.coordinates.lat}, {linkup.coordinates.lng})</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default LinkupDetails;
+                        ) :
