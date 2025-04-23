@@ -43,7 +43,7 @@ interface LinkupChatViewProps {
 export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps) {
   const renderMessage = (message: ChatMessage) => {
     return (
-      <div key={message.id} className="flex items-start gap-3 py-3">
+      <div key={message.id} className="flex items-start gap-3 py-3 border-b last:border-b-0">
         <Avatar>
           <AvatarImage src={message.user.avatar} alt={message.user.name} />
           <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>

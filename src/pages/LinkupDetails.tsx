@@ -316,6 +316,56 @@ const linkup = {
       },
       message: "I'll have volleyballs, but feel free to bring water and sunscreen!",
       timestamp: "2024-05-10T16:20:00Z"
+    },
+    {
+      id: "m5",
+      type: "gif",
+      user: {
+        id: "a2",
+        name: "Sophia Rodriguez",
+        username: "sophia_r",
+        avatar: "https://i.pravatar.cc/150?img=3"
+      },
+      message: "Can't wait to see everyone's volleyball skills!",
+      media: {
+        url: "https://media.giphy.com/media/xT9DPBMumxHJIgK4ak/giphy.gif",
+        type: "gif"
+      },
+      timestamp: "2024-05-10T16:45:00Z"
+    },
+    {
+      id: "m6",
+      type: "voice",
+      user: {
+        id: "a3",
+        name: "Olivia Johnson",
+        username: "olivia_j",
+        avatar: "https://i.pravatar.cc/150?img=5"
+      },
+      message: "Hey team, just a quick voice message to say I'm excited!",
+      media: {
+        url: "https://example.com/sample-voice-message.mp3",
+        type: "voice",
+        duration: "0:12"
+      },
+      timestamp: "2024-05-10T17:00:00Z"
+    },
+    {
+      id: "m7",
+      type: "video",
+      user: {
+        id: "a4",
+        name: "Daniel Brown",
+        username: "daniel_b",
+        avatar: "https://i.pravatar.cc/150?img=13"
+      },
+      message: "Check out my volleyball practice from last week!",
+      media: {
+        url: "https://example.com/volleyball-practice.mp4",
+        type: "video",
+        thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b"
+      },
+      timestamp: "2024-05-10T17:30:00Z"
     }
   ],
   media: [
@@ -348,7 +398,7 @@ const linkup = {
       type: "video",
       url: "https://www.example.com/sample-video.mp4",
       timestamp: "2024-05-12T10:15:00Z",
-      thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?ixlib=rb-4.0.3",
+      thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b",
       user: {
         id: "a1",
         name: "James Wilson",
@@ -804,6 +854,32 @@ const LinkupDetails = () => {
                                   src={message.media.url} 
                                   controls
                                   poster={message.media.thumbnail}
+                                  className="w-full h-auto"
+                                />
+                              </div>
+                            </div>
+                          )}
+                          
+                          {message.type === "gif" && message.media && (
+                            <div className="mt-2">
+                              <p className="mb-2">{message.message}</p>
+                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
+                                <img 
+                                  src={message.media.url} 
+                                  alt="Shared media"
+                                  className="w-full h-auto" 
+                                />
+                              </div>
+                            </div>
+                          )}
+                          
+                          {message.type === "voice" && message.media && (
+                            <div className="mt-2">
+                              <p className="mb-2">{message.message}</p>
+                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
+                                <audio 
+                                  src={message.media.url} 
+                                  controls
                                   className="w-full h-auto"
                                 />
                               </div>
