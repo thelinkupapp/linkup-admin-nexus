@@ -69,6 +69,7 @@ import {
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { EnlargeableMedia } from "@/components/linkups/EnlargeableMedia";
+import { LinkupReportsList } from "@/components/linkups/LinkupReportsList";
 
 const linkup = {
   id: "1",
@@ -833,39 +834,25 @@ const LinkupDetails = () => {
             
             <TabsContent value="reports">
               <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Reports</CardTitle>
-                  <CardDescription>User reports for this linkup</CardDescription>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                   {linkup.reports.length === 0 ? (
-                    <p className="text-center py-8 text-muted-foreground">No reports for this linkup</p>
-                  ) : (
-                    <div className="space-y-4">
-                      {linkup.reports.map((report) => (
-                        <div key={report.id} className="p-4 border rounded-lg">
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <AlertTriangle className="h-5 w-5 text-amber-500" />
-                              <h4 className="font-medium">Report by {report.reporter.name}</h4>
-                            </div>
-                            <Badge variant={report.resolved ? "outline" : "destructive"}>
-                              {report.resolved ? "Resolved" : "Active"}
-                            </Badge>
-                          </div>
-                          <p className="mt-2 text-sm">{report.reason}</p>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {new Date(report.timestamp).toLocaleString()}
-                          </p>
-                          <div className="flex gap-2 mt-4">
-                            <Button variant="outline" size="sm">View Details</Button>
-                            {!report.resolved && (
-                              <Button variant="default" size="sm">Mark as Resolved</Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="text-center py-8 text-muted-foreground">
+                      <p>No reports for this linkup</p>
                     </div>
+                  ) : (
+                    <LinkupReportsList 
+                      reports={linkup.reports}
+                      onMarkAsRead={(reportId) => {
+                        const updatedReports = linkup.reports.map(report =>
+                          report.id === reportId ? { ...report, resolved: true } : report
+                        );
+                        
+                        toast({
+                          title: "Report marked as read",
+                          description: "The report has been successfully marked as read.",
+                        });
+                      }}
+                    />
                   )}
                 </CardContent>
               </Card>
