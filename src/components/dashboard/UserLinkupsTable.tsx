@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar, ArrowUpDown } from "lucide-react";
-import { format, differenceInHours } from "date-fns";
+import { format, differenceInHours, differenceInDays } from "date-fns";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -225,7 +224,10 @@ const LinkupsTable = ({
               <div className="flex flex-col">
                 <span>{format(new Date(linkup.startDate), "MMM d, yyyy, h:mm a")}</span>
                 <span className="text-sm text-muted-foreground">
-                  {differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate))}hr
+                  {differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate)) >= 24 
+                    ? `${differenceInDays(new Date(linkup.endDate), new Date(linkup.startDate))}d`
+                    : `${differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate))}hr`
+                  }
                 </span>
               </div>
             </div>

@@ -11,24 +11,38 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   const start = new Date(startDate);
   const end = new Date(endDate);
   
-  // Calculate duration in hours
+  // Calculate duration
   const hoursDiff = differenceInHours(end, start);
+  const daysDiff = differenceInDays(end, start);
   
-  // Format time without seconds
-  const timeStr = format(start, "MMM d, yyyy, h:mm a");
+  // Format duration string
+  let durationStr;
+  if (hoursDiff >= 24) {
+    durationStr = `${daysDiff}d`;
+  } else {
+    durationStr = `${hoursDiff}hr`;
+  }
   
-  // Format duration
-  return `${format(start, "MMM d, yyyy, h:mm a")} (${hoursDiff}hr)`;
+  return `${format(start, "MMM d, yyyy, h:mm a")} (${durationStr})`;
 }
 
 export function formatCompactLinkupDateTime(startDate: string, endDate: string): string {
   const start = new Date(startDate);
   const end = new Date(endDate);
   
-  // Calculate duration in hours
+  // Calculate duration
   const hoursDiff = differenceInHours(end, start);
+  const daysDiff = differenceInDays(end, start);
   
-  return `${format(start, "MMM d, yyyy, h:mm a")} (${hoursDiff}hr)`;
+  // Format duration string
+  let durationStr;
+  if (hoursDiff >= 24) {
+    durationStr = `${daysDiff}d`;
+  } else {
+    durationStr = `${hoursDiff}hr`;
+  }
+  
+  return `${format(start, "MMM d, yyyy, h:mm a")} (${durationStr})`;
 }
 
 export function formatCreatedDate(date: string | Date): string {
