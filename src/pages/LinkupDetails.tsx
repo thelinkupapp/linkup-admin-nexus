@@ -80,6 +80,7 @@ const linkup = {
   price: 25,
   totalEarnings: 125,
   capacity: 20,
+  createdAt: "2024-04-10T09:30:00Z",
   isFlexibleDate: false,
   startDate: "2024-05-15T18:00:00Z",
   endDate: "2024-05-15T20:00:00Z",
@@ -515,6 +516,12 @@ const LinkupDetails = () => {
                         <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500 font-medium">Created on</span>
+                          <span className="text-sm text-gray-500">{format(new Date(linkup.createdAt), 'MMM d, yyyy')}</span>
+                          <span className="text-sm text-gray-500">at</span>
+                          <span className="text-sm text-gray-500">{format(new Date(linkup.createdAt), 'h:mm a')}</span>
+                        </div>
                         <span className="text-sm text-gray-500 font-medium mb-0.5">Hosted by</span>
                         <span className="font-semibold text-lg text-gray-900 hover:underline decoration-linkup-purple">
                           {linkup.host.name}
