@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Search, Calendar, Image, Video, Mic, GifIcon } from "lucide-react";
+import { MessageCircle, Search, Calendar, Image, Video, Mic, Gift as GifIcon } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -34,7 +33,6 @@ const statusOptions = [
   { value: "removed", label: "Removed" }
 ];
 
-// Sample data with various media types
 const chatMessages: ChatMessage[] = [
   {
     id: "1",
