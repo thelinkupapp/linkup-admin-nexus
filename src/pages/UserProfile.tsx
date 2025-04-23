@@ -859,11 +859,9 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-2">Verification Status</p>
                         <div className="flex items-center gap-2">
-                          {isVerified ? (
-                            <Badge variant="success">Verified</Badge>
-                          ) : (
-                            <Badge variant="destructive">Pending</Badge>
-                          )}
+                          <Badge variant={isVerified ? "default" : "destructive"}>
+                            {isVerified ? "Verified" : "Pending"}
+                          </Badge>
                         </div>
                       </div>
                     </div>
@@ -917,11 +915,9 @@ const UserProfile = () => {
                       <div>
                         <p className="text-sm font-medium text-muted-foreground mb-2">Linkup Plus</p>
                         <div className="flex items-center gap-2">
-                          {user.wallet.linkupPlus.startDate ? (
-                            <Badge variant="success">Active</Badge>
-                          ) : (
-                            <Badge variant="destructive">Inactive</Badge>
-                          )}
+                          <Badge variant={user.wallet.linkupPlus.startDate ? "default" : "destructive"}>
+                            {user.wallet.linkupPlus.startDate ? "Active" : "Inactive"}
+                          </Badge>
                         </div>
                       </div>
                     </div>
