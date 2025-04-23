@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { ChevronRight, FileText } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatCreatedDate } from "@/utils/dateFormatting";
-import { Badge } from "@/components/ui/badge";
 
 interface UserReport {
   id: string;
@@ -13,11 +12,13 @@ interface UserReport {
     id: string;
     name: string;
     avatar: string;
+    username: string; // Added username to the interface
   };
   reportedUser: {
     id: string;
     name: string;
     avatar: string;
+    username: string; // Added username to the interface
   };
   reason: string;
   submittedAt: string;
