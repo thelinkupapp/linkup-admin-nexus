@@ -83,8 +83,7 @@ export function UserFeedbackTable() {
       const matchesSearch = 
         item.user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        item.type.toLowerCase().includes(searchQuery.toLowerCase());
+        item.content.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesStatus = 
         statusFilter === "all" || 
@@ -147,7 +146,6 @@ export function UserFeedbackTable() {
           <TableHeader>
             <TableRow>
               <TableHead>User</TableHead>
-              <TableHead>Type</TableHead>
               <TableHead>Feedback</TableHead>
               <TableHead 
                 className="cursor-pointer hover:text-foreground" 
@@ -183,11 +181,6 @@ export function UserFeedbackTable() {
                       </p>
                     </div>
                   </div>
-                </TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="bg-blue-100 text-blue-800 hover:bg-blue-100">
-                    {item.type}
-                  </Badge>
                 </TableCell>
                 <TableCell className="max-w-md">
                   <div className="truncate">
@@ -251,3 +244,4 @@ export function UserFeedbackTable() {
     </div>
   );
 }
+
