@@ -8,6 +8,7 @@ import { MessageCircle, Search, Calendar, Image, Video, Mic, Gift as GifIcon } f
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ChatMediaContent } from "./ChatMediaContent";
 
 interface ChatMessage {
   id: string;
@@ -143,36 +144,6 @@ export function UserLinkupChats() {
       return matchesSearch && matchesLinkup && matchesStatus;
     });
 
-  const MediaContent = ({ message }: { message: ChatMessage }) => {
-    switch (message.mediaType) {
-      case 'image':
-        return <img src={message.mediaUrl} alt="Shared image" className="rounded-lg max-h-48 object-cover" />;
-      case 'video':
-        return (
-          <div className="flex items-center gap-2 text-blue-600">
-            <Video className="h-5 w-5" />
-            <span>Video message</span>
-          </div>
-        );
-      case 'gif':
-        return (
-          <div className="flex items-center gap-2 text-purple-600">
-            <GifIcon className="h-5 w-5" />
-            <span>GIF message</span>
-          </div>
-        );
-      case 'voice':
-        return (
-          <div className="flex items-center gap-2 text-green-600">
-            <Mic className="h-5 w-5" />
-            <span>Voice message</span>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
@@ -186,8 +157,8 @@ export function UserLinkupChats() {
         {chatMessages.slice(0, 3).map((message) => (
           <div key={message.id} className="flex items-start gap-4">
             <Avatar className="h-10 w-10">
-              <AvatarImage src={message.sender.avatar} alt="User" />
-              <AvatarFallback>JP</AvatarFallback>
+              <AvatarImage src={message.sender.avatar} alt={message.sender.name} />
+              <AvatarFallback>{message.sender.name.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <Link 
@@ -197,10 +168,12 @@ export function UserLinkupChats() {
                 {message.linkupName}
               </Link>
               <p className="text-sm mt-1">{message.message}</p>
-              <div className="mt-2">
-                <MediaContent message={message} />
-              </div>
-              <p className="text-sm text-muted-foreground mt-1">
+              <ChatMediaContent 
+                mediaType={message.mediaType}
+                mediaUrl={message.mediaUrl}
+                message={message.message}
+              />
+              <p className="text-sm text-muted-foreground mt-2">
                 {formatJoinDate(message.timestamp)}
               </p>
             </div>
@@ -267,8 +240,8 @@ export function UserLinkupChats() {
               {filteredMessages.map((message) => (
                 <div key={message.id} className="flex items-start gap-4">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={message.sender.avatar} alt="User" />
-                    <AvatarFallback>JP</AvatarFallback>
+                    <AvatarImage src={message.sender.avatar} alt={message.sender.name} />
+                    <AvatarFallback>{message.sender.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
                     <Link 
@@ -278,9 +251,11 @@ export function UserLinkupChats() {
                       {message.linkupName}
                     </Link>
                     <p className="text-sm mt-1">{message.message}</p>
-                    <div className="mt-2">
-                      <MediaContent message={message} />
-                    </div>
+                    <ChatMediaContent 
+                      mediaType={message.mediaType}
+                      mediaUrl={message.mediaUrl}
+                      message={message.message}
+                    />
                     <p className="text-sm text-muted-foreground mt-1">
                       {formatJoinDate(message.timestamp)}
                     </p>
