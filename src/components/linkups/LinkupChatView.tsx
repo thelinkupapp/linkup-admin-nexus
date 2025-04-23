@@ -1,8 +1,8 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Pin, Volume2, Play } from "lucide-react";
+import { format } from "date-fns";
 
 export interface ChatMessage {
   id: string;
@@ -41,6 +41,10 @@ interface LinkupChatViewProps {
 }
 
 export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps) {
+  const formatTimestamp = (timestamp: string) => {
+    return format(new Date(timestamp), "MMM d, yyyy 'at' h:mm a");
+  };
+
   const renderMessage = (message: ChatMessage) => {
     return (
       <div key={message.id} className="flex items-start gap-3 py-3 border-b last:border-b-0">
@@ -59,7 +63,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
               {message.user.name}
             </Link>
             <p className="text-xs text-muted-foreground">
-              {new Date(message.timestamp).toLocaleString()}
+              {formatTimestamp(message.timestamp)}
             </p>
           </div>
           
@@ -140,6 +144,9 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
               >
                 {pinnedMessage.user.name}
               </Link>
+              <span className="text-xs text-muted-foreground">
+                {formatTimestamp(pinnedMessage.timestamp)}
+              </span>
             </div>
           </div>
         </div>
