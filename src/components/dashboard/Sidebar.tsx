@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import { 
   Users,
   Map,
-  Settings,
   Bell,
   ShieldCheck,
   MessageSquare,
@@ -106,11 +105,6 @@ const navItems = [
     href: "/feedback",
     icon: MessageSquare
   },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings
-  }
 ];
 
 export function Sidebar() {
