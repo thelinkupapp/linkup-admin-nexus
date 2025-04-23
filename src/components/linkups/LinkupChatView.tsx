@@ -1,6 +1,8 @@
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Pin } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Link } from "react-router-dom";
+import { Pin, Volume2, Play } from "lucide-react";
 
 interface ChatMessage {
   id: string;
@@ -17,6 +19,7 @@ interface ChatMessage {
     url: string;
     type: string;
     thumbnail?: string;
+    duration?: string;
   };
 }
 
@@ -38,6 +41,95 @@ interface LinkupChatViewProps {
 }
 
 export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps) {
+  const renderMessage = (message: ChatMessage) => {
+    return (
+      <div key={message.id} className="flex items-start gap-3 py-3">
+        <Avatar>
+          <AvatarImage src={message.user.avatar} alt={message.user.name} />
+          <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
+            <Link 
+              to={`/users/${message.user.username}`} 
+              className="font-medium hover:text-linkup-purple hover:underline"
+            >
+              {message.user.name}
+            </Link>
+            <p className="text-xs text-muted-foreground">
+              {new Date(message.timestamp).toLocaleString()}
+            </p>
+          </div>
+          
+          {message.type === "text" && <p className="mt-1">{message.message}</p>}
+          
+          {message.type === "image" && message.media && (
+            <div className="mt-2">
+              <p className="mb-2">{message.message}</p>
+              <div className="rounded-md overflow-hidden border w-full max-w-xs">
+                <img 
+                  src={message.media.url} 
+                  alt="Shared media"
+                  className="w-full h-auto" 
+                />
+              </div>
+            </div>
+          )}
+          
+          {message.type === "gif" && message.media && (
+            <div className="mt-2">
+              <p className="mb-2">{message.message}</p>
+              <div className="rounded-md overflow-hidden border w-full max-w-xs">
+                <img 
+                  src={message.media.url} 
+                  alt="GIF"
+                  className="w-full h-auto" 
+                />
+              </div>
+            </div>
+          )}
+          
+          {message.type === "video" && message.media && (
+            <div className="mt-2">
+              <p className="mb-2">{message.message}</p>
+              <div className="rounded-md overflow-hidden border w-full max-w-xs">
+                <video 
+                  src={message.media.url} 
+                  controls
+                  poster={message.media.thumbnail} 
+                  className="w-full h-auto"
+                />
+              </div>
+            </div>
+          )}
+
+          {message.type === "voice" && message.media && (
+            <div className="mt-2">
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-linkup-soft-purple/10 max-w-xs">
+                <div className="h-8 w-8 rounded-full bg-linkup-purple/20 flex items-center justify-center">
+                  <Volume2 className="h-4 w-4 text-linkup-purple" />
+                </div>
+                <div className="flex-1">
+                  <div className="h-1 bg-linkup-purple/20 rounded-full">
+                    <div className="h-1 w-0 bg-linkup-purple rounded-full" />
+                  </div>
+                  <div className="flex items-center justify-between mt-1">
+                    <button className="text-linkup-purple hover:text-linkup-purple/80">
+                      <Play className="h-4 w-4" />
+                    </button>
+                    <span className="text-xs text-muted-foreground">
+                      {message.media.duration || "0:00"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {pinnedMessage && (
@@ -51,57 +143,22 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
                 <AvatarImage src={pinnedMessage.user.avatar} alt={pinnedMessage.user.name} />
                 <AvatarFallback>{pinnedMessage.user.name.charAt(0)}</AvatarFallback>
               </Avatar>
-              <span className="text-xs">{pinnedMessage.user.name}</span>
+              <Link 
+                to={`/users/${pinnedMessage.user.username}`}
+                className="text-xs hover:text-linkup-purple hover:underline"
+              >
+                {pinnedMessage.user.name}
+              </Link>
             </div>
           </div>
         </div>
       )}
 
-      {messages.map((message) => (
-        <div key={message.id} className="flex items-start gap-3">
-          <Avatar>
-            <AvatarImage src={message.user.avatar} alt={message.user.name} />
-            <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <p className="font-medium">{message.user.name}</p>
-              <p className="text-xs text-muted-foreground">
-                {new Date(message.timestamp).toLocaleString()}
-              </p>
-            </div>
-            
-            {message.type === "text" && <p className="mt-1">{message.message}</p>}
-            
-            {message.type === "image" && message.media && (
-              <div className="mt-2">
-                <p className="mb-2">{message.message}</p>
-                <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                  <img 
-                    src={message.media.url} 
-                    alt="Shared media"
-                    className="w-full h-auto" 
-                  />
-                </div>
-              </div>
-            )}
-            
-            {message.type === "video" && message.media && (
-              <div className="mt-2">
-                <p className="mb-2">{message.message}</p>
-                <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                  <video 
-                    src={message.media.url} 
-                    controls
-                    poster={message.media.thumbnail} 
-                    className="w-full h-auto"
-                  />
-                </div>
-              </div>
-            )}
-          </div>
+      <ScrollArea className="h-[600px] pr-4">
+        <div className="space-y-1 divide-y">
+          {messages.map(renderMessage)}
         </div>
-      ))}
+      </ScrollArea>
     </div>
   );
 }
