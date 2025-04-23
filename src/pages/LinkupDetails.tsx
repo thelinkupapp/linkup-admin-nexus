@@ -279,7 +279,7 @@ const LinkupDetails = () => {
 
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
-  const linkupImgSrc = "/lovable-uploads/11eefad3-1463-4e51-a8e2-0bfa82e9976e.png";
+  const linkupImgSrc = "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -332,6 +332,9 @@ const LinkupDetails = () => {
                 {linkup.category}
               </span>
               <h1 className="text-3xl md:text-4xl font-black text-black leading-tight py-2">{linkup.title}</h1>
+              <p className="text-base md:text-lg text-gray-700 mt-0.5 mb-1.5">
+                {linkup.description}
+              </p>
             </div>
           </div>
 
