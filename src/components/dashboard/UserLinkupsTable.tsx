@@ -392,6 +392,11 @@ export function UserLinkupsTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center space-x-2">
+          <p className="text-lg">
+            <span className="text-[#9b87f5] font-bold">{getLinkupCountText(activeTab)}</span>
+          </p>
+        </div>
         <div className="flex items-center justify-end">
           <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
             View All
@@ -400,10 +405,6 @@ export function UserLinkupsTable() {
       </div>
 
       <div className="space-y-2">
-        <p className="text-lg">
-          <span className="text-[#9b87f5] font-bold">{getLinkupCountText(activeTab)}</span>
-        </p>
-
         <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList>
             <TabsTrigger value="all">All</TabsTrigger>
