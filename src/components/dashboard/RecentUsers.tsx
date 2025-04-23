@@ -11,6 +11,7 @@ interface RecentUser {
   email: string;
   joinDate: string;
   avatar: string;
+  username: string;
 }
 
 const recentUsers: RecentUser[] = [
@@ -18,22 +19,25 @@ const recentUsers: RecentUser[] = [
     id: "1",
     name: "Emma Rodriguez",
     email: "emma.rodriguez@example.com",
-    joinDate: new Date().toISOString(), // Today
-    avatar: "https://i.pravatar.cc/150?img=68"
+    joinDate: new Date().toISOString(),
+    avatar: "https://i.pravatar.cc/150?img=68",
+    username: "emma.rodriguez"
   },
   {
     id: "2",
     name: "Liam Chen",
     email: "liam.chen@example.com",
-    joinDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-    avatar: "https://i.pravatar.cc/150?img=69"
+    joinDate: new Date(Date.now() - 86400000).toISOString(),
+    avatar: "https://i.pravatar.cc/150?img=69",
+    username: "liam.chen"
   },
   {
     id: "3",
     name: "Sophia Patel",
     email: "sophia.patel@example.com",
-    joinDate: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-    avatar: "https://i.pravatar.cc/150?img=70"
+    joinDate: new Date(Date.now() - 172800000).toISOString(),
+    avatar: "https://i.pravatar.cc/150?img=70",
+    username: "sophia.patel"
   }
 ];
 
@@ -68,7 +72,7 @@ export function RecentUsers() {
                 </Avatar>
                 <div>
                   <p className="font-medium text-sm leading-none mb-1">{user.name}</p>
-                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                  <p className="text-sm text-muted-foreground">@{user.username}</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">

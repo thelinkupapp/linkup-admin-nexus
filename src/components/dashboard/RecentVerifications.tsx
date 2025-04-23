@@ -24,30 +24,33 @@ const recentVerifications: VerificationRequest[] = [
     user: {
       id: "1",
       name: "Michael Smith",
+      username: "michael.smith",
       avatar: "https://i.pravatar.cc/150?img=1"
     },
     status: "pending",
-    submittedAt: "2024-05-15"
+    submittedAt: new Date().toISOString()
   },
   {
     id: "2",
     user: {
       id: "2",
       name: "Emma Davis",
+      username: "emma.davis",
       avatar: "https://i.pravatar.cc/150?img=2"
     },
     status: "pending",
-    submittedAt: "2024-05-14"
+    submittedAt: new Date(Date.now() - 86400000).toISOString()
   },
   {
     id: "3",
     user: {
       id: "3",
       name: "James Wilson",
+      username: "james.wilson",
       avatar: "https://i.pravatar.cc/150?img=3"
     },
     status: "pending",
-    submittedAt: "2024-05-13"
+    submittedAt: new Date(Date.now() - 172800000).toISOString()
   }
 ];
 
@@ -82,12 +85,12 @@ export function RecentVerifications() {
                 </Avatar>
                 <div>
                   <p className="font-medium text-sm leading-none mb-1">{request.user.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {formatCreatedDate(request.submittedAt)}
-                  </p>
+                  <p className="text-sm text-muted-foreground">@{request.user.username}</p>
                 </div>
               </div>
-              <Badge variant="secondary" className="bg-secondary/50">Pending</Badge>
+              <p className="text-sm text-muted-foreground">
+                {formatCreatedDate(request.submittedAt)}
+              </p>
             </div>
           ))}
         </div>

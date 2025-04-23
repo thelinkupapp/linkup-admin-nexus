@@ -30,15 +30,17 @@ const recentReports: UserReport[] = [
     reporter: {
       id: "1",
       name: "John Smith",
+      username: "john.smith",
       avatar: "https://i.pravatar.cc/150?img=4"
     },
     reportedUser: {
       id: "2",
       name: "Alice Johnson",
+      username: "alice.johnson",
       avatar: "https://i.pravatar.cc/150?img=5"
     },
     reason: "Inappropriate behavior",
-    submittedAt: "2024-05-15",
+    submittedAt: new Date().toISOString(),
     status: "pending"
   },
   {
@@ -46,15 +48,17 @@ const recentReports: UserReport[] = [
     reporter: {
       id: "3",
       name: "Emily Brown",
+      username: "emily.brown",
       avatar: "https://i.pravatar.cc/150?img=6"
     },
     reportedUser: {
       id: "4",
       name: "David Wilson",
+      username: "david.wilson",
       avatar: "https://i.pravatar.cc/150?img=7"
     },
     reason: "Harassment",
-    submittedAt: "2024-05-14",
+    submittedAt: new Date(Date.now() - 86400000).toISOString(),
     status: "pending"
   },
   {
@@ -62,15 +66,17 @@ const recentReports: UserReport[] = [
     reporter: {
       id: "5",
       name: "Sarah Davis",
+      username: "sarah.davis",
       avatar: "https://i.pravatar.cc/150?img=8"
     },
     reportedUser: {
       id: "6",
       name: "Michael Brown",
+      username: "michael.brown",
       avatar: "https://i.pravatar.cc/150?img=9"
     },
     reason: "Spam",
-    submittedAt: "2024-05-13",
+    submittedAt: new Date(Date.now() - 172800000).toISOString(),
     status: "pending"
   }
 ];
@@ -106,15 +112,13 @@ export function RecentUserReports() {
                 </Avatar>
                 <div>
                   <p className="font-medium text-sm leading-none mb-1">{report.reportedUser.name}</p>
-                  <p className="text-sm text-muted-foreground">{report.reason}</p>
+                  <p className="text-sm text-muted-foreground">@{report.reportedUser.username}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{report.reason}</p>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-2">
-                <Badge variant="secondary" className="bg-secondary/50">Pending Review</Badge>
-                <span className="text-sm text-muted-foreground">
-                  {formatCreatedDate(report.submittedAt)}
-                </span>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                {formatCreatedDate(report.submittedAt)}
+              </p>
             </div>
           ))}
         </div>
