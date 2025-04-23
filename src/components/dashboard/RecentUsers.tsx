@@ -71,7 +71,12 @@ export function RecentUsers() {
                   <AvatarFallback>{user.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium text-sm leading-none mb-1">{user.name}</p>
+                  <Link
+                    to={`/users/${user.username}`}
+                    className="font-medium text-sm leading-none mb-1 text-black hover:underline block"
+                  >
+                    {user.name}
+                  </Link>
                   <p className="text-sm text-muted-foreground">@{user.username}</p>
                 </div>
               </div>

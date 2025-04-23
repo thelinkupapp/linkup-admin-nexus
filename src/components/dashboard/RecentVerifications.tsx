@@ -84,7 +84,12 @@ export function RecentVerifications() {
                   <AvatarFallback>{request.user.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium text-sm leading-none mb-1">{request.user.name}</p>
+                  <Link
+                    to={`/users/${request.user.username}`}
+                    className="font-medium text-sm leading-none mb-1 text-black hover:underline block"
+                  >
+                    {request.user.name}
+                  </Link>
                   <p className="text-sm text-muted-foreground">@{request.user.username}</p>
                 </div>
               </div>
@@ -98,3 +103,4 @@ export function RecentVerifications() {
     </Card>
   );
 }
+
