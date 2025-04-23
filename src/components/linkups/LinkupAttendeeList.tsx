@@ -27,7 +27,7 @@ export function LinkupAttendeeList({ host, coHosts, attendees }: LinkupAttendeeL
 
   // Calculate total attendees and capacity
   const totalAttendees = 1 + coHosts.length + attendees.length; // 1 for host
-  const capacity = 20; // This should match your linkup's capacity
+  const capacity = 50; // Updated to 50 people as requested
   const percentageFull = Math.round((totalAttendees / capacity) * 100);
   
   // Combine and sort all attendees
