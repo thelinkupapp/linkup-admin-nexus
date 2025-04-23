@@ -46,7 +46,7 @@ export function RecentLinkups() {
             <CalendarDays className="h-5 w-5 text-muted-foreground" />
             <CardTitle className="text-xl font-semibold">Linkups</CardTitle>
           </div>
-          <CardDescription>Latest created linkups</CardDescription>
+          <CardDescription>Latest linkups created</CardDescription>
         </div>
         <Link to="/linkups/management">
           <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">

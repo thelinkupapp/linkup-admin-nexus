@@ -79,7 +79,7 @@ export function RecentLinkupReports() {
             <FileText className="h-5 w-5 text-muted-foreground" />
             <CardTitle className="text-xl font-semibold">Linkup Reports</CardTitle>
           </div>
-          <CardDescription>Recent reports on linkups</CardDescription>
+          <CardDescription>Latest linkup reports</CardDescription>
         </div>
         <Link to="/reports/linkups">
           <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">

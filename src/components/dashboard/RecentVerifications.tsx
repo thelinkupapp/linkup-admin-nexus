@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -12,7 +11,7 @@ interface VerificationRequest {
     id: string;
     name: string;
     avatar: string;
-    username: string; // Added username to the interface
+    username: string;
   };
   status: "pending";
   submittedAt: string;
@@ -63,7 +62,7 @@ export function RecentVerifications() {
             <UserCheck className="h-5 w-5 text-muted-foreground" />
             <CardTitle className="text-xl font-semibold">Verification Requests</CardTitle>
           </div>
-          <CardDescription>Recent user verification requests</CardDescription>
+          <CardDescription>Latest user verification requests</CardDescription>
         </div>
         <Link to="/verifications">
           <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">
@@ -103,4 +102,3 @@ export function RecentVerifications() {
     </Card>
   );
 }
-
