@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -291,7 +292,7 @@ const LinkupDetails = () => {
               <div className="flex-shrink-0">
                 <div className="relative rounded-lg overflow-hidden" style={{ width: 180, height: 320, minWidth: 120 }}>
                   <img 
-                    src={linkup.officialImage.url}
+                    src="/lovable-uploads/e0bb103f-15e1-4123-8472-4b1df102a40e.png"
                     alt={linkup.title}
                     className="object-cover w-full h-full"
                     style={{ aspectRatio: "9/16" }}
@@ -308,13 +309,12 @@ const LinkupDetails = () => {
               <div className="flex-1 flex flex-col justify-center gap-2">
                 <div className="flex items-center gap-3">
                   <h1 className="text-3xl font-bold flex items-center gap-2">
-                    {linkup.emoji} {linkup.title}
+                    {linkup.title}
                   </h1>
                 </div>
                 <div className="flex items-center gap-2 mt-1.5">
                   <span className="bg-linkup-soft-purple text-linkup-dark-purple px-2 py-1 rounded text-base font-medium">
-                    <Tag className="h-4 w-4 mr-1 inline align-text-bottom" />
-                    {linkup.category}
+                    {linkup.category === 'Sports' ? '🏐' : ''} {linkup.category}
                   </span>
                 </div>
                 <p className="mt-4 text-gray-700 text-base">{linkup.description}</p>
