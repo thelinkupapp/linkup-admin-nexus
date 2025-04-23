@@ -1,4 +1,3 @@
-
 import { format, isToday, isYesterday, isThisWeek, differenceInDays, differenceInYears, startOfWeek, differenceInHours, differenceInMinutes, isThisYear } from "date-fns";
 
 function isLastWeek(date: Date): boolean {
@@ -12,35 +11,24 @@ export function formatLinkupDateTime(startDate: string, endDate: string): string
   const start = new Date(startDate);
   const end = new Date(endDate);
   
-  // Calculate duration
+  // Calculate duration in hours
   const hoursDiff = differenceInHours(end, start);
-  const minutesDiff = differenceInMinutes(end, start);
-  const daysDiff = differenceInDays(end, start);
   
-  // Format duration string
-  let duration;
-  if (daysDiff > 0) {
-    duration = `${daysDiff}d`;
-  } else {
-    duration = `${hoursDiff}hr`;
-  }
+  // Format time without seconds
+  const timeStr = format(start, "MMM d, yyyy, h:mm a");
   
-  // Format the date part
-  let dateStr;
-  if (isToday(start)) {
-    dateStr = 'Today';
-  } else if (isYesterday(start)) {
-    dateStr = 'Yesterday';
-  } else if (isThisYear(start)) {
-    dateStr = format(start, 'MMM d');
-  } else {
-    dateStr = format(start, 'MMM d, yyyy');
-  }
+  // Format duration
+  return `${format(start, "MMM d, yyyy, h:mm a")} (${hoursDiff}hr)`;
+}
+
+export function formatCompactLinkupDateTime(startDate: string, endDate: string): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
   
-  // Format time
-  const timeStr = format(start, 'h:mm a');
+  // Calculate duration in hours
+  const hoursDiff = differenceInHours(end, start);
   
-  return `${dateStr}, ${timeStr} (${duration})`;
+  return `${format(start, "MMM d, yyyy, h:mm a")} (${hoursDiff}hr)`;
 }
 
 export function formatCreatedDate(date: string | Date): string {
@@ -65,4 +53,3 @@ export function formatJoinDate(date: string | Date): string {
   // This can be implemented similarly to formatCreatedDate if needed
   return formatCreatedDate(date);
 }
-

@@ -205,23 +205,26 @@ const LinkupsTable = ({
                 {(linkup.type === "attended" || linkup.type === "cohost") && linkup.joinedDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
-                    <span>Joined on {new Date(linkup.joinedDate).toLocaleString()}</span>
+                    <span>Joined on {format(new Date(linkup.joinedDate), "MMM d, yyyy, h:mm a")}</span>
                   </div>
                 )}
                 {linkup.type === "hosted" && linkup.createdDate && (
                   <div className="flex items-center gap-1">
                     <Calendar className="h-3.5 w-3.5" />
-                    <span>Created on {new Date(linkup.createdDate).toLocaleString()}</span>
+                    <span>Created on {format(new Date(linkup.createdDate), "MMM d, yyyy, h:mm a")}</span>
                   </div>
                 )}
               </div>
             </div>
           </TableCell>
           <TableCell>
-            <div className="flex flex-col gap-1 text-sm">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
-                <span>{formatLinkupDateTime(linkup.startDate, linkup.endDate)}</span>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col">
+                <span>{format(new Date(linkup.startDate), "MMM d, yyyy, h:mm a")}</span>
+                <span className="text-sm text-muted-foreground">
+                  {differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate))}hr
+                </span>
               </div>
             </div>
           </TableCell>
