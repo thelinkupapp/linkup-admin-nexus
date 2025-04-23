@@ -1,9 +1,8 @@
 
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { DateRange } from "react-day-picker";
 import { UserLinkupActivity } from "@/components/dashboard/UserLinkupActivity";
 import { UserLinkupChats } from "@/components/dashboard/UserLinkupChats";
-import { DateRange } from "react-day-picker";
 
 const Linkups = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);

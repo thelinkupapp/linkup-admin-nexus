@@ -757,6 +757,16 @@ const UserProfile = () => {
               </div>
             </TabsContent>
 
+            <TabsContent value="linkups" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <UserLinkupActivity 
+                  dateRange={linkupDateRange} 
+                  setDateRange={setLinkupDateRange} 
+                />
+                <UserLinkupChats />
+              </div>
+            </TabsContent>
+
             <TabsContent value="profile-info" className="space-y-6">
               <ProfileImageCarousel photos={profilePhotos} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -778,4 +788,368 @@ const UserProfile = () => {
                         <p className="text-sm font-medium text-muted-foreground mb-2">Occupation</p>
                         <div className="flex items-center gap-2">
                           <Briefcase className="h-4 w-4 text-muted-foreground" />
-                          <p className="
+                          <p className="text-sm">{user.occupation}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Socials</p>
+                        <div className="flex items-center gap-2">
+                          {user.socials.instagram && (
+                            <Instagram className="h-4 w-4 text-linkup-purple" />
+                          )}
+                          {user.socials.twitter && (
+                            <Twitter className="h-4 w-4 text-linkup-purple" />
+                          )}
+                          {user.socials.linkedin && (
+                            <Linkedin className="h-4 w-4 text-linkup-purple" />
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Interests</p>
+                        <div className="flex items-center gap-2">
+                          {user.interests.map((interest, index) => (
+                            <Badge key={index} variant="secondary">
+                              {interest}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Languages</p>
+                        <div className="flex items-center gap-2">
+                          {user.languages.map((language, index) => (
+                            <Badge key={index} variant="secondary">
+                              {language}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="verification" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Verification
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Verification Attempts</p>
+                        <div className="flex items-center gap-2">
+                          {verificationAttempts.map((attempt, index) => (
+                            <Badge key={index} variant="secondary">
+                              {attempt.status}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Verification Status</p>
+                        <div className="flex items-center gap-2">
+                          {isVerified ? (
+                            <Badge variant="success">Verified</Badge>
+                          ) : (
+                            <Badge variant="destructive">Pending</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="wallet" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Wallet & Billing
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Lifetime Earnings</p>
+                        <p className="text-sm">{user.wallet.lifetimeEarnings}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Available Balance</p>
+                        <p className="text-sm">{user.wallet.availableBalance}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">In Transit</p>
+                        <p className="text-sm">{user.wallet.inTransit}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Last Withdrawal</p>
+                        <p className="text-sm">{user.wallet.lastWithdrawal}</p>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Payout History</p>
+                        <div className="flex items-center gap-2">
+                          {user.wallet.payoutHistory.map((payout, index) => (
+                            <Badge key={index} variant="secondary">
+                              {payout.status}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Linkup Plus</p>
+                        <div className="flex items-center gap-2">
+                          {user.wallet.linkupPlus.startDate ? (
+                            <Badge variant="success">Active</Badge>
+                          ) : (
+                            <Badge variant="destructive">Inactive</Badge>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="privacy" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Privacy Settings
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Hide Age</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.hideAge} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Allow Female Friend Requests</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.allowFemaleFriendRequests} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Allow Male Friend Requests</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.allowMaleFriendRequests} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Socials Visible to Friends Only</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.socialsVisibleToFriendsOnly} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Friends Can See Upcoming Attendance</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.friendsCanSeeUpcomingAttendance} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Location on Map</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.showLocationOnMap} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Appear on Nearby People</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.appearOnNearbyPeople} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Linkups to Everyone</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.showLinkupsToEveryone} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Show Linkups to Friends Only</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.privacySettings.showLinkupsToFriendsOnly} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="reports" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Reports
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Reports Received</p>
+                        <div className="flex items-center gap-2">
+                          {userWithVerification.reportsReceived.map(report => (
+                            <Badge key={report.id} variant="secondary">
+                              {report.description}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Reports Made</p>
+                        <div className="flex items-center gap-2">
+                          {userWithVerification.reportsMade.map(report => (
+                            <Badge key={report.id} variant="secondary">
+                              {report.description}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="friends" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Friends
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Friends List</p>
+                        <div className="flex items-center gap-2">
+                          {user.friends.map(friend => (
+                            <Badge key={friend.id} variant="secondary">
+                              {friend.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="push-notifications" className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <UserIcon className="h-5 w-5 text-linkup-purple" />
+                      Push Notifications
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Enable All</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.enableAll} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">New Linkup Messages</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.newLinkupMessages} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">New Friend Messages</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.newFriendMessages} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Friend Requests</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.friendRequests} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Linkup Activity</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.linkupActivity} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Wallet Activity</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.walletActivity} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Promotions</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.promotions} />
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Announcements</p>
+                        <div className="flex items-center gap-2">
+                          <Switch checked={user.pushNotifications.announcements} />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default UserProfile;
