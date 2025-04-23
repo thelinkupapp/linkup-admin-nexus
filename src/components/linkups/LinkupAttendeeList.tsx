@@ -10,7 +10,7 @@ interface Attendee {
   username: string;
   avatar: string;
   joinedAt: string;
-  role?: "host" | "co-host";
+  role?: "host" | "co-host" | undefined;
 }
 
 interface LinkupAttendeeListProps {
@@ -27,7 +27,7 @@ export function LinkupAttendeeList({ host, coHosts, attendees }: LinkupAttendeeL
     ...attendees
   ];
 
-  const getRoleBadge = (role?: string) => {
+  const getRoleBadge = (role?: "host" | "co-host" | undefined) => {
     if (!role) return null;
     
     return (

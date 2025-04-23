@@ -94,7 +94,7 @@ const linkup = {
     username: "emma_t",
     avatar: "https://i.pravatar.cc/150?img=1",
     joinedAt: "2024-04-15T10:00:00Z",
-    role: "host"
+    role: "host" as const
   },
   coHosts: [
     {
@@ -103,7 +103,7 @@ const linkup = {
       username: "mike_chen",
       avatar: "https://i.pravatar.cc/150?img=2",
       joinedAt: "2024-04-15T10:30:00Z",
-      role: "co-host"
+      role: "co-host" as const
     }
   ],
   attendees: [
