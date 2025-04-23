@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -790,3 +791,25 @@ const LinkupDetails = () => {
                 </CardContent>
               </Card>
             </TabsContent>
+            
+            <TabsContent value="map">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Location</CardTitle>
+                  <CardDescription>{linkup.specificLocation}</CardDescription>
+                </CardHeader>
+                <CardContent className="h-[400px] overflow-hidden rounded-md">
+                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                    <p className="text-muted-foreground">Map goes here (using coordinates {linkup.coordinates.lat}, {linkup.coordinates.lng})</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default LinkupDetails;
