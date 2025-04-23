@@ -517,12 +517,13 @@ const LinkupDetails = () => {
                         <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
                       </Avatar>
                       <div className="flex flex-col">
+                        <span className="text-sm text-gray-500 font-medium mb-1">Hosted by</span>
                         <span className="font-semibold text-lg text-gray-900 hover:underline decoration-linkup-purple">
                           {linkup.host.name}
                         </span>
                         <span className="text-sm text-gray-500">@{linkup.host.username}</span>
                         
-                        <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center gap-2 mt-4">
                           <span className="text-sm text-gray-500">Created on</span>
                           <span className="text-sm text-gray-500">{format(new Date(linkup.createdAt), 'MMM d, yyyy')}</span>
                           <span className="text-sm text-gray-500">at</span>
