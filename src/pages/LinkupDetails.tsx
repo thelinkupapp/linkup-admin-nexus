@@ -249,6 +249,45 @@ const linkup = {
   }
 };
 
+const categoryEmojis: Record<string, string> = {
+  Sports: "🏐",
+  Music: "🎵",
+  Food: "🍔",
+  Art: "🎨",
+  Tech: "💻",
+  Outdoors: "🌳",
+  Fitness: "💪",
+  Reading: "📚",
+  Travel: "✈️",
+  Gaming: "🎮",
+};
+
+const statusStyles: Record<
+  string,
+  { bg: string; text: string; border: string }
+> = {
+  upcoming: {
+    bg: "bg-blue-100",
+    text: "text-blue-800",
+    border: "border-blue-300",
+  },
+  happening: {
+    bg: "bg-green-100",
+    text: "text-green-800",
+    border: "border-green-300",
+  },
+  happened: {
+    bg: "bg-gray-200",
+    text: "text-gray-800",
+    border: "border-gray-300",
+  },
+  cancelled: {
+    bg: "bg-red-100",
+    text: "text-red-800",
+    border: "border-red-300",
+  },
+};
+
 const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
@@ -256,9 +295,20 @@ const LinkupDetails = () => {
   const now = new Date();
   const startDate = new Date(linkup.startDate);
   const endDate = new Date(linkup.endDate);
-  
-  const isHappening = now >= startDate && now <= endDate;
-  
+
+  let status: "upcoming" | "happening" | "happened" | "cancelled" = "upcoming";
+  if (linkup.status === "cancelled") {
+    status = "cancelled";
+  } else if (now < startDate) {
+    status = "upcoming";
+  } else if (now >= startDate && now <= endDate) {
+    status = "happening";
+  } else if (now > endDate) {
+    status = "happened";
+  }
+
+  const statusStyle = statusStyles[status];
+
   const timeLeftMs = endDate.getTime() - now.getTime();
   const hoursLeft = Math.floor(timeLeftMs / (1000 * 60 * 60));
   const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -306,13 +356,24 @@ const LinkupDetails = () => {
                 </div>
               </div>
               <div className="flex-1 flex flex-col justify-center gap-2">
+                <div
+                  className={`
+                    mb-4 w-fit px-5 py-2 rounded-full border-2 font-bold text-lg uppercase tracking-wide
+                    ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
+                  `}
+                  style={{ letterSpacing: "0.08em" }}
+                  data-testid="linkup-status-pill"
+                >
+                  {status}
+                </div>
                 <div className="flex items-center gap-3">
                   <h1 className="text-3xl font-bold flex items-center gap-2">
                     {linkup.title}
                   </h1>
                 </div>
                 <div className="flex items-center gap-2 mt-1.5">
-                  <span className="bg-linkup-soft-purple text-linkup-dark-purple px-2 py-1 rounded text-base font-medium">
+                  <span className="bg-linkup-soft-purple text-linkup-dark-purple px-2 py-1 rounded text-base font-medium flex items-center gap-2">
+                    <span className="text-lg" aria-label="category-emoji">{categoryEmojis[linkup.category] ?? "❓"}</span>
                     {linkup.category}
                   </span>
                 </div>
