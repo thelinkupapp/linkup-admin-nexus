@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -23,7 +23,7 @@ export function LinkupStaffTable() {
   const { toast } = useToast();
 
   // Add event listener for new staff members
-  React.useEffect(() => {
+  useEffect(() => {
     const handleAddStaffMember = (event: CustomEvent) => {
       setStaffMembers(current => [...current, event.detail]);
     };
