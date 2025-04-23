@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -156,7 +155,6 @@ export function LinkupReportsTable() {
   const totalReports = reports.length;
   const unreadCount = reports.filter(r => r.status === "unread").length;
 
-  // Sort reports by timestamp
   const sortedReports = useMemo(() => {
     return [...reports].sort((a, b) => {
       const dateA = new Date(a.timestamp).getTime();
@@ -165,7 +163,6 @@ export function LinkupReportsTable() {
     });
   }, [reports, sortDirection]);
 
-  // Filter reports based on search and status
   const filteredReports = useMemo(() => {
     return sortedReports.filter(report => {
       const matchesSearch = searchQuery === "" || 
@@ -184,14 +181,12 @@ export function LinkupReportsTable() {
     });
   }, [sortedReports, searchQuery, selectedStatus]);
 
-  // Pagination
   const paginatedReports = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredReports.slice(startIndex, endIndex);
   }, [filteredReports, currentPage, itemsPerPage]);
 
-  // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedStatus, itemsPerPage]);
@@ -229,18 +224,20 @@ export function LinkupReportsTable() {
     : `Showing ${filteredReports.length} of ${totalReports} reports`;
   
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight mb-2 hidden">Linkup Reports</h1>
-        <p className="text-muted-foreground mb-4 hidden">
-          View and manage reports submitted for linkups on the app
+    <div className="space-y-6">
+      <div className="pb-8">
+        <h1 className="text-[42px] font-semibold tracking-tight text-[#23252b] mb-3">
+          User Reports
+        </h1>
+        <p className="text-[#6B7280] text-lg font-normal">
+          View and manage reports submitted against users on the app
         </p>
-        <div className="flex items-center text-sm">
-          <span className="flex items-center gap-2">
-            <span className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-violet-100 text-violet-700">
-              <AlertCircle className="h-4 w-4" />
-            </span>
-            <span className="text-xl font-medium">{showingText}</span>
+        <div className="flex items-center gap-2 mt-6">
+          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-100">
+            <AlertCircle className="h-5 w-5 text-violet-700" />
+          </span>
+          <span className="text-xl text-[#23252b]">
+            <strong>{unreadCount}</strong> reports
           </span>
         </div>
       </div>
@@ -390,7 +387,6 @@ export function LinkupReportsTable() {
         </Table>
       </div>
 
-      {/* Pagination */}
       <div className="flex items-center justify-between">
         <PaginationItemsPerPage>
           Showing {filteredReports.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}-
