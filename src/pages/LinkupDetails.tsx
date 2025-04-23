@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
@@ -302,7 +301,6 @@ const LinkupDetails = () => {
     setActiveTab("attendees");
   };
 
-  // Fix the chat messages mapping
   const typedChatMessages: ChatMessage[] = linkup.chat.map(msg => ({
     ...msg,
     type: msg.type as "text" | "image" | "video" | "voice" | "gif",
@@ -370,7 +368,6 @@ const LinkupDetails = () => {
                   }}
                   data-testid="linkup-status-pill"
                 >
-                  {/* Fix: Using createElement to properly render the icon component */}
                   {React.createElement(statusStyle.icon, { className: "h-5 w-5" })}
                   <span>{statusStyle.label}</span>
                 </div>
