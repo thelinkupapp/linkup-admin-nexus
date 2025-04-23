@@ -58,6 +58,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { EnlargeableImage } from "@/components/linkups/EnlargeableImage";
 
 const linkup = {
   id: "1",
@@ -278,6 +279,8 @@ const LinkupDetails = () => {
 
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
+  const linkupImgSrc = "/lovable-uploads/db11a8bd-dc32-446e-9747-3ccbf3c94979.png";
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -293,22 +296,18 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          <div className="bg-white rounded-2xl px-8 py-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-10 md:gap-12 items-center"
-               style={{borderColor: "#f0ecfc" }}
-          >
-            <div className="w-full max-w-[240px] md:max-w-[280px] transition-transform hover:scale-105 duration-200 rounded-xl cursor-pointer relative group shadow-sm">
-              <img
-                src="/lovable-uploads/80f436ec-ef20-4595-8bd2-7dec7337312b.png"
+          <div className="bg-white rounded-2xl px-6 py-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-10 md:gap-10 items-center"
+               style={{borderColor: "#f0ecfc" }}>
+            <div className="w-full max-w-[340px] md:max-w-[340px] transition-transform rounded-2xl">
+              <EnlargeableImage
+                src={linkupImgSrc}
                 alt="Linkup"
-                className="rounded-xl w-full h-[320px] md:h-[360px] object-cover"
-                style={{background: "#d9d6f6"}}
+                showAiLabel
+                className="aspect-[4/5] md:aspect-[4/5] h-[400px] md:h-[420px] drop-shadow hover-scale"
+                imageClassName=""
               />
-              <span className="absolute top-4 left-4 flex items-center gap-1 bg-black/60 text-white rounded-full px-3 py-1 text-xs font-semibold select-none z-10 drop-shadow group-hover:scale-105 transition-transform">
-                <WandSparkles className="h-4 w-4" />
-                AI-Generated
-              </span>
             </div>
-            <div className="flex-1 flex flex-col items-start gap-3 md:gap-5 max-w-2xl pt-2">
+            <div className="flex-1 flex flex-col items-start gap-2 md:gap-4 max-w-2xl pt-1">
               <div
                 className={`
                   mb-2 md:mb-3 inline-flex items-center gap-2 px-8 py-3 rounded-full border-2 text-lg font-bold uppercase tracking-wide
@@ -326,12 +325,12 @@ const LinkupDetails = () => {
                 <span className="text-xl">{statusStyle.icon}</span>
                 <span>{statusStyle.label}</span>
               </div>
-              <span className="flex items-center gap-2 text-linkup-purple font-medium text-base md:text-lg pb-1">
+              <span className="flex items-center gap-2 text-linkup-purple font-medium text-base md:text-lg pb-0">
                 <span className="text-xl md:text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
                 {linkup.category}
               </span>
-              <h1 className="text-3xl md:text-4xl font-black text-linkup-dark-purple">{linkup.title}</h1>
-              <p className="text-gray-700 text-lg md:text-xl">{linkup.description}</p>
+              <h1 className="text-3xl md:text-4xl font-black text-linkup-dark-purple leading-tight py-2">{linkup.title}</h1>
+              <p className="text-gray-700 text-lg md:text-xl mb-2 md:mb-4">{linkup.description}</p>
             </div>
           </div>
 
