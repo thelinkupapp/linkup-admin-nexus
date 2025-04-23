@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -795,4 +796,113 @@ const LinkupDetails = () => {
                             alt="Linkup media" 
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                           />
-                        ) :
+                        ) : item.type === "video" ? (
+                          <div className="relative w-full h-full">
+                            <img 
+                              src={item.thumbnail || ""} 
+                              alt="Video thumbnail" 
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+                              <Video className="h-12 w-12 text-white" />
+                            </div>
+                          </div>
+                        ) : null}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage src={item.user.avatar} alt={item.user.name} />
+                              <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs truncate">{item.user.name}</span>
+                          </div>
+                          <Button variant="ghost" size="icon" className="h-7 w-7 text-white hover:text-white hover:bg-white/20">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="reports">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Reports</CardTitle>
+                  <CardDescription>Issues reported for this linkup</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {linkup.reports.length > 0 ? (
+                    <div className="space-y-4">
+                      {linkup.reports.map((report) => (
+                        <div key={report.id} className="p-4 border rounded-lg space-y-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5 text-amber-500" />
+                              <p className="font-medium">Reported by {report.reporter.name}</p>
+                            </div>
+                            <Badge variant={report.resolved ? "success" : "outline"} className={report.resolved ? "bg-green-100 text-green-800 border-green-200" : "bg-amber-100 text-amber-800 border-amber-200"}>
+                              {report.resolved ? "Resolved" : "Open"}
+                            </Badge>
+                          </div>
+                          
+                          <p className="text-sm text-muted-foreground">
+                            Reported on {new Date(report.timestamp).toLocaleDateString()} at {new Date(report.timestamp).toLocaleTimeString()}
+                          </p>
+                          
+                          <div className="bg-muted p-3 rounded-md">
+                            <p className="text-sm">{report.reason}</p>
+                          </div>
+                          
+                          <div className="flex items-center justify-end gap-2">
+                            <Button variant="outline" size="sm">Mark as Resolved</Button>
+                            <Button variant="destructive" size="sm">Delete Report</Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-8">
+                      <div className="bg-muted rounded-full p-3 mb-3">
+                        <AlertTriangle className="h-6 w-6 text-muted-foreground" />
+                      </div>
+                      <p className="text-lg font-medium">No reports found</p>
+                      <p className="text-sm text-muted-foreground">This linkup has not been reported by any users.</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="map">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Location</CardTitle>
+                  <CardDescription>
+                    {linkup.generalLocation} - {linkup.specificLocation}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-md overflow-hidden border h-[400px] bg-muted flex items-center justify-center">
+                    <div className="text-center p-6">
+                      <Map className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
+                      <p className="text-lg font-medium">Map view</p>
+                      <p className="text-sm text-muted-foreground mb-4">Location: {linkup.specificLocation}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Coordinates: {linkup.coordinates.lat}, {linkup.coordinates.lng}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default LinkupDetails;
