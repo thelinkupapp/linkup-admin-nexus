@@ -1,5 +1,6 @@
+
 import { useState } from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -53,6 +54,7 @@ export function AddStaffDialog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
   const [role, setRole] = useState("");
+  const [open, setOpen] = useState(false);
   const { toast } = useToast();
 
   const filteredUsers = searchQuery
@@ -63,7 +65,7 @@ export function AddStaffDialog() {
       )
     : [];
 
-  const handleAddStaff = (close: () => void) => {
+  const handleAddStaff = () => {
     if (selectedUser && role) {
       const newStaffMember = {
         id: selectedUser.id,
@@ -83,15 +85,22 @@ export function AddStaffDialog() {
         description: `${selectedUser.firstName} ${selectedUser.lastName} has been added as ${role}`,
       });
       
-      close();
+      // Reset form and close dialog
       setSelectedUser(null);
       setRole("");
       setSearchQuery("");
+      setOpen(false);
     }
   };
 
+  const handleReset = () => {
+    setSelectedUser(null);
+    setRole("");
+    setSearchQuery("");
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2 bg-[#8B5CF6] hover:bg-[#7C3AED]">
           <UserPlus className="h-4 w-4" />
@@ -176,12 +185,7 @@ export function AddStaffDialog() {
                 Back
               </Button>
               <Button 
-                onClick={(e) => {
-                  const closeButton = e.currentTarget.closest('[role="dialog"]')?.querySelector('[data-radix-collection-item]') as HTMLButtonElement;
-                  if (closeButton) {
-                    handleAddStaff(() => closeButton.click());
-                  }
-                }} 
+                onClick={handleAddStaff} 
                 className="bg-[#8B5CF6] hover:bg-[#7C3AED]" 
                 disabled={!role}
               >
