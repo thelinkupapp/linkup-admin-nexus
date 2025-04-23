@@ -11,7 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Check, Search, AlertCircle, ArrowUp, ArrowDown } from "lucide-react";
+import { Check, Search, AlertCircle, ArrowUp, ArrowDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { format } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -397,9 +397,8 @@ export function LinkupReportsTable() {
               setItemsPerPage(Number(value));
               setCurrentPage(1);
             }}
-            className="w-[80px] h-8"
           >
-            <SelectTrigger>
+            <SelectTrigger className="w-[80px] h-8">
               <SelectValue>{itemsPerPage}</SelectValue>
             </SelectTrigger>
             <SelectContent>
