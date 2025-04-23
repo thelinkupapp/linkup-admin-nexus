@@ -392,9 +392,6 @@ export function UserLinkupsTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <div>
-          <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
-        </div>
         <div className="flex items-center justify-end">
           <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
             View All
@@ -435,6 +432,8 @@ export function UserLinkupsTable() {
                   {getHeaderText()}
                 </div>
                 <div className="flex items-center gap-2">
+                  <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+                  
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
