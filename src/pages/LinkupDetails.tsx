@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -268,6 +267,12 @@ const statusConfig = {
   }
 };
 
+const genderJoinOptions: Record<string, { label: string; emoji: string }> = {
+  "All": { label: "Anyone", emoji: "💖" },
+  "Male": { label: "Only guys", emoji: "💁‍♂️" },
+  "Female": { label: "Only girls", emoji: "💁‍♀️" },
+};
+
 const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
@@ -508,10 +513,28 @@ const LinkupDetails = () => {
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">Gender Restriction</p>
+                          <p className="text-sm font-medium text-muted-foreground">Join Price</p>
+                          <p className="flex items-center gap-2 mt-1 font-semibold">
+                            <DollarSign className="h-4 w-4 text-linkup-purple" />
+                            ${linkup.price}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
+                          <p className="flex items-center gap-2 mt-1 font-semibold">
+                            <DollarSign className="h-4 w-4 text-linkup-purple" />
+                            ${earnings}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground">Who can join</p>
                           <p className="flex items-center gap-2 mt-1">
-                            <User className="h-4 w-4 text-linkup-purple" />
-                            {linkup.genderRestriction}
+                            <span className="text-lg">
+                              {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
+                            </span>
+                            {genderJoinOptions[linkup.genderRestriction]?.label || "Anyone"}
                           </p>
                         </div>
                       </div>
