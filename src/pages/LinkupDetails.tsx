@@ -383,6 +383,24 @@ const LinkupDetails = () => {
                   <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
                     {linkup.description}
                   </p>
+
+                  <div className="flex items-center gap-4 mt-2 p-4 bg-linkup-soft-purple/10 rounded-xl">
+                    <Avatar className="h-12 w-12 ring-2 ring-linkup-purple ring-offset-2">
+                      <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
+                      <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-500 font-medium mb-0.5">Hosted by</span>
+                      <Button 
+                        variant="link" 
+                        className="h-auto p-0 font-semibold text-lg text-gray-900 hover:underline decoration-linkup-purple"
+                        onClick={() => {/* Add profile navigation logic */}}
+                      >
+                        {linkup.host.name}
+                      </Button>
+                      <span className="text-sm text-gray-500">@{linkup.host.username}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
