@@ -398,120 +398,143 @@ const LinkupDetails = () => {
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card>
+                    <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <CalendarClock className="h-5 w-5 text-linkup-purple" />
+                        <CardTitle className="flex items-center gap-3 text-2xl">
+                          <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                            <CalendarClock className="h-6 w-6 text-linkup-purple" />
+                          </div>
                           Date & Time
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-md">
+                      <CardContent className="space-y-6">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
                             <Calendar className="h-5 w-5 text-linkup-purple" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">Date</p>
-                            <p>{new Date(linkup.startDate).toLocaleDateString(undefined, { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Date</p>
+                            <p className="text-base font-semibold">{new Date(linkup.startDate).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</p>
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-md">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
                             <Clock className="h-5 w-5 text-linkup-purple" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">Time</p>
-                            <p>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Time</p>
+                            <p className="text-base font-semibold">
                               {new Date(linkup.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - 
                               {new Date(linkup.endDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-md">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
                             <Timer className="h-5 w-5 text-linkup-purple" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">Duration</p>
-                            <p>{ linkup.duration}</p>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Duration</p>
+                            <p className="text-base font-semibold">{linkup.duration}</p>
                           </div>
                         </div>
                       </CardContent>
                     </Card>
                     
-                    <Card>
+                    <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
                       <CardHeader>
-                        <CardTitle className="flex items-center gap-2">
-                          <MapPin className="h-5 w-5 text-linkup-purple" />
+                        <CardTitle className="flex items-center gap-3 text-2xl">
+                          <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                            <MapPin className="h-6 w-6 text-linkup-purple" />
+                          </div>
                           Location
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-md">
+                      <CardContent className="space-y-6">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
                             <Globe className="h-5 w-5 text-linkup-purple" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">General Area</p>
-                            <p>{linkup.generalLocation}</p>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">General Area</p>
+                            <p className="text-base font-semibold">{linkup.generalLocation}</p>
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                          <div className="bg-linkup-soft-purple p-2 rounded-md">
+                        <div className="flex items-center gap-4">
+                          <div className="bg-linkup-soft-purple/50 p-3 rounded-lg">
                             <MapPin className="h-5 w-5 text-linkup-purple" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium">Specific Location</p>
-                            <p>{linkup.specificLocation}</p>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">Specific Location</p>
+                            <p className="text-base font-semibold">{linkup.specificLocation}</p>
                           </div>
                         </div>
                         
-                        <Button variant="outline" size="sm" className="gap-1 w-full" onClick={() => setActiveTab("map")}>
-                          <Map className="h-3.5 w-3.5" />
+                        <Button 
+                          variant="outline" 
+                          size="lg" 
+                          className="w-full mt-2 bg-linkup-soft-purple hover:bg-linkup-soft-purple/70 border-linkup-purple text-linkup-purple hover:text-linkup-purple font-medium gap-2"
+                          onClick={() => setActiveTab("map")}
+                        >
+                          <Map className="h-4 w-4" />
                           View on Map
                         </Button>
                       </CardContent>
                     </Card>
                   </div>
 
-                  <Card>
+                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Users className="h-5 w-5 text-linkup-purple" />
+                      <CardTitle className="flex items-center gap-3 text-2xl">
+                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                          <Users className="h-6 w-6 text-linkup-purple" />
+                        </div>
                         Host & Co-Hosts
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
+                    <CardContent className="space-y-6">
+                      <div className="flex items-center justify-between p-4 bg-linkup-soft-purple/20 rounded-xl">
+                        <div className="flex items-center gap-4">
+                          <Avatar className="h-12 w-12 border-2 border-linkup-purple">
                             <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
                             <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium">{linkup.host.name} <Badge variant="secondary">Host</Badge></p>
+                            <div className="flex items-center gap-2 mb-1">
+                              <p className="font-semibold text-lg">{linkup.host.name}</p>
+                              <Badge variant="secondary" className="bg-linkup-purple text-white">Host</Badge>
+                            </div>
                             <p className="text-sm text-muted-foreground">@{linkup.host.username}</p>
                           </div>
                         </div>
-                        <Button variant="outline" size="sm">View Profile</Button>
+                        <Button variant="outline" size="sm" className="gap-2">
+                          <User className="h-4 w-4" />
+                          View Profile
+                        </Button>
                       </div>
                       
                       {linkup.coHosts.map((coHost) => (
-                        <div key={coHost.id} className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Avatar>
+                        <div key={coHost.id} className="flex items-center justify-between p-4 bg-linkup-soft-purple/10 rounded-xl">
+                          <div className="flex items-center gap-4">
+                            <Avatar className="h-12 w-12">
                               <AvatarImage src={coHost.avatar} alt={coHost.name} />
                               <AvatarFallback>{coHost.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium">{coHost.name} <Badge variant="outline">Co-Host</Badge></p>
+                              <div className="flex items-center gap-2 mb-1">
+                                <p className="font-semibold text-lg">{coHost.name}</p>
+                                <Badge variant="outline" className="border-linkup-purple text-linkup-purple">Co-Host</Badge>
+                              </div>
                               <p className="text-sm text-muted-foreground">@{coHost.username}</p>
                             </div>
                           </div>
-                          <Button variant="outline" size="sm">View Profile</Button>
+                          <Button variant="outline" size="sm" className="gap-2">
+                            <User className="h-4 w-4" />
+                            View Profile
+                          </Button>
                         </div>
                       ))}
                     </CardContent>
@@ -519,33 +542,35 @@ const LinkupDetails = () => {
                 </div>
 
                 <div className="space-y-6">
-                  <Card>
+                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Tag className="h-5 w-5 text-linkup-purple" />
+                      <CardTitle className="flex items-center gap-3 text-2xl">
+                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                          <Tag className="h-6 w-6 text-linkup-purple" />
+                        </div>
                         Linkup Details
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-2 gap-4">
+                    <CardContent className="space-y-6">
+                      <div className="grid grid-cols-2 gap-6">
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">Visibility</p>
+                          <p className="text-sm font-medium text-muted-foreground mb-2">Visibility</p>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <p className="flex items-center gap-2 mt-1 cursor-help">
+                                <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
                                   {linkup.visibility === "Public" ? (
                                     <>
-                                      <Eye className="h-4 w-4 text-linkup-purple" />
-                                      Public
+                                      <Eye className="h-5 w-5 text-linkup-purple" />
+                                      <span className="font-medium">Public</span>
                                     </>
                                   ) : (
                                     <>
-                                      <EyeOff className="h-4 w-4 text-linkup-purple" />
-                                      Private
+                                      <EyeOff className="h-5 w-5 text-linkup-purple" />
+                                      <span className="font-medium">Private</span>
                                     </>
                                   )}
-                                </p>
+                                </div>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>{visibilityTooltip}</p>
@@ -555,13 +580,14 @@ const LinkupDetails = () => {
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">Join Method</p>
+                          <p className="text-sm font-medium text-muted-foreground mb-2">Join Method</p>
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <p className="flex items-center gap-2 mt-1 cursor-help">
-                                  {linkup.joinMethod}
-                                </p>
+                                <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
+                                  <Users className="h-5 w-5 text-linkup-purple" />
+                                  <span className="font-medium">{linkup.joinMethod}</span>
+                                </div>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>{joinMethodTooltip}</p>
@@ -571,75 +597,81 @@ const LinkupDetails = () => {
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">Join Price</p>
-                          <p className="flex items-center gap-2 mt-1 font-semibold">
-                            <DollarSign className="h-4 w-4 text-linkup-purple" />
-                            {linkup.price}
-                          </p>
+                          <p className="text-sm font-medium text-muted-foreground mb-2">Join Price</p>
+                          <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                            <DollarSign className="h-5 w-5 text-linkup-purple" />
+                            <span className="font-semibold">{linkup.price}</span>
+                          </div>
                         </div>
                         
                         <div>
-                          <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
-                          <p className="flex items-center gap-2 mt-1 font-semibold">
-                            <DollarSign className="h-4 w-4 text-linkup-purple" />
-                            {earnings}
-                          </p>
+                          <p className="text-sm font-medium text-muted-foreground mb-2">Total Earnings</p>
+                          <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                            <DollarSign className="h-5 w-5 text-linkup-purple" />
+                            <span className="font-semibold">{earnings}</span>
+                          </div>
                         </div>
-                        
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Who can join</p>
-                          <p className="flex items-center gap-2 mt-1">
-                            <span className="text-lg">
-                              {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
-                            </span>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Who can join</p>
+                        <div className="flex items-center gap-2 p-3 bg-linkup-soft-purple/20 rounded-lg">
+                          <span className="text-xl">
+                            {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
+                          </span>
+                          <span className="font-medium">
                             {genderJoinOptions[linkup.genderRestriction]?.label || "Anyone"}
-                          </p>
+                          </span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
                   
-                  <Card>
+                  <Card className="border-2 border-linkup-soft-purple hover:shadow-lg transition-shadow duration-200">
                     <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Users className="h-5 w-5 text-linkup-purple" />
+                      <CardTitle className="flex items-center gap-3 text-2xl">
+                        <div className="bg-linkup-soft-purple p-2.5 rounded-lg">
+                          <Users className="h-6 w-6 text-linkup-purple" />
+                        </div>
                         Attendee Stats
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <Users className="h-5 w-5 text-muted-foreground" />
-                          <span>Total Attendees</span>
+                    <CardContent className="space-y-6">
+                      <div className="flex items-center justify-between p-3 bg-linkup-soft-purple/20 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <Users className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-medium">Total Attendees</span>
                         </div>
-                        <span className="font-semibold">{linkup.attendees.length}</span>
+                        <span className="text-xl font-semibold">{linkup.attendees.length}</span>
                       </div>
                       
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center gap-2">
-                          <Tag className="h-5 w-5 text-muted-foreground" />
-                          <span>Capacity</span>
+                      <div className="flex items-center justify-between p-3 bg-linkup-soft-purple/20 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <Tag className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-medium">Capacity</span>
                         </div>
-                        <span className="font-semibold">{linkup.capacity}</span>
+                        <span className="text-xl font-semibold">{linkup.capacity}</span>
                       </div>
                       
-                      <div className="w-full bg-muted rounded-full h-2.5 mb-1">
-                        <div 
-                          className="bg-linkup-purple h-2.5 rounded-full" 
-                          style={{ width: `${capacityPercentage}%` }}
-                        ></div>
+                      <div>
+                        <div className="h-3 bg-linkup-soft-purple/30 rounded-full overflow-hidden mb-2">
+                          <div 
+                            className="h-full bg-linkup-purple transition-all duration-500" 
+                            style={{ width: `${capacityPercentage}%` }}
+                          ></div>
+                        </div>
+                        <p className="text-right text-sm font-medium text-linkup-purple">
+                          {capacityPercentage}% full
+                        </p>
                       </div>
-                      <p className="text-xs text-right text-muted-foreground">
-                        {capacityPercentage}% full
-                      </p>
                       
                       <Button 
                         variant="outline" 
-                        size="sm" 
-                        className="w-full mt-4"
+                        size="lg"
+                        className="w-full bg-linkup-soft-purple hover:bg-linkup-soft-purple/70 border-linkup-purple text-linkup-purple hover:text-linkup-purple font-medium gap-2"
                         onClick={() => setActiveTab("attendees")}
                       >
-                        <Users className="h-4 w-4 mr-2" />
+                        <Users className="h-4 w-4" />
                         View Attendee List
                       </Button>
                     </CardContent>
