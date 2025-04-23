@@ -25,6 +25,11 @@ interface LinkupAttendeeListProps {
 export function LinkupAttendeeList({ host, coHosts, attendees }: LinkupAttendeeListProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Calculate total attendees and capacity
+  const totalAttendees = 1 + coHosts.length + attendees.length; // 1 for host
+  const capacity = 20; // This should match your linkup's capacity
+  const percentageFull = Math.round((totalAttendees / capacity) * 100);
+  
   // Combine and sort all attendees
   const allAttendees = [
     { ...host, role: "host" as const },
@@ -54,6 +59,23 @@ export function LinkupAttendeeList({ host, coHosts, attendees }: LinkupAttendeeL
 
   return (
     <div className="space-y-4">
+      {/* Capacity indicator */}
+      <div className="p-4 bg-white rounded-lg border">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-muted-foreground">Capacity</span>
+          <span className="font-medium">{totalAttendees} / {capacity}</span>
+        </div>
+        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+          <div 
+            className="h-full bg-linkup-purple transition-all duration-300"
+            style={{ width: `${percentageFull}%` }}
+          />
+        </div>
+        <p className="text-sm text-muted-foreground mt-2">
+          {percentageFull}% full • {capacity - totalAttendees} spots remaining
+        </p>
+      </div>
+
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
