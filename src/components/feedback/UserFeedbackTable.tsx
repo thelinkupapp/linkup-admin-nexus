@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Clock, Filter, Search, Check, ArrowUp, ArrowDown, AlertCircle } from "lucide-react";
@@ -20,7 +19,6 @@ interface Feedback {
     username: string;
     avatar: string;
   };
-  type: "Feature Request" | "Bug Report" | "Suggestion" | "Other";
   content: string;
   timestamp: string;
   status: "Read" | "Unread";
@@ -35,7 +33,6 @@ const INITIAL_FEEDBACK: Feedback[] = [
       username: "@sarahw",
       avatar: "/lovable-uploads/2e089ec4-e032-49e1-af97-37742c6d61ea.png"
     },
-    type: "Feature Request",
     content: "Would love to see a dark mode option in the app!",
     timestamp: "2025-04-17T11:30:00Z",
     status: "Unread"
@@ -48,7 +45,6 @@ const INITIAL_FEEDBACK: Feedback[] = [
       username: "@davidw",
       avatar: "/lovable-uploads/71376d09-ccf7-4580-91f7-0c7e70d3d9e6.png"
     },
-    type: "Bug Report",
     content: "App crashes when uploading multiple photos at once. This has been happening consistently when I try to upload more than 3 photos to my profile. Steps to reproduce: 1. Go to profile settings 2. Try to upload 4+ photos at once 3. App freezes and then crashes",
     timestamp: "2025-04-16T16:45:00Z",
     status: "Read"
@@ -62,21 +58,6 @@ export function UserFeedbackTable() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
   const { toast } = useToast();
-
-  const handleMarkAsRead = (feedbackId: string) => {
-    setFeedback(prev => 
-      prev.map(item => 
-        item.id === feedbackId 
-          ? { ...item, status: "Read" } 
-          : item
-      )
-    );
-
-    toast({
-      title: "Feedback marked as read",
-      description: "The feedback has been updated successfully.",
-    });
-  };
 
   const filteredFeedback = feedback
     .filter(item => {
@@ -97,7 +78,23 @@ export function UserFeedbackTable() {
       return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
     });
 
-  const unreadCount = feedback.filter(item => item.status === "Unread").length;
+  const totalFeedbackCount = feedback.length;
+  const filteredFeedbackCount = filteredFeedback.length;
+
+  const handleMarkAsRead = (feedbackId: string) => {
+    setFeedback(prev => 
+      prev.map(item => 
+        item.id === feedbackId 
+          ? { ...item, status: "Read" } 
+          : item
+      )
+    );
+
+    toast({
+      title: "Feedback marked as read",
+      description: "The feedback has been updated successfully.",
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -113,7 +110,9 @@ export function UserFeedbackTable() {
             <AlertCircle className="h-5 w-5 text-violet-700" />
           </span>
           <span className="text-xl text-[#23252b]">
-            {unreadCount} unread {unreadCount === 1 ? 'feedback' : 'feedbacks'}
+            {statusFilter === "all" 
+              ? `${totalFeedbackCount} reports` 
+              : `Showing ${filteredFeedbackCount} of ${totalFeedbackCount} reports`}
           </span>
         </div>
       </div>
@@ -244,4 +243,3 @@ export function UserFeedbackTable() {
     </div>
   );
 }
-
