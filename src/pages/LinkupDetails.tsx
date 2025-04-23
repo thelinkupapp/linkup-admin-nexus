@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -45,7 +44,7 @@ import { LinkupImage } from "@/components/linkups/LinkupImage";
 import { LinkupMap } from "@/components/linkups/LinkupMap";
 import { LinkupAttendeeList } from "@/components/linkups/LinkupAttendeeList";
 import { LinkupMediaGallery } from "@/components/linkups/LinkupMediaGallery";
-import { LinkupChatView, ChatMessage } from "@/components/linkups/LinkupChatView";
+import { LinkupChatView } from "@/components/linkups/LinkupChatView";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -70,7 +69,7 @@ import {
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
-import { Linkup } from "@/types/linkup";
+import { Linkup, ChatMessage } from "@/types/linkup";
 
 const linkup: Linkup = {
   id: "123",
@@ -213,15 +212,56 @@ const linkup: Linkup = {
 };
 
 const categoryEmojis: Record<string, string> = {
-  // ... keep existing categoryEmojis
+  "Outdoor & Adventure": "🏞️",
+  "Tech & Innovation": "💻",
+  "Arts & Culture": "🎨",
+  "Food & Drink": "🍽️",
+  "Health & Wellness": "💪",
+  "Games & Entertainment": "🎮",
+  "Travel & Exploration": "🌍",
+  "Professional & Networking": "💼",
+  "Community & Social": "🤝",
+  "Education & Learning": "📚",
 };
 
 const statusConfig = {
-  // ... keep existing statusConfig
+  upcoming: {
+    label: "Upcoming",
+    bg: "bg-green-50 text-green-600",
+    border: "border-green-200",
+    icon: CalendarClock,
+  },
+  ongoing: {
+    label: "Ongoing",
+    bg: "bg-blue-50 text-blue-600",
+    border: "border-blue-200",
+    icon: Clock,
+  },
+  completed: {
+    label: "Completed",
+    bg: "bg-gray-100 text-gray-500",
+    border: "border-gray-200",
+    icon: Calendar,
+  },
+  cancelled: {
+    label: "Cancelled",
+    bg: "bg-red-50 text-red-600",
+    border: "border-red-200",
+    icon: AlertTriangle,
+  },
+  removed: {
+    label: "Removed",
+    bg: "bg-red-500 text-white",
+    border: "border-red-600",
+    icon: Trash2,
+  },
 };
 
 const genderJoinOptions: Record<string, { label: string; emoji: string }> = {
-  // ... keep existing genderJoinOptions
+  everyone: { label: "Everyone", emoji: "💖" },
+  male: { label: "Men Only", emoji: "♂️" },
+  female: { label: "Women Only", emoji: "♀️" },
+  other: { label: "Other Genders", emoji: "⚧️" },
 };
 
 const LinkupDetails = () => {
@@ -261,9 +301,14 @@ const LinkupDetails = () => {
     setActiveTab("attendees");
   };
 
+  // Fix the chat messages mapping
   const typedChatMessages: ChatMessage[] = linkup.chat.map(msg => ({
     ...msg,
-    type: msg.type as "text" | "image" | "video" | "voice" | "gif"
+    type: msg.type as "text" | "image" | "video" | "voice" | "gif",
+    id: msg.id,
+    content: msg.content,
+    timestamp: msg.timestamp,
+    user: msg.user
   }));
 
   const formatMediaTimestamp = (timestamp: string) => {
@@ -668,47 +713,4 @@ const LinkupDetails = () => {
                               <AlertTriangle className="h-5 w-5 text-amber-500" />
                               <h4 className="font-medium">Report by {report.reporter.name}</h4>
                             </div>
-                            <Badge variant={report.resolved ? "outline" : "destructive"}>
-                              {report.resolved ? "Resolved" : "Active"}
-                            </Badge>
-                          </div>
-                          <p className="mt-2 text-sm">{report.reason}</p>
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            {new Date(report.timestamp).toLocaleString()}
-                          </p>
-                          <div className="flex gap-2 mt-4">
-                            <Button variant="outline" size="sm">View Details</Button>
-                            {!report.resolved && (
-                              <Button variant="default" size="sm">Mark as Resolved</Button>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="map">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Location</CardTitle>
-                  <CardDescription>{linkup.specificLocation}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <LinkupMap 
-                    coordinates={linkup.coordinates} 
-                    specificLocation={linkup.specificLocation}
-                  />
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default LinkupDetails;
+                            <Badge variant={report.resolved ? "

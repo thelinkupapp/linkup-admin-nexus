@@ -1,39 +1,10 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Pin, Volume2, Play } from "lucide-react";
 import { format } from "date-fns";
-
-export interface ChatMessage {
-  id: string;
-  type: "text" | "image" | "video" | "voice" | "gif";
-  user: {
-    id: string;
-    name: string;
-    username: string;
-    avatar: string;
-  };
-  message: string;
-  timestamp: string;
-  media?: {
-    url: string;
-    type: string;
-    thumbnail?: string;
-    duration?: string;
-  };
-}
-
-export interface PinnedMessage {
-  id: string;
-  user: {
-    id: string;
-    name: string;
-    username: string;
-    avatar: string;
-  };
-  message: string;
-  timestamp: string;
-}
+import { ChatMessage, PinnedMessage } from "@/types/linkup";
 
 interface LinkupChatViewProps {
   messages: ChatMessage[];
@@ -68,15 +39,15 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
           </div>
           
           {message.type === "text" && (
-            <p className="mt-1">{message.message}</p>
+            <p className="mt-1">{message.content}</p>
           )}
           
-          {(message.type === "image" || message.type === "gif") && message.media && (
+          {(message.type === "image" || message.type === "gif") && (
             <div className="mt-2">
-              <p className="mb-2">{message.message}</p>
+              <p className="mb-2">{message.content}</p>
               <div className="rounded-md overflow-hidden border w-full max-w-xs">
                 <img 
-                  src={message.media.url} 
+                  src={message.content} 
                   alt={message.type === "image" ? "Shared media" : "GIF"}
                   className="w-full h-auto" 
                 />
@@ -84,21 +55,20 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
             </div>
           )}
           
-          {message.type === "video" && message.media && (
+          {message.type === "video" && (
             <div className="mt-2">
-              <p className="mb-2">{message.message}</p>
+              <p className="mb-2">{message.content}</p>
               <div className="rounded-md overflow-hidden border w-full max-w-xs">
                 <video 
-                  src={message.media.url} 
+                  src={message.content} 
                   controls
-                  poster={message.media.thumbnail} 
                   className="w-full h-auto"
                 />
               </div>
             </div>
           )}
 
-          {message.type === "voice" && message.media && (
+          {message.type === "voice" && (
             <div className="mt-2">
               <div className="flex items-center gap-3 p-3 rounded-lg bg-linkup-soft-purple/10 max-w-xs">
                 <div className="h-8 w-8 rounded-full bg-linkup-purple/20 flex items-center justify-center">
@@ -113,7 +83,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
                       <Play className="h-4 w-4" />
                     </button>
                     <span className="text-xs text-muted-foreground">
-                      {message.media.duration || "0:00"}
+                      0:00
                     </span>
                   </div>
                 </div>
@@ -132,7 +102,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
           <Pin className="h-4 w-4 text-linkup-purple mt-0.5" />
           <div>
             <p className="text-sm font-medium mb-1">Pinned Message</p>
-            <p className="text-sm">{pinnedMessage.message}</p>
+            <p className="text-sm">{pinnedMessage.content}</p>
             <div className="flex items-center gap-2 mt-2">
               <Avatar className="h-5 w-5">
                 <AvatarImage src={pinnedMessage.user.avatar} alt={pinnedMessage.user.name} />
