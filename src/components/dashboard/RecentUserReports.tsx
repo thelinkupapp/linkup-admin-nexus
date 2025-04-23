@@ -12,13 +12,7 @@ interface UserReport {
     id: string;
     name: string;
     avatar: string;
-    username: string; // Added username to the interface
-  };
-  reportedUser: {
-    id: string;
-    name: string;
-    avatar: string;
-    username: string; // Added username to the interface
+    username: string;
   };
   reason: string;
   submittedAt: string;
@@ -34,12 +28,6 @@ const recentReports: UserReport[] = [
       username: "john.smith",
       avatar: "https://i.pravatar.cc/150?img=4"
     },
-    reportedUser: {
-      id: "2",
-      name: "Alice Johnson",
-      username: "alice.johnson",
-      avatar: "https://i.pravatar.cc/150?img=5"
-    },
     reason: "Inappropriate behavior",
     submittedAt: new Date().toISOString(),
     status: "pending"
@@ -52,12 +40,6 @@ const recentReports: UserReport[] = [
       username: "emily.brown",
       avatar: "https://i.pravatar.cc/150?img=6"
     },
-    reportedUser: {
-      id: "4",
-      name: "David Wilson",
-      username: "david.wilson",
-      avatar: "https://i.pravatar.cc/150?img=7"
-    },
     reason: "Harassment",
     submittedAt: new Date(Date.now() - 86400000).toISOString(),
     status: "pending"
@@ -69,12 +51,6 @@ const recentReports: UserReport[] = [
       name: "Sarah Davis",
       username: "sarah.davis",
       avatar: "https://i.pravatar.cc/150?img=8"
-    },
-    reportedUser: {
-      id: "6",
-      name: "Michael Brown",
-      username: "michael.brown",
-      avatar: "https://i.pravatar.cc/150?img=9"
     },
     reason: "Spam",
     submittedAt: new Date(Date.now() - 172800000).toISOString(),
@@ -108,13 +84,26 @@ export function RecentUserReports() {
             >
               <div className="flex items-center gap-4">
                 <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
-                  <AvatarImage src={report.reportedUser.avatar} alt={report.reportedUser.name} />
-                  <AvatarFallback>{report.reportedUser.name[0]}</AvatarFallback>
+                  <AvatarImage src={report.reporter.avatar} alt={report.reporter.name} />
+                  <AvatarFallback>{report.reporter.name[0]}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <p className="font-medium text-sm leading-none mb-1">{report.reportedUser.name}</p>
-                  <p className="text-sm text-muted-foreground">@{report.reportedUser.username}</p>
-                  <p className="text-sm text-muted-foreground mt-1">{report.reason}</p>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-1">
+                    <Link
+                      to={`/users/${report.reporter.username}`}
+                      className="font-medium text-sm leading-none text-black hover:underline"
+                    >
+                      {report.reporter.name}
+                    </Link>
+                    <span className="text-sm text-muted-foreground">reported</span>
+                    <Link
+                      to={`/users/${report.reportedUser.username}`}
+                      className="font-medium text-sm leading-none text-black hover:underline"
+                    >
+                      {report.reportedUser.name}
+                    </Link>
+                  </div>
+                  <p className="text-sm text-muted-foreground">{report.reason}</p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
