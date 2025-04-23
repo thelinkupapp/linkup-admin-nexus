@@ -541,7 +541,7 @@ const LinkupDetails = () => {
                           <p className="text-sm font-medium text-muted-foreground">Join Price</p>
                           <p className="flex items-center gap-2 mt-1 font-semibold">
                             <DollarSign className="h-4 w-4 text-linkup-purple" />
-                            ${linkup.price}
+                            {linkup.price}
                           </p>
                         </div>
                         
@@ -549,7 +549,7 @@ const LinkupDetails = () => {
                           <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
                           <p className="flex items-center gap-2 mt-1 font-semibold">
                             <DollarSign className="h-4 w-4 text-linkup-purple" />
-                            ${earnings}
+                            {earnings}
                           </p>
                         </div>
                         
