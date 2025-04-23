@@ -566,34 +566,6 @@ const LinkupDetails = () => {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
-                        <Pin className="h-5 w-5 text-linkup-purple" />
-                        Pinned Message
-                      </CardTitle>
-                    </CardHeader>
-                    {linkup.pinnedMessage ? (
-                      <CardContent className="border-l-4 border-linkup-purple pl-4 ml-2">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={linkup.pinnedMessage.user.avatar} alt={linkup.pinnedMessage.user.name} />
-                            <AvatarFallback>{linkup.pinnedMessage.user.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span className="font-medium text-sm">{linkup.pinnedMessage.user.name}</span>
-                        </div>
-                        <p className="text-sm">{linkup.pinnedMessage.message}</p>
-                        <p className="text-xs text-muted-foreground mt-2">
-                          {new Date(linkup.pinnedMessage.timestamp).toLocaleString()}
-                        </p>
-                      </CardContent>
-                    ) : (
-                      <CardContent>
-                        <p className="text-sm text-muted-foreground">No pinned message</p>
-                      </CardContent>
-                    )}
-                  </Card>
-                  
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
                         <AlertTriangle className="h-5 w-5 text-linkup-purple" />
                         Reports
                       </CardTitle>
@@ -818,25 +790,3 @@ const LinkupDetails = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            
-            <TabsContent value="map">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Linkup Location</CardTitle>
-                  <CardDescription>{linkup.specificLocation}</CardDescription>
-                </CardHeader>
-                <CardContent className="h-[400px] overflow-hidden rounded-md">
-                  <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                    <p className="text-muted-foreground">Map goes here (using coordinates {linkup.coordinates.lat}, {linkup.coordinates.lng})</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </main>
-      </div>
-    </div>
-  );
-};
-
-export default LinkupDetails;
