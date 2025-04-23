@@ -18,21 +18,21 @@ const recentLinkups: RecentLinkup[] = [
     id: "1",
     title: "Coffee Chat Meetup",
     hostName: "Michael",
-    image: "/lovable-uploads/28a4fce0-42eb-4672-8d43-7b11ebd21344.png",
+    image: "/lovable-uploads/5da9d3ec-be1e-48f8-9977-e23dd8c0b873.png",
     date: new Date().toISOString() // Today
   },
   {
     id: "2",
     title: "Beach Volleyball",
     hostName: "Emma",
-    image: "/lovable-uploads/c1f2df94-36e7-4698-b3d2-c6d0f48692b2.png",
+    image: "/lovable-uploads/9253be66-4106-4932-84bc-d571d790eb81.png",
     date: new Date(Date.now() - 86400000).toISOString() // Yesterday
   },
   {
     id: "3",
     title: "Book Club Discussion",
     hostName: "Alex",
-    image: "/lovable-uploads/28a4fce0-42eb-4672-8d43-7b11ebd21344.png", // Reusing image as placeholder
+    image: "/lovable-uploads/0e26bd30-b75d-4798-a267-d2275e6c8f22.png",
     date: new Date(Date.now() - 172800000).toISOString() // 2 days ago
   }
 ];
