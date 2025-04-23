@@ -59,6 +59,13 @@ import {
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
+// Updated interface to include optional thumbnail property
+interface MessageMedia {
+  url: string;
+  type: string;
+  thumbnail?: string;
+}
+
 // Mock data - would be fetched from API in production
 const linkup = {
   id: "1",
@@ -973,4 +980,3 @@ const LinkupDetails = () => {
 };
 
 export default LinkupDetails;
-
