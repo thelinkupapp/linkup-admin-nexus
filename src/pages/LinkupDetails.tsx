@@ -68,6 +68,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
+import { EnlargeableMedia } from "@/components/linkups/EnlargeableMedia";
 
 const linkup = {
   id: "1",
@@ -495,6 +496,11 @@ const LinkupDetails = () => {
     type: msg.type as "text" | "image" | "video" | "voice" | "gif"
   }));
 
+  const typedMedia = linkup.media.map(item => ({
+    ...item,
+    type: item.type as "image" | "video"
+  }));
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -820,7 +826,7 @@ const LinkupDetails = () => {
                   <CardDescription>Images and videos shared for this linkup</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <LinkupMediaGallery media={linkup.media} />
+                  <LinkupMediaGallery media={typedMedia} />
                 </CardContent>
               </Card>
             </TabsContent>
