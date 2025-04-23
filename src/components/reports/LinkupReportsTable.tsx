@@ -39,6 +39,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 interface Report {
   id: string;
