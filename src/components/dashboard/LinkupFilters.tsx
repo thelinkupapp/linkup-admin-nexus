@@ -117,6 +117,12 @@ export function LinkupFilters({
     { value: "cancelled", label: "Cancelled" }
   ];
 
+  const joinMethodOptions = [
+    { value: "all", label: "All Join Methods" },
+    { value: "open", label: "Open" },
+    { value: "closed", label: "Closed" }
+  ];
+
   function getDateRangeLabel(range?: DateRange) {
     if (range?.from && range?.to) {
       return `${format(range.from, "MMM d")}–${format(range.to, "MMM d")}`;
@@ -269,15 +275,11 @@ export function LinkupFilters({
               <SelectValue placeholder="Join Method" />
             </SelectTrigger>
             <SelectContent className="z-[100]">
-              <SelectItem value="all" className="text-xs">
-                All Join Methods
-              </SelectItem>
-              <SelectItem value="open" className="text-xs">
-                Open Join
-              </SelectItem>
-              <SelectItem value="closed" className="text-xs">
-                Closed Join
-              </SelectItem>
+              {joinMethodOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value} className="text-xs">
+                  {option.label}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
 
