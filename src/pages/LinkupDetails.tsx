@@ -68,389 +68,22 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
+import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
 
 const linkup = {
-  id: "1",
-  title: "Sunset Beach Volleyball",
-  emoji: "🏐",
-  description: "Join us for a fun beach volleyball session as the sun sets. All skill levels welcome! We'll have extra volleyballs and refreshments.",
-  category: "Sports",
-  visibility: "Public",
-  joinMethod: "Open",
-  genderRestriction: "All",
-  price: 25,
-  totalEarnings: 125,
-  capacity: 20,
-  createdAt: "2024-04-10T09:30:00Z",
-  isFlexibleDate: false,
-  startDate: "2024-05-15T18:00:00Z",
-  endDate: "2024-05-15T20:00:00Z",
-  duration: "2 hours",
-  generalLocation: "Santa Monica",
-  specificLocation: "Santa Monica Beach Volleyball Courts, CA",
-  coordinates: { lat: 34.008, lng: -118.5 },
-  status: "upcoming",
-  host: {
-    id: "h1",
-    name: "Emma Thompson",
-    username: "emma_t",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    joinedAt: "2024-04-15T10:00:00Z",
-    role: "host" as const
-  },
-  coHosts: [
-    {
-      id: "ch1",
-      name: "Michael Chen",
-      username: "mike_chen",
-      avatar: "https://i.pravatar.cc/150?img=2",
-      joinedAt: "2024-04-15T10:30:00Z",
-      role: "co-host" as const
-    }
-  ],
-  attendees: [
-    {
-      id: "a1",
-      name: "James Wilson",
-      username: "james_w",
-      avatar: "https://i.pravatar.cc/150?img=4",
-      joinedAt: "2024-04-16T14:30:00Z"
-    },
-    {
-      id: "a2",
-      name: "Sophia Rodriguez",
-      username: "sophia_r",
-      avatar: "https://i.pravatar.cc/150?img=3",
-      joinedAt: "2024-04-16T15:45:00Z"
-    },
-    {
-      id: "a3",
-      name: "Olivia Johnson",
-      username: "olivia_j",
-      avatar: "https://i.pravatar.cc/150?img=5",
-      joinedAt: "2024-04-17T09:15:00Z"
-    },
-    {
-      id: "a4",
-      name: "Daniel Brown",
-      username: "daniel_b",
-      avatar: "https://i.pravatar.cc/150?img=13",
-      joinedAt: "2024-04-17T10:20:00Z"
-    },
-    {
-      id: "a5",
-      name: "Emily Davis",
-      username: "emily_d",
-      avatar: "https://i.pravatar.cc/150?img=6",
-      joinedAt: "2024-04-17T11:30:00Z"
-    },
-    {
-      id: "a6",
-      name: "Lucas Martinez",
-      username: "lucas_m",
-      avatar: "https://i.pravatar.cc/150?img=7",
-      joinedAt: "2024-04-17T13:45:00Z"
-    },
-    {
-      id: "a7",
-      name: "Isabella Taylor",
-      username: "bella_t",
-      avatar: "https://i.pravatar.cc/150?img=8",
-      joinedAt: "2024-04-17T14:20:00Z"
-    },
-    {
-      id: "a8",
-      name: "William Lee",
-      username: "will_lee",
-      avatar: "https://i.pravatar.cc/150?img=9",
-      joinedAt: "2024-04-17T15:10:00Z"
-    },
-    {
-      id: "a9",
-      name: "Sofia White",
-      username: "sofia_w",
-      avatar: "https://i.pravatar.cc/150?img=10",
-      joinedAt: "2024-04-17T16:05:00Z"
-    },
-    {
-      id: "a10",
-      name: "Alexander Kim",
-      username: "alex_k",
-      avatar: "https://i.pravatar.cc/150?img=11",
-      joinedAt: "2024-04-17T17:30:00Z"
-    },
-    {
-      id: "a11",
-      name: "Victoria Clark",
-      username: "vicky_c",
-      avatar: "https://i.pravatar.cc/150?img=12",
-      joinedAt: "2024-04-18T09:15:00Z"
-    },
-    {
-      id: "a12",
-      name: "Nathan Wright",
-      username: "nathan_w",
-      avatar: "https://i.pravatar.cc/150?img=14",
-      joinedAt: "2024-04-18T10:45:00Z"
-    },
-    {
-      id: "a13",
-      name: "Emma Garcia",
-      username: "emma_g",
-      avatar: "https://i.pravatar.cc/150?img=15",
-      joinedAt: "2024-04-18T11:20:00Z"
-    },
-    {
-      id: "a14",
-      name: "Benjamin Ross",
-      username: "ben_r",
-      avatar: "https://i.pravatar.cc/150?img=16",
-      joinedAt: "2024-04-18T13:10:00Z"
-    },
-    {
-      id: "a15",
-      name: "Mia Anderson",
-      username: "mia_a",
-      avatar: "https://i.pravatar.cc/150?img=17",
-      joinedAt: "2024-04-18T14:30:00Z"
-    },
-    {
-      id: "a16",
-      name: "Henry Wilson",
-      username: "henry_w",
-      avatar: "https://i.pravatar.cc/150?img=18",
-      joinedAt: "2024-04-18T15:45:00Z"
-    },
-    {
-      id: "a17",
-      name: "Ava Thompson",
-      username: "ava_t",
-      avatar: "https://i.pravatar.cc/150?img=19",
-      joinedAt: "2024-04-18T16:20:00Z"
-    },
-    {
-      id: "a18",
-      name: "Sebastian Cox",
-      username: "seb_c",
-      avatar: "https://i.pravatar.cc/150?img=20",
-      joinedAt: "2024-04-19T09:30:00Z"
-    },
-    {
-      id: "a19",
-      name: "Luna Parker",
-      username: "luna_p",
-      avatar: "https://i.pravatar.cc/150?img=21",
-      joinedAt: "2024-04-19T10:15:00Z"
-    },
-    {
-      id: "a20",
-      name: "Leo Mitchell",
-      username: "leo_m",
-      avatar: "https://i.pravatar.cc/150?img=22",
-      joinedAt: "2024-04-19T11:45:00Z"
-    }
-  ],
-  reports: [
-    {
-      id: "r1",
-      reporter: {
-        id: "rp1",
-        name: "Anonymous User",
-        username: "anonymous"
-      },
-      reason: "Inappropriate content in description",
-      timestamp: "2024-04-28T15:30:00Z",
-      resolved: false
-    }
-  ],
-  chat: [
-    {
-      id: "m1",
-      type: "text",
-      user: {
-        id: "h1",
-        name: "Emma Thompson",
-        username: "emma_t",
-        avatar: "https://i.pravatar.cc/150?img=1"
-      },
-      message: "Hey everyone! Looking forward to playing volleyball with you all!",
-      timestamp: "2024-05-10T14:30:00Z"
-    },
-    {
-      id: "m2",
-      type: "text",
-      user: {
-        id: "a1",
-        name: "James Wilson",
-        username: "james_w",
-        avatar: "https://i.pravatar.cc/150?img=4"
-      },
-      message: "Can't wait! Should I bring any extra equipment?",
-      timestamp: "2024-05-10T15:45:00Z"
-    },
-    {
-      id: "m3",
-      type: "image",
-      user: {
-        id: "ch1",
-        name: "Michael Chen",
-        username: "mike_chen",
-        avatar: "https://i.pravatar.cc/150?img=2"
-      },
-      message: "Here's the volleyball court we'll be using",
-      media: {
-        url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
-        type: "image",
-        thumbnail: undefined
-      },
-      timestamp: "2024-05-10T16:00:00Z"
-    },
-    {
-      id: "m4",
-      type: "text",
-      user: {
-        id: "h1",
-        name: "Emma Thompson",
-        username: "emma_t",
-        avatar: "https://i.pravatar.cc/150?img=1"
-      },
-      message: "I'll have volleyballs, but feel free to bring water and sunscreen!",
-      timestamp: "2024-05-10T16:20:00Z"
-    },
-    {
-      id: "m5",
-      type: "gif",
-      user: {
-        id: "a2",
-        name: "Sophia Rodriguez",
-        username: "sophia_r",
-        avatar: "https://i.pravatar.cc/150?img=3"
-      },
-      message: "Can't wait to see everyone's volleyball skills!",
-      media: {
-        url: "https://media.giphy.com/media/xT9DPBMumxHJIgK4ak/giphy.gif",
-        type: "gif"
-      },
-      timestamp: "2024-05-10T16:45:00Z"
-    },
-    {
-      id: "m6",
-      type: "voice",
-      user: {
-        id: "a3",
-        name: "Olivia Johnson",
-        username: "olivia_j",
-        avatar: "https://i.pravatar.cc/150?img=5"
-      },
-      message: "Hey team, just a quick voice message to say I'm excited!",
-      media: {
-        url: "https://example.com/sample-voice-message.mp3",
-        type: "voice",
-        duration: "0:12"
-      },
-      timestamp: "2024-05-10T17:00:00Z"
-    },
-    {
-      id: "m7",
-      type: "video",
-      user: {
-        id: "a4",
-        name: "Daniel Brown",
-        username: "daniel_b",
-        avatar: "https://i.pravatar.cc/150?img=13"
-      },
-      message: "Check out my volleyball practice from last week!",
-      media: {
-        url: "https://example.com/volleyball-practice.mp4",
-        type: "video",
-        thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b"
-      },
-      timestamp: "2024-05-10T17:30:00Z"
-    }
-  ],
-  media: [
-    {
-      id: "img1",
-      type: "image",
-      url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2007&q=80",
-      timestamp: "2024-05-10T16:00:00Z",
-      user: {
-        id: "ch1",
-        name: "Michael Chen",
-        username: "mike_chen",
-        avatar: "https://i.pravatar.cc/150?img=2"
-      }
-    },
-    {
-      id: "img2",
-      type: "image",
-      url: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80",
-      timestamp: "2024-05-11T12:30:00Z",
-      user: {
-        id: "a2",
-        name: "Sophia Rodriguez",
-        username: "sophia_r",
-        avatar: "https://i.pravatar.cc/150?img=3"
-      }
-    },
-    {
-      id: "vid1",
-      type: "video",
-      url: "https://www.example.com/sample-video.mp4",
-      timestamp: "2024-05-12T10:15:00Z",
-      thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b",
-      user: {
-        id: "a1",
-        name: "James Wilson",
-        username: "james_w",
-        avatar: "https://i.pravatar.cc/150?img=4"
-      }
-    }
-  ],
-  pinnedMessage: {
-    id: "pin1",
-    user: {
-      id: "h1",
-      name: "Emma Thompson",
-      username: "emma_t",
-      avatar: "https://i.pravatar.cc/150?img=1"
-    },
-    message: "Important: Please bring your own water bottles! We're trying to reduce plastic waste.",
-    timestamp: "2024-05-10T15:00:00Z"
-  },
-  officialImage: {
-    url: "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png",
-    source: "ai-generated" as const
-  }
+  // ... keep existing linkup data
 };
 
 const categoryEmojis: Record<string, string> = {
-  Sports: "🏐",
-  Music: "🎵",
-  Food: "🍔",
-  Art: "🎨",
-  Tech: "💻",
-  Outdoors: "🌳",
-  Fitness: "💪",
-  Reading: "📚",
-  Travel: "✈️",
-  Gaming: "🎮",
+  // ... keep existing categoryEmojis
 };
 
 const statusConfig = {
-  upcoming: {
-    bg: "bg-[#ede9fe]",
-    text: "text-[#7c3aed]",
-    border: "border-[#cfc3ed]",
-    icon: "⏰",
-    label: "UPCOMING"
-  }
+  // ... keep existing statusConfig
 };
 
 const genderJoinOptions: Record<string, { label: string; emoji: string }> = {
-  "All": { label: "Anyone", emoji: "💖" },
-  "Male": { label: "Only guys", emoji: "💁‍♂️" },
-  "Female": { label: "Only girls", emoji: "💁‍♀️" },
+  // ... keep existing genderJoinOptions
 };
 
 const LinkupDetails = () => {
@@ -490,12 +123,14 @@ const LinkupDetails = () => {
     setActiveTab("attendees");
   };
 
-  // Fix the type issue by ensuring correct chat message types
   const typedChatMessages: ChatMessage[] = linkup.chat.map(msg => ({
     ...msg,
-    // Ensure type is one of the allowed literal types
     type: msg.type as "text" | "image" | "video" | "voice" | "gif"
   }));
+
+  const formatMediaTimestamp = (timestamp: string) => {
+    return format(new Date(timestamp), "MMM d, yyyy 'at' h:mm a");
+  };
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -824,35 +459,50 @@ const LinkupDetails = () => {
                 <CardContent>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     {linkup.media.map((item) => (
-                      <div key={item.id} className="relative aspect-square rounded-md overflow-hidden border group">
+                      <div key={item.id}>
                         {item.type === "image" ? (
-                          <img 
-                            src={item.url} 
-                            alt="Linkup media" 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          <EnlargeableImage
+                            src={item.url}
+                            alt="Linkup media"
+                            className="aspect-square"
+                            imageClassName="object-cover"
                           />
                         ) : item.type === "video" ? (
-                          <div className="relative w-full h-full">
-                            <img 
-                              src={item.thumbnail || ""} 
-                              alt="Video thumbnail" 
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
-                              <Video className="h-12 w-12 text-white" />
-                            </div>
-                          </div>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <div className="relative aspect-square rounded-md overflow-hidden border group cursor-pointer">
+                                <img 
+                                  src={item.thumbnail || ""} 
+                                  alt="Video thumbnail" 
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+                                  <Video className="h-12 w-12 text-white" />
+                                </div>
+                                <span className="absolute inset-0 flex items-center justify-center text-white text-base font-medium opacity-0 group-hover:opacity-100 bg-black/25 transition-opacity">
+                                  Click to enlarge
+                                </span>
+                              </div>
+                            </DialogTrigger>
+                            <DialogContent className="p-2 rounded-2xl bg-black bg-opacity-80 max-w-3xl flex flex-col items-center justify-center">
+                              <video 
+                                src={item.url}
+                                controls
+                                className="rounded-lg w-full h-auto max-h-[80vh]"
+                              />
+                            </DialogContent>
+                          </Dialog>
                         ) : null}
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 flex items-center justify-between">
+                        <div className="mt-2 p-2 bg-gray-50 rounded-md">
                           <div className="flex items-center gap-1.5">
                             <Avatar className="h-5 w-5">
                               <AvatarImage src={item.user.avatar} alt={item.user.name} />
                               <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
                             </Avatar>
-                            <span className="text-xs">{item.user.name}</span>
+                            <span className="text-sm font-medium">{item.user.name}</span>
                           </div>
-                          <span className="text-xs opacity-75">
-                            {new Date(item.timestamp).toLocaleDateString()}
+                          <span className="text-xs text-muted-foreground block mt-1">
+                            {formatMediaTimestamp(item.timestamp)}
                           </span>
                         </div>
                       </div>
