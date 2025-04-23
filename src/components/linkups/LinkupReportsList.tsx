@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Check, Search } from "lucide-react";
+import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -30,20 +30,31 @@ interface LinkupReportsListProps {
 export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
 
-  const filteredReports = reports.filter(report => {
-    const matchesSearch = 
-      report.reporter.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      report.reporter.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      report.reason.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredReports = reports
+    .filter(report => {
+      const matchesSearch = 
+        report.reporter.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        report.reporter.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        report.reason.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesFilter = 
-      filter === "all" || 
-      (filter === "unread" && !report.resolved) || 
-      (filter === "read" && report.resolved);
+      const matchesFilter = 
+        filter === "all" || 
+        (filter === "unread" && !report.resolved) || 
+        (filter === "read" && report.resolved);
 
-    return matchesSearch && matchesFilter;
-  });
+      return matchesSearch && matchesFilter;
+    })
+    .sort((a, b) => {
+      const dateA = new Date(a.timestamp).getTime();
+      const dateB = new Date(b.timestamp).getTime();
+      return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+    });
+
+  const toggleSortOrder = () => {
+    setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+  };
 
   return (
     <div className="space-y-6">
@@ -85,7 +96,14 @@ export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListPr
         <div className="grid grid-cols-[1fr_2fr_1fr_100px_120px] gap-4 py-3 text-sm text-muted-foreground border-b">
           <div>Reporter</div>
           <div>Description</div>
-          <div>Date & Time</div>
+          <div className="flex items-center gap-2 cursor-pointer hover:text-foreground transition-colors" onClick={toggleSortOrder}>
+            Date & Time
+            {sortOrder === "asc" ? (
+              <ArrowUp className="h-4 w-4" />
+            ) : (
+              <ArrowDown className="h-4 w-4" />
+            )}
+          </div>
           <div>Status</div>
           <div>Actions</div>
         </div>
