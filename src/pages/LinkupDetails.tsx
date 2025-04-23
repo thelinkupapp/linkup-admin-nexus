@@ -279,7 +279,7 @@ const LinkupDetails = () => {
 
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
-  const linkupImgSrc = "/lovable-uploads/db11a8bd-dc32-446e-9747-3ccbf3c94979.png";
+  const linkupImgSrc = "/lovable-uploads/11eefad3-1463-4e51-a8e2-0bfa82e9976e.png";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -296,28 +296,30 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          <div className="bg-white rounded-2xl px-6 py-8 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-10 md:gap-10 items-center"
-               style={{borderColor: "#f0ecfc" }}>
-            <div className="w-full max-w-[340px] md:max-w-[340px] transition-transform rounded-2xl">
+          <div
+            className="bg-white rounded-2xl px-6 py-6 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-6 md:gap-8 items-center"
+            style={{ borderColor: "#f0ecfc", minHeight: 0, paddingBottom: 32 }}
+          >
+            <div className="w-full max-w-[380px] md:max-w-[380px] flex-shrink-0">
               <EnlargeableImage
                 src={linkupImgSrc}
                 alt="Linkup"
                 showAiLabel
-                className="aspect-[4/5] md:aspect-[4/5] h-[400px] md:h-[420px] drop-shadow hover-scale"
-                imageClassName=""
+                className="aspect-[4/5] h-[420px] rounded-2xl hover:shadow-xl hover:scale-[1.015] transition-all group"
+                imageClassName="bg-gray-100 object-cover"
               />
             </div>
-            <div className="flex-1 flex flex-col items-start gap-2 md:gap-4 max-w-2xl pt-1">
+            <div className="flex-1 flex flex-col items-start gap-1 md:gap-3 max-w-2xl pt-1">
               <div
                 className={`
-                  mb-2 md:mb-3 inline-flex items-center gap-2 px-8 py-3 rounded-full border-2 text-lg font-bold uppercase tracking-wide
+                  mb-2 md:mb-3 inline-flex items-center gap-2 px-7 py-2 rounded-full border-2 text-lg font-bold uppercase tracking-wide
                   ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
                   shadow-sm transition-all
                 `}
                 style={{
                   borderWidth: 2,
-                  minHeight: 48,
-                  fontSize: 22,
+                  minHeight: 42,
+                  fontSize: 20,
                   letterSpacing: "0.07em"
                 }}
                 data-testid="linkup-status-pill"
@@ -330,7 +332,6 @@ const LinkupDetails = () => {
                 {linkup.category}
               </span>
               <h1 className="text-3xl md:text-4xl font-black text-black leading-tight py-2">{linkup.title}</h1>
-              <p className="text-gray-700 text-lg md:text-xl mb-2 md:mb-4">{linkup.description}</p>
             </div>
           </div>
 
@@ -343,22 +344,10 @@ const LinkupDetails = () => {
               <TabsTrigger value="reports">Reports</TabsTrigger>
               <TabsTrigger value="map">Map</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="details" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <File className="h-5 w-5 text-linkup-purple" />
-                        Description
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-gray-700">{linkup.description}</p>
-                    </CardContent>
-                  </Card>
-                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <Card>
                       <CardHeader>
@@ -438,7 +427,7 @@ const LinkupDetails = () => {
                       </CardContent>
                     </Card>
                   </div>
-                  
+
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -521,25 +510,7 @@ const LinkupDetails = () => {
                             {linkup.genderRestriction}
                           </p>
                         </div>
-
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Price</p>
-                          <p className="flex items-center gap-2 mt-1">
-                            <DollarSign className="h-4 w-4 text-linkup-purple" />
-                            {linkup.price === 0 ? "Free" : `$${linkup.price}`}
-                          </p>
-                        </div>
                       </div>
-                      
-                      {linkup.price > 0 && (
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground">Total Earnings</p>
-                          <p className="flex items-center gap-2 mt-1 text-lg font-semibold text-green-600">
-                            <DollarSign className="h-4 w-4" />
-                            ${linkup.totalEarnings || (linkup.price * linkup.attendees.length)}
-                          </p>
-                        </div>
-                      )}
                     </CardContent>
                   </Card>
                   
