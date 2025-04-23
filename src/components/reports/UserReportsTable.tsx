@@ -161,17 +161,15 @@ export function UserReportsTable() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex w-full max-w-sm items-center space-x-2">
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
           <Input
             placeholder="Search reports..."
-            className="h-9"
+            className="pl-9 h-9"
             type="search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <Button size="sm" variant="outline">
-            <Search className="h-4 w-4" />
-          </Button>
         </div>
         <div className="flex items-center gap-4">
           <Select 
