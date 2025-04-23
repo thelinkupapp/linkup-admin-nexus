@@ -1,9 +1,13 @@
 
-import { Check } from "lucide-react";
+import { useState } from "react";
+import { Check, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
 
 interface Report {
   id: string;
@@ -11,6 +15,7 @@ interface Report {
     id: string;
     name: string;
     username: string;
+    avatar: string;
   };
   reason: string;
   timestamp: string;
@@ -23,60 +28,121 @@ interface LinkupReportsListProps {
 }
 
 export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+
+  const filteredReports = reports.filter(report => {
+    const matchesSearch = 
+      report.reporter.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      report.reporter.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      report.reason.toLowerCase().includes(searchQuery.toLowerCase());
+
+    const matchesFilter = 
+      filter === "all" || 
+      (filter === "unread" && !report.resolved) || 
+      (filter === "read" && report.resolved);
+
+    return matchesSearch && matchesFilter;
+  });
+
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold">Reports Received</h2>
-          <p className="text-muted-foreground mt-1">Reports submitted by other users</p>
+      <div>
+        <h2 className="text-2xl font-bold flex items-center gap-2">
+          Reports Received
+          {reports.filter(r => !r.resolved).length > 0 && (
+            <Badge variant="outline" className="bg-yellow-100 text-yellow-800">
+              {reports.filter(r => !r.resolved).length} unread
+            </Badge>
+          )}
+        </h2>
+        <p className="text-muted-foreground mt-1">Reports submitted by other users</p>
+      </div>
+
+      <div className="flex gap-4 items-center">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search by name, username, or description..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10"
+          />
         </div>
-        <Button variant="outline" size="sm">
-          View All
-        </Button>
+        <Select value={filter} onValueChange={(value: "all" | "unread" | "read") => setFilter(value)}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Filter reports" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Reports</SelectItem>
+            <SelectItem value="unread">Unread</SelectItem>
+            <SelectItem value="read">Read</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       
-      <div className="space-y-6">
-        {reports.map((report) => (
-          <div key={report.id} className="flex items-start justify-between border-b pb-6">
-            <div className="flex items-start gap-4">
-              <Avatar className="h-10 w-10">
-                <AvatarFallback>{report.reporter.name[0]}</AvatarFallback>
-              </Avatar>
-              
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">{report.reporter.name}</span>
-                  <Badge 
-                    variant="outline" 
-                    className={report.resolved 
-                      ? "bg-green-100 text-green-800 hover:bg-green-100" 
-                      : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
-                    }
+      <div className="relative">
+        <div className="grid grid-cols-[1fr_2fr_1fr_100px_120px] gap-4 py-3 text-sm text-muted-foreground border-b">
+          <div>Reporter</div>
+          <div>Description</div>
+          <div>Date & Time</div>
+          <div>Status</div>
+          <div>Actions</div>
+        </div>
+
+        <div className="divide-y">
+          {filteredReports.map((report) => (
+            <div key={report.id} className="grid grid-cols-[1fr_2fr_1fr_100px_120px] gap-4 py-4 items-center">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={report.reporter.avatar} alt={report.reporter.name} />
+                  <AvatarFallback>{report.reporter.name[0]}</AvatarFallback>
+                </Avatar>
+                <div className="flex flex-col">
+                  <Link 
+                    to={`/users/${report.reporter.id}`}
+                    className="font-medium hover:underline"
                   >
-                    {report.resolved ? "Read" : "Unread"}
-                  </Badge>
+                    {report.reporter.name}
+                  </Link>
+                  <span className="text-sm text-muted-foreground">@{report.reporter.username}</span>
                 </div>
-                <p className="text-sm text-muted-foreground">@{report.reporter.username}</p>
-                <p className="text-base mt-2">{report.reason}</p>
-                <p className="text-sm text-muted-foreground">
-                  {format(new Date(report.timestamp), "dd/MM/yyyy, HH:mm:ss")}
-                </p>
+              </div>
+              
+              <div className="text-sm">{report.reason}</div>
+              
+              <div className="text-sm text-muted-foreground">
+                {format(new Date(report.timestamp), "dd/MM/yyyy, HH:mm:ss")}
+              </div>
+
+              <div>
+                <Badge 
+                  variant="outline" 
+                  className={report.resolved 
+                    ? "bg-green-100 text-green-800 hover:bg-green-100" 
+                    : "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
+                  }
+                >
+                  {report.resolved ? "Read" : "Unread"}
+                </Badge>
+              </div>
+
+              <div>
+                {!report.resolved && (
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="text-green-600 hover:text-green-700 gap-1.5"
+                    onClick={() => onMarkAsRead(report.id)}
+                  >
+                    <Check className="h-4 w-4" />
+                    Mark as Read
+                  </Button>
+                )}
               </div>
             </div>
-            
-            {!report.resolved && (
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="text-green-600 hover:text-green-700 gap-1.5"
-                onClick={() => onMarkAsRead(report.id)}
-              >
-                <Check className="h-4 w-4" />
-                Mark as Read
-              </Button>
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -256,13 +256,62 @@ const linkup = {
     {
       id: "r1",
       reporter: {
-        id: "rp1",
-        name: "Anonymous User",
-        username: "anonymous"
+        id: "u1",
+        name: "Sarah Johnson",
+        username: "sarahjohnson",
+        avatar: "https://i.pravatar.cc/150?img=1"
       },
-      reason: "Inappropriate content in description",
-      timestamp: "2024-04-28T15:30:00Z",
+      reason: "Inappropriate behavior in chat",
+      timestamp: "2024-04-22T11:30:00Z",
       resolved: false
+    },
+    {
+      id: "r2",
+      reporter: {
+        id: "u2",
+        name: "Mike Williams",
+        username: "mikewilliams",
+        avatar: "https://i.pravatar.cc/150?img=2"
+      },
+      reason: "Suspicious activity during linkup",
+      timestamp: "2024-04-21T16:45:00Z",
+      resolved: true
+    },
+    {
+      id: "r3",
+      reporter: {
+        id: "u3",
+        name: "Emily Brown",
+        username: "emilybrown",
+        avatar: "https://i.pravatar.cc/150?img=3"
+      },
+      reason: "Harassment in direct messages",
+      timestamp: "2024-04-20T10:15:00Z",
+      resolved: false
+    },
+    {
+      id: "r4",
+      reporter: {
+        id: "u4",
+        name: "David Chen",
+        username: "davidchen",
+        avatar: "https://i.pravatar.cc/150?img=4"
+      },
+      reason: "Spam messages in chat",
+      timestamp: "2024-04-19T14:20:00Z",
+      resolved: false
+    },
+    {
+      id: "r5",
+      reporter: {
+        id: "u5",
+        name: "Lisa Anderson",
+        username: "lisaanderson",
+        avatar: "https://i.pravatar.cc/150?img=5"
+      },
+      reason: "Inappropriate profile content",
+      timestamp: "2024-04-18T09:45:00Z",
+      resolved: true
     }
   ],
   chat: [
@@ -835,25 +884,19 @@ const LinkupDetails = () => {
             <TabsContent value="reports">
               <Card>
                 <CardContent className="pt-6">
-                  {linkup.reports.length === 0 ? (
-                    <div className="text-center py-8 text-muted-foreground">
-                      <p>No reports for this linkup</p>
-                    </div>
-                  ) : (
-                    <LinkupReportsList 
-                      reports={linkup.reports}
-                      onMarkAsRead={(reportId) => {
-                        const updatedReports = linkup.reports.map(report =>
-                          report.id === reportId ? { ...report, resolved: true } : report
-                        );
-                        
-                        toast({
-                          title: "Report marked as read",
-                          description: "The report has been successfully marked as read.",
-                        });
-                      }}
-                    />
-                  )}
+                  <LinkupReportsList 
+                    reports={linkup.reports}
+                    onMarkAsRead={(reportId) => {
+                      linkup.reports = linkup.reports.map(report =>
+                        report.id === reportId ? { ...report, resolved: true } : report
+                      );
+                      
+                      toast({
+                        title: "Report marked as read",
+                        description: "The report has been successfully marked as read.",
+                      });
+                    }}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
