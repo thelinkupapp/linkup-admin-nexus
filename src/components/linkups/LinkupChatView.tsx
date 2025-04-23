@@ -44,10 +44,12 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
   const renderMessage = (message: ChatMessage) => {
     return (
       <div key={message.id} className="flex items-start gap-3 py-3 border-b last:border-b-0">
-        <Avatar>
-          <AvatarImage src={message.user.avatar} alt={message.user.name} />
-          <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-        </Avatar>
+        <Link to={`/users/${message.user.username}`}>
+          <Avatar>
+            <AvatarImage src={message.user.avatar} alt={message.user.name} />
+            <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
+          </Avatar>
+        </Link>
         <div className="flex-1">
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <Link 
@@ -154,8 +156,8 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
         </div>
       )}
 
-      <ScrollArea className="h-[600px] pr-4">
-        <div className="space-y-1 divide-y">
+      <ScrollArea className="h-[600px] pr-4 border rounded-lg bg-white">
+        <div className="space-y-1">
           {messages.map(renderMessage)}
         </div>
       </ScrollArea>
