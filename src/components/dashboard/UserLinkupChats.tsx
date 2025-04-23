@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -117,6 +117,31 @@ const getUniqueLinkupsByStatus = (messages: ChatMessage[], status: string) => {
   ));
 };
 
+const getMediaTypeIndicator = (mediaType?: string) => {
+  if (!mediaType || mediaType === 'text') return null;
+
+  const icons = {
+    image: <Image className="h-4 w-4" />,
+    video: <Video className="h-4 w-4" />,
+    gif: <GifIcon className="h-4 w-4" />,
+    voice: <Mic className="h-4 w-4" />
+  };
+
+  const labels = {
+    image: "Image",
+    video: "Video",
+    gif: "GIF",
+    voice: "Voice Message"
+  };
+
+  return (
+    <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+      {icons[mediaType as keyof typeof icons]}
+      <span>{labels[mediaType as keyof typeof labels]}</span>
+    </div>
+  );
+};
+
 export function UserLinkupChats() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -168,11 +193,7 @@ export function UserLinkupChats() {
                 {message.linkupName}
               </Link>
               <p className="text-sm mt-1">{message.message}</p>
-              <ChatMediaContent 
-                mediaType={message.mediaType}
-                mediaUrl={message.mediaUrl}
-                message={message.message}
-              />
+              {getMediaTypeIndicator(message.mediaType)}
               <p className="text-sm text-muted-foreground mt-2">
                 {formatJoinDate(message.timestamp)}
               </p>
