@@ -1,11 +1,12 @@
 
 import { useState } from "react";
-import { Check, Search, ArrowUp, ArrowDown } from "lucide-react";
+import { Check, Search, ArrowUp, ArrowDown, X } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
 
@@ -27,10 +28,13 @@ interface LinkupReportsListProps {
   onMarkAsRead: (reportId: string) => void;
 }
 
+const MAX_DESCRIPTION_LENGTH = 100;
+
 export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
 
   const filteredReports = reports
     .filter(report => {
@@ -54,6 +58,11 @@ export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListPr
 
   const toggleSortOrder = () => {
     setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+  };
+
+  const truncateDescription = (text: string) => {
+    if (text.length <= MAX_DESCRIPTION_LENGTH) return text;
+    return text.slice(0, MAX_DESCRIPTION_LENGTH) + "...";
   };
 
   return (
@@ -127,7 +136,17 @@ export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListPr
                 </div>
               </div>
               
-              <div className="text-sm">{report.reason}</div>
+              <div className="text-sm">
+                {truncateDescription(report.reason)}
+                {report.reason.length > MAX_DESCRIPTION_LENGTH && (
+                  <button
+                    onClick={() => setSelectedReport(report)}
+                    className="ml-1 text-violet-500 hover:text-violet-600"
+                  >
+                    Read more
+                  </button>
+                )}
+              </div>
               
               <div className="text-sm text-muted-foreground">
                 {format(new Date(report.timestamp), "dd/MM/yyyy, HH:mm:ss")}
@@ -162,6 +181,17 @@ export function LinkupReportsList({ reports, onMarkAsRead }: LinkupReportsListPr
           ))}
         </div>
       </div>
+
+      <Dialog open={!!selectedReport} onOpenChange={() => setSelectedReport(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Report Description</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4 text-base text-gray-700 whitespace-pre-line">
+            {selectedReport?.reason}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
