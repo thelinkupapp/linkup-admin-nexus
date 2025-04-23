@@ -1,4 +1,3 @@
-
 import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -156,7 +155,6 @@ export function LinkupReportsTable() {
   const totalReports = reports.length;
   const unreadCount = reports.filter(r => r.status === "unread").length;
 
-  // Sort reports by timestamp
   const sortedReports = useMemo(() => {
     return [...reports].sort((a, b) => {
       const dateA = new Date(a.timestamp).getTime();
@@ -165,7 +163,6 @@ export function LinkupReportsTable() {
     });
   }, [reports, sortDirection]);
 
-  // Filter reports based on search and status
   const filteredReports = useMemo(() => {
     return sortedReports.filter(report => {
       const matchesSearch = searchQuery === "" || 
@@ -184,17 +181,17 @@ export function LinkupReportsTable() {
     });
   }, [sortedReports, searchQuery, selectedStatus]);
 
-  // Pagination
   const paginatedReports = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     return filteredReports.slice(startIndex, endIndex);
   }, [filteredReports, currentPage, itemsPerPage]);
 
-  // Reset to first page when filters change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [searchQuery, selectedStatus, itemsPerPage]);
+  const startItem = filteredReports.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = Math.min(currentPage * itemsPerPage, filteredReports.length);
+  const showingText = selectedStatus === "all" 
+    ? `${unreadCount} reports` 
+    : `Showing ${startItem}-${endItem} of ${filteredReports.length} reports`;
 
   const formatTimestamp = (timestamp: string) => {
     const date = new Date(timestamp);
@@ -224,10 +221,7 @@ export function LinkupReportsTable() {
   };
 
   const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
-  const showingText = selectedStatus === "all" 
-    ? `${unreadCount} reports` 
-    : `Showing ${filteredReports.length} of ${totalReports} reports`;
-  
+
   return (
     <div className="space-y-4">
       <div>
@@ -390,16 +384,14 @@ export function LinkupReportsTable() {
         </Table>
       </div>
 
-      {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <PaginationItemsPerPage>
-          Showing {filteredReports.length === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1}-
-          {Math.min(currentPage * itemsPerPage, filteredReports.length)} of {filteredReports.length} reports
+      <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+          <span>Showing {filteredReports.length === 0 ? 0 : startItem}-{endItem} of {filteredReports.length} reports</span>
           <Select
             value={itemsPerPage.toString()}
             onValueChange={(value) => setItemsPerPage(Number(value))}
           >
-            <SelectTrigger className="w-[80px] h-8">
+            <SelectTrigger className="w-[70px] h-8">
               <SelectValue>{itemsPerPage}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -410,40 +402,50 @@ export function LinkupReportsTable() {
               ))}
             </SelectContent>
           </Select>
-        </PaginationItemsPerPage>
+        </div>
 
         {totalPages > 1 && (
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-              
+          <div className="flex items-center space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              disabled={currentPage <= 1}
+              className="h-8 w-24"
+            >
+              Previous
+            </Button>
+            
+            <div className="flex items-center">
               {Array.from({ length: totalPages }).map((_, i) => {
                 const pageNumber = i + 1;
                 return (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(pageNumber)}
-                      isActive={pageNumber === currentPage}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
+                  <Button
+                    key={pageNumber}
+                    variant={pageNumber === currentPage ? "outline" : "ghost"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className={cn(
+                      "h-8 w-8",
+                      pageNumber === currentPage && "bg-muted"
+                    )}
+                  >
+                    {pageNumber}
+                  </Button>
                 );
               })}
+            </div>
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              disabled={currentPage >= totalPages}
+              className="h-8 w-24"
+            >
+              Next
+            </Button>
+          </div>
         )}
       </div>
 
