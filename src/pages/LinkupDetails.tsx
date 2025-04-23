@@ -59,6 +59,8 @@ import {
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { EnlargeableImage } from "@/components/linkups/EnlargeableImage";
+import RemoveLinkupDialog from "@/components/dashboard/RemoveLinkupDialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const linkup = {
   id: "1",
@@ -276,6 +278,8 @@ const genderJoinOptions: Record<string, { label: string; emoji: string }> = {
 const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   const status = "upcoming";
   const statusStyle = statusConfig[status];
@@ -287,21 +291,42 @@ const LinkupDetails = () => {
 
   const linkupImgSrc = "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png";
 
+  const handleRemove = () => {
+    setRemoveDialogOpen(false);
+    toast({
+      title: "Linkup removed",
+      description: `The linkup "${linkup.title}" has been removed.`,
+      variant: "destructive",
+    });
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 ml-64">
         <Header title="Linkup Details" />
         <main className="p-6">
-          <div className="mb-6">
+          <div className="mb-6 flex flex-row items-center justify-between">
             <Button variant="ghost" className="gap-1 text-muted-foreground" asChild>
               <Link to="/linkups/management">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Linkups
               </Link>
             </Button>
+            <Button
+              variant="destructive"
+              className="gap-1 px-5 py-2 font-semibold rounded-lg bg-[#ea384c] text-white hover:bg-[#cb2d3e] transition-colors"
+              onClick={() => setRemoveDialogOpen(true)}
+            >
+              Remove linkup
+            </Button>
           </div>
-
+          <RemoveLinkupDialog
+            open={removeDialogOpen}
+            linkupTitle={linkup.title}
+            onConfirm={handleRemove}
+            onCancel={() => setRemoveDialogOpen(false)}
+          />
           <div
             className="bg-white rounded-2xl px-6 py-6 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-6 md:gap-8 items-center"
             style={{ borderColor: "#f0ecfc", minHeight: 0, paddingBottom: 32 }}
