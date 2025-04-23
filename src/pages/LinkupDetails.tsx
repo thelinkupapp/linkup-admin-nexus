@@ -329,7 +329,7 @@ const LinkupDetails = () => {
                 <span className="text-xl md:text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
                 {linkup.category}
               </span>
-              <h1 className="text-3xl md:text-4xl font-black text-linkup-dark-purple leading-tight py-2">{linkup.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-black leading-tight py-2">{linkup.title}</h1>
               <p className="text-gray-700 text-lg md:text-xl mb-2 md:mb-4">{linkup.description}</p>
             </div>
           </div>
