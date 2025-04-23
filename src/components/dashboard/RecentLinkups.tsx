@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -54,9 +53,10 @@ export function RecentLinkups() {
       <CardContent>
         <div className="space-y-6">
           {recentLinkups.map((linkup) => (
-            <div
+            <Link
+              to={`/linkups/${linkup.id}`}
               key={linkup.id}
-              className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors"
+              className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors block"
             >
               <div className="flex items-center gap-4">
                 <img
@@ -67,14 +67,21 @@ export function RecentLinkups() {
                 <div>
                   <p className="font-medium text-sm leading-none mb-1">{linkup.title}</p>
                   <p className="text-sm text-muted-foreground">
-                    Hosted by {linkup.hostName}
+                    Hosted by{" "}
+                    <Link
+                      to={`/users/${linkup.hostName.toLowerCase()}`}
+                      className="font-bold text-black hover:underline"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {linkup.hostName}
+                    </Link>
                   </p>
                 </div>
               </div>
               <p className="text-sm text-muted-foreground">
                 {formatCreatedDate(linkup.date)}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       </CardContent>
