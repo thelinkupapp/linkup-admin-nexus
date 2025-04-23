@@ -92,14 +92,18 @@ const linkup = {
     id: "h1",
     name: "Emma Thompson",
     username: "emma_t",
-    avatar: "https://i.pravatar.cc/150?img=1"
+    avatar: "https://i.pravatar.cc/150?img=1",
+    joinedAt: "2024-04-15T10:00:00Z",
+    role: "host"
   },
   coHosts: [
     {
       id: "ch1",
       name: "Michael Chen",
       username: "mike_chen",
-      avatar: "https://i.pravatar.cc/150?img=2"
+      avatar: "https://i.pravatar.cc/150?img=2",
+      joinedAt: "2024-04-15T10:30:00Z",
+      role: "co-host"
     }
   ],
   attendees: [
@@ -107,25 +111,141 @@ const linkup = {
       id: "a1",
       name: "James Wilson",
       username: "james_w",
-      avatar: "https://i.pravatar.cc/150?img=4"
+      avatar: "https://i.pravatar.cc/150?img=4",
+      joinedAt: "2024-04-16T14:30:00Z"
     },
     {
       id: "a2",
       name: "Sophia Rodriguez",
       username: "sophia_r",
-      avatar: "https://i.pravatar.cc/150?img=3"
+      avatar: "https://i.pravatar.cc/150?img=3",
+      joinedAt: "2024-04-16T15:45:00Z"
     },
     {
       id: "a3",
       name: "Olivia Johnson",
       username: "olivia_j",
-      avatar: "https://i.pravatar.cc/150?img=5"
+      avatar: "https://i.pravatar.cc/150?img=5",
+      joinedAt: "2024-04-17T09:15:00Z"
     },
     {
       id: "a4",
       name: "Daniel Brown",
       username: "daniel_b",
-      avatar: "https://i.pravatar.cc/150?img=13"
+      avatar: "https://i.pravatar.cc/150?img=13",
+      joinedAt: "2024-04-17T10:20:00Z"
+    },
+    {
+      id: "a5",
+      name: "Emily Davis",
+      username: "emily_d",
+      avatar: "https://i.pravatar.cc/150?img=6",
+      joinedAt: "2024-04-17T11:30:00Z"
+    },
+    {
+      id: "a6",
+      name: "Lucas Martinez",
+      username: "lucas_m",
+      avatar: "https://i.pravatar.cc/150?img=7",
+      joinedAt: "2024-04-17T13:45:00Z"
+    },
+    {
+      id: "a7",
+      name: "Isabella Taylor",
+      username: "bella_t",
+      avatar: "https://i.pravatar.cc/150?img=8",
+      joinedAt: "2024-04-17T14:20:00Z"
+    },
+    {
+      id: "a8",
+      name: "William Lee",
+      username: "will_lee",
+      avatar: "https://i.pravatar.cc/150?img=9",
+      joinedAt: "2024-04-17T15:10:00Z"
+    },
+    {
+      id: "a9",
+      name: "Sofia White",
+      username: "sofia_w",
+      avatar: "https://i.pravatar.cc/150?img=10",
+      joinedAt: "2024-04-17T16:05:00Z"
+    },
+    {
+      id: "a10",
+      name: "Alexander Kim",
+      username: "alex_k",
+      avatar: "https://i.pravatar.cc/150?img=11",
+      joinedAt: "2024-04-17T17:30:00Z"
+    },
+    {
+      id: "a11",
+      name: "Victoria Clark",
+      username: "vicky_c",
+      avatar: "https://i.pravatar.cc/150?img=12",
+      joinedAt: "2024-04-18T09:15:00Z"
+    },
+    {
+      id: "a12",
+      name: "Nathan Wright",
+      username: "nathan_w",
+      avatar: "https://i.pravatar.cc/150?img=14",
+      joinedAt: "2024-04-18T10:45:00Z"
+    },
+    {
+      id: "a13",
+      name: "Emma Garcia",
+      username: "emma_g",
+      avatar: "https://i.pravatar.cc/150?img=15",
+      joinedAt: "2024-04-18T11:20:00Z"
+    },
+    {
+      id: "a14",
+      name: "Benjamin Ross",
+      username: "ben_r",
+      avatar: "https://i.pravatar.cc/150?img=16",
+      joinedAt: "2024-04-18T13:10:00Z"
+    },
+    {
+      id: "a15",
+      name: "Mia Anderson",
+      username: "mia_a",
+      avatar: "https://i.pravatar.cc/150?img=17",
+      joinedAt: "2024-04-18T14:30:00Z"
+    },
+    {
+      id: "a16",
+      name: "Henry Wilson",
+      username: "henry_w",
+      avatar: "https://i.pravatar.cc/150?img=18",
+      joinedAt: "2024-04-18T15:45:00Z"
+    },
+    {
+      id: "a17",
+      name: "Ava Thompson",
+      username: "ava_t",
+      avatar: "https://i.pravatar.cc/150?img=19",
+      joinedAt: "2024-04-18T16:20:00Z"
+    },
+    {
+      id: "a18",
+      name: "Sebastian Cox",
+      username: "seb_c",
+      avatar: "https://i.pravatar.cc/150?img=20",
+      joinedAt: "2024-04-19T09:30:00Z"
+    },
+    {
+      id: "a19",
+      name: "Luna Parker",
+      username: "luna_p",
+      avatar: "https://i.pravatar.cc/150?img=21",
+      joinedAt: "2024-04-19T10:15:00Z"
+    },
+    {
+      id: "a20",
+      name: "Leo Mitchell",
+      username: "leo_m",
+      avatar: "https://i.pravatar.cc/150?img=22",
+      joinedAt: "2024-04-19T11:45:00Z"
     }
   ],
   reports: [
@@ -404,7 +524,7 @@ const LinkupDetails = () => {
                     </div>
                     <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-full">
                       <Users className="h-5 w-5 text-linkup-purple" />
-                      <span className="font-medium text-linkup-purple">{linkup.attendees.length} Attendees</span>
+                      <span className="font-medium text-linkup-purple">{linkup.attendees.length + linkup.coHosts.length + 1} Attendees</span>
                     </div>
                   </div>
                 </div>
@@ -600,31 +720,16 @@ const LinkupDetails = () => {
             
             <TabsContent value="attendees">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Linkup Attendees</CardTitle>
-                    <CardDescription className="mt-1.5">{linkup.attendees.length} people attending</CardDescription>
-                  </div>
-                  <Button variant="outline" size="sm">Export List</Button>
+                <CardHeader>
+                  <CardTitle>Linkup Attendees</CardTitle>
+                  <CardDescription className="mt-1.5">{linkup.attendees.length + linkup.coHosts.length + 1} people attending</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {linkup.attendees.map((attendee) => (
-                      <div key={attendee.id} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage src={attendee.avatar} alt={attendee.name} />
-                            <AvatarFallback>{attendee.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="font-medium">{attendee.name}</p>
-                            <p className="text-sm text-muted-foreground">@{attendee.username}</p>
-                          </div>
-                        </div>
-                        <Button variant="ghost" size="sm">View</Button>
-                      </div>
-                    ))}
-                  </div>
+                  <LinkupAttendeeList 
+                    host={linkup.host}
+                    coHosts={linkup.coHosts}
+                    attendees={linkup.attendees}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
