@@ -1,30 +1,38 @@
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Link } from "react-router-dom";
 import { AddStaffDialog } from "@/components/staff/AddStaffDialog";
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogCancel, AlertDialogAction, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
 
-// Updated staff members array with Jack Peagam
-const staffMembers = [
+const initialStaffMembers = [
   {
     id: "1", 
     name: "Jack Peagam",
     username: "@jackpeagam",
     avatar: "/lovable-uploads/d2bddf64-f07e-405b-b149-443782e1e95e.png",
     role: "CEO",
-  },
-  {
-    id: "2", 
-    name: "John Doe",
-    username: "@johndoe",
-    avatar: "/placeholder.svg",
-    role: "Moderator",
   }
 ];
 
 export function LinkupStaffTable() {
+  const [staffMembers, setStaffMembers] = useState(initialStaffMembers);
+  const { toast } = useToast();
+
+  const handleRemoveStaff = (memberId: string, memberName: string) => {
+    setStaffMembers(currentMembers => 
+      currentMembers.filter(member => member.id !== memberId)
+    );
+    
+    toast({
+      title: "Staff Member Removed",
+      description: `${memberName} has been removed from staff.`,
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -75,7 +83,10 @@ export function LinkupStaffTable() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="bg-red-600 hover:bg-red-700">
+                        <AlertDialogAction 
+                          onClick={() => handleRemoveStaff(member.id, member.name)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
                           Remove Staff Member
                         </AlertDialogAction>
                       </AlertDialogFooter>
