@@ -261,7 +261,7 @@ const linkup = {
         username: "sarahjohnson",
         avatar: "https://i.pravatar.cc/150?img=1"
       },
-      reason: "Inappropriate behavior in chat",
+      reason: "I witnessed multiple instances of inappropriate behavior in the chat during yesterday's event. The user 'toxic_player42' was repeatedly using offensive language, making inappropriate jokes, and harassing female participants. I tried to ask them to stop privately, but they continued and even escalated their behavior. Several other attendees mentioned feeling uncomfortable. This kind of behavior creates an unwelcoming environment and should not be tolerated in our community events.",
       timestamp: "2024-04-22T11:30:00Z",
       resolved: false
     },
@@ -273,7 +273,7 @@ const linkup = {
         username: "mikewilliams",
         avatar: "https://i.pravatar.cc/150?img=2"
       },
-      reason: "Suspicious activity during linkup",
+      reason: "During the linkup, I noticed a user who kept asking personal questions to multiple attendees and attempting to collect contact information outside the app. When people declined, they became insistent and made others uncomfortable. They were also taking screenshots of the chat without permission. This behavior seemed predatory and concerning for everyone's safety. The username was 'friendly_guy89' and this occurred throughout most of the event. I believe this should be investigated further for everyone's safety.",
       timestamp: "2024-04-21T16:45:00Z",
       resolved: true
     },
@@ -285,7 +285,7 @@ const linkup = {
         username: "emilybrown",
         avatar: "https://i.pravatar.cc/150?img=3"
       },
-      reason: "Harassment in direct messages",
+      reason: "I've received multiple unsolicited direct messages from a user named 'event_pro' following the beach volleyball linkup. The messages started with normal conversation but quickly turned inappropriate with sexual comments and requests for private meetings. When I asked them to stop, they became aggressive and threatened to leave bad reviews on all my hosted events. I have screenshots of all the conversations and can provide them if needed. Please help address this harassment situation.",
       timestamp: "2024-04-20T10:15:00Z",
       resolved: false
     },
@@ -297,7 +297,7 @@ const linkup = {
         username: "davidchen",
         avatar: "https://i.pravatar.cc/150?img=4"
       },
-      reason: "Spam messages in chat",
+      reason: "A user with the handle 'deal_finder22' is repeatedly spamming the chat with promotional links to external websites selling counterfeit sports equipment. They've created multiple messages that look like they're part of the event communication but actually contain hidden affiliate links. When other users called them out, they would delete and repost similar messages. This disrupted our event coordination and confused many participants about what information was legitimate. I've documented at least 15 instances of this behavior during our 2-hour event.",
       timestamp: "2024-04-19T14:20:00Z",
       resolved: false
     },
@@ -309,7 +309,7 @@ const linkup = {
         username: "lisaanderson",
         avatar: "https://i.pravatar.cc/150?img=5"
       },
-      reason: "Inappropriate profile content",
+      reason: "The user 'beach_fun101' has profile content that violates community guidelines. Their profile description contains explicit language, references to illegal activities, and their profile image appears to be inappropriate. Several attendees mentioned feeling uncomfortable after viewing their profile when they joined our family-friendly beach event. This seems to go against the community standards that Linkup promotes.",
       timestamp: "2024-04-18T09:45:00Z",
       resolved: true
     }
