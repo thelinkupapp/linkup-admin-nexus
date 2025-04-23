@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
@@ -227,12 +226,6 @@ export function LinkupReportsTable() {
   return (
     <div className="space-y-6">
       <div className="pb-8">
-        <h1 className="text-[42px] font-bold tracking-tight text-[#23252b] mb-2">
-          User Reports
-        </h1>
-        <p className="text-[#6B7280] text-lg font-normal">
-          View and manage reports submitted against users on the app
-        </p>
         <div className="flex items-center gap-2 mt-6">
           <span className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-100">
             <AlertCircle className="h-5 w-5 text-violet-700" />
