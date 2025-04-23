@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { ChevronRight, UserCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatCreatedDate } from "@/utils/dateFormatting";
+import { Badge } from "@/components/ui/badge";
 
 interface VerificationRequest {
   id: string;

@@ -2,7 +2,7 @@
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ChevronRight, FileText2 } from "lucide-react";
+import { ChevronRight, FileText } from "lucide-react";
 import { formatCreatedDate } from "@/utils/dateFormatting";
 import { Badge } from "@/components/ui/badge";
 
@@ -48,7 +48,7 @@ export function RecentLinkupReports() {
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <div className="flex items-center gap-2">
-            <FileText2 className="h-5 w-5 text-muted-foreground" />
+            <FileText className="h-5 w-5 text-muted-foreground" />
             <CardTitle>Linkup Reports</CardTitle>
           </div>
           <CardDescription>Recent reports on linkups</CardDescription>
