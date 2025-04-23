@@ -22,6 +22,19 @@ export function LinkupStaffTable() {
   const [staffMembers, setStaffMembers] = useState(initialStaffMembers);
   const { toast } = useToast();
 
+  // Add event listener for new staff members
+  React.useEffect(() => {
+    const handleAddStaffMember = (event: CustomEvent) => {
+      setStaffMembers(current => [...current, event.detail]);
+    };
+
+    window.addEventListener('addStaffMember', handleAddStaffMember as EventListener);
+    
+    return () => {
+      window.removeEventListener('addStaffMember', handleAddStaffMember as EventListener);
+    };
+  }, []);
+
   const handleRemoveStaff = (memberId: string, memberName: string) => {
     setStaffMembers(currentMembers => 
       currentMembers.filter(member => member.id !== memberId)

@@ -53,6 +53,7 @@ export function AddStaffDialog() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
   const [role, setRole] = useState("");
+  const { toast } = useToast();
 
   const filteredUsers = searchQuery
     ? mockUsers.filter(
@@ -62,17 +63,37 @@ export function AddStaffDialog() {
       )
     : [];
 
-  const handleAddStaff = () => {
+  const handleAddStaff = (close: () => void) => {
     if (selectedUser && role) {
-      console.log("Adding staff member:", { user: selectedUser, role });
-      // Add staff member logic here
+      const newStaffMember = {
+        id: selectedUser.id,
+        name: `${selectedUser.firstName} ${selectedUser.lastName}`,
+        username: selectedUser.username,
+        avatar: selectedUser.avatar,
+        role: role
+      };
+      
+      // Dispatch event to add staff member
+      window.dispatchEvent(new CustomEvent('addStaffMember', { 
+        detail: newStaffMember 
+      }));
+      
+      toast({
+        title: "Staff Member Added",
+        description: `${selectedUser.firstName} ${selectedUser.lastName} has been added as ${role}`,
+      });
+      
+      close();
+      setSelectedUser(null);
+      setRole("");
+      setSearchQuery("");
     }
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="gap-2">
+        <Button className="gap-2 bg-[#8B5CF6] hover:bg-[#7C3AED]">
           <UserPlus className="h-4 w-4" />
           Add Staff Member
         </Button>
@@ -154,7 +175,16 @@ export function AddStaffDialog() {
               <Button variant="outline" onClick={() => setSelectedUser(null)}>
                 Back
               </Button>
-              <Button onClick={handleAddStaff} disabled={!role}>
+              <Button 
+                onClick={(e) => {
+                  const closeButton = e.currentTarget.closest('[role="dialog"]')?.querySelector('[data-radix-collection-item]') as HTMLButtonElement;
+                  if (closeButton) {
+                    handleAddStaff(() => closeButton.click());
+                  }
+                }} 
+                className="bg-[#8B5CF6] hover:bg-[#7C3AED]" 
+                disabled={!role}
+              >
                 Add Staff Member
               </Button>
             </DialogFooter>
