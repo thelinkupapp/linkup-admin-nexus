@@ -1,12 +1,30 @@
-
-import React, { useState } from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { ArrowUpRight, Info, Filter } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Calendar, ArrowUpDown } from "lucide-react";
 import { format, differenceInHours, differenceInDays } from "date-fns";
+import { formatLinkupDateTime } from "@/utils/dateFormatting";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { DateRangeFilter } from "./DateRangeFilter";
+import { DateRange } from "react-day-picker";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationItemsPerPage
+} from "@/components/ui/pagination";
 
 interface Linkup {
   id: string;
@@ -14,260 +32,540 @@ interface Linkup {
   emoji: string;
   startDate: string;
   endDate: string;
-  status: "upcoming" | "happening" | "happened" | "cancelled";
+  status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
   type: "hosted" | "attended" | "cohost";
   createdDate?: string;
   joinedDate?: string;
 }
 
-const UserLinkupsTable: React.FC = () => {
-  const [statusFilter, setStatusFilter] = useState<string>("all");
-  const [typeFilter, setTypeFilter] = useState<string>("all");
+const linkups: Linkup[] = [
+  {
+    id: "1",
+    name: "Bali Digital Nomad Retreat",
+    emoji: "🌴",
+    startDate: "2024-08-01T18:00:00Z",
+    endDate: "2024-08-03T22:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdDate: "2024-03-15T10:30:00Z"
+  },
+  {
+    id: "2",
+    name: "Evening Social Mixer",
+    emoji: "🍷",
+    startDate: "2024-04-19T20:00:00Z",
+    endDate: "2024-04-19T22:00:00Z",
+    status: "upcoming",
+    type: "cohost",
+    joinedDate: "2024-04-01T15:45:00Z"
+  },
+  {
+    id: "3",
+    name: "Afternoon Workshop",
+    emoji: "💻",
+    startDate: "2024-04-20T12:00:00Z",
+    endDate: "2024-04-20T15:00:00Z",
+    status: "upcoming",
+    type: "attended",
+    joinedDate: "2024-04-10T09:15:00Z"
+  },
+  {
+    id: "4",
+    name: "Monday Tech Meetup",
+    emoji: "🚀",
+    startDate: "2024-04-22T15:00:00Z",
+    endDate: "2024-04-22T21:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdDate: "2024-04-08T11:20:00Z"
+  },
+  {
+    id: "5",
+    name: "Beach Cleanup Event",
+    emoji: "🏖️",
+    startDate: "2024-04-15T19:00:00Z",
+    endDate: "2024-04-15T23:00:00Z",
+    status: "happened",
+    type: "hosted",
+    createdDate: "2024-03-25T16:40:00Z"
+  },
+  {
+    id: "6",
+    name: "Weekend Mountain Retreat",
+    emoji: "⛰️",
+    startDate: "2024-05-24T15:00:00Z",
+    endDate: "2024-05-26T12:00:00Z",
+    status: "upcoming",
+    type: "hosted",
+    createdDate: "2024-04-12T14:10:00Z"
+  }
+];
 
-  const mockLinkups: Linkup[] = [
-    {
-      id: "1",
-      name: "Beach Volleyball",
-      emoji: "🏐",
-      startDate: "2025-04-25T15:00:00Z",
-      endDate: "2025-04-25T17:00:00Z",
-      status: "upcoming",
-      type: "hosted",
-      createdDate: "2025-04-10T09:30:00Z"
-    },
-    {
-      id: "2",
-      name: "Coffee & Chat",
-      emoji: "☕",
-      startDate: "2025-04-24T10:00:00Z",
-      endDate: "2025-04-24T11:30:00Z",
-      status: "upcoming",
-      type: "attended",
-      joinedDate: "2025-04-15T14:20:00Z"
-    },
-    {
-      id: "3",
-      name: "Hiking Adventure",
-      emoji: "⛰️",
-      startDate: "2025-04-22T08:00:00Z",
-      endDate: "2025-04-22T16:00:00Z",
-      status: "happened",
-      type: "attended",
-      joinedDate: "2025-04-05T11:45:00Z"
-    },
-    {
-      id: "4",
-      name: "Movie Night",
-      emoji: "🎬",
-      startDate: "2025-04-21T19:00:00Z",
-      endDate: "2025-04-21T22:00:00Z",
-      status: "happened",
-      type: "cohost",
-      joinedDate: "2025-04-10T15:30:00Z"
-    },
-    {
-      id: "5",
-      name: "Board Games Evening",
-      emoji: "🎲",
-      startDate: "2025-04-23T18:00:00Z",
-      endDate: "2025-04-23T22:00:00Z",
-      status: "cancelled",
-      type: "hosted",
-      createdDate: "2025-04-08T10:15:00Z"
-    },
-    {
-      id: "6",
-      name: "Yoga in the Park",
-      emoji: "🧘",
-      startDate: "2025-04-26T09:00:00Z",
-      endDate: "2025-04-26T10:30:00Z",
-      status: "upcoming",
-      type: "hosted",
-      createdDate: "2025-04-12T08:45:00Z"
-    },
-    {
-      id: "7",
-      name: "Photography Walk",
-      emoji: "📸",
-      startDate: "2025-04-28T15:30:00Z",
-      endDate: "2025-04-28T18:30:00Z",
-      status: "happening",
-      type: "attended",
-      joinedDate: "2025-04-18T17:10:00Z"
-    },
-    {
-      id: "8",
-      name: "Cooking Class",
-      emoji: "👨‍🍳",
-      startDate: "2025-04-26T14:00:00Z",
-      endDate: "2025-04-26T17:00:00Z",
-      status: "upcoming",
-      type: "cohost",
-      joinedDate: "2025-04-14T12:20:00Z"
-    }
-  ];
+const statusOptions = [
+  { label: "Upcoming", value: "upcoming" },
+  { label: "Happening", value: "happening" },
+  { label: "Happened", value: "happened" },
+  { label: "Cancelled", value: "cancelled" },
+  { label: "Deleted", value: "deleted" },
+  { label: "Removed", value: "removed" }
+];
 
-  const statusOptions = [
-    { value: "all", label: "All Statuses" },
-    { value: "upcoming", label: "Upcoming" },
-    { value: "happening", label: "Happening" },
-    { value: "happened", label: "Happened" },
-    { value: "cancelled", label: "Cancelled" }
-  ];
+const filteredLinkupsData = (type?: "hosted" | "attended" | "cohost", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
+  let filtered = type ? linkups.filter(linkup => linkup.type === type) : linkups;
+  
+  if (selectedStatuses && selectedStatuses.length > 0) {
+    filtered = filtered.filter(linkup => selectedStatuses.includes(linkup.status));
+  }
+  
+  if (sortConfig) {
+    return [...filtered].sort((a, b) => {
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'created') {
+        const createdDateA = a.createdDate ? new Date(a.createdDate).getTime() : 0;
+        const createdDateB = b.createdDate ? new Date(b.createdDate).getTime() : 0;
+        const joinedDateA = a.joinedDate ? new Date(a.joinedDate).getTime() : 0;
+        const joinedDateB = b.joinedDate ? new Date(b.joinedDate).getTime() : 0;
+        
+        const dateA = a.type === "hosted" ? createdDateA : joinedDateA;
+        const dateB = b.type === "hosted" ? createdDateB : joinedDateB;
+        
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'name') {
+        return sortConfig.direction === 'asc' 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
+  }
+  
+  return filtered;
+};
 
-  const typeOptions = [
-    { value: "all", label: "All Types" },
-    { value: "hosted", label: "Hosted" },
-    { value: "cohost", label: "Co-Host" },
-    { value: "attended", label: "Attended" }
-  ];
+const getStatusBadgeStyles = (status: Linkup["status"]) => {
+  switch (status) {
+    case "upcoming":
+      return "bg-blue-50 text-blue-700 border-blue-200";
+    case "happening":
+      return "bg-purple-50 text-purple-700 border-purple-200";
+    case "happened":
+      return "bg-green-50 text-green-700 border-green-200";
+    case "cancelled":
+      return "bg-red-50 text-red-700 border-red-200";
+    case "deleted":
+      return "bg-gray-50 text-gray-700 border-gray-200";
+    default:
+      return "bg-blue-50 text-blue-700 border-blue-200";
+  }
+};
 
-  const filteredLinkups = mockLinkups.filter(linkup => {
-    const matchesStatus = statusFilter === "all" || linkup.status === statusFilter;
-    const matchesType = typeFilter === "all" || linkup.type === typeFilter;
-    return matchesStatus && matchesType;
+const LinkupsTable = ({ 
+  data, 
+  preview = false,
+  onSort
+}: { 
+  data: Linkup[], 
+  preview?: boolean,
+  onSort?: (field: string) => void
+}) => (
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead className={cn("cursor-pointer", !preview && "hover:bg-gray-50")} onClick={() => onSort && onSort('name')}>
+          <div className="flex items-center">
+            Linkup
+            {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
+          </div>
+        </TableHead>
+        <TableHead className={cn("cursor-pointer", !preview && "hover:bg-gray-50")} onClick={() => onSort && onSort('date')}>
+          <div className="flex items-center">
+            Date & Time
+            {!preview && <ArrowUpDown className="ml-2 h-4 w-4" />}
+          </div>
+        </TableHead>
+        <TableHead>Status</TableHead>
+        <TableHead>Type</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {(preview ? data.slice(0, 3) : data).map((linkup) => (
+        <TableRow key={linkup.id}>
+          <TableCell>
+            <div className="space-y-1">
+              <Link 
+                to={`/linkups/${linkup.id}`} 
+                className="flex items-center gap-2 hover:underline"
+              >
+                <span className="text-xl">{linkup.emoji}</span>
+                <span className="font-medium">{linkup.name}</span>
+              </Link>
+              <div className="text-sm text-muted-foreground">
+                {(linkup.type === "attended" || linkup.type === "cohost") && linkup.joinedDate && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span>Joined on {format(new Date(linkup.joinedDate), "MMM d, yyyy, h:mm a")}</span>
+                  </div>
+                )}
+                {linkup.type === "hosted" && linkup.createdDate && (
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3.5 w-3.5" />
+                    <span>Created on {format(new Date(linkup.createdDate), "MMM d, yyyy, h:mm a")}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </TableCell>
+          <TableCell>
+            <div className="flex items-center gap-2">
+              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col">
+                <span>{format(new Date(linkup.startDate), "MMM d, yyyy, h:mm a")}</span>
+                <span className="text-sm text-muted-foreground">
+                  {differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate)) >= 24 
+                    ? `${differenceInDays(new Date(linkup.endDate), new Date(linkup.startDate))}d`
+                    : `${differenceInHours(new Date(linkup.endDate), new Date(linkup.startDate))}hr`
+                  }
+                </span>
+              </div>
+            </div>
+          </TableCell>
+          <TableCell>
+            <Badge
+              variant="outline"
+              className={getStatusBadgeStyles(linkup.status)}
+            >
+              {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
+            </Badge>
+          </TableCell>
+          <TableCell>
+            <Badge variant="outline">
+              {linkup.type === "hosted" ? "👑 Host" : 
+               linkup.type === "cohost" ? "🤝 Co-Host" :
+               "👋 Attendee"}
+            </Badge>
+          </TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+);
+
+export function UserLinkupsTable() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [sortConfig, setSortConfig] = useState<{ field: string, direction: 'asc' | 'desc' }>({
+    field: 'date',
+    direction: 'desc'
   });
+  const [activeTab, setActiveTab] = useState("all");
+  const [statusPopoverOpen, setStatusPopoverOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
 
-  const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
-      case "upcoming":
-        return "bg-blue-100 text-blue-800";
-      case "happening":
-        return "bg-green-100 text-green-800";
-      case "happened":
-        return "bg-gray-100 text-gray-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
+  const handleCheckedChange = (value: string, checked: boolean) => {
+    setSelectedStatuses(prev => {
+      if (checked) {
+        return [...prev, value];
+      } else {
+        return prev.filter(item => item !== value);
+      }
+    });
   };
 
-  const formatDateDuration = (startDate: string, endDate: string): string => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+  const filteredLinkups = linkups
+    .filter(linkup => {
+      if (activeTab !== "all" && linkup.type !== activeTab) return false;
+      
+      if (selectedStatuses.length > 0 && !selectedStatuses.includes(linkup.status)) return false;
+      
+      if (searchQuery && !linkup.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      
+      if (
+        dateRange?.from &&
+        (new Date(linkup.startDate) < dateRange.from)
+      ) {
+        return false;
+      }
+      if (
+        dateRange?.to &&
+        (new Date(linkup.startDate) > new Date(dateRange.to))
+      ) {
+        return false;
+      }
+      
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortConfig.field === 'date') {
+        const dateA = new Date(a.startDate).getTime();
+        const dateB = new Date(b.startDate).getTime();
+        return sortConfig.direction === 'asc' ? dateA - dateB : dateB - dateA;
+      } else if (sortConfig.field === 'name') {
+        return sortConfig.direction === 'asc' 
+          ? a.name.localeCompare(b.name) 
+          : b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
+
+  const totalPages = Math.ceil(filteredLinkups.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentLinkups = filteredLinkups.slice(startIndex, endIndex);
+
+  const totalLinkups = linkups.filter(linkup => 
+    activeTab === "all" ? true : linkup.type === activeTab
+  ).length;
+
+  const getHeaderText = () => {
+    const filteredCount = filteredLinkups.length;
+    const roleText = activeTab === "hosted" ? "Host" : activeTab === "attended" ? "Attendee" : "";
+    const linkupText = totalLinkups === 1 ? "linkup" : "linkups";
     
-    // Calculate duration
-    const hoursDiff = differenceInHours(end, start);
-    const daysDiff = differenceInDays(end, start);
-    
-    // Format duration string
-    let durationStr;
-    if (hoursDiff > 23) {
-      durationStr = `${daysDiff}d`;
-    } else {
-      durationStr = `${hoursDiff}hr`;
+    if (roleText) {
+      return (
+        <div className="flex flex-col gap-1">
+          <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+          <div className="flex items-center gap-2 text-lg">
+            <span>{roleText} of </span>
+            <span className="text-[#9b87f5] font-bold text-xl">{totalLinkups}</span>
+            <span> {linkupText}</span>
+            {(selectedStatuses.length > 0 || searchQuery) && (
+              <>
+                <span className="mx-1">•</span>
+                <span>showing </span>
+                <span className="text-[#9b87f5] font-bold">{filteredCount}</span>
+                <span> of </span>
+                <span className="text-[#9b87f5] font-bold">{totalLinkups}</span>
+                <span> {linkupText}</span>
+              </>
+            )}
+          </div>
+        </div>
+      );
     }
     
-    return `${format(start, "MMM d, yyyy, h:mm a")} (${durationStr})`;
+    return (
+      <div className="flex flex-col gap-1">
+        <DialogTitle className="text-2xl">All Linkups</DialogTitle>
+        <div className="flex items-center gap-2 text-lg">
+          <span className="text-[#9b87f5] font-bold text-xl">{totalLinkups}</span>
+          <span className="text-[#1A1F2C]">{totalLinkups === 1 ? "linkup" : "linkups"}</span>
+          {(selectedStatuses.length > 0 || searchQuery) && (
+            <>
+              <span className="mx-1">•</span>
+              <span>showing </span>
+              <span className="text-[#9b87f5] font-bold">{filteredCount}</span>
+              <span> of </span>
+              <span className="text-[#9b87f5] font-bold">{totalLinkups}</span>
+              <span> {totalLinkups === 1 ? "linkup" : "linkups"}</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
   };
 
-  const typeBadgeVariant = (type: string) => {
-    switch (type) {
+  const getFilteredLinkupsCount = (type?: "hosted" | "attended" | "cohost") => {
+    return linkups.filter(linkup => type ? linkup.type === type : true).length;
+  };
+
+  const getLinkupCountText = (tab: string) => {
+    const count = getFilteredLinkupsCount(tab === "all" ? undefined : tab as "hosted" | "attended" | "cohost");
+    switch(tab) {
       case "hosted":
-        return "bg-purple-100 text-purple-800";
+        return `Host of ${count} linkups`;
       case "cohost":
-        return "bg-indigo-100 text-indigo-800";
+        return `Co-Host of ${count} linkups`;
       case "attended":
-        return "bg-teal-100 text-teal-800";
+        return `Attendee of ${count} linkups`;
       default:
-        return "bg-gray-100 text-gray-800";
+        return `All - ${count} linkups`;
     }
+  };
+
+  const handleSort = (field: string) => {
+    setSortConfig(prev => ({
+      field,
+      direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>User Linkups</CardTitle>
-            <CardDescription>View all linkups this user has been involved with</CardDescription>
-          </div>
-          <div className="flex gap-2">
-            <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
-              <SelectContent>
-                {typeOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                {statusOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center space-x-2">
+          <p className="text-lg">
+            <span className="text-[#9b87f5] font-bold">{getLinkupCountText(activeTab)}</span>
+          </p>
         </div>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Linkup</TableHead>
-              <TableHead>Type</TableHead>
-              <TableHead>Date & Time</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {filteredLinkups.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-4">
-                  No linkups found matching the selected filters
-                </TableCell>
-              </TableRow>
-            ) : (
-              filteredLinkups.map((linkup) => (
-                <TableRow key={linkup.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg">{linkup.emoji}</span>
-                      <span className="font-medium">{linkup.name}</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={typeBadgeVariant(linkup.type)} variant="outline">
-                      {linkup.type.charAt(0).toUpperCase() + linkup.type.slice(1)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    {formatDateDuration(linkup.startDate, linkup.endDate)}
-                  </TableCell>
-                  <TableCell>
-                    <Badge className={getStatusBadgeVariant(linkup.status)} variant="outline">
-                      {linkup.status.charAt(0).toUpperCase() + linkup.status.slice(1)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="ghost" size="sm" asChild>
-                      <a href={`/linkups/${linkup.id}`}>
-                        <ArrowUpRight className="h-4 w-4 mr-1" />
-                        View
-                      </a>
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
-  );
-};
+        <div className="flex items-center justify-end">
+          <Button variant="outline" onClick={() => setIsDialogOpen(true)}>
+            View All
+          </Button>
+        </div>
+      </div>
 
-export default UserLinkupsTable;
+      <div className="space-y-2">
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList>
+            <TabsTrigger value="all">All</TabsTrigger>
+            <TabsTrigger value="hosted">Host</TabsTrigger>
+            <TabsTrigger value="cohost">Co-Host</TabsTrigger>
+            <TabsTrigger value="attended">Attendee</TabsTrigger>
+          </TabsList>
+
+          {["all", "hosted", "cohost", "attended"].map((tab) => (
+            <TabsContent key={tab} value={tab}>
+              <LinkupsTable 
+                data={filteredLinkupsData(tab === "all" ? undefined : tab as "hosted" | "attended" | "cohost")} 
+                preview={true}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
+      </div>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[80vh]">
+          <DialogHeader>
+            <div className="flex flex-col gap-4 pr-12">
+              <div className="flex items-center justify-between">
+                <div className="space-y-1">
+                  {getHeaderText()}
+                </div>
+                <div className="flex items-center gap-2">
+                  <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange} />
+                  
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search linkups..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 w-[200px]"
+                    />
+                  </div>
+                  <Popover 
+                    open={statusPopoverOpen} 
+                    onOpenChange={setStatusPopoverOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button variant="outline">
+                        Status ({selectedStatuses.length})
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[220px] p-4 bg-white" align="end">
+                      <div className="space-y-2">
+                        {statusOptions.map((option) => (
+                          <div 
+                            key={option.value} 
+                            className="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleCheckedChange(option.value, !selectedStatuses.includes(option.value));
+                            }}
+                          >
+                            <Checkbox 
+                              id={`status-${option.value}`}
+                              checked={selectedStatuses.includes(option.value)} 
+                              onCheckedChange={(checked) => {
+                                handleCheckedChange(option.value, checked === true);
+                              }}
+                              onClick={(e) => e.stopPropagation()}
+                              className="border-gray-300 data-[state=checked]:bg-[#9b87f5] data-[state=checked]:border-[#9b87f5]"
+                            />
+                            <label
+                              htmlFor={`status-${option.value}`}
+                              className="text-sm font-medium leading-none cursor-pointer flex-grow"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {option.label}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+            </div>
+          </DialogHeader>
+          <ScrollArea className="h-[600px] pr-4">
+            <Tabs 
+              defaultValue="all" 
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
+              <TabsList>
+                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="hosted">Host</TabsTrigger>
+                <TabsTrigger value="cohost">Co-Host</TabsTrigger>
+                <TabsTrigger value="attended">Attendee</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value={activeTab}>
+                <LinkupsTable 
+                  data={currentLinkups}
+                  preview={false}
+                  onSort={handleSort}
+                />
+              </TabsContent>
+            </Tabs>
+          </ScrollArea>
+          <div className="mt-4 flex items-center justify-between">
+            <PaginationItemsPerPage className="flex items-center gap-2">
+              <span>Items per page:</span>
+              <select
+                value={itemsPerPage}
+                onChange={(e) => {
+                  setItemsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="border rounded px-2 py-1"
+              >
+                {[5, 10, 15].map((value) => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+            </PaginationItemsPerPage>
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onClick={() => currentPage > 1 && setCurrentPage(p => Math.max(1, p - 1))}
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(page)}
+                      isActive={currentPage === page}
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+                <PaginationItem>
+                  <PaginationNext 
+                    onClick={() => currentPage < totalPages && setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
