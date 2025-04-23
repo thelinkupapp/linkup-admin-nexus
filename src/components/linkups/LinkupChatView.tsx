@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
@@ -135,7 +134,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
   return (
     <div className="space-y-6">
       {pinnedMessage && (
-        <div className="p-3 bg-linkup-soft-purple rounded-md border border-linkup-purple/30 flex items-start gap-3 mb-6">
+        <div className="p-3 bg-linkup-soft-purple rounded-md border border-linkup-purple/30 flex items-start gap-3">
           <Pin className="h-4 w-4 text-linkup-purple mt-0.5" />
           <div>
             <p className="text-sm font-medium mb-1">Pinned Message</p>
