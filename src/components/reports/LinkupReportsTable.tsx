@@ -225,13 +225,21 @@ export function LinkupReportsTable() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-2 mt-6">
-        <span className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-100">
-          <AlertCircle className="h-5 w-5 text-violet-700" />
-        </span>
-        <span className="text-xl text-[#23252b]">
-          {showingText}
-        </span>
+      <div>
+        <h1 className="text-[42px] font-bold tracking-tight text-[#23252b] mb-2">
+          Linkup Reports
+        </h1>
+        <p className="text-[#6B7280] text-lg font-normal">
+          Review and manage reported linkups
+        </p>
+        <div className="flex items-center gap-2 mt-6">
+          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-100">
+            <AlertCircle className="h-5 w-5 text-violet-700" />
+          </span>
+          <span className="text-xl text-[#23252b]">
+            {showingText}
+          </span>
+        </div>
       </div>
 
       <div className="flex items-center justify-between gap-4">
