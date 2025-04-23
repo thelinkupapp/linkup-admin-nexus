@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -713,4 +714,42 @@ const LinkupDetails = () => {
                               <AlertTriangle className="h-5 w-5 text-amber-500" />
                               <h4 className="font-medium">Report by {report.reporter.name}</h4>
                             </div>
-                            <Badge variant={report.resolved ? "
+                            <Badge variant={report.resolved ? "outline" : "destructive"}>
+                              {report.resolved ? "Resolved" : "Pending"}
+                            </Badge>
+                          </div>
+                          <p className="mt-2 text-muted-foreground">{report.reason}</p>
+                          <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
+                            <span>Reported on {format(new Date(report.timestamp), 'MMM d, yyyy')}</span>
+                            <span>{format(new Date(report.timestamp), 'h:mm a')}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="map">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Location</CardTitle>
+                  <CardDescription>{linkup.specificLocation}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LinkupMap 
+                    coordinates={linkup.coordinates} 
+                    locationName={linkup.specificLocation} 
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default LinkupDetails;
