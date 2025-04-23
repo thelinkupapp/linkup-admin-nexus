@@ -1,13 +1,11 @@
-
 import { Sidebar } from "@/components/dashboard/Sidebar";
 import { Header } from "@/components/dashboard/Header";
 import { Stats } from "@/components/dashboard/Stats";
-import { Link } from "react-router-dom";
+import { RecentUsers } from "@/components/dashboard/RecentUsers";
+import { RecentLinkups } from "@/components/dashboard/RecentLinkups";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { ChevronRight } from "lucide-react";
 
 // Mock data for charts
 const userActivityData = [
@@ -28,56 +26,6 @@ const linkupActivityData = [
   { name: "May", linkups: 40 },
   { name: "Jun", linkups: 52 },
   { name: "Jul", linkups: 65 },
-];
-
-// Mock data for recent users
-const recentUsers = [
-  {
-    id: "1",
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    joinDate: "2024-05-10",
-    avatar: "https://i.pravatar.cc/150?img=11"
-  },
-  {
-    id: "2",
-    name: "Sara Williams",
-    email: "sara@example.com",
-    joinDate: "2024-05-09",
-    avatar: "https://i.pravatar.cc/150?img=12"
-  },
-  {
-    id: "3",
-    name: "Daniel Brown",
-    email: "daniel@example.com",
-    joinDate: "2024-05-08",
-    avatar: "https://i.pravatar.cc/150?img=13"
-  }
-];
-
-// Mock data for upcoming linkups
-const upcomingLinkups = [
-  {
-    id: "1",
-    title: "Coffee Meetup",
-    emoji: "☕",
-    date: "2024-05-15",
-    attendees: 8
-  },
-  {
-    id: "2",
-    title: "Hiking Adventure",
-    emoji: "🏔️",
-    date: "2024-05-16",
-    attendees: 15
-  },
-  {
-    id: "3",
-    title: "Book Club",
-    emoji: "📚",
-    date: "2024-05-17",
-    attendees: 12
-  }
 ];
 
 const Index = () => {
@@ -135,73 +83,8 @@ const Index = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Recent Users</CardTitle>
-                    <CardDescription>Latest users who joined the platform</CardDescription>
-                  </div>
-                  <Link to="/users">
-                    <Button variant="ghost" size="sm" className="gap-1">
-                      View All <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {recentUsers.map((user) => (
-                      <div key={user.id} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <img src={user.avatar} alt={user.name} className="h-10 w-10 rounded-full" />
-                          <div>
-                            <p className="font-medium">{user.name}</p>
-                            <p className="text-sm text-muted-foreground">{user.email}</p>
-                          </div>
-                        </div>
-                        <p className="text-sm text-muted-foreground">
-                          {new Date(user.joinDate).toLocaleDateString()}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <div>
-                    <CardTitle>Upcoming Linkups</CardTitle>
-                    <CardDescription>The next few scheduled linkups</CardDescription>
-                  </div>
-                  <Link to="/linkups">
-                    <Button variant="ghost" size="sm" className="gap-1">
-                      View All <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {upcomingLinkups.map((linkup) => (
-                      <div key={linkup.id} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 rounded-full bg-linkup-light-purple flex items-center justify-center text-xl">
-                            {linkup.emoji}
-                          </div>
-                          <div>
-                            <p className="font-medium">{linkup.title}</p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(linkup.date).toLocaleDateString()}
-                            </p>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm">{linkup.attendees} attendees</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <RecentUsers />
+              <RecentLinkups />
             </div>
           </div>
         </main>
