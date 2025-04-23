@@ -4,17 +4,14 @@ import {
   Users,
   Map,
   Settings,
-  BarChart3,
   Bell,
   ShieldCheck,
   MessageSquare,
   ChevronDown,
   Shield,
-  Megaphone,
   FileText,
   AlertTriangle,
   Trash2,
-  Mail,
   LayoutDashboard,
   LogOut,
   User,
@@ -96,23 +93,6 @@ const navItems = [
         title: "Reports",
         href: "/linkups/reports",
         icon: FileText
-      }
-    ]
-  },
-  {
-    title: "Marketing",
-    type: "dropdown",
-    icon: Megaphone,
-    items: [
-      {
-        title: "Email CRM",
-        href: "/crm/email",
-        icon: Mail
-      },
-      {
-        title: "Push Notifications",
-        href: "/crm/push",
-        icon: Bell
       }
     ]
   },

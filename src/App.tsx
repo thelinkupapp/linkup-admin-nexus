@@ -111,14 +111,7 @@ const App = () => {
                 </ProtectedRoute>
               } />
               
-              <Route path="/crm/*" element={
-                <ProtectedRoute>
-                  <Routes>
-                    <Route path="email" element={<EmailCRM />} />
-                    <Route path="push" element={<PushNotificationCRM />} />
-                  </Routes>
-                </ProtectedRoute>
-              } />
+              
               
               <Route path="/verifications" element={
                 <ProtectedRoute>
