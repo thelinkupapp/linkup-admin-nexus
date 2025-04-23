@@ -1,7 +1,8 @@
+
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, CalendarDays } from "lucide-react";
 import { formatCreatedDate } from "@/utils/dateFormatting";
 
 interface RecentLinkup {
@@ -41,7 +42,10 @@ export function RecentLinkups() {
     <Card className="animate-fade-in">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="space-y-1">
-          <CardTitle className="text-xl font-semibold">Recent Linkups</CardTitle>
+          <div className="flex items-center gap-2">
+            <CalendarDays className="h-5 w-5 text-muted-foreground" />
+            <CardTitle className="text-xl font-semibold">Recent Linkups</CardTitle>
+          </div>
           <CardDescription>Latest created linkups</CardDescription>
         </div>
         <Link to="/linkups/management">
