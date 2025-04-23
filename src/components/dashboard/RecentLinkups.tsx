@@ -1,39 +1,39 @@
+
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
-import { ChevronRight, Users } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { formatCreatedDate } from "@/utils/dateFormatting";
 
 interface RecentLinkup {
   id: string;
   title: string;
-  emoji: string;
+  hostName: string;
+  image: string;
   date: string;
-  attendees: number;
 }
 
 const recentLinkups: RecentLinkup[] = [
   {
     id: "1",
-    title: "Urban Photography Walk",
-    emoji: "📸",
-    date: new Date().toISOString(), // Today
-    attendees: 12
+    title: "Coffee Chat Meetup",
+    hostName: "Michael",
+    image: "/lovable-uploads/28a4fce0-42eb-4672-8d43-7b11ebd21344.png",
+    date: new Date().toISOString() // Today
   },
   {
     id: "2",
-    title: "Rooftop Yoga Session",
-    emoji: "🧘‍♀️",
-    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
-    attendees: 8
+    title: "Beach Volleyball",
+    hostName: "Emma",
+    image: "/lovable-uploads/c1f2df94-36e7-4698-b3d2-c6d0f48692b2.png",
+    date: new Date(Date.now() - 86400000).toISOString() // Yesterday
   },
   {
     id: "3",
-    title: "Tech Startup Networking",
-    emoji: "💻",
-    date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-    attendees: 15
+    title: "Book Club Discussion",
+    hostName: "Alex",
+    image: "/lovable-uploads/28a4fce0-42eb-4672-8d43-7b11ebd21344.png", // Reusing image as placeholder
+    date: new Date(Date.now() - 172800000).toISOString() // 2 days ago
   }
 ];
 
@@ -59,21 +59,21 @@ export function RecentLinkups() {
               className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors"
             >
               <div className="flex items-center gap-4">
-                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-lg">
-                  {linkup.emoji}
-                </div>
+                <img
+                  src={linkup.image}
+                  alt={linkup.title}
+                  className="h-10 w-10 rounded-lg object-cover"
+                />
                 <div>
                   <p className="font-medium text-sm leading-none mb-1">{linkup.title}</p>
                   <p className="text-sm text-muted-foreground">
-                    {formatCreatedDate(linkup.date)}
+                    Hosted by {linkup.hostName}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="bg-secondary/50">
-                  {linkup.attendees} attendees
-                </Badge>
-              </div>
+              <p className="text-sm text-muted-foreground">
+                {formatCreatedDate(linkup.date)}
+              </p>
             </div>
           ))}
         </div>
