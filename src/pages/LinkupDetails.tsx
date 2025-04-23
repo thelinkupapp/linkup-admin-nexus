@@ -322,7 +322,7 @@ const LinkupDetails = () => {
         <Header title="Linkup Details" />
         <main className="p-6">
           <div className="mb-6 flex flex-row items-center justify-between">
-            <Button variant="ghost" className="gap-1 text-muted-foreground" asChild>
+            <Button variant="ghost" className="gap-1.5 text-muted-foreground hover:text-foreground transition-colors" asChild>
               <Link to="/linkups/management">
                 <ArrowLeft className="h-4 w-4" />
                 Back to Linkups
@@ -330,9 +330,10 @@ const LinkupDetails = () => {
             </Button>
             <Button
               variant="destructive"
-              className="gap-1 px-5 py-2 font-semibold rounded-lg bg-[#ea384c] text-white hover:bg-[#cb2d3e] transition-colors"
+              className="gap-2 px-6 py-2.5 font-semibold rounded-full bg-[#ea384c] text-white hover:bg-[#cb2d3e] transition-all shadow-sm hover:shadow-md"
               onClick={() => setRemoveDialogOpen(true)}
             >
+              <Trash2 className="h-4 w-4" />
               Remove linkup
             </Button>
           </div>
@@ -342,56 +343,60 @@ const LinkupDetails = () => {
             onConfirm={handleRemove}
             onCancel={() => setRemoveDialogOpen(false)}
           />
-          <div
-            className="bg-white rounded-2xl px-6 py-6 mb-8 border shadow-sm flex flex-col md:flex-row md:items-center gap-6 md:gap-8 items-center"
-            style={{ borderColor: "#f0ecfc", minHeight: 0, paddingBottom: 32 }}
-          >
-            <div className="w-full max-w-[380px] md:max-w-[380px] flex-shrink-0">
-              <EnlargeableImage
-                src={linkupImgSrc}
-                alt="Linkup"
-                showAiLabel
-                className="aspect-[4/5] h-[420px] rounded-2xl hover:shadow-xl hover:scale-[1.015] transition-all group"
-                imageClassName="bg-gray-100 object-cover"
-              />
-            </div>
-            <div className="flex-1 flex flex-col items-start gap-1 md:gap-3 max-w-2xl pt-1">
-              <div
-                className={`
-                  mb-2 md:mb-3 inline-flex items-center gap-2 px-7 py-2 rounded-full border-2 text-lg font-bold uppercase tracking-wide
-                  ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
-                  shadow-sm transition-all
-                `}
-                style={{
-                  borderWidth: 2,
-                  minHeight: 42,
-                  fontSize: 20,
-                  letterSpacing: "0.07em"
-                }}
-                data-testid="linkup-status-pill"
-              >
-                <span className="text-xl">{statusStyle.icon}</span>
-                <span>{statusStyle.label}</span>
+          <div className="bg-gradient-to-br from-white to-gray-50/50 rounded-3xl px-8 py-8 mb-8 border shadow-lg hover:shadow-xl transition-all">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12">
+              <div className="w-full max-w-[420px] md:max-w-[380px] flex-shrink-0">
+                <EnlargeableImage
+                  src={linkupImgSrc}
+                  alt="Linkup"
+                  showAiLabel
+                  className="aspect-[4/5] h-[420px] rounded-2xl shadow-2xl hover:shadow-[0_20px_50px_rgba(8,_112,_184,_0.2)] hover:scale-[1.02] transition-all duration-300"
+                  imageClassName="bg-gray-100 object-cover"
+                />
               </div>
-              <span className="flex items-center gap-2 text-linkup-purple font-medium text-base md:text-lg pb-0">
-                <span className="text-xl md:text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
-                {linkup.category}
-              </span>
-              <h1 className="text-3xl md:text-4xl font-black text-black leading-tight py-2">{linkup.title}</h1>
-              <p className="text-base md:text-lg text-gray-700 mt-0.5 mb-1.5">
-                {linkup.description}
-              </p>
+              <div className="flex-1 flex flex-col items-start gap-4 max-w-2xl pt-2">
+                <div
+                  className={`
+                    inline-flex items-center gap-2.5 px-6 py-2 rounded-full border-2 text-lg font-bold uppercase tracking-wider
+                    ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
+                    shadow-sm transition-all hover:shadow-md cursor-default
+                  `}
+                  style={{
+                    borderWidth: 2,
+                    minHeight: 40,
+                    fontSize: 16,
+                    letterSpacing: "0.1em"
+                  }}
+                  data-testid="linkup-status-pill"
+                >
+                  <span className="text-xl">{statusStyle.icon}</span>
+                  <span>{statusStyle.label}</span>
+                </div>
+                
+                <div className="space-y-4">
+                  <span className="inline-flex items-center gap-3 px-4 py-2 bg-linkup-soft-purple/30 rounded-full text-linkup-purple font-medium text-base">
+                    <span className="text-xl">{categoryEmojis[linkup.category] || "❓"}</span>
+                    {linkup.category}
+                  </span>
+                  
+                  <h1 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight">{linkup.title}</h1>
+                  
+                  <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
+                    {linkup.description}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="mb-4">
-              <TabsTrigger value="details">Details</TabsTrigger>
-              <TabsTrigger value="attendees">Attendees</TabsTrigger>
-              <TabsTrigger value="chat">Chat</TabsTrigger>
-              <TabsTrigger value="media">Media</TabsTrigger>
-              <TabsTrigger value="reports">Reports</TabsTrigger>
-              <TabsTrigger value="map">Map</TabsTrigger>
+            <TabsList className="mb-6 p-1 bg-gray-100/50 rounded-full border shadow-sm">
+              <TabsTrigger value="details" className="rounded-full transition-all">Details</TabsTrigger>
+              <TabsTrigger value="attendees" className="rounded-full transition-all">Attendees</TabsTrigger>
+              <TabsTrigger value="chat" className="rounded-full transition-all">Chat</TabsTrigger>
+              <TabsTrigger value="media" className="rounded-full transition-all">Media</TabsTrigger>
+              <TabsTrigger value="reports" className="rounded-full transition-all">Reports</TabsTrigger>
+              <TabsTrigger value="map" className="rounded-full transition-all">Map</TabsTrigger>
             </TabsList>
 
             <TabsContent value="details" className="space-y-6">
