@@ -1,28 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircle, Search, Filter, Calendar, Trash2, Calendar as CalendarIcon } from "lucide-react";
+import { MessageCircle, Search, Calendar, Image, Video, Mic, GifIcon } from "lucide-react";
 import { formatJoinDate } from "@/utils/dateFormatting";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DateRange } from "react-day-picker";
-import { format } from "date-fns";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Separator } from "@/components/ui/separator";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { 
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
 interface ChatMessage {
   id: string;
@@ -30,21 +16,14 @@ interface ChatMessage {
   linkupName: string;
   message: string;
   timestamp: string;
-  status: 'upcoming' | 'happened' | 'happening' | 'cancelled' | 'deleted' | 'removed';
+  status: 'upcoming' | 'happened' | 'happening' | 'cancelled' | 'removed';
   sender: {
     name: string;
     avatar: string;
   };
+  mediaType?: 'text' | 'image' | 'video' | 'gif' | 'voice';
+  mediaUrl?: string;
 }
-
-type DateRangeFilter = 'last-7-days' | 'this-month' | 'last-month' | 'custom';
-
-const dateRangeOptions = [
-  { value: 'last-7-days', label: 'Last 7 days' },
-  { value: 'this-month', label: 'This month' },
-  { value: 'last-month', label: 'Last month' },
-  { value: 'custom', label: 'Custom range' }
-];
 
 const statusOptions = [
   { value: "all", label: "All Statuses" },
@@ -55,9 +34,7 @@ const statusOptions = [
   { value: "removed", label: "Removed" }
 ];
 
-const itemsPerPageOptions = [10, 25, 50];
-
-// Sample data - in a real app this would come from your backend
+// Sample data with various media types
 const chatMessages: ChatMessage[] = [
   {
     id: "1",
@@ -69,35 +46,67 @@ const chatMessages: ChatMessage[] = [
     sender: {
       name: "Jack Peagam",
       avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
-    }
+    },
+    mediaType: 'text'
   },
   {
     id: "2",
     linkupId: "tech-1",
     linkupName: "Tech Meetup",
-    message: "I'll be presenting about React hooks!",
+    message: "Check out my presentation slides!",
     timestamp: new Date(Date.now() - 1000 * 60 * 120).toISOString(),
     status: 'happening',
     sender: {
       name: "Jack Peagam",
       avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
-    }
+    },
+    mediaType: 'image',
+    mediaUrl: "/lovable-uploads/2d714cfa-f1e3-488d-bb49-22aee977af8d.png"
   },
   {
     id: "3",
     linkupId: "book-1",
     linkupName: "Book Club Meeting",
-    message: "The plot twist in chapter 7 was incredible!",
+    message: "My reaction to the plot twist",
     timestamp: new Date(Date.now() - 1000 * 60 * 180).toISOString(),
     status: 'happened',
     sender: {
       name: "Jack Peagam",
       avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
-    }
+    },
+    mediaType: 'gif',
+    mediaUrl: "https://media.giphy.com/media/3o7btPCcdNniyf0ArS/giphy.gif"
+  },
+  {
+    id: "4",
+    linkupId: "music-1",
+    linkupName: "Music Jam Session",
+    message: "Here's my latest recording",
+    timestamp: new Date(Date.now() - 1000 * 60 * 240).toISOString(),
+    status: 'upcoming',
+    sender: {
+      name: "Jack Peagam",
+      avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
+    },
+    mediaType: 'voice',
+    mediaUrl: "/audio-sample.mp3"
+  },
+  {
+    id: "5",
+    linkupId: "dance-1",
+    linkupName: "Dance Workshop",
+    message: "Tutorial for the new routine",
+    timestamp: new Date(Date.now() - 1000 * 60 * 300).toISOString(),
+    status: 'happening',
+    sender: {
+      name: "Jack Peagam",
+      avatar: "/lovable-uploads/e3298a53-bda5-4cc9-9f92-f09065f5a448.png"
+    },
+    mediaType: 'video',
+    mediaUrl: "/video-sample.mp4"
   }
 ];
 
-// Get unique linkup names for the filter
 const getUniqueLinkupsByStatus = (messages: ChatMessage[], status: string) => {
   if (status === 'all') {
     return Array.from(new Set(messages.map(msg => msg.linkupName)));
@@ -111,13 +120,9 @@ const getUniqueLinkupsByStatus = (messages: ChatMessage[], status: string) => {
 
 export function UserLinkupChats() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>();
-  const [selectedDateFilter, setSelectedDateFilter] = useState<DateRangeFilter>('last-7-days');
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLinkup, setSelectedLinkup] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState("all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const [availableLinkups, setAvailableLinkups] = useState<string[]>(
     getUniqueLinkupsByStatus(chatMessages, 'all')
@@ -131,13 +136,6 @@ export function UserLinkupChats() {
     }
   }, [selectedStatus]);
 
-  const handleDateRangeSelection = (value: DateRangeFilter) => {
-    setSelectedDateFilter(value);
-    if (value !== 'custom') {
-      setDateRange(undefined);
-    }
-  };
-
   const filteredMessages = chatMessages
     .filter(message => {
       const matchesSearch = message.message.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -147,11 +145,35 @@ export function UserLinkupChats() {
       return matchesSearch && matchesLinkup && matchesStatus;
     });
 
-  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
-  const paginatedMessages = filteredMessages.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const MediaContent = ({ message }: { message: ChatMessage }) => {
+    switch (message.mediaType) {
+      case 'image':
+        return <img src={message.mediaUrl} alt="Shared image" className="rounded-lg max-h-48 object-cover" />;
+      case 'video':
+        return (
+          <div className="flex items-center gap-2 text-blue-600">
+            <Video className="h-5 w-5" />
+            <span>Video message</span>
+          </div>
+        );
+      case 'gif':
+        return (
+          <div className="flex items-center gap-2 text-purple-600">
+            <GifIcon className="h-5 w-5" />
+            <span>GIF message</span>
+          </div>
+        );
+      case 'voice':
+        return (
+          <div className="flex items-center gap-2 text-green-600">
+            <Mic className="h-5 w-5" />
+            <span>Voice message</span>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -177,6 +199,9 @@ export function UserLinkupChats() {
                 {message.linkupName}
               </Link>
               <p className="text-sm mt-1">{message.message}</p>
+              <div className="mt-2">
+                <MediaContent message={message} />
+              </div>
               <p className="text-sm text-muted-foreground mt-1">
                 {formatJoinDate(message.timestamp)}
               </p>
@@ -209,56 +234,9 @@ export function UserLinkupChats() {
               </div>
               
               <div className="flex gap-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button variant="outline" className="flex items-center gap-2 min-w-[140px]">
-                      <Calendar className="h-4 w-4" />
-                      {selectedDateFilter === 'custom' && dateRange?.from && dateRange?.to ? (
-                        <span className="truncate">
-                          {format(dateRange.from, "MMM d")} - {format(dateRange.to, "MMM d")}
-                        </span>
-                      ) : (
-                        <span>
-                          {dateRangeOptions.find(option => option.value === selectedDateFilter)?.label || 'Select date range'}
-                        </span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-4" align="end">
-                    <div className="space-y-4">
-                      <div className="grid gap-2">
-                        {dateRangeOptions.map((option) => (
-                          <div key={option.value} className="flex items-center gap-2">
-                            <Checkbox 
-                              id={`date-range-${option.value}`}
-                              checked={selectedDateFilter === option.value}
-                              onCheckedChange={() => handleDateRangeSelection(option.value as DateRangeFilter)}
-                            />
-                            <label htmlFor={`date-range-${option.value}`} className="text-sm cursor-pointer">
-                              {option.label}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {selectedDateFilter === 'custom' && (
-                        <div className="pt-4">
-                          <Separator className="mb-4" />
-                          <CalendarComponent
-                            mode="range"
-                            selected={dateRange}
-                            onSelect={setDateRange}
-                            numberOfMonths={2}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  </PopoverContent>
-                </Popover>
-
                 <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                   <SelectTrigger className="min-w-[140px]">
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
                     {statusOptions.map(status => (
@@ -288,7 +266,7 @@ export function UserLinkupChats() {
           
           <ScrollArea className="h-[500px] pr-4">
             <div className="space-y-6">
-              {paginatedMessages.map((message) => (
+              {filteredMessages.map((message) => (
                 <div key={message.id} className="flex items-start gap-4">
                   <Avatar className="h-10 w-10">
                     <AvatarImage src={message.sender.avatar} alt="User" />
@@ -302,6 +280,9 @@ export function UserLinkupChats() {
                       {message.linkupName}
                     </Link>
                     <p className="text-sm mt-1">{message.message}</p>
+                    <div className="mt-2">
+                      <MediaContent message={message} />
+                    </div>
                     <p className="text-sm text-muted-foreground mt-1">
                       {formatJoinDate(message.timestamp)}
                     </p>
@@ -310,57 +291,6 @@ export function UserLinkupChats() {
               ))}
             </div>
           </ScrollArea>
-
-          <div className="flex items-center justify-between border-t pt-4 mt-4">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Items per page:</span>
-              <Select
-                value={itemsPerPage.toString()}
-                onValueChange={(value) => {
-                  setItemsPerPage(Number(value));
-                  setCurrentPage(1);
-                }}
-              >
-                <SelectTrigger className="w-[70px]">
-                  <SelectValue placeholder="10" />
-                </SelectTrigger>
-                <SelectContent>
-                  {itemsPerPageOptions.map(option => (
-                    <SelectItem key={option} value={option.toString()}>
-                      {option}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious 
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    className={cn(currentPage === 1 && "pointer-events-none opacity-50")}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <PaginationItem key={page}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(page)}
-                      isActive={currentPage === page}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                ))}
-                <PaginationItem>
-                  <PaginationNext 
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    className={cn(currentPage === totalPages && "pointer-events-none opacity-50")}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
         </DialogContent>
       </Dialog>
     </div>
