@@ -68,7 +68,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
-import { EnlargeableMedia } from "@/components/linkups/EnlargeableMedia";
 
 const linkup = {
   id: "1",
@@ -707,3 +706,221 @@ const LinkupDetails = () => {
                       Linkup Details
                     </CardTitle>
                   </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Visibility</p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
+                                {linkup.visibility === "Public" ? (
+                                  <>
+                                    <Eye className="h-5 w-5 text-linkup-purple" />
+                                    <span className="font-medium">Public</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <EyeOff className="h-5 w-5 text-linkup-purple" />
+                                    <span className="font-medium">Private</span>
+                                  </>
+                                )}
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{visibilityTooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Join Method</p>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg cursor-help">
+                                <Users className="h-5 w-5 text-linkup-purple" />
+                                <span className="font-medium">{linkup.joinMethod}</span>
+                              </div>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{joinMethodTooltip}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Join Price</p>
+                        <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                          <DollarSign className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-semibold">{linkup.price}</span>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <p className="text-sm font-medium text-muted-foreground mb-2">Total Earnings</p>
+                        <div className="flex items-center gap-2 p-2 bg-linkup-soft-purple/20 rounded-lg">
+                          <DollarSign className="h-5 w-5 text-linkup-purple" />
+                          <span className="font-semibold">{earnings}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm font-medium text-muted-foreground mb-2">Who can join</p>
+                      <div className="flex items-center gap-2 p-3 bg-linkup-soft-purple/20 rounded-lg">
+                        <span className="text-xl">
+                          {genderJoinOptions[linkup.genderRestriction]?.emoji || "💖"}
+                        </span>
+                        <span className="font-medium">
+                          {genderJoinOptions[linkup.genderRestriction]?.label || "Anyone"}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="attendees">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Attendees</CardTitle>
+                  <CardDescription className="mt-1.5">{linkup.attendees.length + linkup.coHosts.length + 1} people attending</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LinkupAttendeeList 
+                    host={linkup.host}
+                    coHosts={linkup.coHosts}
+                    attendees={linkup.attendees}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="chat">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Chat</CardTitle>
+                  <CardDescription>Read-only view of the chat thread</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LinkupChatView 
+                    messages={typedChatMessages}
+                    pinnedMessage={linkup.pinnedMessage}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="media">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Media</CardTitle>
+                  <CardDescription>Images and videos shared for this linkup</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {linkup.media.map((item) => (
+                      <div key={item.id} className="relative aspect-square rounded-md overflow-hidden border group">
+                        {item.type === "image" ? (
+                          <img 
+                            src={item.url} 
+                            alt="Linkup media" 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                          />
+                        ) : item.type === "video" ? (
+                          <div className="relative w-full h-full">
+                            <img 
+                              src={item.thumbnail || ""} 
+                              alt="Video thumbnail" 
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+                              <Video className="h-12 w-12 text-white" />
+                            </div>
+                          </div>
+                        ) : null}
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 flex items-center justify-between">
+                          <div className="flex items-center gap-1.5">
+                            <Avatar className="h-5 w-5">
+                              <AvatarImage src={item.user.avatar} alt={item.user.name} />
+                              <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs">{item.user.name}</span>
+                          </div>
+                          <span className="text-xs opacity-75">
+                            {new Date(item.timestamp).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="reports">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Reports</CardTitle>
+                  <CardDescription>User reports for this linkup</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {linkup.reports.length === 0 ? (
+                    <p className="text-center py-8 text-muted-foreground">No reports for this linkup</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {linkup.reports.map((report) => (
+                        <div key={report.id} className="p-4 border rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5 text-amber-500" />
+                              <h4 className="font-medium">Report by {report.reporter.name}</h4>
+                            </div>
+                            <Badge variant={report.resolved ? "outline" : "destructive"}>
+                              {report.resolved ? "Resolved" : "Active"}
+                            </Badge>
+                          </div>
+                          <p className="mt-2 text-sm">{report.reason}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {new Date(report.timestamp).toLocaleString()}
+                          </p>
+                          <div className="flex gap-2 mt-4">
+                            <Button variant="outline" size="sm">View Details</Button>
+                            {!report.resolved && (
+                              <Button variant="default" size="sm">Mark as Resolved</Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="map">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Location</CardTitle>
+                  <CardDescription>{linkup.specificLocation}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LinkupMap 
+                    coordinates={linkup.coordinates} 
+                    specificLocation={linkup.specificLocation}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default LinkupDetails;
