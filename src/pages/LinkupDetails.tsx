@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -500,46 +499,60 @@ const LinkupDetails = () => {
                         Host & Co-Hosts
                       </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="flex items-center justify-between p-4 bg-linkup-soft-purple/20 rounded-xl">
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-12 w-12 border-2 border-linkup-purple">
-                            <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
-                            <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="flex items-center gap-2 mb-1">
-                              <p className="font-semibold text-lg">{linkup.host.name}</p>
-                              <Badge variant="secondary" className="bg-linkup-purple text-white">Host</Badge>
-                            </div>
-                            <p className="text-sm text-muted-foreground">@{linkup.host.username}</p>
-                          </div>
-                        </div>
-                        <Button variant="outline" size="sm" className="gap-2">
-                          <User className="h-4 w-4" />
-                          View Profile
-                        </Button>
-                      </div>
-                      
-                      {linkup.coHosts.map((coHost) => (
-                        <div key={coHost.id} className="flex items-center justify-between p-4 bg-linkup-soft-purple/10 rounded-xl">
+                    <CardContent className="space-y-4">
+                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl">
+                        <div className="flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <Avatar className="h-12 w-12">
-                              <AvatarImage src={coHost.avatar} alt={coHost.name} />
-                              <AvatarFallback>{coHost.name.charAt(0)}</AvatarFallback>
+                            <Avatar className="h-12 w-12 ring-2 ring-linkup-purple ring-offset-2">
+                              <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
+                              <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
                             </Avatar>
                             <div>
-                              <div className="flex items-center gap-2 mb-1">
-                                <p className="font-semibold text-lg">{coHost.name}</p>
-                                <Badge variant="outline" className="border-linkup-purple text-linkup-purple">Co-Host</Badge>
+                              <div className="flex items-center gap-2">
+                                <p className="font-semibold text-lg">{linkup.host.name}</p>
+                                <Badge className="bg-linkup-purple text-white border-0">Host</Badge>
                               </div>
-                              <p className="text-sm text-muted-foreground">@{coHost.username}</p>
+                              <p className="text-sm text-muted-foreground">@{linkup.host.username}</p>
                             </div>
                           </div>
-                          <Button variant="outline" size="sm" className="gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="gap-2 hover:bg-linkup-soft-purple/50"
+                          >
                             <User className="h-4 w-4" />
                             View Profile
                           </Button>
+                        </div>
+                      </div>
+                      
+                      {linkup.coHosts.map((coHost) => (
+                        <div key={coHost.id} className="bg-linkup-soft-purple/5 p-4 rounded-xl">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <Avatar className="h-12 w-12">
+                                <AvatarImage src={coHost.avatar} alt={coHost.name} />
+                                <AvatarFallback>{coHost.name.charAt(0)}</AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <div className="flex items-center gap-2">
+                                  <p className="font-semibold text-lg">{coHost.name}</p>
+                                  <Badge variant="outline" className="border-linkup-purple text-linkup-purple">
+                                    Co-Host
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground">@{coHost.username}</p>
+                              </div>
+                            </div>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="gap-2 hover:bg-linkup-soft-purple/50"
+                            >
+                              <User className="h-4 w-4" />
+                              View Profile
+                            </Button>
+                          </div>
                         </div>
                       ))}
                     </CardContent>
@@ -642,32 +655,37 @@ const LinkupDetails = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-6">
-                      <div className="flex items-center justify-between p-3 bg-linkup-soft-purple/20 rounded-lg">
+                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <Users className="h-5 w-5 text-linkup-purple" />
+                          <div className="bg-linkup-soft-purple p-2 rounded-lg">
+                            <Users className="h-5 w-5 text-linkup-purple" />
+                          </div>
                           <span className="font-medium">Total Attendees</span>
                         </div>
-                        <span className="text-xl font-semibold">{linkup.attendees.length}</span>
+                        <span className="text-2xl font-bold text-linkup-purple">{linkup.attendees.length}</span>
                       </div>
                       
-                      <div className="flex items-center justify-between p-3 bg-linkup-soft-purple/20 rounded-lg">
+                      <div className="bg-linkup-soft-purple/10 p-4 rounded-xl flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <Tag className="h-5 w-5 text-linkup-purple" />
+                          <div className="bg-linkup-soft-purple p-2 rounded-lg">
+                            <Tag className="h-5 w-5 text-linkup-purple" />
+                          </div>
                           <span className="font-medium">Capacity</span>
                         </div>
-                        <span className="text-xl font-semibold">{linkup.capacity}</span>
+                        <span className="text-2xl font-bold text-linkup-purple">{linkup.capacity}</span>
                       </div>
                       
-                      <div>
-                        <div className="h-3 bg-linkup-soft-purple/30 rounded-full overflow-hidden mb-2">
+                      <div className="mt-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium text-muted-foreground">Capacity Usage</span>
+                          <span className="text-sm font-medium text-linkup-purple">{capacityPercentage}% full</span>
+                        </div>
+                        <div className="h-3 bg-linkup-soft-purple/20 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-linkup-purple transition-all duration-500" 
+                            className="h-full bg-linkup-purple transition-all duration-500 rounded-full"
                             style={{ width: `${capacityPercentage}%` }}
                           ></div>
                         </div>
-                        <p className="text-right text-sm font-medium text-linkup-purple">
-                          {capacityPercentage}% full
-                        </p>
                       </div>
                       
                       <Button 
