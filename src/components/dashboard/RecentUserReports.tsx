@@ -14,6 +14,12 @@ interface UserReport {
     avatar: string;
     username: string;
   };
+  reportedUser: {
+    id: string;
+    name: string;
+    avatar: string;
+    username: string;
+  };
   reason: string;
   submittedAt: string;
   status: "pending" | "reviewed";
@@ -28,6 +34,12 @@ const recentReports: UserReport[] = [
       username: "john.smith",
       avatar: "https://i.pravatar.cc/150?img=4"
     },
+    reportedUser: {
+      id: "2",
+      name: "Alice Johnson",
+      username: "alice.johnson",
+      avatar: "https://i.pravatar.cc/150?img=5"
+    },
     reason: "Inappropriate behavior",
     submittedAt: new Date().toISOString(),
     status: "pending"
@@ -40,6 +52,12 @@ const recentReports: UserReport[] = [
       username: "emily.brown",
       avatar: "https://i.pravatar.cc/150?img=6"
     },
+    reportedUser: {
+      id: "4",
+      name: "David Wilson",
+      username: "david.wilson",
+      avatar: "https://i.pravatar.cc/150?img=7"
+    },
     reason: "Harassment",
     submittedAt: new Date(Date.now() - 86400000).toISOString(),
     status: "pending"
@@ -51,6 +69,12 @@ const recentReports: UserReport[] = [
       name: "Sarah Davis",
       username: "sarah.davis",
       avatar: "https://i.pravatar.cc/150?img=8"
+    },
+    reportedUser: {
+      id: "6",
+      name: "Michael Brown",
+      username: "michael.brown",
+      avatar: "https://i.pravatar.cc/150?img=9"
     },
     reason: "Spam",
     submittedAt: new Date(Date.now() - 172800000).toISOString(),
