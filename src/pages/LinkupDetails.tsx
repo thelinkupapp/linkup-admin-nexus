@@ -476,7 +476,7 @@ const linkup = {
 };
 
 const categoryEmojis: Record<string, string> = {
-  Sports: "��",
+  Sports: "⚽",
   Music: "🎵",
   Food: "🍔",
   Art: "🎨",
