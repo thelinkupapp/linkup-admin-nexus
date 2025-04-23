@@ -359,7 +359,7 @@ const LinkupDetails = () => {
                 <div
                   className={`
                     inline-flex items-center gap-2.5 px-6 py-2 rounded-full border-2 text-lg font-bold uppercase tracking-wider
-                    ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
+                    ${statusStyle.bg} ${statusStyle.border}
                     shadow-sm transition-all hover:shadow-md cursor-default
                   `}
                   style={{
@@ -370,7 +370,8 @@ const LinkupDetails = () => {
                   }}
                   data-testid="linkup-status-pill"
                 >
-                  <span className="text-xl">{statusStyle.icon}</span>
+                  {/* Fix: Using createElement to properly render the icon component */}
+                  {React.createElement(statusStyle.icon, { className: "h-5 w-5" })}
                   <span>{statusStyle.label}</span>
                 </div>
                 
@@ -740,7 +741,7 @@ const LinkupDetails = () => {
                 <CardContent>
                   <LinkupMap 
                     coordinates={linkup.coordinates} 
-                    locationName={linkup.specificLocation} 
+                    specificLocation={linkup.specificLocation} 
                   />
                 </CardContent>
               </Card>
