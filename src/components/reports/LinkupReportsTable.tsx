@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect } from "react";
+
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { 
   Table, 
@@ -226,7 +227,7 @@ export function LinkupReportsTable() {
   return (
     <div className="space-y-6">
       <div className="pb-8">
-        <h1 className="text-[42px] font-semibold tracking-tight text-[#23252b] mb-3">
+        <h1 className="text-[42px] font-bold tracking-tight text-[#23252b] mb-2">
           User Reports
         </h1>
         <p className="text-[#6B7280] text-lg font-normal">
