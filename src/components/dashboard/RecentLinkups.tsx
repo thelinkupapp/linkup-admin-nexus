@@ -1,4 +1,3 @@
-
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -17,24 +16,24 @@ interface RecentLinkup {
 const recentLinkups: RecentLinkup[] = [
   {
     id: "1",
-    title: "Coffee Meetup",
-    emoji: "☕",
-    date: "2024-05-15",
-    attendees: 8
+    title: "Urban Photography Walk",
+    emoji: "📸",
+    date: new Date().toISOString(), // Today
+    attendees: 12
   },
   {
     id: "2",
-    title: "Hiking Adventure",
-    emoji: "🏔️",
-    date: "2024-05-16",
-    attendees: 15
+    title: "Rooftop Yoga Session",
+    emoji: "🧘‍♀️",
+    date: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    attendees: 8
   },
   {
     id: "3",
-    title: "Book Club",
-    emoji: "📚",
-    date: "2024-05-17",
-    attendees: 12
+    title: "Tech Startup Networking",
+    emoji: "💻",
+    date: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    attendees: 15
   }
 ];
 

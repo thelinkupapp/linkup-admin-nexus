@@ -1,4 +1,3 @@
-
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,24 +16,24 @@ interface RecentUser {
 const recentUsers: RecentUser[] = [
   {
     id: "1",
-    name: "Alex Johnson",
-    email: "alex@example.com",
-    joinDate: "2024-05-10",
-    avatar: "https://i.pravatar.cc/150?img=11"
+    name: "Emma Rodriguez",
+    email: "emma.rodriguez@example.com",
+    joinDate: new Date().toISOString(), // Today
+    avatar: "https://i.pravatar.cc/150?img=68"
   },
   {
     id: "2",
-    name: "Sara Williams",
-    email: "sara@example.com",
-    joinDate: "2024-05-09",
-    avatar: "https://i.pravatar.cc/150?img=12"
+    name: "Liam Chen",
+    email: "liam.chen@example.com",
+    joinDate: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+    avatar: "https://i.pravatar.cc/150?img=69"
   },
   {
     id: "3",
-    name: "Daniel Brown",
-    email: "daniel@example.com",
-    joinDate: "2024-05-08",
-    avatar: "https://i.pravatar.cc/150?img=13"
+    name: "Sophia Patel",
+    email: "sophia.patel@example.com",
+    joinDate: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+    avatar: "https://i.pravatar.cc/150?img=70"
   }
 ];
 
