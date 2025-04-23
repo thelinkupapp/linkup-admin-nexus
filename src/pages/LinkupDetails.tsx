@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -60,12 +59,6 @@ import {
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-interface MessageMedia {
-  url: string;
-  type: string;
-  thumbnail?: string;
-}
-
 const linkup = {
   id: "1",
   title: "Sunset Beach Volleyball",
@@ -75,8 +68,8 @@ const linkup = {
   visibility: "Public",
   joinMethod: "Open",
   genderRestriction: "All",
-  price: 0,
-  totalEarnings: 0,
+  price: 25,
+  totalEarnings: 100,
   capacity: 20,
   isFlexibleDate: false,
   startDate: "2024-05-15T18:00:00Z",
@@ -268,9 +261,9 @@ const statusStyles: Record<
   { bg: string; text: string; border: string }
 > = {
   upcoming: {
-    bg: "bg-blue-100",
-    text: "text-blue-800",
-    border: "border-blue-300",
+    bg: "bg-[#9b87f5]/20",
+    text: "text-[#7c3aed]",
+    border: "border-[#9b87f5]",
   },
   happening: {
     bg: "bg-green-100",
@@ -307,8 +300,6 @@ const LinkupDetails = () => {
   } else if (now > endDate) {
     status = "happened";
   }
-
-  // Define isHappening based on the status value
   const isHappening = status === "happening";
 
   const statusStyle = statusStyles[status];
@@ -316,13 +307,12 @@ const LinkupDetails = () => {
   const timeLeftMs = endDate.getTime() - now.getTime();
   const hoursLeft = Math.floor(timeLeftMs / (1000 * 60 * 60));
   const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
-  
-  const timeLeftDisplay = isHappening 
+
+  const timeLeftDisplay = isHappening
     ? `Ends in ${hoursLeft}h ${minutesLeft}m`
     : linkup.duration;
 
   const formattedDate = formatLinkupDateTime(linkup.startDate, linkup.endDate);
-  
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
   return (
@@ -341,48 +331,41 @@ const LinkupDetails = () => {
           </div>
 
           <div className="bg-white rounded-lg p-6 mb-8 border shadow-sm">
-            <div className="flex flex-col lg:flex-row gap-6">
-              <div className="flex-shrink-0">
-                <div className="relative rounded-lg overflow-hidden" style={{ width: 180, height: 320, minWidth: 120 }}>
-                  <img 
-                    src="/lovable-uploads/5380c1eb-3914-42ad-8234-c9d0a4442b4f.png"
-                    alt={linkup.title}
-                    className="object-cover w-full h-full"
-                    style={{ aspectRatio: "9/16" }}
-                  />
-                  <Badge 
-                    variant="secondary"
-                    className="absolute top-3 left-3 gap-1.5 bg-black/70 text-white border-none"
-                  >
-                    <WandSparkles className="h-3.5 w-3.5" />
-                    AI-Generated
-                  </Badge>
-                </div>
+            <div className="flex flex-col gap-2">
+              <div
+                className={`
+                mb-4 inline-flex items-center gap-2 px-7 py-2.5 rounded-full border-2 font-bold text-xl uppercase tracking-wide
+                ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
+                shadow-sm transition
+                `}
+                style={{
+                  letterSpacing: "0.08em",
+                  borderWidth: 3,
+                  minHeight: 54,
+                  backgroundColor: "#ede9fe",
+                  borderColor: "#9b87f5",
+                  color: "#7c3aed"
+                }}
+                data-testid="linkup-status-pill"
+              >
+                <span className="text-2xl">
+                  {status === "upcoming" && "⏰"}
+                  {status === "happening" && "🔴"}
+                  {status === "happened" && "✅"}
+                  {status === "cancelled" && "❌"}
+                </span>
+                {status.charAt(0).toUpperCase() + status.slice(1)}
               </div>
-              <div className="flex-1 flex flex-col justify-center gap-2">
-                <div
-                  className={`
-                    mb-4 w-fit px-5 py-2 rounded-full border-2 font-bold text-lg uppercase tracking-wide
-                    ${statusStyle.bg} ${statusStyle.text} ${statusStyle.border}
-                  `}
-                  style={{ letterSpacing: "0.08em" }}
-                  data-testid="linkup-status-pill"
-                >
-                  {status}
-                </div>
-                <div className="flex items-center gap-3">
-                  <h1 className="text-3xl font-bold flex items-center gap-2">
-                    {linkup.title}
-                  </h1>
-                </div>
-                <div className="flex items-center gap-2 mt-1.5">
-                  <span className="bg-linkup-soft-purple text-linkup-dark-purple px-2 py-1 rounded text-base font-medium flex items-center gap-2">
-                    <span className="text-lg" aria-label="category-emoji">{categoryEmojis[linkup.category] ?? "❓"}</span>
-                    {linkup.category}
-                  </span>
-                </div>
-                <p className="mt-4 text-gray-700 text-base">{linkup.description}</p>
+              <span className="flex items-center mb-2 gap-2 text-xl font-medium text-linkup-dark-purple bg-linkup-soft-purple px-4 py-1 rounded-full w-fit">
+                <span className="text-2xl">{categoryEmojis[linkup.category] || "❓"}</span>
+                {linkup.category}
+              </span>
+              <div className="flex items-center gap-3 mt-1">
+                <h1 className="text-3xl font-bold flex items-center gap-2">
+                  {linkup.title}
+                </h1>
               </div>
+              <p className="mt-3 text-gray-700 text-base">{linkup.description}</p>
             </div>
           </div>
 
