@@ -4,7 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
 import { Pin, Volume2, Play } from "lucide-react";
 
-interface ChatMessage {
+export interface ChatMessage {
   id: string;
   type: "text" | "image" | "video" | "voice" | "gif";
   user: {
@@ -23,7 +23,7 @@ interface ChatMessage {
   };
 }
 
-interface PinnedMessage {
+export interface PinnedMessage {
   id: string;
   user: {
     id: string;

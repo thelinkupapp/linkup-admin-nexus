@@ -44,7 +44,7 @@ import { LinkupImage } from "@/components/linkups/LinkupImage";
 import { LinkupMap } from "@/components/linkups/LinkupMap";
 import { LinkupAttendeeList } from "@/components/linkups/LinkupAttendeeList";
 import { LinkupMediaGallery } from "@/components/linkups/LinkupMediaGallery";
-import { LinkupChatView } from "@/components/linkups/LinkupChatView";
+import { LinkupChatView, ChatMessage } from "@/components/linkups/LinkupChatView";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -490,6 +490,13 @@ const LinkupDetails = () => {
     setActiveTab("attendees");
   };
 
+  // Fix the type issue by ensuring correct chat message types
+  const typedChatMessages: ChatMessage[] = linkup.chat.map(msg => ({
+    ...msg,
+    // Ensure type is one of the allowed literal types
+    type: msg.type as "text" | "image" | "video" | "voice" | "gif"
+  }));
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -801,7 +808,7 @@ const LinkupDetails = () => {
                 </CardHeader>
                 <CardContent>
                   <LinkupChatView 
-                    messages={linkup.chat}
+                    messages={typedChatMessages}
                     pinnedMessage={linkup.pinnedMessage}
                   />
                 </CardContent>
