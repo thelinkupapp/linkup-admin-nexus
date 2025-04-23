@@ -314,6 +314,10 @@ const LinkupDetails = () => {
     ? "No approval needed" 
     : "Approval needed";
 
+  const handleHostSectionClick = () => {
+    setActiveTab("attendees");
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
@@ -384,21 +388,23 @@ const LinkupDetails = () => {
                     {linkup.description}
                   </p>
 
-                  <div className="flex items-center gap-4 mt-2 p-4 bg-linkup-soft-purple/10 rounded-xl">
-                    <Avatar className="h-12 w-12 ring-2 ring-linkup-purple ring-offset-2">
-                      <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
-                      <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col">
-                      <span className="text-sm text-gray-500 font-medium mb-0.5">Hosted by</span>
-                      <Button 
-                        variant="link" 
-                        className="h-auto p-0 font-semibold text-lg text-gray-900 hover:underline decoration-linkup-purple"
-                        onClick={() => {/* Add profile navigation logic */}}
-                      >
-                        {linkup.host.name}
-                      </Button>
-                      <span className="text-sm text-gray-500">@{linkup.host.username}</span>
+                  <div className="flex items-center justify-between mt-2 p-4 bg-linkup-soft-purple/10 rounded-xl cursor-pointer hover:bg-linkup-soft-purple/20 transition-all" onClick={handleHostSectionClick}>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12 ring-2 ring-linkup-purple ring-offset-2">
+                        <AvatarImage src={linkup.host.avatar} alt={linkup.host.name} />
+                        <AvatarFallback>{linkup.host.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-500 font-medium mb-0.5">Hosted by</span>
+                        <span className="font-semibold text-lg text-gray-900 hover:underline decoration-linkup-purple">
+                          {linkup.host.name}
+                        </span>
+                        <span className="text-sm text-gray-500">@{linkup.host.username}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 bg-white/50 px-4 py-2 rounded-full">
+                      <Users className="h-5 w-5 text-linkup-purple" />
+                      <span className="font-medium text-linkup-purple">{linkup.attendees.length} Attendees</span>
                     </div>
                   </div>
                 </div>
