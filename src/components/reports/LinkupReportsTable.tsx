@@ -222,7 +222,7 @@ export function LinkupReportsTable() {
   const showingText = selectedStatus === "all" 
     ? `${unreadCount} reports` 
     : `Showing ${filteredReports.length} of ${totalReports} reports`;
-  
+
   return (
     <div className="space-y-6">
       <div className="pb-8">
@@ -237,7 +237,7 @@ export function LinkupReportsTable() {
             <AlertCircle className="h-5 w-5 text-violet-700" />
           </span>
           <span className="text-xl text-[#23252b]">
-            <strong>{unreadCount}</strong> reports
+            {showingText}
           </span>
         </div>
       </div>
@@ -393,9 +393,13 @@ export function LinkupReportsTable() {
           {Math.min(currentPage * itemsPerPage, filteredReports.length)} of {filteredReports.length} reports
           <Select
             value={itemsPerPage.toString()}
-            onValueChange={(value) => setItemsPerPage(Number(value))}
+            onValueChange={(value) => {
+              setItemsPerPage(Number(value));
+              setCurrentPage(1);
+            }}
+            className="w-[80px] h-8"
           >
-            <SelectTrigger className="w-[80px] h-8">
+            <SelectTrigger>
               <SelectValue>{itemsPerPage}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -410,34 +414,40 @@ export function LinkupReportsTable() {
 
         {totalPages > 1 && (
           <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  className={currentPage <= 1 ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
+            <PaginationContent className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+              >
+                <ChevronLeft className="h-4 w-4" />
+                Previous
+              </Button>
               
-              {Array.from({ length: totalPages }).map((_, i) => {
-                const pageNumber = i + 1;
-                return (
-                  <PaginationItem key={pageNumber}>
-                    <PaginationLink
-                      onClick={() => setCurrentPage(pageNumber)}
-                      isActive={pageNumber === currentPage}
-                    >
-                      {pageNumber}
-                    </PaginationLink>
-                  </PaginationItem>
-                );
-              })}
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                <Button
+                  key={pageNumber}
+                  variant={currentPage === pageNumber ? "default" : "outline"}
+                  size="sm"
+                  className="min-w-[40px]"
+                  onClick={() => setCurrentPage(pageNumber)}
+                >
+                  {pageNumber}
+                </Button>
+              ))}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  className={currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}
-                />
-              </PaginationItem>
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+              >
+                Next
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </PaginationContent>
           </Pagination>
         )}
