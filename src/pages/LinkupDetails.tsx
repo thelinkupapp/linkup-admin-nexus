@@ -790,7 +790,7 @@ const LinkupDetails = () => {
                                 <video 
                                   src={message.media.url} 
                                   controls
-                                  poster={'thumbnail' in message.media ? (message.media as any).thumbnail : undefined}
+                                  poster={message.media.thumbnail}
                                   className="w-full h-auto"
                                 />
                               </div>
