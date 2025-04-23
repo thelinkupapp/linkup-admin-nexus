@@ -476,7 +476,7 @@ const linkup = {
 };
 
 const categoryEmojis: Record<string, string> = {
-  Sports: "🏐",
+  Sports: "��",
   Music: "🎵",
   Food: "🍔",
   Art: "🎨",
@@ -659,7 +659,7 @@ const LinkupDetails = () => {
               <TabsTrigger value="chat" className="rounded-full transition-all">Chat</TabsTrigger>
               <TabsTrigger value="media" className="rounded-full transition-all">Media</TabsTrigger>
               <TabsTrigger value="reports" className="rounded-full transition-all">Reports</TabsTrigger>
-              <TabsTrigger value="map" className="rounded-full transition-all">Map</TabsTrigger>
+              <TabsTrigger value="map" className="rounded-full transition-all">Location</TabsTrigger>
             </TabsList>
 
             <TabsContent value="details" className="space-y-6">
