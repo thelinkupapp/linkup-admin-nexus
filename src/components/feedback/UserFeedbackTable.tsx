@@ -89,7 +89,7 @@ export function UserFeedbackTable() {
       return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
     });
 
-  // Define the variables that were missing
+  // Define these variables for the UI display
   const totalFeedbackCount = feedback.length;
   const filteredFeedbackCount = filteredFeedback.length;
     
