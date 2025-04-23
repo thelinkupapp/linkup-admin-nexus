@@ -490,10 +490,8 @@ const LinkupDetails = () => {
     setActiveTab("attendees");
   };
 
-  // Fix the type issue by ensuring correct chat message types
   const typedChatMessages: ChatMessage[] = linkup.chat.map(msg => ({
     ...msg,
-    // Ensure type is one of the allowed literal types
     type: msg.type as "text" | "image" | "video" | "voice" | "gif"
   }));
 
@@ -822,42 +820,7 @@ const LinkupDetails = () => {
                   <CardDescription>Images and videos shared for this linkup</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {linkup.media.map((item) => (
-                      <div key={item.id} className="relative aspect-square rounded-md overflow-hidden border group">
-                        {item.type === "image" ? (
-                          <img 
-                            src={item.url} 
-                            alt="Linkup media" 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                          />
-                        ) : item.type === "video" ? (
-                          <div className="relative w-full h-full">
-                            <img 
-                              src={item.thumbnail || ""} 
-                              alt="Video thumbnail" 
-                              className="w-full h-full object-cover"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
-                              <Video className="h-12 w-12 text-white" />
-                            </div>
-                          </div>
-                        ) : null}
-                        <div className="absolute bottom-0 left-0 right-0 bg-black/60 text-white p-2 flex items-center justify-between">
-                          <div className="flex items-center gap-1.5">
-                            <Avatar className="h-5 w-5">
-                              <AvatarImage src={item.user.avatar} alt={item.user.name} />
-                              <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <span className="text-xs">{item.user.name}</span>
-                          </div>
-                          <span className="text-xs opacity-75">
-                            {new Date(item.timestamp).toLocaleDateString()}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <LinkupMediaGallery media={linkup.media} />
                 </CardContent>
               </Card>
             </TabsContent>
