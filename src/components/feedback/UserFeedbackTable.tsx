@@ -10,6 +10,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface Feedback {
   id: string;
@@ -57,6 +65,8 @@ export function UserFeedbackTable() {
   const [statusFilter, setStatusFilter] = useState<"all" | "read" | "unread">("all");
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
   const [selectedFeedback, setSelectedFeedback] = useState<Feedback | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(25);
   const { toast } = useToast();
 
   const filteredFeedback = feedback
@@ -78,8 +88,10 @@ export function UserFeedbackTable() {
       return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
     });
 
-  const totalFeedbackCount = feedback.length;
-  const filteredFeedbackCount = filteredFeedback.length;
+  const totalPages = Math.ceil(filteredFeedback.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = Math.min(startIndex + pageSize, filteredFeedback.length);
+  const paginatedFeedback = filteredFeedback.slice(startIndex, endIndex);
 
   const handleMarkAsRead = (feedbackId: string) => {
     setFeedback(prev => 
@@ -94,6 +106,46 @@ export function UserFeedbackTable() {
       title: "Feedback marked as read",
       description: "The feedback has been updated successfully.",
     });
+  };
+
+  const generatePaginationItems = () => {
+    let pages = [];
+    const maxVisiblePages = 5;
+    
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      pages.push(1);
+      
+      let startPage = Math.max(2, currentPage - 1);
+      let endPage = Math.min(totalPages - 1, currentPage + 1);
+      
+      if (currentPage <= 3) {
+        endPage = 4;
+      }
+      
+      if (currentPage >= totalPages - 2) {
+        startPage = totalPages - 3;
+      }
+      
+      if (startPage > 2) {
+        pages.push('ellipsis');
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+      
+      if (endPage < totalPages - 1) {
+        pages.push('ellipsis');
+      }
+      
+      pages.push(totalPages);
+    }
+    
+    return pages;
   };
 
   return (
@@ -163,7 +215,7 @@ export function UserFeedbackTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredFeedback.map((item) => (
+            {paginatedFeedback.map((item) => (
               <TableRow key={item.id}>
                 <TableCell>
                   <div className="flex items-center gap-2">
@@ -228,18 +280,92 @@ export function UserFeedbackTable() {
         </Table>
       </div>
 
-      <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Feedback Details</DialogTitle>
-          </DialogHeader>
-          <div className="mt-4">
-            <p className="text-sm text-muted-foreground">
-              {selectedFeedback?.content}
-            </p>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {selectedFeedback && (
+        <Dialog open={!!selectedFeedback} onOpenChange={() => setSelectedFeedback(null)}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Feedback Details</DialogTitle>
+            </DialogHeader>
+            <div className="mt-4">
+              <p className="text-sm text-muted-foreground">
+                {selectedFeedback?.content}
+              </p>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      <div className="mt-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-[#1A1F2C]">
+            Showing{" "}
+            <span className="text-[#9b87f5]">
+              {startIndex + 1}-{endIndex}
+            </span>
+            {" "}of{" "}
+            <span className="text-[#9b87f5]">{filteredFeedback.length}</span>
+            {" "}items
+          </span>
+          <Select
+            value={pageSize.toString()}
+            onValueChange={(value) => {
+              setPageSize(Number(value));
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="25">25</SelectItem>
+              <SelectItem value="50">50</SelectItem>
+              <SelectItem value="100">100</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {totalPages > 0 && (
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              
+              {generatePaginationItems().map((page, index) => {
+                if (page === 'ellipsis') {
+                  return (
+                    <PaginationItem key={`ellipsis-${index}`}>
+                      <span className="flex h-9 w-9 items-center justify-center">...</span>
+                    </PaginationItem>
+                  );
+                }
+                
+                return (
+                  <PaginationItem key={index}>
+                    <PaginationLink
+                      onClick={() => setCurrentPage(Number(page))}
+                      isActive={currentPage === Number(page)}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  </PaginationItem>
+                );
+              })}
+
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        )}
+      </div>
     </div>
   );
 }
