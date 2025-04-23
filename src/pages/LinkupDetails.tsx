@@ -36,7 +36,8 @@ import {
   Map,
   Video,
   File,
-  Pin
+  Pin,
+  WandSparkles
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LinkupImage } from "@/components/linkups/LinkupImage";
@@ -243,8 +244,8 @@ const linkup = {
     timestamp: "2024-05-10T15:00:00Z"
   },
   officialImage: {
-    url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
-    source: "uploaded" as const
+    url: "/lovable-uploads/0ad4a69e-85bc-4de8-a0a6-91a7dab929b2.png",
+    source: "ai-generated" as const
   }
 };
 
@@ -285,85 +286,38 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex items-center gap-4">
-                <div className="h-16 w-16 rounded-lg bg-linkup-light-purple flex items-center justify-center text-3xl">
-                  {linkup.emoji}
-                </div>
-                <div>
-                  <h1 className="text-2xl font-bold">{linkup.title}</h1>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <Tag className="h-4 w-4 text-muted-foreground" />
-                    <Badge variant="outline" className="bg-linkup-soft-purple text-linkup-dark-purple">
-                      {linkup.category}
-                    </Badge>
-                  </div>
+          <div className="bg-white rounded-lg p-6 mb-8 border shadow-sm">
+            <div className="flex flex-col lg:flex-row gap-6">
+              <div className="flex-shrink-0">
+                <div className="relative rounded-lg overflow-hidden" style={{ width: 180, height: 320, minWidth: 120 }}>
+                  <img 
+                    src={linkup.officialImage.url}
+                    alt={linkup.title}
+                    className="object-cover w-full h-full"
+                    style={{ aspectRatio: "9/16" }}
+                  />
+                  <Badge 
+                    variant="secondary"
+                    className="absolute top-3 left-3 gap-1.5 bg-black/70 text-white border-none"
+                  >
+                    <WandSparkles className="h-3.5 w-3.5" />
+                    AI-Generated
+                  </Badge>
                 </div>
               </div>
-              
-              <div className="ml-auto flex flex-wrap gap-3 items-start">
-                <Badge
-                  variant="outline"
-                  className={cn(
-                    "capitalize",
-                    linkup.status === "upcoming" && "bg-blue-100 text-blue-800 border-blue-200",
-                    linkup.status === "happening" && "bg-green-100 text-green-800 border-green-200",
-                    linkup.status === "happened" && "bg-purple-100 text-purple-800 border-purple-200",
-                    linkup.status === "cancelled" && "bg-gray-100 text-gray-800 border-gray-200"
-                  )}
-                >
-                  {isHappening ? "Happening now" : linkup.status}
-                </Badge>
-                
-                {linkup.price === 0 ? (
-                  <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
-                    <DollarSign className="h-3.5 w-3.5 mr-1" />
-                    Free
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
-                    <DollarSign className="h-3.5 w-3.5 mr-1" />
-                    Paid - ${linkup.price}
-                  </Badge>
-                )}
-                
-                <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">
-                  {linkup.visibility === "Public" ? (
-                    <>
-                      <Eye className="h-3.5 w-3.5 mr-1" />
-                      Public
-                    </>
-                  ) : (
-                    <>
-                      <EyeOff className="h-3.5 w-3.5 mr-1" />
-                      Private
-                    </>
-                  )}
-                </Badge>
-                
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button variant="destructive" size="sm" className="gap-1">
-                      <Trash2 className="h-4 w-4" />
-                      Remove Linkup
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently remove this linkup and all associated data from our servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                        Remove Linkup
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
+              <div className="flex-1 flex flex-col justify-center gap-2">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold flex items-center gap-2">
+                    {linkup.emoji} {linkup.title}
+                  </h1>
+                </div>
+                <div className="flex items-center gap-2 mt-1.5">
+                  <span className="bg-linkup-soft-purple text-linkup-dark-purple px-2 py-1 rounded text-base font-medium">
+                    <Tag className="h-4 w-4 mr-1 inline align-text-bottom" />
+                    {linkup.category}
+                  </span>
+                </div>
+                <p className="mt-4 text-gray-700 text-base">{linkup.description}</p>
               </div>
             </div>
           </div>
@@ -381,32 +335,6 @@ const LinkupDetails = () => {
             <TabsContent value="details" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <div className="lg:col-span-2 space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Image className="h-5 w-5 text-linkup-purple" />
-                        Linkup Image
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <div className="relative">
-                        <img 
-                          src={linkup.officialImage.url} 
-                          alt={linkup.title}
-                          className="w-full h-auto object-cover rounded-b-lg"
-                        />
-                        <Badge 
-                          variant="secondary" 
-                          className="absolute top-4 right-4 gap-1.5 bg-black/60 text-white border-none"
-                        >
-                          <Image className="h-3.5 w-3.5" />
-                          {linkup.officialImage.source === "uploaded" ? "Uploaded" : 
-                           linkup.officialImage.source === "ai-generated" ? "AI-Generated" : "Stock"}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2">
@@ -798,7 +726,7 @@ const LinkupDetails = () => {
                                 <video 
                                   src={message.media.url} 
                                   controls
-                                  poster={message.media.thumbnail} 
+                                  poster={'thumbnail' in message.media ? (message.media as any).thumbnail : undefined}
                                   className="w-full h-auto"
                                 />
                               </div>
