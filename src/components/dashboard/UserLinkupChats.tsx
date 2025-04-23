@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -48,13 +47,12 @@ const dateRangeOptions = [
 ];
 
 const statusOptions = [
-  { value: 'all', label: 'All Statuses' },
-  { value: 'upcoming', label: 'Upcoming' },
-  { value: 'happened', label: 'Happened' },
-  { value: 'happening', label: 'Happening' },
-  { value: 'cancelled', label: 'Cancelled' },
-  { value: 'deleted', label: 'Deleted' },
-  { value: 'removed', label: 'Removed' }
+  { value: "all", label: "All Statuses" },
+  { value: "upcoming", label: "Upcoming" },
+  { value: "happening", label: "Happening" },
+  { value: "happened", label: "Happened" },
+  { value: "cancelled", label: "Cancelled" },
+  { value: "removed", label: "Removed" }
 ];
 
 const itemsPerPageOptions = [10, 25, 50];
