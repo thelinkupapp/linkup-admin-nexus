@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,7 +49,7 @@ export function RecentUsers() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 text-muted-foreground" />
-            <CardTitle className="text-xl font-semibold">Recent Users</CardTitle>
+            <CardTitle className="text-xl font-semibold">Users</CardTitle>
           </div>
           <CardDescription>Latest users who joined the platform</CardDescription>
         </div>

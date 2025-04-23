@@ -44,7 +44,7 @@ export function RecentLinkups() {
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <CalendarDays className="h-5 w-5 text-muted-foreground" />
-            <CardTitle className="text-xl font-semibold">Recent Linkups</CardTitle>
+            <CardTitle className="text-xl font-semibold">Linkups</CardTitle>
           </div>
           <CardDescription>Latest created linkups</CardDescription>
         </div>
