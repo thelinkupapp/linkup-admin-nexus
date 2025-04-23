@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -69,9 +70,146 @@ import {
 } from "@/components/ui/tooltip";
 import { format } from "date-fns";
 import { Dialog, DialogTrigger, DialogContent } from "@/components/ui/dialog";
+import { Linkup } from "@/types/linkup";
 
-const linkup = {
-  // ... keep existing linkup data
+const linkup: Linkup = {
+  id: "123",
+  title: "Beach Day Adventure",
+  description: "Join us for a fun day at the beach with games, swimming, and a BBQ lunch!",
+  category: "Outdoor & Adventure",
+  startDate: "2025-05-15T13:00:00Z",
+  endDate: "2025-05-15T18:00:00Z",
+  duration: "5 hours",
+  generalLocation: "Miami Beach",
+  specificLocation: "South Beach, Miami, FL",
+  coordinates: {
+    lat: 25.7825,
+    lng: -80.1340
+  },
+  createdAt: "2025-04-01T09:30:00Z",
+  host: {
+    id: "user1",
+    name: "Sarah Johnson",
+    username: "sarahj",
+    avatar: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png",
+    joinedAt: "2024-10-15T14:30:00Z"
+  },
+  coHosts: [
+    {
+      id: "user2",
+      name: "Mike Thompson",
+      username: "miket",
+      avatar: "/lovable-uploads/1fa5e36a-9e47-4933-9b3c-d103bedaf3bf.png",
+      joinedAt: "2024-10-16T09:15:00Z"
+    }
+  ],
+  attendees: [
+    {
+      id: "user3",
+      name: "Emma Wilson",
+      username: "emmaw",
+      avatar: "/lovable-uploads/2d43509e-db1a-41c7-a82b-2e30835e9fd6.png",
+      joinedAt: "2024-10-17T11:45:00Z"
+    },
+    {
+      id: "user4",
+      name: "John Davis",
+      username: "johnd",
+      avatar: "/lovable-uploads/3a92fc9e-fe93-44e4-8c0e-0b14a7085082.png",
+      joinedAt: "2024-10-18T08:30:00Z"
+    },
+    {
+      id: "user5",
+      name: "Lily Chen",
+      username: "lilyc",
+      avatar: "/lovable-uploads/4075cd3e-99b1-4fe1-8a47-184857a379fc.png",
+      joinedAt: "2024-10-19T16:20:00Z"
+    }
+  ],
+  capacity: 50,
+  price: 25,
+  totalEarnings: 125,
+  visibility: "Public",
+  joinMethod: "Open",
+  genderRestriction: "everyone",
+  chat: [
+    {
+      id: "msg1",
+      type: "text",
+      content: "I'm so excited about this event!",
+      timestamp: "2025-04-10T14:23:00Z",
+      user: {
+        id: "user3",
+        name: "Emma Wilson",
+        username: "emmaw",
+        avatar: "/lovable-uploads/2d43509e-db1a-41c7-a82b-2e30835e9fd6.png"
+      }
+    },
+    {
+      id: "msg2",
+      type: "image",
+      content: "/lovable-uploads/96315a2c-30e4-429b-a4de-b2f55e46e7bd.png",
+      timestamp: "2025-04-11T09:15:00Z",
+      user: {
+        id: "user4",
+        name: "John Davis",
+        username: "johnd",
+        avatar: "/lovable-uploads/3a92fc9e-fe93-44e4-8c0e-0b14a7085082.png"
+      }
+    }
+  ],
+  pinnedMessage: {
+    id: "pin1",
+    content: "Don't forget to bring sunscreen and a beach towel!",
+    timestamp: "2025-04-05T11:30:00Z",
+    user: {
+      id: "user1",
+      name: "Sarah Johnson",
+      username: "sarahj",
+      avatar: "/lovable-uploads/83f338de-da6b-47e4-b44d-f33556e0d7ce.png"
+    }
+  },
+  media: [
+    {
+      id: "media1",
+      type: "image",
+      url: "/lovable-uploads/c0487dbf-7b28-4238-92ac-8129cd4992c7.png",
+      timestamp: "2025-04-12T13:45:00Z",
+      user: {
+        id: "user3",
+        name: "Emma Wilson",
+        username: "emmaw",
+        avatar: "/lovable-uploads/2d43509e-db1a-41c7-a82b-2e30835e9fd6.png"
+      }
+    },
+    {
+      id: "media2",
+      type: "video",
+      url: "https://example.com/beach-video.mp4",
+      thumbnail: "/lovable-uploads/8e42a8d4-17c9-4722-9aa9-467143946cfd.png",
+      timestamp: "2025-04-13T15:20:00Z",
+      user: {
+        id: "user4",
+        name: "John Davis",
+        username: "johnd",
+        avatar: "/lovable-uploads/3a92fc9e-fe93-44e4-8c0e-0b14a7085082.png"
+      }
+    }
+  ],
+  reports: [
+    {
+      id: "report1",
+      reason: "Inappropriate content in chat",
+      timestamp: "2025-04-14T09:30:00Z",
+      resolved: false,
+      reporter: {
+        id: "user5",
+        name: "Lily Chen",
+        username: "lilyc",
+        avatar: "/lovable-uploads/4075cd3e-99b1-4fe1-8a47-184857a379fc.png"
+      }
+    }
+  ]
 };
 
 const categoryEmojis: Record<string, string> = {
