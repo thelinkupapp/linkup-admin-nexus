@@ -1,3 +1,4 @@
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Link } from "react-router-dom";
@@ -43,7 +44,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
   const renderMessage = (message: ChatMessage) => {
     return (
       <div key={message.id} className="flex items-start gap-3 py-3 border-b last:border-b-0">
-        <Link to={`/users/${message.user.username}`}>
+        <Link to={`/users/${message.user.username}`} className="flex-shrink-0">
           <Avatar>
             <AvatarImage src={message.user.avatar} alt={message.user.name} />
             <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
@@ -53,7 +54,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
           <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <Link 
               to={`/users/${message.user.username}`} 
-              className="font-medium hover:text-linkup-purple hover:underline"
+              className="font-medium text-linkup-purple hover:underline transition-colors"
             >
               {message.user.name}
             </Link>
@@ -135,7 +136,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
               </Avatar>
               <Link 
                 to={`/users/${pinnedMessage.user.username}`}
-                className="text-xs hover:text-linkup-purple hover:underline"
+                className="text-xs text-linkup-purple hover:underline transition-colors"
               >
                 {pinnedMessage.user.name}
               </Link>
@@ -145,7 +146,7 @@ export function LinkupChatView({ messages, pinnedMessage }: LinkupChatViewProps)
       )}
 
       <ScrollArea className="h-[calc(100vh-300px)] pr-4 border rounded-lg bg-white">
-        <div className="space-y-1">
+        <div className="p-4 space-y-2">
           {messages.map(renderMessage)}
         </div>
       </ScrollArea>

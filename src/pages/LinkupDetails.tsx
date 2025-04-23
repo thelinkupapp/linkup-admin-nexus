@@ -799,96 +799,11 @@ const LinkupDetails = () => {
                   <CardTitle>Linkup Chat</CardTitle>
                   <CardDescription>Read-only view of the chat thread</CardDescription>
                 </CardHeader>
-                {linkup.pinnedMessage && (
-                  <div className="mx-6 mt-2 p-3 bg-linkup-soft-purple rounded-md border border-linkup-purple/30 flex items-start gap-3">
-                    <Pin className="h-4 w-4 text-linkup-purple mt-0.5" />
-                    <div>
-                      <p className="text-sm font-medium mb-1">Pinned Message</p>
-                      <p className="text-sm">{linkup.pinnedMessage.message}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <Avatar className="h-5 w-5">
-                          <AvatarImage src={linkup.pinnedMessage.user.avatar} alt={linkup.pinnedMessage.user.name} />
-                          <AvatarFallback>{linkup.pinnedMessage.user.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <span className="text-xs">{linkup.pinnedMessage.user.name}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-                <CardContent className="pt-4">
-                  <div className="space-y-6">
-                    {linkup.chat.map((message) => (
-                      <div key={message.id} className="flex items-start gap-3">
-                        <Avatar>
-                          <AvatarImage src={message.user.avatar} alt={message.user.name} />
-                          <AvatarFallback>{message.user.name.charAt(0)}</AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                            <p className="font-medium">{message.user.name}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {new Date(message.timestamp).toLocaleString()}
-                            </p>
-                          </div>
-                          
-                          {message.type === "text" && <p className="mt-1">{message.message}</p>}
-                          
-                          {message.type === "image" && message.media && (
-                            <div className="mt-2">
-                              <p className="mb-2">{message.message}</p>
-                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                                <img 
-                                  src={message.media.url} 
-                                  alt="Shared media"
-                                  className="w-full h-auto" 
-                                />
-                              </div>
-                            </div>
-                          )}
-                          
-                          {message.type === "video" && message.media && (
-                            <div className="mt-2">
-                              <p className="mb-2">{message.message}</p>
-                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                                <video 
-                                  src={message.media.url} 
-                                  controls
-                                  poster={message.media.thumbnail}
-                                  className="w-full h-auto"
-                                />
-                              </div>
-                            </div>
-                          )}
-                          
-                          {message.type === "gif" && message.media && (
-                            <div className="mt-2">
-                              <p className="mb-2">{message.message}</p>
-                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                                <img 
-                                  src={message.media.url} 
-                                  alt="Shared media"
-                                  className="w-full h-auto" 
-                                />
-                              </div>
-                            </div>
-                          )}
-                          
-                          {message.type === "voice" && message.media && (
-                            <div className="mt-2">
-                              <p className="mb-2">{message.message}</p>
-                              <div className="rounded-md overflow-hidden border w-full max-w-xs">
-                                <audio 
-                                  src={message.media.url} 
-                                  controls
-                                  className="w-full h-auto"
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                <CardContent>
+                  <LinkupChatView 
+                    messages={linkup.chat}
+                    pinnedMessage={linkup.pinnedMessage}
+                  />
                 </CardContent>
               </Card>
             </TabsContent>
