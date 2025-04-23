@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -309,11 +308,11 @@ const LinkupDetails = () => {
 
   const visibilityTooltip = linkup.visibility === "Public" 
     ? "Linkup open to anyone" 
-    : "Only invited users can see this linkup";
+    : "Linkup viewable by link only";
 
   const joinMethodTooltip = linkup.joinMethod === "Open" 
-    ? "Anyone can join this linkup" 
-    : "Host approval required to join";
+    ? "No approval needed" 
+    : "Approval needed";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -653,22 +652,44 @@ const LinkupDetails = () => {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex items-center justify-between mb-4">
-                        <span>Total Reports</span>
-                        <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200">
-                          {linkup.reports.length}
-                        </Badge>
-                      </div>
-                      
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="w-full"
-                        onClick={() => setActiveTab("reports")}
-                      >
-                        <AlertTriangle className="h-4 w-4 mr-2" />
-                        View Reports
-                      </Button>
+                      {linkup.reports.length > 0 ? (
+                        <div className="space-y-4">
+                          {linkup.reports.map((report) => (
+                            <div key={report.id} className="p-4 border rounded-lg space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                  <AlertTriangle className="h-5 w-4 text-amber-500" />
+                                  <p className="font-medium">Reported by {report.reporter.name}</p>
+                                </div>
+                                <Badge variant={report.resolved ? "secondary" : "outline"} className={report.resolved ? "bg-green-100 text-green-800 border-green-200" : "bg-amber-100 text-amber-800 border-amber-200"}>
+                                  {report.resolved ? "Resolved" : "Open"}
+                                </Badge>
+                              </div>
+                              
+                              <p className="text-sm text-muted-foreground">
+                                Reported on {new Date(report.timestamp).toLocaleDateString()} at {new Date(report.timestamp).toLocaleTimeString()}
+                              </p>
+                              
+                              <div className="bg-muted p-3 rounded-md">
+                                <p className="text-sm">{report.reason}</p>
+                              </div>
+                              
+                              <div className="flex items-center justify-end gap-2">
+                                <Button variant="outline" size="sm">Mark as Resolved</Button>
+                                <Button variant="destructive" size="sm">Delete Report</Button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-8">
+                          <div className="bg-muted rounded-full p-3 mb-3">
+                            <AlertTriangle className="h-6 w-6 text-muted-foreground" />
+                          </div>
+                          <p className="text-lg font-medium">No reports found</p>
+                          <p className="text-sm text-muted-foreground">This linkup has not been reported by any users.</p>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
@@ -840,10 +861,10 @@ const LinkupDetails = () => {
                         <div key={report.id} className="p-4 border rounded-lg space-y-3">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <AlertTriangle className="h-5 w-5 text-amber-500" />
+                              <AlertTriangle className="h-5 w-4 text-amber-500" />
                               <p className="font-medium">Reported by {report.reporter.name}</p>
                             </div>
-                            <Badge variant={report.resolved ? "success" : "outline"} className={report.resolved ? "bg-green-100 text-green-800 border-green-200" : "bg-amber-100 text-amber-800 border-amber-200"}>
+                            <Badge variant={report.resolved ? "secondary" : "outline"} className={report.resolved ? "bg-green-100 text-green-800 border-green-200" : "bg-amber-100 text-amber-800 border-amber-200"}>
                               {report.resolved ? "Resolved" : "Open"}
                             </Badge>
                           </div>
