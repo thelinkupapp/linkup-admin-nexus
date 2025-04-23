@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -306,6 +307,9 @@ const LinkupDetails = () => {
   } else if (now > endDate) {
     status = "happened";
   }
+
+  // Define isHappening based on the status value
+  const isHappening = status === "happening";
 
   const statusStyle = statusStyles[status];
 
