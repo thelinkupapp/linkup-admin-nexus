@@ -77,37 +77,40 @@ const recentReports: UserReport[] = [
 
 export function RecentUserReports() {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+    <Card className="animate-fade-in">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-muted-foreground" />
-            <CardTitle>User Reports</CardTitle>
+            <CardTitle className="text-xl font-semibold">User Reports</CardTitle>
           </div>
           <CardDescription>Recent reports submitted by users</CardDescription>
         </div>
         <Link to="/reports/users">
-          <Button variant="ghost" size="sm" className="gap-1">
+          <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">
             View All <ChevronRight className="h-4 w-4" />
           </Button>
         </Link>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {recentReports.map((report) => (
-            <div key={report.id} className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Avatar>
+            <div
+              key={report.id}
+              className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors"
+            >
+              <div className="flex items-center gap-4">
+                <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
                   <AvatarImage src={report.reportedUser.avatar} alt={report.reportedUser.name} />
                   <AvatarFallback>{report.reportedUser.name[0]}</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="font-medium">{report.reportedUser.name}</p>
+                  <p className="font-medium text-sm leading-none mb-1">{report.reportedUser.name}</p>
                   <p className="text-sm text-muted-foreground">{report.reason}</p>
                 </div>
               </div>
-              <div className="flex flex-col items-end gap-1">
-                <Badge variant="secondary">Pending Review</Badge>
+              <div className="flex flex-col items-end gap-2">
+                <Badge variant="secondary" className="bg-secondary/50">Pending Review</Badge>
                 <span className="text-sm text-muted-foreground">
                   {formatCreatedDate(report.submittedAt)}
                 </span>

@@ -12,9 +12,9 @@ const Index = () => {
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <div className="flex-1 pl-64">
-        <Header title="Dashboard" />
-        <main className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <Header title="Dashboard Overview" />
+        <main className="p-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 gap-8 auto-rows-fr">
             <RecentUsers />
             <RecentVerifications />
             <RecentLinkups />

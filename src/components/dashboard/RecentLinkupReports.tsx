@@ -44,32 +44,37 @@ const recentReports: LinkupReport[] = [
 
 export function RecentLinkupReports() {
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div>
+    <Card className="animate-fade-in">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <div className="space-y-1">
           <div className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-muted-foreground" />
-            <CardTitle>Linkup Reports</CardTitle>
+            <CardTitle className="text-xl font-semibold">Linkup Reports</CardTitle>
           </div>
           <CardDescription>Recent reports on linkups</CardDescription>
         </div>
         <Link to="/reports/linkups">
-          <Button variant="ghost" size="sm" className="gap-1">
+          <Button variant="ghost" size="sm" className="gap-1 hover:bg-secondary">
             View All <ChevronRight className="h-4 w-4" />
           </Button>
         </Link>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
+        <div className="space-y-6">
           {recentReports.map((report) => (
-            <div key={report.id} className="flex items-center justify-between">
+            <div
+              key={report.id}
+              className="flex items-center justify-between group hover:bg-secondary/40 p-2 rounded-lg transition-colors"
+            >
               <div>
-                <p className="font-medium">{report.linkupTitle}</p>
+                <p className="font-medium text-sm leading-none mb-1">{report.linkupTitle}</p>
                 <p className="text-sm text-muted-foreground">{report.reason}</p>
               </div>
-              <div className="flex flex-col items-end gap-1">
+              <div className="flex flex-col items-end gap-2">
                 <div className="flex items-center gap-2">
-                  <Badge variant="secondary">{report.reportCount} reports</Badge>
+                  <Badge variant="secondary" className="bg-secondary/50">
+                    {report.reportCount} reports
+                  </Badge>
                   <Badge variant="outline">Pending</Badge>
                 </div>
                 <span className="text-sm text-muted-foreground">
