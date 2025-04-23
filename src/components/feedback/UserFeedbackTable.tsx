@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Clock, Filter, Search, Check, ArrowUp, ArrowDown, AlertCircle } from "lucide-react";
@@ -88,6 +89,10 @@ export function UserFeedbackTable() {
       return sortDirection === "asc" ? dateA - dateB : dateB - dateA;
     });
 
+  // Define the variables that were missing
+  const totalFeedbackCount = feedback.length;
+  const filteredFeedbackCount = filteredFeedback.length;
+    
   const totalPages = Math.ceil(filteredFeedback.length / pageSize);
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = Math.min(startIndex + pageSize, filteredFeedback.length);
