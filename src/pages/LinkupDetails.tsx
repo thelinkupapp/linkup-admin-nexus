@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -784,4 +785,80 @@ const LinkupDetails = () => {
                           <div className="flex items-center gap-1.5">
                             <Avatar className="h-5 w-5">
                               <AvatarImage src={item.user.avatar} alt={item.user.name} />
-                              <AvatarFallback>{item.user.name.
+                              <AvatarFallback>{item.user.name.charAt(0)}</AvatarFallback>
+                            </Avatar>
+                            <span className="text-xs">{item.user.name}</span>
+                          </div>
+                          <span className="text-xs opacity-75">
+                            {new Date(item.timestamp).toLocaleDateString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="reports">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Reports</CardTitle>
+                  <CardDescription>User reports for this linkup</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {linkup.reports.length === 0 ? (
+                    <p className="text-center py-8 text-muted-foreground">No reports for this linkup</p>
+                  ) : (
+                    <div className="space-y-4">
+                      {linkup.reports.map((report) => (
+                        <div key={report.id} className="p-4 border rounded-lg">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <AlertTriangle className="h-5 w-5 text-amber-500" />
+                              <h4 className="font-medium">Report by {report.reporter.name}</h4>
+                            </div>
+                            <Badge variant={report.resolved ? "outline" : "destructive"}>
+                              {report.resolved ? "Resolved" : "Active"}
+                            </Badge>
+                          </div>
+                          <p className="mt-2 text-sm">{report.reason}</p>
+                          <p className="mt-1 text-xs text-muted-foreground">
+                            {new Date(report.timestamp).toLocaleString()}
+                          </p>
+                          <div className="flex gap-2 mt-4">
+                            <Button variant="outline" size="sm">View Details</Button>
+                            {!report.resolved && (
+                              <Button variant="default" size="sm">Mark as Resolved</Button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="map">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Linkup Location</CardTitle>
+                  <CardDescription>{linkup.specificLocation}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LinkupMap 
+                    coordinates={linkup.coordinates} 
+                    specificLocation={linkup.specificLocation}
+                  />
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default LinkupDetails;
