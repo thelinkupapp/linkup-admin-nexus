@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -32,7 +32,7 @@ interface Linkup {
   emoji: string;
   startDate: string;
   endDate: string;
-  status: "upcoming" | "happening" | "happened" | "cancelled" | "deleted" | "removed";
+  status: "upcoming" | "happening" | "happened" | "cancelled";
   type: "hosted" | "attended" | "cohost";
   createdDate?: string;
   joinedDate?: string;
@@ -105,9 +105,7 @@ const statusOptions = [
   { label: "Upcoming", value: "upcoming" },
   { label: "Happening", value: "happening" },
   { label: "Happened", value: "happened" },
-  { label: "Cancelled", value: "cancelled" },
-  { label: "Deleted", value: "deleted" },
-  { label: "Removed", value: "removed" }
+  { label: "Cancelled", value: "cancelled" }
 ];
 
 const filteredLinkupsData = (type?: "hosted" | "attended" | "cohost", selectedStatuses?: string[], sortConfig?: { field: string, direction: 'asc' | 'desc' }) => {
@@ -155,8 +153,6 @@ const getStatusBadgeStyles = (status: Linkup["status"]) => {
       return "bg-green-50 text-green-700 border-green-200";
     case "cancelled":
       return "bg-red-50 text-red-700 border-red-200";
-    case "deleted":
-      return "bg-gray-50 text-gray-700 border-gray-200";
     default:
       return "bg-blue-50 text-blue-700 border-blue-200";
   }
@@ -569,3 +565,5 @@ export function UserLinkupsTable() {
     </div>
   );
 }
+
+export default UserLinkupsTable;
