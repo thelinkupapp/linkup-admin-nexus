@@ -227,10 +227,10 @@ export function LinkupReportsTable() {
     <div className="space-y-6">
       <div>
         <h1 className="text-[42px] font-bold tracking-tight text-[#23252b] mb-2">
-          User Reports
+          Linkup Reports
         </h1>
         <p className="text-[#6B7280] text-lg font-normal">
-          View and manage reports submitted against users on the app
+          Review and manage reported linkups
         </p>
         <div className="flex items-center gap-2 mt-6">
           <span className="flex items-center justify-center w-10 h-10 rounded-full bg-violet-100">
