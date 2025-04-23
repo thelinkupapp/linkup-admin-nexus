@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Sidebar } from "@/components/dashboard/Sidebar";
@@ -59,14 +58,12 @@ import {
 import { formatLinkupDateTime } from "@/utils/dateFormatting";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-// Updated interface to include optional thumbnail property
 interface MessageMedia {
   url: string;
   type: string;
   thumbnail?: string;
 }
 
-// Mock data - would be fetched from API in production
 const linkup = {
   id: "1",
   title: "Sunset Beach Volleyball",
@@ -177,7 +174,8 @@ const linkup = {
       message: "Here's the volleyball court we'll be using",
       media: {
         url: "https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?ixlib=rb-4.0.3",
-        type: "image"
+        type: "image",
+        thumbnail: undefined
       },
       timestamp: "2024-05-10T16:00:00Z"
     },
@@ -222,7 +220,7 @@ const linkup = {
     {
       id: "vid1",
       type: "video",
-      url: "https://www.example.com/sample-video.mp4", // Mock URL
+      url: "https://www.example.com/sample-video.mp4",
       timestamp: "2024-05-12T10:15:00Z",
       thumbnail: "https://images.unsplash.com/photo-1535131749006-b7f58c99034b?ixlib=rb-4.0.3",
       user: {
@@ -254,14 +252,12 @@ const LinkupDetails = () => {
   const { linkupId } = useParams();
   const [activeTab, setActiveTab] = useState("details");
 
-  // Calculate if linkup is happening now
   const now = new Date();
   const startDate = new Date(linkup.startDate);
   const endDate = new Date(linkup.endDate);
   
   const isHappening = now >= startDate && now <= endDate;
   
-  // Calculate remaining time if happening
   const timeLeftMs = endDate.getTime() - now.getTime();
   const hoursLeft = Math.floor(timeLeftMs / (1000 * 60 * 60));
   const minutesLeft = Math.floor((timeLeftMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -270,10 +266,8 @@ const LinkupDetails = () => {
     ? `Ends in ${hoursLeft}h ${minutesLeft}m`
     : linkup.duration;
 
-  // Format dates for display
   const formattedDate = formatLinkupDateTime(linkup.startDate, linkup.endDate);
   
-  // Calculate capacity percentage
   const capacityPercentage = Math.round((linkup.attendees.length / linkup.capacity) * 100);
 
   return (
@@ -282,7 +276,6 @@ const LinkupDetails = () => {
       <div className="flex-1 ml-64">
         <Header title="Linkup Details" />
         <main className="p-6">
-          {/* Back button */}
           <div className="mb-6">
             <Button variant="ghost" className="gap-1 text-muted-foreground" asChild>
               <Link to="/linkups/management">
@@ -292,7 +285,6 @@ const LinkupDetails = () => {
             </Button>
           </div>
 
-          {/* Linkup header section */}
           <div className="bg-white rounded-lg p-6 mb-6 border shadow-sm">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex items-center gap-4">
@@ -311,7 +303,6 @@ const LinkupDetails = () => {
               </div>
               
               <div className="ml-auto flex flex-wrap gap-3 items-start">
-                {/* Status badge */}
                 <Badge
                   variant="outline"
                   className={cn(
@@ -325,7 +316,6 @@ const LinkupDetails = () => {
                   {isHappening ? "Happening now" : linkup.status}
                 </Badge>
                 
-                {/* Price badge */}
                 {linkup.price === 0 ? (
                   <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200">
                     <DollarSign className="h-3.5 w-3.5 mr-1" />
@@ -338,7 +328,6 @@ const LinkupDetails = () => {
                   </Badge>
                 )}
                 
-                {/* Visibility badge */}
                 <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200">
                   {linkup.visibility === "Public" ? (
                     <>
@@ -353,7 +342,6 @@ const LinkupDetails = () => {
                   )}
                 </Badge>
                 
-                {/* Remove button */}
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="destructive" size="sm" className="gap-1">
@@ -390,10 +378,8 @@ const LinkupDetails = () => {
               <TabsTrigger value="map">Map</TabsTrigger>
             </TabsList>
             
-            {/* Details Tab */}
             <TabsContent value="details" className="space-y-6">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Main content - 2/3 width */}
                 <div className="lg:col-span-2 space-y-6">
                   <Card>
                     <CardHeader>
@@ -554,7 +540,6 @@ const LinkupDetails = () => {
                   </Card>
                 </div>
 
-                {/* Sidebar - 1/3 width */}
                 <div className="space-y-6">
                   <Card>
                     <CardHeader>
@@ -722,7 +707,6 @@ const LinkupDetails = () => {
               </div>
             </TabsContent>
             
-            {/* Attendees Tab */}
             <TabsContent value="attendees">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
@@ -754,7 +738,6 @@ const LinkupDetails = () => {
               </Card>
             </TabsContent>
             
-            {/* Chat Tab */}
             <TabsContent value="chat">
               <Card>
                 <CardHeader>
@@ -829,7 +812,6 @@ const LinkupDetails = () => {
               </Card>
             </TabsContent>
             
-            {/* Media Tab */}
             <TabsContent value="media">
               <Card>
                 <CardHeader>
@@ -882,7 +864,6 @@ const LinkupDetails = () => {
               </Card>
             </TabsContent>
             
-            {/* Reports Tab */}
             <TabsContent value="reports">
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between">
@@ -938,7 +919,6 @@ const LinkupDetails = () => {
               </Card>
             </TabsContent>
             
-            {/* Map Tab */}
             <TabsContent value="map">
               <Card>
                 <CardHeader>
