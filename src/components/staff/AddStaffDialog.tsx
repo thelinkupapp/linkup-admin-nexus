@@ -5,23 +5,62 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Search, UserPlus } from "lucide-react";
+import { User } from "@/types/user";
 
-// Mock data - replace with actual API call
-const mockUsers = [
-  { id: "1", name: "Sarah Wilson", username: "@sarah", avatar: "/placeholder.svg" },
-  { id: "2", name: "Mike Johnson", username: "@mike", avatar: "/placeholder.svg" },
+// Mock data from User Management
+const mockUsers: User[] = [
+  {
+    id: "1",
+    firstName: "Sarah",
+    lastName: "Wilson",
+    username: "@sarah",
+    avatar: "/lovable-uploads/0a1432b0-c905-4dd9-a32d-0d42660de0f6.png",
+    email: "sarah@example.com",
+    age: 28,
+    joinDate: "2024-01-15",
+    location: "New York",
+    isLinkupPlus: true,
+    isVerified: true,
+    nationality: "American",
+    gender: "Female",
+    hostedLinkups: 5,
+    attendedLinkups: 12,
+    totalEarnings: 1500
+  },
+  {
+    id: "2",
+    firstName: "Mike",
+    lastName: "Johnson",
+    username: "@mike",
+    avatar: "/lovable-uploads/1d844ea0-52cc-4ed0-b8d2-cb250bf887d2.png",
+    email: "mike@example.com",
+    age: 32,
+    joinDate: "2024-02-01",
+    location: "Los Angeles",
+    isLinkupPlus: false,
+    isVerified: true,
+    nationality: "American",
+    gender: "Male",
+    hostedLinkups: 3,
+    attendedLinkups: 8,
+    totalEarnings: 800
+  }
 ];
+
+type SelectedUser = Pick<User, 'id' | 'firstName' | 'lastName' | 'username' | 'avatar'>;
 
 export function AddStaffDialog() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUser, setSelectedUser] = useState<typeof mockUsers[0] | null>(null);
+  const [selectedUser, setSelectedUser] = useState<SelectedUser | null>(null);
   const [role, setRole] = useState("");
 
-  const filteredUsers = mockUsers.filter(
-    user => 
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredUsers = searchQuery
+    ? mockUsers.filter(
+        user => 
+          `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          user.username.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : [];
 
   const handleAddStaff = () => {
     if (selectedUser && role) {
@@ -54,36 +93,49 @@ export function AddStaffDialog() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <div className="rounded-md border">
-              {filteredUsers.map((user) => (
-                <div
-                  key={user.id}
-                  className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer"
-                  onClick={() => setSelectedUser(user)}
-                >
-                  <div className="flex items-center gap-3">
-                    <Avatar>
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback>{user.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-sm text-muted-foreground">{user.username}</div>
+            {searchQuery && (
+              <div className="rounded-md border">
+                {filteredUsers.map((user) => (
+                  <div
+                    key={user.id}
+                    className="flex items-center justify-between p-4 hover:bg-muted/50 cursor-pointer"
+                    onClick={() => setSelectedUser({
+                      id: user.id,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      username: user.username,
+                      avatar: user.avatar
+                    })}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Avatar>
+                        <AvatarImage src={user.avatar} alt={`${user.firstName} ${user.lastName}`} />
+                        <AvatarFallback>{user.firstName[0]}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{user.firstName} {user.lastName}</div>
+                        <div className="text-sm text-muted-foreground">{user.username}</div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+                {filteredUsers.length === 0 && (
+                  <div className="p-4 text-center text-muted-foreground">
+                    No users found
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
             <div className="flex items-center gap-3 p-4 rounded-md border">
               <Avatar>
-                <AvatarImage src={selectedUser.avatar} alt={selectedUser.name} />
-                <AvatarFallback>{selectedUser.name[0]}</AvatarFallback>
+                <AvatarImage src={selectedUser.avatar} alt={`${selectedUser.firstName} ${selectedUser.lastName}`} />
+                <AvatarFallback>{selectedUser.firstName[0]}</AvatarFallback>
               </Avatar>
               <div>
-                <div className="font-medium">{selectedUser.name}</div>
+                <div className="font-medium">{selectedUser.firstName} {selectedUser.lastName}</div>
                 <div className="text-sm text-muted-foreground">{selectedUser.username}</div>
               </div>
             </div>
