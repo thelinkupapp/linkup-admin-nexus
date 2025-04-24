@@ -150,7 +150,7 @@ export default function Login() {
                 render={({ slots }) => (
                   <InputOTPGroup>
                     {slots.map((slot, i) => (
-                      <InputOTPSlot key={i} {...slot} />
+                      <InputOTPSlot key={i} {...slot} index={i} />
                     ))}
                   </InputOTPGroup>
                 )}
