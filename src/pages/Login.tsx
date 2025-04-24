@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Mail, Lock, Loader2, ArrowRight, KeyRound } from "lucide-react";
 
 type ResetStep = "login" | "confirm-reset" | "enter-code" | "new-password" | "success";
@@ -145,18 +144,34 @@ export default function Login() {
               <label className="text-sm font-medium">
                 Enter the 6-digit code sent to your email
               </label>
-              <InputOTP
-                maxLength={6}
-                value={resetCode}
-                onChange={setResetCode}
-                render={({ slots }) => (
-                  <InputOTPGroup>
-                    {slots.map((slot, i) => (
-                      <InputOTPSlot key={i} {...slot} index={i} />
-                    ))}
-                  </InputOTPGroup>
-                )}
-              />
+              <div className="flex justify-between gap-2">
+                {[0, 1, 2, 3, 4, 5].map((index) => (
+                  <Input
+                    key={index}
+                    type="text"
+                    maxLength={1}
+                    className="h-12 w-12 text-center text-lg"
+                    value={resetCode[index] || ""}
+                    onChange={(e) => {
+                      const newCode = resetCode.split('');
+                      newCode[index] = e.target.value;
+                      setResetCode(newCode.join(''));
+                      
+                      // Auto-focus next input
+                      if (e.target.value && index < 5) {
+                        const nextInput = document.querySelector(`input[name="digit-${index + 1}"]`);
+                        if (nextInput instanceof HTMLInputElement) {
+                          nextInput.focus();
+                        }
+                      }
+                    }}
+                    name={`digit-${index}`}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Didn't receive a code? <button type="button" className="text-primary hover:underline" onClick={handleConfirmReset}>Resend</button>
+              </p>
             </div>
             <div className="flex justify-between space-x-2">
               <Button type="button" variant="outline" onClick={handleCancel}>
