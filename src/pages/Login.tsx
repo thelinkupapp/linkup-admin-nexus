@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -7,13 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { Mail, Lock, Loader2, ArrowRight, KeyRound, CheckCircle2, ShieldCheck } from "lucide-react";
+import { Mail, Lock, Loader2, ArrowRight, KeyRound } from "lucide-react";
 
-type ResetStep = "login" | "confirm-reset" | "enter-code" | "new-password";
+type ResetStep = "login" | "confirm-reset" | "enter-code" | "new-password" | "success";
 
 export default function Login() {
-  const [email, setEmail] = useState("jack@linkupapp.io"); // Pre-filled for demo
-  const [password, setPassword] = useState("linkup"); // Pre-filled for demo
+  const [email, setEmail] = useState("jack@linkupapp.io");
+  const [password, setPassword] = useState("linkup");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [resetStep, setResetStep] = useState<ResetStep>("login");
@@ -23,11 +22,10 @@ export default function Login() {
   const { toast } = useToast();
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   console.log("Login page rendered, user:", user);
-  
+
   useEffect(() => {
-    // If user is already logged in, redirect to home or the page they were trying to access
     if (user) {
       const from = location.state?.from?.pathname || "/";
       console.log("User already logged in, redirecting to:", from);
@@ -39,7 +37,6 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    console.log("Login attempt with:", email, password);
 
     try {
       await login(email, password);
@@ -47,8 +44,6 @@ export default function Login() {
         title: "Success",
         description: "Logged in successfully!",
       });
-      
-      // Navigation happens in useEffect above when user state changes
     } catch (err) {
       console.error("Login failed:", err);
       setError("Invalid email or password");
@@ -60,10 +55,6 @@ export default function Login() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleForgotPassword = () => {
-    setResetStep("confirm-reset");
   };
 
   const handleConfirmReset = (e: React.FormEvent) => {
@@ -90,15 +81,19 @@ export default function Login() {
 
   const handlePasswordReset = (e: React.FormEvent) => {
     e.preventDefault();
+    if (newPassword.length < 6) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Password must be at least 6 characters long",
+      });
+      return;
+    }
+    setResetStep("success");
     toast({
       title: "Success",
-      description: "Your password has been reset successfully. Please log in.",
+      description: "Your password has been reset successfully",
     });
-    setResetStep("login");
-    setEmail("");
-    setPassword("");
-    setNewPassword("");
-    setResetCode("");
   };
 
   const handleCancel = () => {
@@ -131,7 +126,10 @@ export default function Login() {
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button 
+                type="submit"
+                className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/90"
+              >
                 Send Code <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -152,7 +150,7 @@ export default function Login() {
                 render={({ slots }) => (
                   <InputOTPGroup>
                     {slots.map((slot, i) => (
-                      <InputOTPSlot key={i} {...slot} index={i} />
+                      <InputOTPSlot key={i} {...slot} />
                     ))}
                   </InputOTPGroup>
                 )}
@@ -162,8 +160,12 @@ export default function Login() {
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={resetCode.length !== 6}>
-                Verify Code <CheckCircle2 className="ml-2 h-4 w-4" />
+              <Button 
+                type="submit" 
+                disabled={resetCode.length !== 6}
+                className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/90"
+              >
+                Verify Code <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </form>
@@ -186,7 +188,7 @@ export default function Login() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter your new password"
                   required
-                  minLength={8}
+                  minLength={6}
                 />
               </div>
             </div>
@@ -194,11 +196,29 @@ export default function Login() {
               <Button type="button" variant="outline" onClick={handleCancel}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={!newPassword}>
-                Reset Password <KeyRound className="ml-2 h-4 w-4" />
+              <Button 
+                type="submit" 
+                disabled={!newPassword}
+                className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/90"
+              >
+                Reset Password <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           </form>
+        );
+
+      case "success":
+        return (
+          <div className="text-center space-y-4">
+            <h2 className="text-xl font-semibold">Password Reset Successfully</h2>
+            <p className="text-muted-foreground">Your password has been updated.</p>
+            <Button 
+              onClick={() => setResetStep("login")}
+              className="bg-[#8B5CF6] hover:bg-[#8B5CF6]/90"
+            >
+              Return to Login
+            </Button>
+          </div>
         );
 
       default:
@@ -237,7 +257,7 @@ export default function Login() {
                   type="button"
                   variant="link" 
                   className="text-xs p-0 h-auto" 
-                  onClick={handleForgotPassword}
+                  onClick={() => setResetStep("confirm-reset")}
                   disabled={!email}
                 >
                   Forgot password?
@@ -257,17 +277,18 @@ export default function Login() {
               </div>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              className="w-full bg-[#8B5CF6] hover:bg-[#8B5CF6]/90" 
+              disabled={isLoading}
+            >
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Signing in...
                 </>
               ) : (
-                <>
-                  <ShieldCheck className="mr-2 h-4 w-4" />
-                  Sign in securely
-                </>
+                "Sign in"
               )}
             </Button>
           </form>
@@ -288,15 +309,16 @@ export default function Login() {
             {resetStep === "login" ? "Do more, together" : 
              resetStep === "confirm-reset" ? "Reset Password" :
              resetStep === "enter-code" ? "Verify Code" :
+             resetStep === "success" ? "Success" :
              "Create New Password"}
           </h1>
           <p className="text-muted-foreground">
             {resetStep === "login" ? "Sign in to access the admin dashboard" :
              resetStep === "confirm-reset" ? "We'll send you a code to reset your password" :
              resetStep === "enter-code" ? "Enter the verification code from your email" :
+             resetStep === "success" ? "You can now sign in with your new password" :
              "Choose a new password for your account"}
           </p>
-          {/* Change the variant from "info" to "default" since "info" is not a valid variant */}
           <Alert variant="default" className="mt-2 bg-blue-50 border-blue-100">
             <AlertDescription className="text-sm">
               For demo: Use <strong>jack@linkupapp.io</strong> and password <strong>linkup</strong>
