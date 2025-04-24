@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -59,6 +60,7 @@ export default function Login() {
 
   const handleConfirmReset = (e: React.FormEvent) => {
     e.preventDefault();
+    // This is an in-app state transition, not a navigation
     setResetStep("enter-code");
     toast({
       title: "Code Sent",
@@ -118,7 +120,7 @@ export default function Login() {
                   type="email"
                   className="pl-10"
                   value={email}
-                  disabled
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
             </div>
@@ -309,15 +311,15 @@ export default function Login() {
             {resetStep === "login" ? "Do more, together" : 
              resetStep === "confirm-reset" ? "Reset Password" :
              resetStep === "enter-code" ? "Verify Code" :
-             resetStep === "success" ? "Success" :
-             "Create New Password"}
+             resetStep === "new-password" ? "Create New Password" :
+             "Success"}
           </h1>
           <p className="text-muted-foreground">
             {resetStep === "login" ? "Sign in to access the admin dashboard" :
              resetStep === "confirm-reset" ? "We'll send you a code to reset your password" :
              resetStep === "enter-code" ? "Enter the verification code from your email" :
-             resetStep === "success" ? "You can now sign in with your new password" :
-             "Choose a new password for your account"}
+             resetStep === "new-password" ? "Choose a new password for your account" :
+             "You can now sign in with your new password"}
           </p>
           <Alert variant="default" className="mt-2 bg-blue-50 border-blue-100">
             <AlertDescription className="text-sm">
