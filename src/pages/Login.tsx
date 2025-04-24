@@ -60,7 +60,7 @@ export default function Login() {
 
   const handleConfirmReset = (e: React.FormEvent) => {
     e.preventDefault();
-    // This is an in-app state transition, not a navigation
+    // In-app state transition, not navigation
     setResetStep("enter-code");
     toast({
       title: "Code Sent",
